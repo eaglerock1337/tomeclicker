@@ -1,0 +1,629 @@
+# The Tomes of Magic - Tomes
+tomes:
+- 1: Tome of Magic
+  tier: 1
+  chapters:
+  - 1: Introduction
+    type: Concept
+  - 2: About Mana
+    type: Concept
+  - 3: Drawing Mana
+    type: Technique
+  - 4: Spells
+    type: Concept
+  - 5: Casting a Spell
+    type: Technique
+  - 6: Fire Orb
+    type: Spell
+  - 7: Cold Orb
+    type: Spell
+  - 8: Shock Orb
+    type: Spell
+  - 9: Holy Orb
+    type: Spell
+  - 10: Black Orb
+    type: Spell
+  - 11: Understanding Magic
+    type: Concept
+  - 12: Continuing Magic
+    type: Concept
+- 2: Tome of Magic Concepts
+  tier: 1
+  prereqs: 1
+  chapters:
+  - 1: Becoming a Mage
+    type: Concept
+  - 2: The Importance of Mana
+    type: Concept
+  - 3: Training in Magic
+    type: Concept
+  - 4: Types of Spells
+    type: Concept
+  - 5: Orbs - The Essence of a Spell
+    type: Concept
+  - 6: Elements and Alignments
+    type: Concept
+  - 7: The Fire Element
+    type: Concept
+  - 8: The Cold Element
+    type: Concept
+  - 9: The Shock Element
+    type: Concept
+  - 10: The Holy Alignment
+    type: Concept
+  - 11: The Black Alignment
+    type: Concept
+  - 12: The Next Step
+    type: Concept
+- 3: Tome of Mana
+  tier: 2
+  chapters:
+  - 1: Training your Body
+    type: Concept
+  - 2: Your Mana Pool
+    type: Concept
+  - 3: Mana Regeneration
+    type: Concept
+  - 4: Drawing Mana
+    type: Concept
+  - 5: Proper Mana Drawing
+    type: Technique
+  - 6: Practicing Mana Drawing
+    type: Concept
+  - 7: Meditation
+    type: Concept
+  - 8: Increasing Mana Pool
+    type: Concept
+  - 9: Mana Pool Meditation
+    type: Technique
+  - 10: Increasing Mana Regeneration
+    type: Concept
+  - 11: Mana Regeneration Meditation
+    type: Technique
+  - 12: Mana Training Discipline
+    type: Concept
+- 4: Tome of Attack
+  tier: 2
+  prereqs: 3
+  chapters:
+  - 1: Magic on the Offense
+    type: Concept
+  - 2: The Principle of the Attack
+    type: Concept
+  - 3: Directing the Orb
+    type: Concept
+  - 4: Types of Attacks
+    type: Concept
+  - 5: Touch Attacks
+    type: Technique
+  - 6: Short Range Attacks
+    type: Technique
+  - 7: Long Range Attacks
+    type: Technique
+  - 8: Forms of an Attack
+    type: Concept
+  - 9: Projectiles
+    type: Technique
+  - 10: Objects
+    type: Technique
+  - 11: Delivering the Attack
+    type: Concept
+  - 12: Learning More
+    type: Concept
+- 5: Tome of Defense
+  tier: 2
+  prereqs: 3
+  chapters:
+  - 1: Magic on the Defense
+    type: Concept
+  - 2: The Principle of Defense
+    type: Concept
+  - 3: Directing the Orb
+    type: Concept
+  - 4: Types of Attacks
+    type: Concept
+  - 5: Shields
+    type: Technique
+  - 6: Counters
+    type: Technique
+  - 7: Mirrors
+    type: Technique
+  - 8: Forms of Defense
+    type: Concept
+  - 9: Held Defenses
+    type: Technique
+  - 10: Thrown Defenses
+    type: Technique
+  - 11: Using the Defense
+    type: Concept
+  - 12: Learning More
+    type: Concept
+- 6: Tome of Magic Mastery
+  tier: 3
+  chapters:
+  - 1: The World of Magic
+    type: Concept
+  - 2: Magical Discipline
+    type: Concept
+  - 3: Pursuit of the Art
+    type: Concept
+  - 4: The Potential of the Orb
+    type: Concept
+  - 5: Changing the Orb
+    type: Concept
+  - 6: Changing the Fire Orb
+    type: Technique
+  - 7: Changing the Cold Orb
+    type: Technique
+  - 8: Changing the Shock Orb
+    type: Technique
+  - 9: Changing the Holy Orb
+    type: Technique
+  - 10: Changing the Black Orb
+    type: Technique
+  - 11: Choosing Your Magic
+    type: Concept
+  - 12: Pursuing Your Choice
+    type: Concept
+- 7: Tome of Elements
+  tier: 3
+  prereqs: 6
+  chapters:
+  - 1: The Elements of Magic
+    type: Concept
+  - 2: Elements in Nature
+    type: Concept
+  - 3: Harnessing the Elements
+    type: Concept
+  - 4: Fire Magic Principles
+    type: Concept
+  - 5: Fire Magic Applications
+    type: Concept
+  - 6: Cold Magic Principles
+    type: Concept
+  - 7: Cold Magic Applications
+    type: Concept
+  - 8: Shock Magic Principles
+    type: Concept
+  - 9: Shock Magic Applications
+    type: Concept
+  - 10: Feeling the Elements
+    type: Concept
+  - 11: Choosing Your Element
+    type: Technique
+  - 12: Pursuing Your Element
+    type: Concept
+- 8: Tome of Alignment
+  tier: 3
+  prereqs: 6
+  chapters:
+  - 1: The Alignment of Magic
+    type: Concept
+  - 2: The Roles of the Divines
+    type: Concept
+  - 3: Black Magic Origins
+    type: Concept
+  - 4: The Polarity of Alignment
+    type: Concept
+  - 5: Applying Aligned Magic
+    type: Concept
+  - 6: Holy Magic Principles
+    type: Concept
+  - 7: Holy Magic Applications
+    type: Concept
+  - 8: Black Magic Principles
+    type: Concept
+  - 9: Black Magic Applications
+    type: Concept
+  - 10: Finding Your Alignment
+    type: Concept
+  - 11: Alignment Meditation
+    type: Technique
+  - 12: Pursuing Your Alignment
+    type: Concept
+- 9: Tome of Fire Magic
+  tier: 4
+  element: fire
+  prereqs: 7
+  chapters:
+  - 1: Applying Fire Magic
+    type: Concept
+  - 2: Fire Orb Crafting
+    type: Technique
+  - 3: Fire Hand
+    type: Spell
+    stance: Attack
+    form: Touch
+    subtype: Melee
+  - 4: Fire Ball
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 5: Fire Burst
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Short-range
+  - 6: Fire Schrapnel
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Long-range
+  - 7: Blaze
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Area
+  - 8: Fire Shield
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Shield
+  - 9: Fire Absorber
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Absorber
+  - 10: Fire Object Counter
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Counter
+  - 11: Fire Projectile Counter
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 12: Fire Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+- 10: Tome of Cold Magic
+  tier: 4
+  element: cold
+  prereqs: 7
+  chapters:
+  - 1: Applying Cold Magic
+    type: Concept
+  - 2: Cold Orb Crafting
+    type: Technique
+  - 3: Freezing Touch
+    type: Spell
+    stance: Attack
+    form: Touch
+    subtype: Melee
+  - 4: Ice Ball
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 5: Ice Blast
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Short-range
+  - 6: Ice Shards
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Long-range
+  - 7: Freeze Spray
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Area
+  - 8: Ice Shield
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Shield
+  - 9: Cold Absorber
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Absorber
+  - 10: Cold Object Counter
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Counter
+  - 11: Cold Projectile Counter
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 12: Ice Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+- 11: Tome of Shock Magic
+  tier: 4
+  element: shock
+  prereqs: 7
+  chapters:
+  - 1: Applying Shock Magic
+    type: Concept
+  - 2: Shock Orb Crafting
+    type: Technique
+  - 3: Shock Hand
+    type: Spell
+    stance: Attack
+    form: Touch
+    subtype: Melee
+  - 4: Lightning Ball
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 5: Chain Lightning
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Short-range
+  - 6: Lightning Bolt
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Long-range
+  - 7: Shockwave
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Area
+  - 8: Lightning Shield
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Shield
+  - 9: Shock Absorber
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Absorber
+  - 10: Shock Object Counter
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Counter
+  - 11: Shock Projectile Counter
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 12: Shock Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+- 12: Tome of Holy Magic
+  tier: 4
+  alignment: holy
+  prereqs: 7
+  chapters:
+  - 1: Applying Holy Magic
+    type: Concept
+  - 2: Holy Orb Crafting
+    type: Technique
+  - 3: Holy Touch
+    type: Spell
+    stance: Attack
+    form: Touch
+    subtype: Melee
+  - 4: Holy Light
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 5: Light Blast
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Short-range
+  - 6: Holy Arc
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Long-range
+  - 7: Holy Wave
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Area
+  - 8: Holy Shield
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Shield
+  - 9: Holy Absorber
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Absorber
+  - 10: Holy Object Counter
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Counter
+  - 11: Holy Projectile Counter
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 12: Holy Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+- 13: Tome of Black Magic
+  tier: 4
+  alignment: black
+  prereqs: 7
+  chapters:
+  - 1: Applying Black Magic
+    type: Concept
+  - 2: Black Orb Crafting
+    type: Technique
+  - 3: Black Hand
+    type: Spell
+    stance: Attack
+    form: Touch
+    subtype: Melee
+  - 4: Black Hole
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 5: Dark Blast
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Short-range
+  - 6: Dark Beam
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Long-range
+  - 7: Dark Curtain
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Area
+  - 8: Dark Shield
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Shield
+  - 9: Black Absorber
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Absorber
+  - 10: Black Object Counter
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Counter
+  - 11: Black Projectile Counter
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 12: Dark Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+- 14: Tome of Mana Mastery
+  tier: 5
+  chapters:
+  - 1: The Alignment of Magic
+    type: Concept
+  - 2: The Roles of the Divines
+    type: Concept
+  - 3: Black Magic Origins
+    type: Concept
+  - 4: The Polarity of Alignment
+    type: Concept
+  - 5: Applying Aligned Magic
+    type: Concept
+  - 6: Holy Magic Principles
+    type: Concept
+  - 7: Holy Magic Applications
+    type: Concept
+  - 8: Black Magic Principles
+    type: Concept
+  - 9: Black Magic Applications
+    type: Concept
+  - 10: Finding Your Alignment
+    type: Concept
+  - 11: Alignment Meditation
+    type: Technique
+  - 12: Pursuing Your Alignment
+    type: Concept
+- 15: Tome of Auras
+  tier: 5
+  prereqs: 14
+  chapters:
+  - 1: The Magical Aura
+    type: Concept
+  - 2: Creating an Aura
+    type: Concept
+  - 3: Spreading the Orb
+    type: Technique
+  - 4: Applying the Aura
+    type: Technique
+  - 5: Aura Effects
+    type: Concept
+  - 6: Offensive Auras
+    type: Concept
+  - 7: Offensive Aura Meditation
+    type: Technique
+  - 8: Defensive Auras
+    type: Concept
+  - 9: Defensive Aura Meditation
+    type: Technique
+  - 10: Renewing Auras
+    type: Concept
+  - 11: Proper Aura Meditation
+    type: Technique
+  - 12: Pursuing Your Alignment
+    type: Concept
+- 16: Tome of Enchantments
+  tier: 5
+  prereqs: 14
+  chapters:
+  - 1: The Magical Enchantment
+    type: Concept
+  - 2: Creating an Enchantment
+    type: Concept
+  - 3: Spreading the Orb
+    type: Technique
+  - 4: Applying the Enchantment
+    type: Technique
+  - 5: Enchantment Effects
+    type: Concept
+  - 6: Physical Enchantments
+    type: Concept
+  - 7: Physical Enchantment Meditation
+    type: Technique
+  - 8: Ethereal Enchantments
+    type: Concept
+  - 9: Ethereal Enchantment Meditation
+    type: Technique
+  - 10: Renewing Enchantments
+    type: Concept
+  - 11: Proper Enchantment Meditation
+    type: Technique
+  - 12: Pursuing Your Alignment
+    type: Concept
+- 16: Tome of Enchantments
+  tier: 5
+  prereqs: 14
+  chapters:
+  - 1: The Magical Enchantment
+    type: Concept
+  - 2: Creating an Enchantment
+    type: Concept
+  - 3: Spreading the Orb
+    type: Technique
+  - 4: Applying the Enchantment
+    type: Technique
+  - 5: Enchantment Effects
+    type: Concept
+  - 6: Physical Enchantments
+    type: Concept
+  - 7: Physical Enchantment Meditation
+    type: Technique
+  - 8: Ethereal Enchantments
+    type: Concept
+  - 9: Ethereal Enchantment Meditation
+    type: Technique
+  - 10: Renewing Enchantments
+    type: Concept
+  - 11: Proper Enchantment Meditation
+    type: Technique
+  - 12: Pursuing Your Alignment
+    type: Concept

@@ -1,0 +1,37 @@
+# The Tomes of Magic - Tiers
+tiers:
+- 1: Introduction
+- 2: Basic Applications
+  prereqs: 1
+- 3: Types of Magic
+  prereqs: 2
+- 4: Basic Spells
+  prereqs: 3
+  minimum: 1
+- 5: Advanced Applications
+  prereqs: 4
+- 6: Advanced Spells
+  prereqs: 5
+  minimum: 2
+  restrictions:
+    alignments: 1
+    unlock: 45
+- 7: Expert Concepts
+  prereqs: 6
+- 8: Expert Techniques
+  prereqs: 7
+- 9: Expert Spells
+  restrictions:
+    alignments: 1
+    unlock: 49
+- 10: Master Concepts
+  prereqs: 9
+- 11: Master Spells
+- 12: Master Alignment Concepts
+- 13: Master Alignment Spells
+  prereqs: 12
+- 14: True Master Concepts
+- 15: True Master Spellcasting
+  prereqs:
+  - 13
+  - 14
