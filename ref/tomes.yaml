@@ -599,31 +599,63 @@ tomes:
     type: Technique
   - 12: Pursuing Your Alignment
     type: Concept
-- 16: Tome of Enchantments
+- 17: Tome of Advanced Attacks
   tier: 5
-  prereqs: 14
+  prereqs:
+  - 15
+  - 16
   chapters:
-  - 1: The Magical Enchantment
+  - 1: Advanced Magical Attacks
     type: Concept
-  - 2: Creating an Enchantment
+  - 2: Advanced Attack Principles
     type: Concept
-  - 3: Spreading the Orb
+  - 3: Taking the Orb Further
+    type: Concept
+  - 4: The Role of the Aura
+    type: Concept
+  - 5: Damage Auras
     type: Technique
-  - 4: Applying the Enchantment
+  - 6: Weakening Auras
     type: Technique
-  - 5: Enchantment Effects
+  - 7: The Role of the Enchantment
     type: Concept
-  - 6: Physical Enchantments
-    type: Concept
-  - 7: Physical Enchantment Meditation
+  - 8: Magical Objects
     type: Technique
-  - 8: Ethereal Enchantments
-    type: Concept
-  - 9: Ethereal Enchantment Meditation
+  - 9: Magical Creatures
     type: Technique
-  - 10: Renewing Enchantments
+  - 10: Improving Base Attacks
     type: Concept
-  - 11: Proper Enchantment Meditation
+  - 11: Power Attacks
     type: Technique
-  - 12: Pursuing Your Alignment
+  - 12: Developing Attacks Further
+    type: Concept
+- 18: Tome of Advanced Defense
+  tier: 5
+  prereqs:
+  - 15
+  - 16
+  chapters:
+  - 1: Advanced Magical Defense
+    type: Concept
+  - 2: Advanced Defense Principles
+    type: Concept
+  - 3: Taking the Orb Further
+    type: Concept
+  - 4: The Role of the Aura
+    type: Concept
+  - 5: Healing Auras
+    type: Technique
+  - 6: Strengthening Auras
+    type: Technique
+  - 7: The Role of the Enchantment
+    type: Concept
+  - 8: Magical Objects
+    type: Technique
+  - 9: Magical Creatures
+    type: Technique
+  - 10: Improving Basic Defense
+    type: Concept
+  - 11: Power Defense
+    type: Technique
+  - 12: Developing Defense Further
     type: Concept
