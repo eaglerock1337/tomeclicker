@@ -659,3 +659,62 @@ tomes:
     type: Technique
   - 12: Developing Defense Further
     type: Concept
+- 19: Tome of Fire Attacks
+  tier: 5
+  element: fire
+  prereqs: 9
+  chapters:
+  - 1: Advanced Fire Attacks
+    type: Concept
+  - 2: Greater Fire Orb Crafting
+    type: Technique
+  - 3: Aura of Burning
+    type: Spell
+    stance: Attack
+    form: Aura
+    subtype: Damage
+  - 4: Aura of Heat
+    type: Spell
+    stance: Attack
+    form: Aura
+    subtype: Weakening
+  - 5: Enchanted Fire Staff
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Staff
+  - 6: Enchanted Fire Ring
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Ring
+  - 7: Fire Spitter
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Animate
+  - 8: Hand of Flame
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Touch
+  - 9: Greater Fire Ball
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 10: Fire Explosion
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Short-range
+  - 11: Fire Bomb
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Long-range
+  - 12: Super Blaze
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Area
