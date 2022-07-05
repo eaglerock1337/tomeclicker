@@ -21,16 +21,22 @@ tiers:
 - 8: Expert Techniques
   prereqs: 7
 - 9: Expert Spells
+  minimum: 4
   restrictions:
     alignments: 1
     unlock: 49
 - 10: Master Concepts
-  prereqs: 9
 - 11: Master Spells
 - 12: Master Alignment Concepts
+  prereqs:
+  - 9
+  - 11
 - 13: Master Alignment Spells
+  minimum: 1
   prereqs: 12
 - 14: True Master Concepts
+  prereqs:
+  - 13
 - 15: True Master Spellcasting
   prereqs:
   - 13
