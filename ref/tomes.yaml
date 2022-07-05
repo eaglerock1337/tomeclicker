@@ -15,7 +15,7 @@ tomes:
     type: Technique
   - 6: Fire Orb
     type: Spell
-  - 7: Cold Orb
+  - 7: Frost Orb
     type: Spell
   - 8: Shock Orb
     type: Spell
@@ -45,7 +45,7 @@ tomes:
     type: Concept
   - 7: The Fire Element
     type: Concept
-  - 8: The Cold Element
+  - 8: The Frost Element
     type: Concept
   - 9: The Shock Element
     type: Concept
@@ -153,7 +153,7 @@ tomes:
     type: Concept
   - 6: Changing the Fire Orb
     type: Technique
-  - 7: Changing the Cold Orb
+  - 7: Changing the Frost Orb
     type: Technique
   - 8: Changing the Shock Orb
     type: Technique
@@ -179,9 +179,9 @@ tomes:
     type: Concept
   - 5: Fire Magic Applications
     type: Concept
-  - 6: Cold Magic Principles
+  - 6: Frost Magic Principles
     type: Concept
-  - 7: Cold Magic Applications
+  - 7: Frost Magic Applications
     type: Concept
   - 8: Shock Magic Principles
     type: Concept
@@ -280,14 +280,14 @@ tomes:
     stance: Defense
     form: Object
     subtype: Mirror
-- 10: Tome of Cold Magic
+- 10: Tome of Frost Magic
   tier: 4
-  element: cold
+  element: frost
   prereqs: 7
   chapters:
-  - 1: Applying Cold Magic
+  - 1: Applying Frost Magic
     type: Concept
-  - 2: Cold Orb Crafting
+  - 2: Frost Orb Crafting
     type: Technique
   - 3: Freezing Touch
     type: Spell
@@ -319,17 +319,17 @@ tomes:
     stance: Defense
     form: Object
     subtype: Shield
-  - 9: Cold Absorber
+  - 9: Frost Absorber
     type: Spell
     stance: Defense
     form: Object
     subtype: Absorber
-  - 10: Cold Object Counter
+  - 10: Frost Object Counter
     type: Spell
     stance: Defense
     form: Object
     subtype: Counter
-  - 11: Cold Projectile Counter
+  - 11: Frost Projectile Counter
     type: Spell
     stance: Defense
     form: Projectile
@@ -417,7 +417,7 @@ tomes:
     stance: Attack
     form: Object
     subtype: Short-range
-  - 5: Light Blast
+  - 5: Holy Wave
     type: Spell
     stance: Attack
     form: Projectile
@@ -660,7 +660,7 @@ tomes:
   - 12: Developing Defense Further
     type: Concept
 - 19: Tome of Fire Attacks
-  tier: 5
+  tier: 6
   element: fire
   prereqs: 9
   chapters:
@@ -718,3 +718,721 @@ tomes:
     stance: Attack
     form: Object
     subtype: Area
+- 20: Tome of Fire Defense
+  tier: 6
+  element: fire
+  prereqs: 9
+  chapters:
+  - 1: Advanced Fire Defense
+    type: Concept
+  - 2: Greater Fire Orb Crafting
+    type: Technique
+  - 3: Aura of Warmth
+    type: Spell
+    stance: Defense
+    form: Aura
+    subtype: Healing
+  - 4: Aura of Flame
+    type: Spell
+    stance: Defense
+    form: Aura
+    subtype: Strengthening
+  - 5: Enchanted Fire Shield
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Shield
+  - 6: Enchanted Fire Amulet
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Amulet
+  - 7: Fire Ward
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Animate
+  - 8: Greater Fire Shield
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Shield
+  - 9: Fire Vacuum
+    type: Spell
+    stance: Defense
+    form: Absorber
+    subtype: Short-range
+  - 10: Fire Object Reflector
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 11: Fire Projectile Reflector
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 12: Greater Fire Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+- 21: Tome of Frost Attacks
+  tier: 6
+  element: frost
+  prereqs: 10
+  chapters:
+  - 1: Advanced Frost Attacks
+    type: Concept
+  - 2: Greater Frost Orb Crafting
+    type: Technique
+  - 3: Aura of Ice
+    type: Spell
+    stance: Attack
+    form: Aura
+    subtype: Damage
+  - 4: Aura of Chill
+    type: Spell
+    stance: Attack
+    form: Aura
+    subtype: Weakening
+  - 5: Enchanted Frost Staff
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Staff
+  - 6: Enchanted Frost Ring
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Ring
+  - 7: Wind Chiller
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Animate
+  - 8: Frost Hand
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Touch
+  - 9: Greater Ice Ball
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 10: Greater Ice Blast
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Short-range
+  - 11: Hail Beam
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Long-range
+  - 12: Hail Spray
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Area
+- 22: Tome of Frost Defense
+  tier: 6
+  element: frost
+  prereqs: 10
+  chapters:
+  - 1: Advanced Frost Defense
+    type: Concept
+  - 2: Greater Frost Orb Crafting
+    type: Technique
+  - 3: Aura of Cooling
+    type: Spell
+    stance: Defense
+    form: Aura
+    subtype: Healing
+  - 4: Aura of Frost
+    type: Spell
+    stance: Defense
+    form: Aura
+    subtype: Strengthening
+  - 5: Enchanted Frost Shield
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Shield
+  - 6: Enchanted Frost Amulet
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Amulet
+  - 7: Frost Ward
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Animate
+  - 8: Greater Frost Shield
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Shield
+  - 9: Frost Vacuum
+    type: Spell
+    stance: Defense
+    form: Absorber
+    subtype: Short-range
+  - 10: Frost Object Reflector
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 11: Frost Projectile Reflector
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 12: Greater Frost Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+- 23: Tome of Shock Attacks
+  tier: 6
+  element: shock
+  prereqs: 11
+  chapters:
+  - 1: Advanced Shock Attacks
+    type: Concept
+  - 2: Greater Shock Orb Crafting
+    type: Technique
+  - 3: Aura of Shock
+    type: Spell
+    stance: Attack
+    form: Aura
+    subtype: Damage
+  - 4: Aura of Electricity
+    type: Spell
+    stance: Attack
+    form: Aura
+    subtype: Weakening
+  - 5: Enchanted Shock Staff
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Staff
+  - 6: Enchanted Shock Ring
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Ring
+  - 7: Static Shocker
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Animate
+  - 8: Electric Hand
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Touch
+  - 9: Greater Shock Ball
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 10: Shock Cloud
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Short-range
+  - 11: Greater Lightning Bolt
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Long-range
+  - 12: Lightning Cage
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Area
+- 24: Tome of Shock Defense
+  tier: 6
+  element: shock
+  prereqs: 11
+  chapters:
+  - 1: Advanced Shock Defense
+    type: Concept
+  - 2: Greater Shock Orb Crafting
+    type: Technique
+  - 3: Aura of Static
+    type: Spell
+    stance: Defense
+    form: Aura
+    subtype: Healing
+  - 4: Aura of Charge
+    type: Spell
+    stance: Defense
+    form: Aura
+    subtype: Strengthening
+  - 5: Enchanted Shock Shield
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Shield
+  - 6: Enchanted Shock Amulet
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Amulet
+  - 7: Static Field
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Animate
+  - 8: Greater Shock Shield
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Shield
+  - 9: Shock Vacuum
+    type: Spell
+    stance: Defense
+    form: Absorber
+    subtype: Short-range
+  - 10: Shock Object Reflector
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 11: Shock Projectile Reflector
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 12: Greater Shock Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+- 25: Tome of Holy Attacks
+  tier: 6
+  alignment: holy
+  prereqs: 12
+  restricted: 45
+  chapters:
+  - 1: Advanced Holy Attacks
+    type: Concept
+  - 2: Greater Holy Orb Crafting
+    type: Technique
+  - 3: Aura of Thorns
+    type: Spell
+    stance: Attack
+    form: Aura
+    subtype: Damage
+  - 4: Aura of Vengeance
+    type: Spell
+    stance: Attack
+    form: Aura
+    subtype: Weakening
+  - 5: Enchanted Holy Staff
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Staff
+  - 6: Enchanted Holy Ring
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Ring
+  - 7: Holy Wave
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Animate
+  - 8: Devout Hand
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Touch
+  - 9: Greater Holy Light
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 10: Shards of Light
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Short-range
+  - 11: Light Blast
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Long-range
+  - 12: Holy Arc
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Area
+- 26: Tome of Holy Defense
+  tier: 6
+  alignment: holy
+  prereqs: 12
+  restricted: 45
+  chapters:
+  - 1: Advanced Holy Defense
+    type: Concept
+  - 2: Greater Holy Orb Crafting
+    type: Technique
+  - 3: Aura of Prayer
+    type: Spell
+    stance: Defense
+    form: Aura
+    subtype: Healing
+  - 4: Aura of Conviction
+    type: Spell
+    stance: Defense
+    form: Aura
+    subtype: Strengthening
+  - 5: Enchanted Holy Shield
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Shield
+  - 6: Enchanted Holy Amulet
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Amulet
+  - 7: Holy Glow
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Animate
+  - 8: Greater Holy Shield
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Shield
+  - 9: Holy Vacuum
+    type: Spell
+    stance: Defense
+    form: Absorber
+    subtype: Short-range
+  - 10: Holy Object Reflector
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 11: Holy Projectile Reflector
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 12: Greater Holy Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+- 27: Tome of Black Attacks
+  tier: 6
+  alignment: black
+  prereqs: 12
+  restricted: 45
+  chapters:
+  - 1: Advanced Black Attacks
+    type: Concept
+  - 2: Greater Black Orb Crafting
+    type: Technique
+  - 3: Aura of Pain
+    type: Spell
+    stance: Attack
+    form: Aura
+    subtype: Damage
+  - 4: Aura of Despair
+    type: Spell
+    stance: Attack
+    form: Aura
+    subtype: Weakening
+  - 5: Enchanted Black Staff
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Staff
+  - 6: Enchanted Black Ring
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Ring
+  - 7: Cry of Despair
+    type: Spell
+    stance: Attack
+    form: Enchantment
+    subtype: Animate
+  - 8: Dark Hand
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Touch
+  - 9: Greater Black Hole
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 10: Shards of Pain
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Short-range
+  - 11: Dark Missile
+    type: Spell
+    stance: Attack
+    form: Projectile
+    subtype: Long-range
+  - 12: Cloud of Night
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Area
+- 28: Tome of Black Defense
+  tier: 6
+  alignment: black
+  prereqs: 12
+  restricted: 45
+  chapters:
+  - 1: Advanced Black Defense
+    type: Concept
+  - 2: Greater Black Orb Crafting
+    type: Technique
+  - 3: Aura of Regeneration
+    type: Spell
+    stance: Defense
+    form: Aura
+    subtype: Healing
+  - 4: Aura of Blackening
+    type: Spell
+    stance: Defense
+    form: Aura
+    subtype: Strengthening
+  - 5: Enchanted Black Shield
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Shield
+  - 6: Enchanted Black Amulet
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Amulet
+  - 7: Dark Shroud
+    type: Spell
+    stance: Defense
+    form: Enchantment
+    subtype: Animate
+  - 8: Greater Black Shield
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Shield
+  - 9: Black Vacuum
+    type: Spell
+    stance: Defense
+    form: Absorber
+    subtype: Short-range
+  - 10: Black Object Reflector
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 11: Black Projectile Reflector
+    type: Spell
+    stance: Defense
+    form: Projectile
+    subtype: Counter
+  - 12: Greater Black Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+- 30: Tome of Spell Balance
+  tier: 7
+  prereqs: 29
+  chapters:
+  - 1: The Effects of a Spell
+    type: Concept
+  - 2: The Ideal Spell
+    type: Concept
+  - 3: Ideal Spell Meditation
+    type: Technique
+  - 4: Balancing Attack Spells
+    type: Concept
+  - 5: Balancing Defense Spells
+    type: Concept
+  - 6: Spillover Effects
+    type: Concept
+  - 7: Spillover Effect Meditation
+    type: Technique
+  - 8: Balancing the Spell
+    type: Concept
+  - 9: Multi-effect Spells
+    type: Concept
+  - 10: Spell Amplification
+    type: Concept
+  - 11: The Perfectly Balanced Spell
+    type: Concept
+  - 12: Spell Balance Meditation
+    type: Technique
+- 31: Tome of Fire Magic Mastery
+  tier: 8
+  element: fire
+  prereqs:
+  - 19
+  - 20
+  chapters:
+  - 1: Master Fire Mages
+    type: Concept
+  - 2: Completing Your Training
+    type: Concept
+  - 3: The Master Fire Orb
+    type: Concept
+  - 4: Creating the Master Fire Orb
+    type: Technique
+  - 5: Fire Magic in Nature
+    type: Concept
+  - 6: The Benefits of Fire Magic
+    type: Concept
+  - 7: The Dangers of Fire Magic
+    type: Concept
+  - 8: Blending Fire Effects
+    type: Concept
+  - 9: Fire Spell Blending
+    type: Technique
+  - 10: Wide-Area Fire Effects
+    type: Concept
+  - 11: Controlling the Environment
+    type: Technique
+  - 12: Preparing for the Great Spells
+    type: Technique
+- 32: Tome of Frost Magic Mastery
+  tier: 8
+  element: frost
+  prereqs:
+  - 21
+  - 22
+  chapters:
+  - 1: Master Frost Mages
+    type: Concept
+  - 2: Completing Your Training
+    type: Concept
+  - 3: The Master Frost Orb
+    type: Concept
+  - 4: Creating the Master Frost Orb
+    type: Technique
+  - 5: Frost Magic in Nature
+    type: Concept
+  - 6: The Benefits of Frost Magic
+    type: Concept
+  - 7: The Dangers of Frost Magic
+    type: Concept
+  - 8: Blending Frost Effects
+    type: Concept
+  - 9: Frost Spell Blending
+    type: Technique
+  - 10: Wide-Area Frost Effects
+    type: Concept
+  - 11: Controlling the Environment
+    type: Technique
+  - 12: Preparing for the Great Spells
+    type: Technique
+- 33: Tome of Shock Magic Mastery
+  tier: 8
+  element: shock
+  prereqs:
+  - 23
+  - 24
+  chapters:
+  - 1: Master Shock Mages
+    type: Concept
+  - 2: Completing Your Training
+    type: Concept
+  - 3: The Master Shock Orb
+    type: Concept
+  - 4: Creating the Master Shock Orb
+    type: Technique
+  - 5: Shock Magic in Nature
+    type: Concept
+  - 6: The Benefits of Shock Magic
+    type: Concept
+  - 7: The Dangers of Shock Magic
+    type: Concept
+  - 8: Blending Shock Effects
+    type: Concept
+  - 9: Shock Spell Blending
+    type: Technique
+  - 10: Wide-Area Shock Effects
+    type: Concept
+  - 11: Controlling the Environment
+    type: Technique
+  - 12: Preparing for the Great Spells
+    type: Technique
+- 34: Tome of Holy Magic Mastery
+  tier: 8
+  alignment: holy
+  prereqs:
+  - 25
+  - 26
+  chapters:
+  - 1: Master Holy Mages
+    type: Concept
+  - 2: Building Your Faith
+    type: Concept
+  - 3: The Master Holy Orb
+    type: Concept
+  - 4: Creating the Master Holy Orb
+    type: Technique
+  - 5: Holy Magic and the Divines
+    type: Concept
+  - 6: The Benefits of Holy Magic
+    type: Concept
+  - 7: The Dangers of Holy Magic
+    type: Concept
+  - 8: Blending Holy Effects
+    type: Concept
+  - 9: Holy Spell Blending
+    type: Technique
+  - 10: Wide-Area Holy Effects
+    type: Concept
+  - 11: Controlling the Divine Forces
+    type: Technique
+  - 12: Preparing for the Great Spells
+    type: Technique
+- 35: Tome of Black Magic Mastery
+  tier: 8
+  alignment: holy
+  prereqs:
+  - 27
+  - 28
+  chapters:
+  - 1: Master Black Mages
+    type: Concept
+  - 2: Strengthening Your Resolve
+    type: Concept
+  - 3: The Master Black Orb
+    type: Concept
+  - 4: Creating the Master Black Orb
+    type: Technique
+  - 5: Black Magic and the Divines
+    type: Concept
+  - 6: The Benefits of Black Magic
+    type: Concept
+  - 7: The Dangers of Black Magic
+    type: Concept
+  - 8: Blending Black Effects
+    type: Concept
+  - 9: Black Spell Blending
+    type: Technique
+  - 10: Wide-Area Black Effects
+    type: Concept
+  - 11: Controlling the Divine Forces
+    type: Technique
+  - 12: Preparing for the Great Spells
+    type: Technique
