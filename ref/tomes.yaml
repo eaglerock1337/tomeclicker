@@ -1377,6 +1377,7 @@ tomes:
 - 34: Tome of Holy Magic Mastery
   tier: 8
   alignment: holy
+  restricted: 49
   prereqs:
   - 25
   - 26
@@ -1408,6 +1409,7 @@ tomes:
 - 35: Tome of Black Magic Mastery
   tier: 8
   alignment: holy
+  restricted: 49
   prereqs:
   - 27
   - 28
@@ -1436,3 +1438,300 @@ tomes:
     type: Technique
   - 12: Preparing for the Great Spells
     type: Technique
+- 36: Tome of Great Fire Magic
+  tier: 9
+  element: fire
+  prereqs: 31
+  chapters:
+  - 1: The Great Fire Spells
+    type: Concept
+  - 2: Master Fire Orb Crafting
+    type: Technique
+  - 3: Master Fire Ball
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 4: Master Fire Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+  - 5: Circling Fire Ward
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Short-range
+  - 6: Raining Fire
+    type: Spell
+    stance: Great
+    form: Projectile
+    subtype: Area
+  - 7: Ring of Fire
+    type: Spell
+    stance: Great
+    form: Aura
+    subtype: Great
+  - 8: Great Fire Stone
+    type: Spell
+    stance: Great
+    form: Enchantment
+    subtype: Stone
+  - 9: Hydra
+    type: Spell
+    stance: Great
+    form: Enchantment
+    subtype: Animate
+  - 10: Firestorm
+    type: Spell
+    stance: Great
+    form: Projectile
+    subtype: Wide-area
+  - 11: Volcano
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Wide-area
+  - 12: Meteor
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Master
+- 37: Tome of Great Frost Magic
+  tier: 9
+  element: frost
+  prereqs: 32
+  chapters:
+  - 1: The Great Frost Spells
+    type: Concept
+  - 2: Master Frost Orb Crafting
+    type: Technique
+  - 3: Master Ice Ball
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 4: Master Frost Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+  - 5: Circling Frost Ward
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Short-range
+  - 6: Hailstorm
+    type: Spell
+    stance: Great
+    form: Projectile
+    subtype: Area
+  - 7: Frozen Aura
+    type: Spell
+    stance: Great
+    form: Aura
+    subtype: Great
+  - 8: Great Ice Stone
+    type: Spell
+    stance: Great
+    form: Enchantment
+    subtype: Stone
+  - 9: Yeti
+    type: Spell
+    stance: Great
+    form: Enchantment
+    subtype: Animate
+  - 10: Blizzard
+    type: Spell
+    stance: Great
+    form: Projectile
+    subtype: Wide-area
+  - 11: Avalanche
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Wide-area
+  - 12: Great Ice Bolt
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Master
+- 38: Tome of Great Shock Magic
+  tier: 9
+  element: shock
+  prereqs: 33
+  chapters:
+  - 1: The Great Shock Spells
+    type: Concept
+  - 2: Master Shock Orb Crafting
+    type: Technique
+  - 3: Master Shock Ball
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 4: Master Shock Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+  - 5: Circling Shock Ward
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Short-range
+  - 6: Shockbolts
+    type: Spell
+    stance: Great
+    form: Projectile
+    subtype: Area
+  - 7: Electrostatic Cloud
+    type: Spell
+    stance: Great
+    form: Aura
+    subtype: Great
+  - 8: Great Shock Stone
+    type: Spell
+    stance: Great
+    form: Enchantment
+    subtype: Stone
+  - 9: Shock Golem
+    type: Spell
+    stance: Great
+    form: Enchantment
+    subtype: Animate
+  - 10: Chain Lightning
+    type: Spell
+    stance: Great
+    form: Projectile
+    subtype: Wide-area
+  - 11: Thunderstorm
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Wide-area
+  - 12: Great Lightning Bolt
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Master
+- 39: Tome of Great Holy Magic
+  tier: 9
+  alignment: holy
+  prereqs: 34
+  restricted: 49
+  chapters:
+  - 1: The Great Holy Spells
+    type: Concept
+  - 2: Master Holy Orb Crafting
+    type: Technique
+  - 3: Master Holy Light
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 4: Master Holy Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+  - 5: Circling Holy Ward
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Short-range
+  - 6: Holy Water
+    type: Spell
+    stance: Great
+    form: Projectile
+    subtype: Area
+  - 7: Aura of the Divines
+    type: Spell
+    stance: Great
+    form: Aura
+    subtype: Great
+  - 8: Great Holy Stone
+    type: Spell
+    stance: Great
+    form: Enchantment
+    subtype: Stone
+  - 9: Holy Crusader
+    type: Spell
+    stance: Great
+    form: Enchantment
+    subtype: Animate
+  - 10: Rain from Heaven
+    type: Spell
+    stance: Great
+    form: Projectile
+    subtype: Wide-area
+  - 11: Wrath of God
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Wide-area
+  - 12: Hand of God
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Master
+- 40: Tome of Great Black Magic
+  tier: 9
+  alignment: black
+  prereqs: 34
+  restricted: 49
+  chapters:
+  - 1: The Great Black Spells
+    type: Concept
+  - 2: Master Black Orb Crafting
+    type: Technique
+  - 3: Master Black Hole
+    type: Spell
+    stance: Attack
+    form: Object
+    subtype: Short-range
+  - 4: Master Black Mirror
+    type: Spell
+    stance: Defense
+    form: Object
+    subtype: Mirror
+  - 5: Circling Black Ward
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Short-range
+  - 6: Cries of the Dead
+    type: Spell
+    stance: Great
+    form: Projectile
+    subtype: Area
+  - 7: Aura of the Zealot
+    type: Spell
+    stance: Great
+    form: Aura
+    subtype: Great
+  - 8: Great Black Stone
+    type: Spell
+    stance: Great
+    form: Enchantment
+    subtype: Stone
+  - 9: Dark Warrior
+    type: Spell
+    stance: Great
+    form: Enchantment
+    subtype: Animate
+  - 10: Rain of Death
+    type: Spell
+    stance: Great
+    form: Projectile
+    subtype: Wide-area
+  - 11: Blackened Sun
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Wide-area
+  - 12: Touch of Death
+    type: Spell
+    stance: Great
+    form: Object
+    subtype: Master
