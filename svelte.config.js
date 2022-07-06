@@ -12,13 +12,15 @@ export default {
 		assets: 'docs',
 		fallback: null,
 		precompress: false,
-		paths: {
-			// change below to your repo name
-			base: dev ? "" : "/tomeclicker",
-		},
+
 		// hydrate the <div id="svelte"> element in src/app.html
 		target: "#svelte"
     }),
+
+	paths: {
+		// change below to your repo name
+		base: dev ? "" : "/tomeclicker",
+	},
 
     prerender: {
       // This can be false if you're using a fallback (i.e. SPA mode)
