@@ -1,0 +1,90 @@
+{
+  ".svelte-kit/runtime/client/start.js": {
+    "file": "start-8e2999b3.js",
+    "src": ".svelte-kit/runtime/client/start.js",
+    "isEntry": true,
+    "imports": [
+      "_index-c8c00d03.js"
+    ],
+    "dynamicImports": [
+      ".svelte-kit/runtime/components/layout.svelte",
+      ".svelte-kit/runtime/components/error.svelte",
+      "src/routes/footer.svelte",
+      "src/routes/header.svelte",
+      "src/routes/index.svelte",
+      "src/routes/navbar.svelte"
+    ]
+  },
+  ".svelte-kit/runtime/components/layout.svelte": {
+    "file": "layout.svelte-f48bfff9.js",
+    "src": ".svelte-kit/runtime/components/layout.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-c8c00d03.js"
+    ]
+  },
+  ".svelte-kit/runtime/components/error.svelte": {
+    "file": "error.svelte-0564fa73.js",
+    "src": ".svelte-kit/runtime/components/error.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-c8c00d03.js"
+    ]
+  },
+  "src/routes/footer.svelte": {
+    "file": "pages/footer.svelte-3ed51213.js",
+    "src": "src/routes/footer.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-c8c00d03.js"
+    ],
+    "css": [
+      "assets/pages/footer.svelte-1514ee22.css"
+    ]
+  },
+  "src/routes/header.svelte": {
+    "file": "pages/header.svelte-8363403c.js",
+    "src": "src/routes/header.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-c8c00d03.js"
+    ],
+    "css": [
+      "assets/pages/header.svelte-2599eee3.css"
+    ]
+  },
+  "src/routes/index.svelte": {
+    "file": "pages/index.svelte-b843b01b.js",
+    "src": "src/routes/index.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-c8c00d03.js",
+      "src/routes/footer.svelte",
+      "src/routes/header.svelte",
+      "src/routes/navbar.svelte"
+    ],
+    "css": [
+      "assets/pages/index.svelte-d60aaeab.css"
+    ]
+  },
+  "src/routes/navbar.svelte": {
+    "file": "pages/navbar.svelte-dc3bb1c3.js",
+    "src": "src/routes/navbar.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-c8c00d03.js"
+    ],
+    "css": [
+      "assets/pages/navbar.svelte-f7be38c8.css"
+    ]
+  },
+  "_index-c8c00d03.js": {
+    "file": "chunks/index-c8c00d03.js"
+  }
+}
