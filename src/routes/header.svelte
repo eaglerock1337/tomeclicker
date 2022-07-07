@@ -22,7 +22,7 @@
         justify-content: space-around;
         align-items: center;
         color: var(--text);
-        transition: color 1s, background-color 1s;
+        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
     .container {

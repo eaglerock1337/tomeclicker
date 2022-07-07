@@ -52,7 +52,7 @@
         flex-direction: row;
         justify-content: center;
         color: var(--text);
-        transition: color 1s, background-color 1s;
+        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
     .menu button {
@@ -63,7 +63,7 @@
         font-weight: 400;
         margin: 0px 0px 10px;
         padding: 5px 10px;
-        transition: color 1s, background-color 1s;
+        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
     p {
@@ -78,12 +78,12 @@
     .green {
         color: var(--green);
         font-weight: 700;
-        transition: color 1s, background-color 1s;
+        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
     .red {
         color: var(--red);
         font-weight: 700; 
-        transition: color 1s, background-color 1s;
+        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 </style>

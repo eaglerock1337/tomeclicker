@@ -97,14 +97,14 @@
         color: var(--green);
         font-style: normal;
         font-weight: 400;
-        transition: color 1s;
+        transition: color 1s cubic-bezier(0,.5,0,1);
     }
 
     strong {
         color: var(--red);
         font-style: normal;
         font-weight: 500;
-        transition: color 1s;
+        transition: color 1s cubic-bezier(0,.5,0,1);
     }
 
     /* The Button */
@@ -122,7 +122,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition: color 1s, background-color 1s;
+        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
 </style>
