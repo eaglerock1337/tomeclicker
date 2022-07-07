@@ -3,54 +3,69 @@
     import Header from './header.svelte';
     import Navbar from './navbar.svelte';
 
-    function setText(event) {
-        let newText = "Menu: {event.detail.newMenu}"
-    }
+    import Icon from 'svelte-awesome/components/Icon.svelte';
+    import toggleOn from 'svelte-awesome/icons/toggleOn';
+    import toggleOff from 'svelte-awesome/icons/toggleOff';
 
     function toggle() {
         darkmode = !darkmode;
-        window.document.body.classList.toggle('dark');
+        theme = darkmode ? "dark" : "light"
+        window.document.body.classList.toggle(theme);
     }
-
-    let text = "";
-    let newText = "click me";
-    let darkmode = true;
-    let menu = "2";
-    let number = 0;
-    let level = 1;
-
-    $: text = newText;
 
     function clickMe() {
         number += 1;
+        text = 'ayy ' + number;
     }
+
+    // Bound values
+    let darkmode = true;
+    let menu = "2";
+
+    // Derived values
+    let text = "click me";
+    let theme = "";
+    $: text = 'menu ' + menu;
+    $: theme = darkmode ? "dark" : "light";
+
+    // User Data
+    let number = 0;
+    let level = 1;
+
 </script>
 
 <svelte:head>
     <title>TomeClicker</title>
 </svelte:head>
 
-<div class="{darkmode ? "dark" : "light"}">
-    <Header 
-        number={number}
-        level={level}    
-    />
+<div class="{theme}">
+    <Header number={number} level={level}/>
     <div class="thebutton">
-        <button on:click={clickMe}>{text}</button>
+        <button on:click={clickMe}>
+            {#if darkmode}
+                <Icon scale="3" data={toggleOn}/>
+            {:else}
+                <Icon scale="3" data={toggleOff}/>
+            {/if}
+            <br>{text}
+        </button>
     </div>
-    <Navbar bind:curMenu={menu} on:message={setText}/>
-    <Footer darkmode={darkmode} on:message={toggle}/>
+    <Navbar bind:menu/>
+    <Footer bind:darkmode on:message={toggle}/>
 </div>
 
 <style>
     :root {
         font-size: 16px;
+        background-color: #28262cff;
+    }
+
+    .light {
         --bg: #d5d3d9ff;
         --alt-bg: #b6b3bdff;
         --text: #1e1c21ff;
         --red: #c14b1fff;
         --green: #406354ff;
-        background-color: #28262cff;
     }
 
     .dark {
@@ -88,6 +103,9 @@
         width: 100%;
         height: 400px;
         display: center;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         transition: color 1s, background-color 1s;
     }
 

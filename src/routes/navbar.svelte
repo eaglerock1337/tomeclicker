@@ -1,57 +1,45 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
-    export let curMenu = "1";
-
-    const dispatch = createEventDispatcher();
-
-    function notifyMenu(page) {
-        curMenu = page;
-        dispatch('message', {
-            newMenu: {page}
-        })
-    }
-
-    $: { curMenu = curMenu; }
+    export let menu;
 </script>
 
 <div class="menu">
     <div class="item">
-        <p class:active="{curMenu === '1'}">one</p>
+        <p class:active="{menu === '1'}">one</p>
     </div>
     <div class="item">
-        <p class:active="{curMenu === '2'}">two</p>
+        <p class:active="{menu === '2'}">two</p>
     </div>
     <div class="item">
-        <p class:active="{curMenu === '3'}">three</p>
+        <p class:active="{menu === '3'}">three</p>
     </div>
     <div class="item">
-        <p class:active="{curMenu === '4'}">four</p>
+        <p class:active="{menu === '4'}">four</p>
     </div>
     <div class="item">
-        <p class:active="{curMenu === '5'}">five</p>
+        <p class:active="{menu === '5'}">five</p>
     </div>
     <div class="item">
-        <p class:active="{curMenu === '6'}">six</p>
+        <p class:active="{menu === '6'}">six</p>
     </div>
 </div>
 <div class="menu">
-    <button on:click="{() => curMenu = '1'}">
-        <p class:active="{curMenu === '1'}">1</p>
+    <button on:click="{() => menu = '1'}">
+        <p class:active="{menu === '1'}">1</p>
     </button>
-    <button on:click="{() => curMenu = '2'}">
-        <p class:active="{curMenu === '2'}">2</p>
+    <button on:click="{() => menu = '2'}">
+        <p class:active="{menu === '2'}">2</p>
     </button>
-    <button on:click="{() => curMenu = '3'}">
-        <p class:active="{curMenu === '3'}">3</p>
+    <button on:click="{() => menu = '3'}">
+        <p class:active="{menu === '3'}">3</p>
     </button>
-    <button on:click="{() => curMenu = '4'}">
-        <p class:active="{curMenu === '4'}">4</p>
+    <button on:click="{() => menu = '4'}">
+        <p class:active="{menu === '4'}">4</p>
     </button>
-    <button on:click="{() => curMenu = '5'}">
-        <p class:active="{curMenu === '5'}">5</p>
+    <button on:click="{() => menu = '5'}">
+        <p class:active="{menu === '5'}">5</p>
     </button>
-    <button on:click="{() => curMenu = '6'}">
-        <p class:active="{curMenu === '6'}">6</p>
+    <button on:click="{() => menu = '6'}">
+        <p class:active="{menu === '6'}">6</p>
     </button>
 </div>
 <style>

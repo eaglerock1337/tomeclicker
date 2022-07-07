@@ -1,6 +1,8 @@
 <script>
     import { createEventDispatcher } from 'svelte';
 
+    export let darkmode;
+
     const dispatch = createEventDispatcher();
 
     function toggle() {
@@ -10,15 +12,15 @@
 
 <footer>
     <div class="item">
-    something
+        something
     </div>
     <div class="item">
-    something
+        something
     </div>
-    <div class="theme-switch-wrapper">
-    theme
-    <input type="checkbox" on:click={toggle} />
-    <div class="slider round"></div>
+    <div class="item">
+        theme
+        <input type="checkbox" bind:checked={darkmode} on:click={toggle} />
+    </div>
 </footer>
 
 <style>
@@ -33,5 +35,9 @@
         align-items: center;
         color: var(--text);
         transition: color 1s, background-color 1s;
+    }
+
+    .item {
+        align-items: center;
     }
 </style>
