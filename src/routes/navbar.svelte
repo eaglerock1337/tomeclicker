@@ -4,60 +4,45 @@
 
 <div class="menu">
     <div class="item">
-        <p class:active="{menu === '1'}">one</p>
+        <p class:green="{menu === '1'}">one</p>
     </div>
     <div class="item">
-        <p class:active="{menu === '2'}">two</p>
+        <p class:green="{menu === '2'}">two</p>
     </div>
     <div class="item">
-        <p class:active="{menu === '3'}">three</p>
+        <p class:green="{menu === '3'}">three</p>
     </div>
     <div class="item">
-        <p class:active="{menu === '4'}">four</p>
+        <p class:green="{menu === '4'}">four</p>
     </div>
     <div class="item">
-        <p class:active="{menu === '5'}">five</p>
+        <p class:green="{menu === '5'}">five</p>
     </div>
     <div class="item">
-        <p class:active="{menu === '6'}">six</p>
+        <p class:green="{menu === '6'}">six</p>
     </div>
 </div>
 <div class="menu">
     <button on:click="{() => menu = '1'}">
-        <p class:active="{menu === '1'}">1</p>
+        <p class:red="{menu === '1'}">1</p>
     </button>
     <button on:click="{() => menu = '2'}">
-        <p class:active="{menu === '2'}">2</p>
+        <p class:red="{menu === '2'}">2</p>
     </button>
     <button on:click="{() => menu = '3'}">
-        <p class:active="{menu === '3'}">3</p>
+        <p class:red="{menu === '3'}">3</p>
     </button>
     <button on:click="{() => menu = '4'}">
-        <p class:active="{menu === '4'}">4</p>
+        <p class:red="{menu === '4'}">4</p>
     </button>
     <button on:click="{() => menu = '5'}">
-        <p class:active="{menu === '5'}">5</p>
+        <p class:red="{menu === '5'}">5</p>
     </button>
     <button on:click="{() => menu = '6'}">
-        <p class:active="{menu === '6'}">6</p>
+        <p class:red="{menu === '6'}">6</p>
     </button>
 </div>
 <style>
-    /* Red and Green Color text */
-    em {
-        color: var(--green);
-        font-style: normal;
-        font-weight: 400;
-        transition: color 1s;
-    }
-
-    strong {
-        color: var(--red);
-        font-style: normal;
-        font-weight: 500;
-        transition: color 1s;
-    }
-
     .menu {
         color: var(--text);
         background-color: var(--bg);
@@ -90,8 +75,15 @@
         margin: 0px 5px;
     }
 
-    .active {
+    .green {
         color: var(--green);
+        font-weight: 700;
+        transition: color 1s, background-color 1s;
+    }
+
+    .red {
+        color: var(--red);
         font-weight: 700; 
+        transition: color 1s, background-color 1s;
     }
 </style>

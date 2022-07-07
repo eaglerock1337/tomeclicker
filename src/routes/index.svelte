@@ -26,7 +26,7 @@
     let text = "click me";
     let theme = "";
     $: text = 'menu ' + menu;
-    $: theme = darkmode ? "dark" : "light";
+    $: theme = darkmode ? "newdark" : "newlight";
 
     // User Data
     let number = 0;
@@ -58,6 +58,22 @@
     :root {
         font-size: 16px;
         background-color: #28262cff;
+    }
+
+    .newdark {
+        --bg: #2d384eff;
+        --alt-bg: #1e2534ff;
+        --text: #57adefff;
+        --green: #1aefc4ff;
+        --red: #ffa047ff;
+    }
+
+    .newlight {
+        --bg: #97a6c3ff;
+        --alt-bg: #a4b1cbff;
+        --text: #0c4f83ff;
+        --green: #08725dff;
+        --red: #cc6300ff;
     }
 
     .light {
