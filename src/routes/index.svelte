@@ -28,12 +28,12 @@
 
     // Bound values
     let darkmode = true;
-    let menu = "2";
+    let menu = "practice";
 
     // Derived values
     let text = "click me";
     let theme = darkmode ? "newdark" : "newlight";
-    $: text = 'menu ' + menu;
+    $: text = menu + " menu";
 
     // User Data
     let number = 0;
@@ -43,6 +43,12 @@
 
 <svelte:head>
     <title>TomeClicker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 </svelte:head>
 
 <div class="{theme}">
@@ -128,7 +134,7 @@
         background-color: var(--bg);
         border: 0px;
         padding: 25px 50px 25px;
-        font-family: JetBrains Mono;
+        font-family: JetBrains Mono, monospace;
         font-weight: 400;
         width: 100%;
         flex: 1 1 500px;

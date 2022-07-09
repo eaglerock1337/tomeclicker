@@ -32,7 +32,7 @@
         padding: 2px 2px;
         font-size: 1.2em;
         font-weight: 400;
-        font-family: JetBrains Mono;
+        font-family: JetBrains Mono, monospace;
         display: flex;
         justify-content: space-around;
         align-items: center;

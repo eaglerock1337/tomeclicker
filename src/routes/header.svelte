@@ -24,7 +24,7 @@
         padding: 2px 2px;
         font-size: 1.2em;
         font-weight: 400;
-        font-family: JetBrains Mono;
+        font-family: JetBrains Mono, monospace;
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -48,7 +48,7 @@
     }
 
     .title {
-        font-family: Lato;
+        font-family: Lato, sans-serif;
         font-weight: 700;
         font-size: 1.2em;
     }
