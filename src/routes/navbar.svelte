@@ -31,7 +31,7 @@
     const dispatch = createEventDispatcher();
 
     function sendTick() {
-        dispatch('message', {text: 'tock'});
+        dispatch('message', {text: game.tick()});
     }
 </script>
 
