@@ -9,13 +9,21 @@
 
     function toggle() {
         darkmode = !darkmode;
-        theme = darkmode ? "dark" : "light"
-        window.document.body.classList.toggle(theme);
+        window.document.body.classList.remove(theme);
+        theme = darkmode ? "newdark" : "newlight";
+        window.document.body.classList.add(theme);
     }
 
     function clickMe() {
         number += 1;
         text = 'ayy ' + number;
+    }
+
+    /**
+     * @param event {{ detail: { text: string; }; }}
+     */
+    function doTick(event) {
+        text = event.detail.text;
     }
 
     // Bound values
@@ -24,9 +32,8 @@
 
     // Derived values
     let text = "click me";
-    let theme = "";
+    let theme = darkmode ? "newdark" : "newlight";
     $: text = 'menu ' + menu;
-    $: theme = darkmode ? "newdark" : "newlight";
 
     // User Data
     let number = 0;
@@ -39,7 +46,7 @@
 </svelte:head>
 
 <div class="{theme}">
-    <Header number={number} level={level}/>
+    <Header {number} {level}/>
     <div class="thebutton">
         <button on:click={clickMe}>
             {#if darkmode}
@@ -50,7 +57,7 @@
             <br>{text}
         </button>
     </div>
-    <Navbar bind:menu/>
+    <Navbar bind:menu on:message={doTick}/>
     <Footer bind:darkmode on:message={toggle}/>
 </div>
 
@@ -58,6 +65,7 @@
     :root {
         font-size: 16px;
         background-color: #28262cff;
+        height: 100%;
     }
 
     .newdark {
@@ -109,6 +117,12 @@
 
     /* The Button */
 
+    .thebutton {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 100px;
+        height: 100%;
+    }
     .thebutton button {
         color: var(--text);
         background-color: var(--bg);
@@ -117,9 +131,9 @@
         font-family: JetBrains Mono;
         font-weight: 400;
         width: 100%;
-        height: 400px;
-        display: center;
+        flex: 1 1 500px;
         flex-direction: column;
+        display: flex;
         align-items: center;
         justify-content: center;
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);

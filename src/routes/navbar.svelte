@@ -1,8 +1,19 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
+
+    import { Game } from '$lib/game.js';
     /**
      * @type string
      */
     export let menu;
+
+    let game = new Game('Peter');
+
+    const dispatch = createEventDispatcher();
+
+    function sendTick() {
+        dispatch('message', {text: 'tock'});
+    }
 </script>
 
 <div class="menu">
@@ -24,6 +35,11 @@
     <div class="item">
         <p class:green="{menu === '6'}">six</p>
     </div>
+</div>
+<div class="menu">
+    <button on:click="{sendTick}">
+        <p class:red="{menu === '6'}">tick</p>
+    </button>
 </div>
 <div class="menu">
     <button on:click="{() => menu = '1'}">

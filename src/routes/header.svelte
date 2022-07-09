@@ -1,4 +1,4 @@
-1<script>
+<script>
     /**
      * @type number
      */
