@@ -43,9 +43,9 @@
     <div class="thebutton">
         <button on:click={clickMe}>
             {#if darkmode}
-                <Icon scale="3" data={toggleOn}/>
+                <Icon scale={3} data={toggleOn}/>
             {:else}
-                <Icon scale="3" data={toggleOff}/>
+                <Icon scale={3} data={toggleOff}/>
             {/if}
             <br>{text}
         </button>

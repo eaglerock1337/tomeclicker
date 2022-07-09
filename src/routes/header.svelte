@@ -1,6 +1,13 @@
-<script>
+1<script>
+    /**
+     * @type number
+     */
     export let number;
+    /**
+     * @type number
+     */
     export let level;
+
 </script>
 
 <header>

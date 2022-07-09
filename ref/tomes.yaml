@@ -1253,6 +1253,33 @@ tomes:
     stance: defense
     form: object
     subtype: mirror
+- 29: Tome of Spell Mastery
+  tier: 7
+  chapters:
+  - 1: The Spell Defined
+    type: concept
+  - 2: The Orb Stage
+    type: concept
+  - 3: The Crafting Stage
+    type: concept
+  - 4: The Imbument Stage
+    type: concept
+  - 5: The Application Stage
+    type: concept
+  - 6: Perfecting the Process
+    type: concept
+  - 7: Adapting Spells
+    type: concept
+  - 8: Experimental Concepts
+    type: concept
+  - 9: Spell Effects
+    type: concept
+  - 10: Spell Modification
+    type: concept
+  - 11: Spell Amplification
+    type: concept
+  - 12: Pursuing the Perfect Spell
+    type: concept
 - 30: Tome of Spell Balance
   tier: 7
   prereqs: 29
@@ -2021,7 +2048,7 @@ tomes:
     stance: great
     form: enchantment
     element: Elemental
-    subtype: stone
+    subtype: animate
   - 10: Hallowed Grounds
     type: spell
     stance: great
@@ -2040,7 +2067,7 @@ tomes:
     form: object
     element: elemental
     subtype: master
-- 47: Tome of Black Elemental Magic
+- 48: Tome of Black Elemental Magic
   tier: 13
   alignment: black
   element:
@@ -2085,7 +2112,7 @@ tomes:
     stance: great
     form: enchantment
     element: Elemental
-    subtype: stone
+    subtype: animate
   - 10: Dark Lands
     type: spell
     stance: great

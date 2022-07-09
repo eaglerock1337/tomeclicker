@@ -1,6 +1,9 @@
 <script>
     import { createEventDispatcher } from 'svelte';
 
+    /**
+     * @type {boolean | null | undefined}
+     */
     export let darkmode;
 
     const dispatch = createEventDispatcher();
