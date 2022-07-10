@@ -71,7 +71,20 @@
     :root {
         font-size: 16px;
         background-color: #28262cff;
+        width: 100%;
+        height: 98vh;
+    }
+
+    :global(body) {
+        display: flex;
         height: 100%;
+        flex-direction: column;
+    }
+
+    :global(div) {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
     }
 
     .newdark {
@@ -124,11 +137,10 @@
     /* The Button */
 
     .thebutton {
-        display: flex;
+        flex: 1;
         flex-direction: column;
-        flex: 1 1 100px;
-        height: 100%;
     }
+
     .thebutton button {
         color: var(--text);
         background-color: var(--bg);
@@ -137,9 +149,7 @@
         font-family: JetBrains Mono, monospace;
         font-weight: 400;
         width: 100%;
-        flex: 1 1 500px;
-        flex-direction: column;
-        display: flex;
+        height: 100%;
         align-items: center;
         justify-content: center;
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);

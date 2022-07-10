@@ -26,6 +26,7 @@
         font-weight: 400;
         font-family: JetBrains Mono, monospace;
         display: flex;
+        flex-direction: column;
         justify-content: space-around;
         align-items: center;
         color: var(--text);
@@ -35,6 +36,7 @@
     .container {
         width: 100%;
         display: flex;
+        flex-direction: row;
         justify-content: space-between;
         align-items: center;
     }

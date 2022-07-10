@@ -13,20 +13,27 @@
     }
 </script>
 
-<footer>
-    <div class="item">
-        something
-    </div>
-    <div class="item">
-        something
-    </div>
-    <div class="item">
-        theme
-        <input type="checkbox" bind:checked={darkmode} on:click={toggle} />
-    </div>
-</footer>
+<div class="footer">
+    <footer>
+        <div class="item">
+            something
+        </div>
+        <div class="item">
+            something
+        </div>
+        <div class="item">
+            theme
+            <input type="checkbox" bind:checked={darkmode} on:click={toggle} />
+        </div>
+    </footer>
+</div>
 
 <style>
+    .footer {
+        flex-direction: column;
+        flex: 0;
+    }
+
     footer {
         background-color: var(--alt-bg);
         padding: 2px 2px;
@@ -42,5 +49,6 @@
 
     .item {
         align-items: center;
+        flex-direction: row;
     }
 </style>
