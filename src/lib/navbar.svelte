@@ -2,6 +2,7 @@
     import { createEventDispatcher } from 'svelte';
     import Icon from 'svelte-awesome/components/Icon.svelte';
 
+    // Font Awesome icons
     import barChart from 'svelte-awesome/icons/barChart';
     import book from 'svelte-awesome/icons/book';
     import bookmark from 'svelte-awesome/icons/bookmark';
@@ -145,10 +146,12 @@
         width: 100%;
         max-width: 55px;
         min-width: 50px;
+        min-height: 52px;
         display: inline-flex;
         justify-content: center;
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
         border: 2px solid var(--text);
+        border-radius: 5px;
     }
 
     .tick {

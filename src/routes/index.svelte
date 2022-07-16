@@ -1,7 +1,9 @@
 <script>
-    import Footer from './footer.svelte';
-    import Header from './header.svelte';
-    import Navbar from './navbar.svelte';
+
+    import Footer from '$lib/footer.svelte';
+    import Header from '$lib/header.svelte';
+    import Navbar from '$lib/navbar.svelte';
+    // import View from '$lib/view.svelte';
 
     import Icon from 'svelte-awesome/components/Icon.svelte';
     import toggleOn from 'svelte-awesome/icons/toggleOn';
@@ -44,10 +46,10 @@
 <svelte:head>
     <title>TomeClicker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 </svelte:head>
 
@@ -63,6 +65,7 @@
             <br>{text}
         </button>
     </div>
+    <!-- <View bind:number bind: bind:darkmode/> -->
     <Navbar bind:menu on:message={doTick}/>
     <Footer bind:darkmode on:message={toggle}/>
 </div>
