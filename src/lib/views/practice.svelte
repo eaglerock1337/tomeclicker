@@ -3,19 +3,13 @@
     import toggleOn from 'svelte-awesome/icons/toggleOn';
     import toggleOff from 'svelte-awesome/icons/toggleOff';
 
-    /**
-    * @type {string}
-    */
+    /** @type {string} */
     export let text;
 
-    /**
-    * @type {number}
-    */
+    /** @type {number} */
     export let number;
 
-    /**
-    * @type {string}
-    */
+    /** @type {string} */
     export let darkmode;
 
     function clickMe() {
@@ -23,9 +17,7 @@
         text = 'ayy ' + number;
     }
 
-    /**
-     * @param event {{ detail: { text: string; }; }}
-     */
+    /** @param event {{ detail: { text: string; }; }} */
     function doTick(event) {
         text = event.detail.text;
     }

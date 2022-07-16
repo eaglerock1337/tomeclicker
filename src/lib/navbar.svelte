@@ -22,9 +22,8 @@
     import trophy from 'svelte-awesome/icons/trophy';
 
     import { Game } from '$lib/game.js';
-    /**
-     * @type string
-     */
+
+    /** @type string */
     export let menu;
 
     let game = new Game('Peter');

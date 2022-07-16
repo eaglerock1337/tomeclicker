@@ -2,9 +2,7 @@
     import Practice from '$lib/views/practice.svelte';
     // import Settings from 'views/settings.svelte';
 
-    /**
-     * @type string
-     */
+    /** @type string */
     export let menu;
 </script>
 

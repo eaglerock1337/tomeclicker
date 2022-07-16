@@ -1,11 +1,7 @@
 <script>
-    /**
-     * @type number
-     */
+    /** @type number */
     export let number;
-    /**
-     * @type number
-     */
+    /** @type number */
     export let level;
 
 </script>
