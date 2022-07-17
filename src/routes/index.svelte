@@ -48,9 +48,9 @@
 </svelte:head>
 
 <div class="{theme}">
-    <Header {game}/>
-    <View {game} {config}/>
-    <Navbar {game} {config}/>
+    <Header bind:game/>
+    <View bind:game bind:config/>
+    <Navbar bind:game bind:config/>
     <!-- <OldNavbar bind:menu on:message={doTick}/> -->
     <Footer bind:darkmode on:message={toggle}/>
 </div>

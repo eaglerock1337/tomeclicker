@@ -18,12 +18,13 @@
 </script>
 
 <div class="view">
-    <div class="page" class:active="{game.menu === 'practice'}">
+    {#if game.menu === "practice"}
         <Practice {config} {game}/>
-    </div>
-    <div class="page" class:active="{game.menu === 'settings'}">
+    {:else if game.menu === "settings"}
         <Settings {config} {game}/>
-    </div>
+    {:else}
+        ???
+    {/if}
 </div>
 
 <style>
