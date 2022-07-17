@@ -7,4 +7,9 @@ export class Config {
         this.darkmode = darkmode;
         this.theme = theme;
     }
+
+    getTheme() {
+        const shade = this.darkmode ? "dark" : "light";
+        return this.theme + "-" + shade;
+    }
 };

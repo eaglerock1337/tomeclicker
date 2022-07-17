@@ -12,16 +12,10 @@
     // Game values
     let game = new Game();
 
-    let theme = "prussian-blue-dark";
-
-    function toggle() {
-        const oldTheme = theme;
-        config.darkmode = !config.darkmode;
-        const color = config.darkmode ? "dark" : "light";
-        theme = config.theme + "-" + color;
-        window.document.body.classList.replace(oldTheme, theme);
-        game.text = theme;
-    };
+    // Color theme
+    let theme = "";
+    $: theme = config.getTheme();
+    $: game.text = theme;
 </script>
 
 <svelte:head>
@@ -32,11 +26,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 </svelte:head>
 
 <div class="{theme}">
     <Header bind:game/>
-    <View bind:game bind:config on:message={toggle}/>
+    <View bind:game bind:config/>
     <Navbar bind:game/>
 </div>
 

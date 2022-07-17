@@ -1,5 +1,7 @@
 <script>
     import Icon from 'svelte-awesome/components/Icon.svelte';
+    import mousePointer from 'svelte-awesome/icons/mousePointer';
+
     import toggleOn from 'svelte-awesome/icons/toggleOn';
     import toggleOff from 'svelte-awesome/icons/toggleOff';
 
@@ -20,12 +22,7 @@
 
 <div class="thebutton">
     <button on:click={clickMe}>
-        {#if config.darkmode}
-            <Icon scale={3} data={toggleOn}/>
-        {:else}
-            <Icon scale={3} data={toggleOff}/>
-        {/if}
-        <br>{game.text}
+        <Icon scale={3} data={mousePointer}/><br>{game.text}
     </button>
 </div>
 
@@ -48,7 +45,8 @@
         height: 100%;
         align-items: center;
         justify-content: center;
-        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
+        text-align: center;
+        transition: color 1s cubic-bezier(0,.5,0,1),
+                    background-color 1s cubic-bezier(0,.5,0,1),
     }
-
 </style>

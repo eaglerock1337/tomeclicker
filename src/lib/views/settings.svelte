@@ -1,8 +1,4 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
-    const dispatch = createEventDispatcher();
-    function toggleDarkMode() { dispatch('message'); };
-
     /** @typedef {import('$lib/config.js').Config} Config */
     /** @type Config */
     export let config;
@@ -10,9 +6,6 @@
     /** @typedef {import('$lib/game.js').Game} Game */
     /** @type {Game} */
     export let game;
-
-    /* Shut up JSDoc until I use this import */
-    config = config;
 </script>
 
 <div class="settings">
@@ -27,7 +20,7 @@
     </div>
     <h3>Dark Mode Toggle</h3>
     <div class="container">
-        <button on:click={toggleDarkMode}>Dark Mode</button>
+        <button on:click={() => {config.darkmode = !config.darkmode;}}>Dark Mode</button>
     </div>
 </div>
 
