@@ -20,17 +20,13 @@
     import sitemap from 'svelte-awesome/icons/sitemap';
     import trophy from 'svelte-awesome/icons/trophy';
 
-    /** @typedef {import('$lib/config.js').Config} Config */
-    /** @type Config */
-    export let config;
-
     /** @typedef {import('$lib/game.js').Game} Game */
     /** @type {Game} */
     export let game;
 
     function sendTick() {
-        game = game;
-        config = config;
+        game.tick++;
+        game.text = "tock " + game.tick;
     }
 </script>
 

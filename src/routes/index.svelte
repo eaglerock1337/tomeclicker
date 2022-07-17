@@ -1,20 +1,11 @@
 <script>
-
     import { Config } from '$lib/config.js';
     import { Game } from '$lib/game.js';
 
     import Footer from '$lib/footer.svelte';
     import Header from '$lib/header.svelte';
     import Navbar from '$lib/navbar.svelte';
-    import OldNavbar from '$lib/oldnavbar.svelte';
     import View from '$lib/view.svelte';
-
-    function toggle() {
-        darkmode = !darkmode;
-        window.document.body.classList.remove(theme);
-        theme = darkmode ? "newdark" : "newlight";
-        window.document.body.classList.add(theme);
-    }
 
     // Config values
     let config = new Config();
@@ -22,19 +13,16 @@
     // Game values
     let game = new Game("A Stranger");
 
-    // Bound values
+    // Legacy stuff
     let darkmode = true;
-    let menu = "practice";
-
-    // Derived values
-    let text = "click me";
     let theme = darkmode ? "newdark" : "newlight";
-    $: text = menu + " menu";
 
-    // User Data
-    let number = 0;
-    let level = 1;
-
+    function toggle() {
+        darkmode = !darkmode;
+        window.document.body.classList.remove(theme);
+        theme = darkmode ? "newdark" : "newlight";
+        window.document.body.classList.add(theme);
+    }
 </script>
 
 <svelte:head>
@@ -50,8 +38,7 @@
 <div class="{theme}">
     <Header bind:game/>
     <View bind:game bind:config/>
-    <Navbar bind:game bind:config/>
-    <!-- <OldNavbar bind:menu on:message={doTick}/> -->
+    <Navbar bind:game/>
     <Footer bind:darkmode on:message={toggle}/>
 </div>
 

@@ -12,16 +12,10 @@
     export let game;
 
     function clickMe() {
-        game.number++;
-        game.text = 'ayy ' + game.number;
+        game.exp++;
+        game.text = 'ayy ' + game.exp;
         game = game;
     }
-
-    /** @param event {{ detail: { text: string; }; }} */
-    function doTick(event) {
-        game.text = event.detail.text;
-    }
-
 </script>
 
 <div class="thebutton">

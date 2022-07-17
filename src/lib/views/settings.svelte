@@ -8,21 +8,16 @@
     export let game;
 
     function clickMe() {
-        game.number++;
-        game.text = 'ayy ' + game.number;
+        game.exp += 10;
+        game.text = 'ayy ' + game.exp;
     }
-
-    /** @param event {{ detail: { text: string; }; }} */
-    function doTick(event) {
-        game.text = event.detail.text;
-    }
-
 </script>
 
 <div class="thebutton">
     <button on:click={clickMe}>
-        Settings Time!
-        <br>{game.text}
+        Settings Time!<br>
+        EXP: {game.exp} Tick: {game.tick}<br>
+        {game.text}<br>
     </button>
 </div>
 

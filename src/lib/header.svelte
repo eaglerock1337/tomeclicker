@@ -2,16 +2,13 @@
     /** @typedef {import('$lib/game.js').Game} Game */
     /** @type {Game} */
     export let game;
-
-    $: level = game.level;
-    $: number = game.number;
 </script>
 
 <header>
     <div class="container">
-        <div class="stat">EXP: {number}</div>
+        <div class="stat">EXP: {game.exp}</div>
         <div class="title">TomeClicker</div>
-        <div class="stat">Level: {level}</div>
+        <div class="stat">Level: {game.level}</div>
     </div>
 </header>
 
@@ -50,18 +47,5 @@
         font-family: Lato, sans-serif;
         font-weight: 700;
         font-size: 1.2em;
-    }
-
-    /* Red and Green Color text */
-    em {
-        color: var(--green);
-        font-style: normal;
-        font-weight: 400;
-    }
-
-    strong {
-        color: var(--red);
-        font-style: normal;
-        font-weight: 500;
     }
 </style>
