@@ -1,6 +1,10 @@
 export class Config {
-    constructor() {
-        this.darkmode = true;
-        this.theme = 'prussian-blue';
+    /** 
+     * @param {string} theme
+     * @param {boolean} darkmode 
+     */
+    constructor(theme, darkmode) {
+        this.darkmode = darkmode;
+        this.theme = theme;
     }
 };

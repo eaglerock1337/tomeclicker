@@ -2,27 +2,26 @@
     import { Config } from '$lib/config.js';
     import { Game } from '$lib/game.js';
 
-    import Footer from '$lib/footer.svelte';
     import Header from '$lib/header.svelte';
     import Navbar from '$lib/navbar.svelte';
     import View from '$lib/view.svelte';
 
     // Config values
-    let config = new Config();
+    let config = new Config("prussian-blue", true);
 
     // Game values
     let game = new Game();
 
-    // Legacy stuff
-    let darkmode = true;
-    let theme = darkmode ? "newdark" : "newlight";
+    let theme = "prussian-blue-dark";
 
     function toggle() {
-        darkmode = !darkmode;
-        window.document.body.classList.remove(theme);
-        theme = darkmode ? "newdark" : "newlight";
-        window.document.body.classList.add(theme);
-    }
+        const oldTheme = theme;
+        config.darkmode = !config.darkmode;
+        const color = config.darkmode ? "dark" : "light";
+        theme = config.theme + "-" + color;
+        window.document.body.classList.replace(oldTheme, theme);
+        game.text = theme;
+    };
 </script>
 
 <svelte:head>
@@ -37,9 +36,8 @@
 
 <div class="{theme}">
     <Header bind:game/>
-    <View bind:game bind:config/>
+    <View bind:game bind:config on:message={toggle}/>
     <Navbar bind:game/>
-    <Footer bind:darkmode on:message={toggle}/>
 </div>
 
 <style>
@@ -80,7 +78,7 @@
 
     /* proto-theme stuff...pull this into its own file later */
 
-    .newdark {
+    .prussian-blue-dark {
         --bg: #2d384eff;
         --alt-bg: #1e2534ff;
         --text: #57adefff;
@@ -88,7 +86,7 @@
         --red: #ffa047ff;
     }
 
-    .newlight {
+    .prussian-blue-light {
         --bg: #97a6c3ff;
         --alt-bg: #a4b1cbff;
         --text: #0c4f83ff;
@@ -96,7 +94,7 @@
         --red: #cc6300ff;
     }
 
-    .light {
+    .graphite-light {
         --bg: #d5d3d9ff;
         --alt-bg: #b6b3bdff;
         --text: #1e1c21ff;
@@ -104,7 +102,7 @@
         --green: #406354ff;
     }
 
-    .dark {
+    .graphite-dark {
         --bg: #28262cff;
         --alt-bg: #1e1c21ff;
         --text: #cbc8d0ff;

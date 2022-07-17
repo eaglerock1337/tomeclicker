@@ -86,7 +86,7 @@
         padding: 5px 10px;
         max-width: 55px;
         min-width: 50px;
-        min-height: 52px;
+        min-height: 50px;
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -115,7 +115,6 @@
         font-weight: 400;
         margin: 2px 2px 10px;
         padding: 5px 10px;
-        width: 100%;
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
         border: 2px solid var(--text);
         border-radius: 10px;
