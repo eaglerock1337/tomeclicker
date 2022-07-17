@@ -24,6 +24,9 @@
     /** @type {Game} */
     export let game;
 
+    /** temporary hack for svelte errors since it's not used yet */
+    game = game;
+
     function sendTick() {
         game.tick++;
         game.text = "tock " + game.tick;
@@ -81,12 +84,12 @@
         font-weight: 400;
         margin: 2px 2px 10px;
         padding: 5px 10px;
-        width: 100%;
         max-width: 55px;
         min-width: 50px;
         min-height: 52px;
         display: inline-flex;
         justify-content: center;
+        align-items: center;
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
         border: 2px solid var(--text);
         border-radius: 5px;
@@ -134,4 +137,5 @@
         font-weight: 700; 
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
+
 </style>

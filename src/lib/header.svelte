@@ -2,6 +2,9 @@
     /** @typedef {import('$lib/game.js').Game} Game */
     /** @type {Game} */
     export let game;
+
+    /** temporary hack for svelte errors since it's not used yet */
+    game = game;
 </script>
 
 <header>
@@ -36,14 +39,15 @@
     }
 
     .stat, .title {
-        width: 100px;
+        min-width: 50px;
         display: inline-flex;
         padding: 0px 5px;
-        justify-content: center;
-
+        text-align: center;
     }
 
     .title {
+        flex: 1;
+        text-align: center;
         font-family: Lato, sans-serif;
         font-weight: 700;
         font-size: 1.2em;

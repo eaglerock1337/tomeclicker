@@ -11,7 +11,7 @@
     let config = new Config();
 
     // Game values
-    let game = new Game("A Stranger");
+    let game = new Game();
 
     // Legacy stuff
     let darkmode = true;

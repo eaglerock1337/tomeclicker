@@ -13,34 +13,46 @@
     }
 </script>
 
-<div class="thebutton">
-    <button on:click={clickMe}>
-        Settings Time!<br>
-        EXP: {game.exp} Tick: {game.tick}<br>
-        {game.text}<br>
-    </button>
+<div class="settings">
+    Settings Time!<br>
+    EXP: {game.exp} Tick: {game.tick}<br>
+    {game.text}<br>
+    <div class="container">
+        <button on:click={clickMe}>
+            Test
+        </button>
+        <button on:click={clickMe}>
+            Test
+        </button>    
+    </div>
 </div>
 
 <style>
-    /* The Button */
-
-    .thebutton {
-        height: 100%;
-        width: 100%;
-    }
-
-    .thebutton button {
+    .settings {
         color: var(--text);
         background-color: var(--bg);
-        border: 0px;
-        padding: 25px 50px 25px;
+        font-size: 1.5em;
         font-family: JetBrains Mono, monospace;
         font-weight: 400;
-        width: 100%;
-        height: 100%;
-        align-items: center;
-        justify-content: center;
-        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
+    .container {
+        height: 4.5rem;
+        display: flex;
+        flex-flow: row;
+    }
+
+    .container button {
+        color: var(--text);
+        background-color: var(--alt-bg);
+        font-size: 1.4em;
+        font-family: JetBrains Mono, monospace;
+        font-weight: 400;
+        margin: 2px 2px 10px;
+        padding: 5px 10px;
+        text-align: center;
+        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
+        border: 2px solid var(--text);
+        border-radius: 10px;
+    }
 </style>
