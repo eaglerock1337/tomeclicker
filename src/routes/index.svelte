@@ -1,13 +1,13 @@
 <script>
 
+    import { Config } from '$lib/config.js';
+    import { Game } from '$lib/game.js';
+
     import Footer from '$lib/footer.svelte';
     import Header from '$lib/header.svelte';
     import Navbar from '$lib/navbar.svelte';
-    // import View from '$lib/view.svelte';
-
-    import Icon from 'svelte-awesome/components/Icon.svelte';
-    import toggleOn from 'svelte-awesome/icons/toggleOn';
-    import toggleOff from 'svelte-awesome/icons/toggleOff';
+    import OldNavbar from '$lib/oldnavbar.svelte';
+    import View from '$lib/view.svelte';
 
     function toggle() {
         darkmode = !darkmode;
@@ -16,17 +16,11 @@
         window.document.body.classList.add(theme);
     }
 
-    function clickMe() {
-        number += 1;
-        text = 'ayy ' + number;
-    }
+    // Config values
+    let config = new Config();
 
-    /**
-     * @param event {{ detail: { text: string; }; }}
-     */
-    function doTick(event) {
-        text = event.detail.text;
-    }
+    // Game values
+    let game = new Game("A Stranger");
 
     // Bound values
     let darkmode = true;
@@ -54,19 +48,10 @@
 </svelte:head>
 
 <div class="{theme}">
-    <Header {number} {level}/>
-    <div class="thebutton">
-        <button on:click={clickMe}>
-            {#if darkmode}
-                <Icon scale={3} data={toggleOn}/>
-            {:else}
-                <Icon scale={3} data={toggleOff}/>
-            {/if}
-            <br>{text}
-        </button>
-    </div>
-    <!-- <View bind:number bind: bind:darkmode/> -->
-    <Navbar bind:menu on:message={doTick}/>
+    <Header {game}/>
+    <View {game} {config}/>
+    <Navbar {game} {config}/>
+    <!-- <OldNavbar bind:menu on:message={doTick}/> -->
     <Footer bind:darkmode on:message={toggle}/>
 </div>
 
@@ -89,6 +74,24 @@
         height: 100%;
         flex-direction: column;
     }
+
+    /* Red and Green Color text */
+
+    :global(em) {
+        color: var(--green);
+        font-style: normal;
+        font-weight: 400;
+        transition: color 1s cubic-bezier(0,.5,0,1);
+    }
+
+    :global(strong) {
+        color: var(--red);
+        font-style: normal;
+        font-weight: 500;
+        transition: color 1s cubic-bezier(0,.5,0,1);
+    }
+
+    /* proto-theme stuff...pull this into its own file later */
 
     .newdark {
         --bg: #2d384eff;
@@ -120,42 +123,6 @@
         --text: #cbc8d0ff;
         --red: #e27750ff;
         --green: #6b9e88ff;
-    }
-
-    /* Red and Green Color text */
-    em {
-        color: var(--green);
-        font-style: normal;
-        font-weight: 400;
-        transition: color 1s cubic-bezier(0,.5,0,1);
-    }
-
-    strong {
-        color: var(--red);
-        font-style: normal;
-        font-weight: 500;
-        transition: color 1s cubic-bezier(0,.5,0,1);
-    }
-
-    /* The Button */
-
-    .thebutton {
-        flex: 1;
-        flex-direction: column;
-    }
-
-    .thebutton button {
-        color: var(--text);
-        background-color: var(--bg);
-        border: 0px;
-        padding: 25px 50px 25px;
-        font-family: JetBrains Mono, monospace;
-        font-weight: 400;
-        width: 100%;
-        height: 100%;
-        align-items: center;
-        justify-content: center;
-        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
 </style>

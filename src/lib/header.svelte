@@ -1,9 +1,10 @@
 <script>
-    /** @type number */
-    export let number;
-    /** @type number */
-    export let level;
+    /** @typedef {import('$lib/game.js').Game} Game */
+    /** @type {Game} */
+    export let game;
 
+    $: level = game.level;
+    $: number = game.number;
 </script>
 
 <header>

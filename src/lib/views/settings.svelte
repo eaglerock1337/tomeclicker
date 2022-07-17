@@ -1,8 +1,4 @@
 <script>
-    import Icon from 'svelte-awesome/components/Icon.svelte';
-    import toggleOn from 'svelte-awesome/icons/toggleOn';
-    import toggleOff from 'svelte-awesome/icons/toggleOff';
-
     /** @typedef {import('$lib/config.js').Config} Config */
     /** @type Config */
     export let config;
@@ -14,7 +10,6 @@
     function clickMe() {
         game.number++;
         game.text = 'ayy ' + game.number;
-        game = game;
     }
 
     /** @param event {{ detail: { text: string; }; }} */
@@ -26,11 +21,7 @@
 
 <div class="thebutton">
     <button on:click={clickMe}>
-        {#if config.darkmode}
-            <Icon scale={3} data={toggleOn}/>
-        {:else}
-            <Icon scale={3} data={toggleOff}/>
-        {/if}
+        Settings Time!
         <br>{game.text}
     </button>
 </div>

@@ -1,4 +1,5 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
     import Icon from 'svelte-awesome/components/Icon.svelte';
 
     // Font Awesome icons
@@ -20,41 +21,97 @@
     import sitemap from 'svelte-awesome/icons/sitemap';
     import trophy from 'svelte-awesome/icons/trophy';
 
-    /** @typedef {import('$lib/config.js').Config} Config */
-    /** @type Config */
-    export let config;
+    import { Game } from '$lib/game.js';
 
-    /** @typedef {import('$lib/game.js').Game} Game */
-    /** @type {Game} */
-    export let game;
+    /** @type string */
+    export let menu;
+
+    let game = new Game('Peter');
+
+    const dispatch = createEventDispatcher();
 
     function sendTick() {
-        game = game;
-        config = config;
+        dispatch('message', {text: game.tick()});
     }
 </script>
 
 <div class="navbar">
+    <div class="menu">
+        <div class="item">
+            <p class:green="{menu === '1'}">one</p>
+        </div>
+        <div class="item">
+            <p class:green="{menu === '2'}">two</p>
+        </div>
+        <div class="item">
+            <p class:green="{menu === '3'}">three</p>
+        </div>
+        <div class="item">
+            <p class:green="{menu === '4'}">four</p>
+        </div>
+        <div class="item">
+            <p class:green="{menu === '5'}">five</p>
+        </div>
+        <div class="item">
+            <p class:green="{menu === '6'}">six</p>
+        </div>
+    </div>
     <div class="tick">
         <button class="tick" on:click="{sendTick}">
-            <p class:red="{game.menu === '6'}">tick</p>
+            <p class:red="{menu === '6'}">tick</p>
         </button>
     </div>
     <div class="menu">
-        <button on:click="{() => game.menu = 'practice'}">
-            <p class:red="{game.menu === 'practice'}"><Icon scale={1.5} data={mousePointer}/></p>
+        <button on:click="{() => menu = 'practice'}">
+            <p class:red="{menu === 'practice'}"><Icon scale={1.5} data={mousePointer}/></p>
         </button>
-        <button on:click="{() => game.menu = 'story'}">
-            <p class:red="{game.menu === 'story'}"><Icon scale={1.5} data={edit}/></p>
+        <button on:click="{() => menu = 'training'}">
+            <p class:red="{menu === 'training'}"><Icon scale={1.5} data={listAlt}/></p>
         </button>
-        <button on:click="{() => game.menu = 'help'}">
-            <p class:red="{game.menu === 'help'}"><Icon scale={1.5} data={questionCircleO}/></p>
+        <button on:click="{() => menu = 'studying'}">
+            <p class:red="{menu === 'studying'}"><Icon scale={1.5} data={copy}/></p>
         </button>
-        <button on:click="{() => game.menu = 'settings'}">
-            <p class:red="{game.menu === 'settings'}"><Icon scale={1.5} data={gear}/></p>
+        <button on:click="{() => menu = 'meditation'}">
+            <p class:red="{menu === 'meditation'}"><Icon scale={1.5} data={hourglass}/></p>
         </button>
-        <button on:click="{() => game.menu = 'about'}">
-            <p class:red="{game.menu === 'about'}"><Icon scale={1.5} data={info}/></p>
+        <button on:click="{() => menu = 'adventure'}">
+            <p class:red="{menu === 'adventure'}"><Icon scale={1.5} data={mapSigns}/></p>
+        </button>
+        <button on:click="{() => menu = 'equipment'}">
+            <p class:red="{menu === 'equipment'}"><Icon scale={1.5} data={shield}/></p>
+        </button>
+        <button on:click="{() => menu = 'knowledge'}">
+            <p class:red="{menu === 'knowledge'}"><Icon scale={1.5} data={bookmark}/></p>
+        </button>
+        <button on:click="{() => menu = 'questing'}">
+            <p class:red="{menu === 'questing'}"><Icon scale={1.5} data={mapMarker}/></p>
+        </button>
+        <button on:click="{() => menu = 'retreat'}">
+            <p class:red="{menu === 'retreat'}"><Icon scale={1.5} data={history}/></p>
+        </button>
+        <button on:click="{() => menu = 'tomes'}">
+            <p class:red="{menu === 'tomes'}"><Icon scale={1.5} data={book}/></p>
+        </button>
+        <button on:click="{() => menu = 'tiers'}">
+            <p class:red="{menu === 'tiers'}"><Icon scale={1.5} data={sitemap}/></p>
+        </button>
+        <button on:click="{() => menu = 'story'}">
+            <p class:red="{menu === 'story'}"><Icon scale={1.5} data={edit}/></p>
+        </button>
+        <button on:click="{() => menu = 'achievements'}">
+            <p class:red="{menu === 'achievements'}"><Icon scale={1.5} data={trophy}/></p>
+        </button>
+        <button on:click="{() => menu = 'statistics'}">
+            <p class:red="{menu === 'statistics'}"><Icon scale={1.5} data={barChart}/></p>
+        </button>
+        <button on:click="{() => menu = 'help'}">
+            <p class:red="{menu === 'help'}"><Icon scale={1.5} data={questionCircleO}/></p>
+        </button>
+        <button on:click="{() => menu = 'settings'}">
+            <p class:red="{menu === 'settings'}"><Icon scale={1.5} data={gear}/></p>
+        </button>
+        <button on:click="{() => menu = 'about'}">
+            <p class:red="{menu === 'about'}"><Icon scale={1.5} data={info}/></p>
         </button>
     </div>
 </div>
@@ -116,10 +173,10 @@
         font-weight: 400;
         margin: 2px 2px 10px;
         padding: 5px 10px;
-        width: 100%;
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
         border: 2px solid var(--text);
         border-radius: 10px;
+        flex-wrap: wrap;
     }
 
     p {
