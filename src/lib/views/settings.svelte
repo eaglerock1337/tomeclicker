@@ -13,16 +13,16 @@
 </script>
 
 <div class="settings">
-    <h2>Settings Time!</h2>
+    <h1>settings</h1>
     <p>EXP: {game.exp} Tick: {game.tick} Level: {game.level}<br>
     {game.text}</p>
-    <h3>Test Incrementals</h3>
+    <h2>test buttons</h2>
     <div class="container">
         <button on:click={() => {game.exp++;}}>EXP</button>
         <button on:click={() => {game.tick++;}}>Tick</button>
         <button on:click={() => {game.level++;}}>Level</button>    
     </div>
-    <h3>Dark Mode Toggle</h3>
+    <h2>game settings</h2>
     <div class="container">
         <button on:click={() => {config.darkmode = !config.darkmode;}}>Dark Mode</button>
         {#if config.darkmode}
@@ -39,21 +39,21 @@
         background-color: var(--bg);
         font-size: 1em;
         font-family: JetBrains Mono, monospace;
-        font-weight: 400;
+        font-weight: 300;
         align-items: center;
         justify-content: center;
         text-align: center;
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
-    h2 {
+    h1 {
         font-family: Lato, sans-serif;
         font-weight: 300;
     }
 
-    h3 {
+    h2 {
         font-family: Lato, sans-serif;
-        font-weight: 400;
+        font-weight: 300;
     }
 
     .container {
@@ -69,7 +69,7 @@
         background-color: var(--alt-bg);
         font-size: 1.2em;
         font-family: JetBrains Mono, monospace;
-        font-weight: 400;
+        font-weight: 300;
         margin: 2px 2px 10px;
         padding: 5px 10px;
         text-align: center;
