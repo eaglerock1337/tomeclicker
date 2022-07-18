@@ -2,9 +2,6 @@
     import Icon from 'svelte-awesome/components/Icon.svelte';
     import mousePointer from 'svelte-awesome/icons/mousePointer';
 
-    import toggleOn from 'svelte-awesome/icons/toggleOn';
-    import toggleOff from 'svelte-awesome/icons/toggleOff';
-
     /** @typedef {import('$lib/config.js').Config} Config */
     /** @type Config */
     export let config;

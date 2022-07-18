@@ -1,4 +1,8 @@
 <script>
+    import Icon from 'svelte-awesome/components/Icon.svelte';
+    import toggleOn from 'svelte-awesome/icons/toggleOn';
+    import toggleOff from 'svelte-awesome/icons/toggleOff';
+
     /** @typedef {import('$lib/config.js').Config} Config */
     /** @type Config */
     export let config;
@@ -21,6 +25,11 @@
     <h3>Dark Mode Toggle</h3>
     <div class="container">
         <button on:click={() => {config.darkmode = !config.darkmode;}}>Dark Mode</button>
+        {#if config.darkmode}
+            <Icon scale={3} data={toggleOn}/>
+        {:else}
+            <Icon scale={3} data={toggleOff}/>
+        {/if}
     </div>
 </div>
 
@@ -37,11 +46,22 @@
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
+    h2 {
+        font-family: Lato, sans-serif;
+        font-weight: 300;
+    }
+
+    h3 {
+        font-family: Lato, sans-serif;
+        font-weight: 400;
+    }
+
     .container {
         height: 3.5rem;
         display: flex;
         flex-flow: row;
         justify-content: center;
+        align-items: flex-start;
     }
 
     .container button {
