@@ -15,6 +15,9 @@
         game.text = 'ayy ' + game.exp;
         game = game;
     }
+
+    /** temporary hack for svelte errors since it's not used yet */
+    config = config;
 </script>
 
 <div class="thebutton">

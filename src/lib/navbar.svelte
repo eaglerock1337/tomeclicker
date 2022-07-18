@@ -36,7 +36,7 @@
 <div class="navbar">
     <div class="tick">
         <button class="tick" on:click="{sendTick}">
-            <p class:red="{game.menu === '6'}">tick</p>
+            <p>tick</p>
         </button>
     </div>
     <div class="menu">

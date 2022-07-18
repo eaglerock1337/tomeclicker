@@ -1,6 +1,7 @@
 <script>
     import Practice from '$lib/views/practice.svelte';
     import Settings from '$lib/views/settings.svelte';
+    import Story from '$lib/views/story.svelte';
 
     /** @typedef {import('$lib/config.js').Config} Config */
     /** @type Config */
@@ -14,6 +15,8 @@
 <div class="view">
     {#if game.menu === "practice"}
         <Practice bind:config bind:game/>
+    {:else if game.menu === "story"}
+        <Story bind:game/>
     {:else if game.menu === "settings"}
         <Settings bind:config bind:game/>
     {:else}
