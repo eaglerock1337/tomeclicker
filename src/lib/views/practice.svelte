@@ -56,6 +56,7 @@
         align-items: center;
         justify-content: center;
         text-align: center;
+        transition: scale 0.1s;
     }
 
     .item:hover {
