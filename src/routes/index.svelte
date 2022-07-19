@@ -15,14 +15,6 @@
     // Color theme
     let theme = "";
     $: theme = config.getTheme();
-
-    // Header visibility
-    /** @type {boolean} */
-    let isStarted;
-    $: isStarted = game.exp > 10;
-    /** @type {boolean} */
-    let isMenu;
-    $: isMenu = game.exp > 50;
 </script>
 
 <svelte:head>
@@ -34,11 +26,11 @@
 </svelte:head>
 
 <div class="{theme}">
-    {#if isStarted}
+    {#if game.showHeader()}
         <Header bind:game/>
     {/if}
     <View bind:game bind:config/>
-    {#if isMenu}
+    {#if game.showMenu()}
         <Navbar bind:game/>
     {/if}
 </div>

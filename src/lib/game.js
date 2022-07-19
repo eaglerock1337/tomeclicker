@@ -9,4 +9,12 @@ export class Game {
         this.text = "click me";
         this.menu = "practice";
     }
+
+    showHeader() {
+        return this.exp > 10;
+    }
+
+    showMenu() {
+        return this.exp > 50;
+    }
 };
