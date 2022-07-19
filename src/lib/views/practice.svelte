@@ -21,7 +21,9 @@
 
 <div class="thebutton">
     <button on:click={clickMe}>
-        <Icon scale={3} data={mousePointer}/><br>{game.text}
+        <div class="item">
+            <Icon scale={3} data={mousePointer}/><br>{game.text}
+        </div>
     </button>
 </div>
 
@@ -45,7 +47,22 @@
         align-items: center;
         justify-content: center;
         text-align: center;
+        font-size: 1em;
         transition: color 1s cubic-bezier(0,.5,0,1),
                     background-color 1s cubic-bezier(0,.5,0,1),
+    }
+
+    .item {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .item:hover {
+        scale: 1.05;
+    }
+
+    .item:active {
+        scale: 0.95;
     }
 </style>

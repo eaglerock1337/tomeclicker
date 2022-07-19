@@ -2,12 +2,16 @@
     /** @typedef {import('$lib/game.js').Game} Game */
     /** @type {Game} */
     export let game;
+
+    /** temporary hack for svelte errors since it's not used yet */
+    game = game;
 </script>
 
 <header>
     <div class="container">
-        <div class="item">EXP: {game.exp}</div>
-        <div class="item">Level: {game.level}</div>
+        <div class="stat">EXP: {game.exp}</div>
+        <div class="title">TomeClicker</div>
+        <div class="stat">Level: {game.level}</div>
     </div>
 </header>
 
@@ -34,10 +38,18 @@
         align-items: center;
     }
 
-    .item {
+    .stat, .title {
         min-width: 50px;
         display: inline-flex;
         padding: 0px 5px;
         text-align: center;
+    }
+
+    .title {
+        flex: 1;
+        text-align: center;
+        font-family: Lato, sans-serif;
+        font-weight: 700;
+        font-size: 1.2em;
     }
 </style>

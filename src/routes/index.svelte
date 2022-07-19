@@ -16,6 +16,11 @@
     let theme = "";
     $: theme = config.getTheme();
     $: game.text = theme;
+
+    // Header visibility
+    /** @type {boolean} */
+    let isStarted;
+    $: isStarted = game.exp > 10;
 </script>
 
 <svelte:head>
@@ -27,14 +32,18 @@
 </svelte:head>
 
 <div class="{theme}">
-    <Header bind:game/>
+    {#if isStarted}
+        <Header bind:game/>
+    {/if}
     <View bind:game bind:config/>
-    <Navbar bind:game/>
+    {#if isStarted}
+        <Navbar bind:game/>
+    {/if}
 </div>
 
 <style>
     :root {
-        font-size: 16px;
+        font-size: 18px;
         background-color: #28262cff;
         width: 100%;
         height: 98vh;
