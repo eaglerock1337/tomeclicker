@@ -20,6 +20,9 @@
     /** @type {boolean} */
     let isStarted;
     $: isStarted = game.exp > 10;
+    /** @type {boolean} */
+    let isMenu;
+    $: isMenu = game.exp > 50;
 </script>
 
 <svelte:head>
@@ -35,7 +38,7 @@
         <Header bind:game/>
     {/if}
     <View bind:game bind:config/>
-    {#if isStarted}
+    {#if isMenu}
         <Navbar bind:game/>
     {/if}
 </div>
