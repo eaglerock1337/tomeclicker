@@ -15,7 +15,6 @@
     // Color theme
     let theme = "";
     $: theme = config.getTheme();
-    $: game.text = theme;
 
     // Header visibility
     /** @type {boolean} */
