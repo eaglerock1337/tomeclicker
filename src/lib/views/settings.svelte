@@ -4,7 +4,7 @@
     import toggleOff from 'svelte-awesome/icons/toggleOff';
 
     /** @typedef {import('$lib/config.js').Config} Config */
-    /** @type Config */
+    /** @type {Config} */
     export let config;
 
     /** @typedef {import('$lib/game.js').Game} Game */

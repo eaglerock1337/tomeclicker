@@ -32,6 +32,16 @@
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
+    .scrollbox {
+        background-color: var(--alt-bg);
+        max-width: 80%;
+        border-radius: 5px;
+        border: 5px var(--text) solid;
+        outline: 20px var(--alt-bg) solid;
+        margin: 30px;
+        padding: 20px;
+    }
+
     li {
         font-family: Tangerine, cursive;
         font-size: 2em;
