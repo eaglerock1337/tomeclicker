@@ -28,5 +28,6 @@
     .view {
         flex-direction: column;
         flex: 1;
+        max-height: 82%;
     }
 </style>

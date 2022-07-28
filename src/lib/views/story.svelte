@@ -16,7 +16,20 @@
             <li>Revenge of the chapter</li>
             <li>Hey look, it's a chapter!</li>
             <li>In Soviet Russia, chapter reads you</li>
+            <li>Chapter Revisited</li>
+            <li>YOLO, so here's a chapter</li>
+            <li>The chapter to end all chapters</li>
+            <li>The final chapter</li>
         </ol>
+        <h2>more stuff</h2>
+        <ul>
+            <li>The extra chapter</li>
+            <li>This is another extra chapter</li>
+            <li>The extended chapter</li>
+            <li>The uncut chapter</li>
+            <li>The chapter to make sure this thing will actually scroll on my computer, because I'm getting tired of coming up with a whole ton of stupid chapter names...I have way better things to do than that, so hopefully this wall of text will prevent me from having to come up with another chapter name ever again.</li>
+            <li>Babbitaboopi</li>
+        </ul>
     </div>
 </div>
 
@@ -33,8 +46,10 @@
     }
 
     .scrollbox {
+        overflow: scroll;
         background-color: var(--alt-bg);
         max-width: 80%;
+        max-height: 75%;
         border-radius: 5px;
         border: 5px var(--text) solid;
         outline: 20px var(--alt-bg) solid;
