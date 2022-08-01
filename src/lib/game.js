@@ -5,10 +5,17 @@ export class Game {
         this.tickrate = 1000;
         this.exp = 0;
         this.tick = 0;
-        this.level = 1;
         this.text = "click me";
         this.menu = "practice";
     }
+
+    /** Derivative Getters */
+
+    get level() {
+        return Math.floor(Math.log10(this.exp) / 3) + 1;
+    }
+
+    /** Condiitionals */
 
     showHeader() {
         return this.exp > 10;

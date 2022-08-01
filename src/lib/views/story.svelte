@@ -27,7 +27,7 @@
             <li>This is another extra chapter</li>
             <li>The extended chapter</li>
             <li>The uncut chapter</li>
-            <li>The chapter to make sure this thing will actually scroll on my computer, because I'm getting tired of coming up with a whole ton of stupid chapter names...I have way better things to do than that, so hopefully this wall of text will prevent me from having to come up with another chapter name ever again.</li>
+            <li>The chapter to not screw everything up</li>
             <li>Babbitaboopi</li>
         </ul>
     </div>
@@ -46,7 +46,7 @@
     }
 
     .scrollbox {
-        overflow: scroll;
+        overflow: auto;
         background-color: var(--alt-bg);
         max-width: 80%;
         max-height: 75%;

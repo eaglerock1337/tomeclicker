@@ -20,7 +20,7 @@
     <div class="container">
         <button on:click={() => {game.exp++;}}>EXP</button>
         <button on:click={() => {game.tick++;}}>Tick</button>
-        <button on:click={() => {game.level++;}}>Level</button>    
+        <button on:click={() => {game.exp += 100;}}>100EXP</button>    
     </div>
     <h2>game settings</h2>
     <div class="container">
@@ -43,7 +43,8 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
+        transition: color 1s cubic-bezier(0,.5,0,1),
+                    background-color 1s cubic-bezier(0,.5,0,1);
     }
 
     h1 {
@@ -73,7 +74,8 @@
         margin: 2px 2px 10px;
         padding: 5px 10px;
         text-align: center;
-        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
+        transition: color 1s cubic-bezier(0,.5,0,1),
+                    background-color 1s cubic-bezier(0,.5,0,1);
         border: 2px solid var(--text);
         border-radius: 10px;
     }
