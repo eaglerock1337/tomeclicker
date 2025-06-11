@@ -1,4 +1,22 @@
 <script>
+    import { onMount } from 'svelte';
+
+    onMount(() => {
+        document.addEventListener('touchstart', function (event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        return () => {
+            document.removeEventListener('touchstart', function (event) {
+                if (event.touches.length > 1) {
+                    event.preventDefault();
+                }
+            });
+        };
+    });
+
     import { Config } from '$lib/config.js';
     import { Game } from '$lib/game.js';
 

@@ -48,6 +48,7 @@
         justify-content: center;
         text-align: center;
         font-size: 1em;
+        touch-action: manipulation;
         transition: color 1s cubic-bezier(0,.5,0,1),
                     background-color 1s cubic-bezier(0,.5,0,1),
     }
