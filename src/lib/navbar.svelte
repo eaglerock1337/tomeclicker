@@ -1,28 +1,28 @@
-<script>
-    import Icon from 'svelte-awesome/components/Icon.svelte';
+<script lang="ts">
+    // Lucide icons (modern replacement for Font Awesome)
+    import {
+        BarChart3,
+        Book,
+        Bookmark,
+        Copy,
+        Edit,
+        Settings,
+        History,
+        Clock,
+        Info,
+        List,
+        MapPin,
+        Map,
+        MousePointer,
+        HelpCircle,
+        Shield,
+        Workflow,
+        Trophy
+    } from 'lucide-svelte';
 
-    // Font Awesome icons
-    import barChart from 'svelte-awesome/icons/barChart';
-    import book from 'svelte-awesome/icons/book';
-    import bookmark from 'svelte-awesome/icons/bookmark';
-    import copy from 'svelte-awesome/icons/copy';
-    import edit from 'svelte-awesome/icons/edit';
-    import gear from 'svelte-awesome/icons/gear';
-    import history from 'svelte-awesome/icons/history';
-    import hourglass from 'svelte-awesome/icons/hourglass';
-    import info from 'svelte-awesome/icons/info';
-    import listAlt from 'svelte-awesome/icons/listAlt';
-    import mapMarker from 'svelte-awesome/icons/mapMarker';
-    import mapSigns from 'svelte-awesome/icons/mapSigns';
-    import mousePointer from 'svelte-awesome/icons/mousePointer';
-    import questionCircleO from 'svelte-awesome/icons/questionCircleO';
-    import shield from 'svelte-awesome/icons/shield';
-    import sitemap from 'svelte-awesome/icons/sitemap';
-    import trophy from 'svelte-awesome/icons/trophy';
+    import type { Game } from '$lib/game';
 
-    /** @typedef {import('$lib/game.js').Game} Game */
-    /** @type {Game} */
-    export let game;
+    export let game: Game;
 
     /** temporary hack for svelte errors since it's not used yet */
     game = game;
@@ -41,19 +41,19 @@
     </div>
     <div class="menu">
         <button on:click="{() => game.menu = 'practice'}">
-            <p class:red="{game.menu === 'practice'}"><Icon scale={1.5} data={mousePointer}/></p>
+            <p class:red="{game.menu === 'practice'}"><MousePointer size={24}/></p>
         </button>
         <button on:click="{() => game.menu = 'story'}">
-            <p class:red="{game.menu === 'story'}"><Icon scale={1.5} data={edit}/></p>
+            <p class:red="{game.menu === 'story'}"><Edit size={24}/></p>
         </button>
         <button on:click="{() => game.menu = 'help'}">
-            <p class:red="{game.menu === 'help'}"><Icon scale={1.5} data={questionCircleO}/></p>
+            <p class:red="{game.menu === 'help'}"><HelpCircle size={24}/></p>
         </button>
         <button on:click="{() => game.menu = 'settings'}">
-            <p class:red="{game.menu === 'settings'}"><Icon scale={1.5} data={gear}/></p>
+            <p class:red="{game.menu === 'settings'}"><Settings size={24}/></p>
         </button>
         <button on:click="{() => game.menu = 'about'}">
-            <p class:red="{game.menu === 'about'}"><Icon scale={1.5} data={info}/></p>
+            <p class:red="{game.menu === 'about'}"><Info size={24}/></p>
         </button>
     </div>
 </div>

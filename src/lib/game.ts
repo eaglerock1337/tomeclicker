@@ -1,6 +1,12 @@
 export class Game {
-    /** @param {string} [name] */
-    constructor(name) {
+    public name: string;
+    public tickrate: number;
+    public exp: number;
+    public tick: number;
+    public text: string;
+    public menu: string;
+
+    constructor(name?: string) {
         this.name = name || 'A Stranger';
         this.tickrate = 1000;
         this.exp = 0;

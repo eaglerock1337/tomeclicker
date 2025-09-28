@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { onMount } from 'svelte';
 
     onMount(() => {
@@ -17,8 +17,8 @@
         };
     });
 
-    import { Config } from '$lib/config.js';
-    import { Game } from '$lib/game.js';
+    import { Config } from '$lib/config';
+    import { Game } from '$lib/game';
 
     import Header from '$lib/header.svelte';
     import Navbar from '$lib/navbar.svelte';

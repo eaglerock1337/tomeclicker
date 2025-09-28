@@ -1,14 +1,11 @@
-<script>
-    import Icon from 'svelte-awesome/components/Icon.svelte';
-    import mousePointer from 'svelte-awesome/icons/mousePointer';
+<script lang="ts">
+    import { MousePointer } from 'lucide-svelte';
 
-    /** @typedef {import('$lib/config.js').Config} Config */
-    /** @type Config */
-    export let config;
+    import type { Config } from '$lib/config';
+    import type { Game } from '$lib/game';
 
-    /** @typedef {import('$lib/game.js').Game} Game */
-    /** @type {Game} */
-    export let game;
+    export let config: Config;
+    export let game: Game;
 
     function clickMe() {
         game.exp++;
@@ -22,7 +19,7 @@
 <div class="thebutton">
     <button on:click={clickMe}>
         <div class="item">
-            <Icon scale={3} data={mousePointer}/><br>{game.text}
+            <MousePointer size={48}/><br>{game.text}
         </div>
     </button>
 </div>

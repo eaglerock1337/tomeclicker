@@ -1,7 +1,7 @@
-<script>
-    /** @typedef {import('$lib/game.js').Game} Game */
-    /** @type {Game} */
-    export let game;
+<script lang="ts">
+    import type { Game } from '$lib/game';
+
+    export let game: Game;
 
     /** temporary hack for svelte errors since it's not used yet */
     game = game;

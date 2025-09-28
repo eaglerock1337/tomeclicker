@@ -1,7 +1,6 @@
-<script>
-    /** @typedef {import('$lib/game.js').Game} Game */
-    /** @type {Game} */
-    export let game;
+<script lang="ts">
+    import type { Game } from '$lib/game';
+    export let game: Game;
 </script>
 
 <header>

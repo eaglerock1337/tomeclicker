@@ -1,15 +1,14 @@
 export class Config {
-    /** 
-     * @param {string} theme
-     * @param {boolean} darkmode 
-     */
-    constructor(theme, darkmode) {
+    public darkmode: boolean;
+    public theme: string;
+
+    constructor(theme: string, darkmode: boolean) {
         this.darkmode = darkmode;
         this.theme = theme;
     }
 
-    getTheme() {
+    getTheme(): string {
         const shade = this.darkmode ? "dark" : "light";
         return this.theme + "-" + shade;
     }
-};
+}

@@ -1,15 +1,13 @@
-<script>
+<script lang="ts">
     import Practice from '$lib/views/practice.svelte';
     import Settings from '$lib/views/settings.svelte';
     import Story from '$lib/views/story.svelte';
 
-    /** @typedef {import('$lib/config.js').Config} Config */
-    /** @type Config */
-    export let config;
+    import type { Config } from '$lib/config';
+    import type { Game } from '$lib/game';
 
-    /** @typedef {import('$lib/game.js').Game} Game */
-    /** @type Game */
-    export let game;
+    export let config: Config;
+    export let game: Game;
 </script>
 
 <div class="view">

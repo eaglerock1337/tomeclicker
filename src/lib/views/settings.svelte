@@ -1,15 +1,11 @@
-<script>
-    import Icon from 'svelte-awesome/components/Icon.svelte';
-    import toggleOn from 'svelte-awesome/icons/toggleOn';
-    import toggleOff from 'svelte-awesome/icons/toggleOff';
+<script lang="ts">
+    import { ToggleLeft, ToggleRight } from 'lucide-svelte';
 
-    /** @typedef {import('$lib/config.js').Config} Config */
-    /** @type {Config} */
-    export let config;
+    import type { Config } from '$lib/config';
+    import type { Game } from '$lib/game';
 
-    /** @typedef {import('$lib/game.js').Game} Game */
-    /** @type {Game} */
-    export let game;
+    export let config: Config;
+    export let game: Game;
 </script>
 
 <div class="settings">
@@ -26,9 +22,9 @@
     <div class="container">
         <button on:click={() => {config.darkmode = !config.darkmode;}}>Dark Mode</button>
         {#if config.darkmode}
-            <Icon scale={3} data={toggleOn}/>
+            <ToggleRight size={48}/>
         {:else}
-            <Icon scale={3} data={toggleOff}/>
+            <ToggleLeft size={48}/>
         {/if}
     </div>
 </div>
