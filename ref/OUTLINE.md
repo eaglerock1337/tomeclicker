@@ -190,11 +190,31 @@ These are the stats that will not only be trained directly in Training but will 
 ## tomes page
 
 - Unlocks after getting the first pages of the Tomes of Magic
+- A book about the Tomes was found with it as well as the first complete book
+- Portions of the remaining books are found with to give an idea of what's to come
 - Shows a catalog of all 50 Tomes of Magic (as outlined in tomes.yaml)
 - Tomes are usable in tiers (as outlined in tiers.yaml)
 
+## other pages
+
+- Need a settings page for game settings
+- Need to allow for saving and loading games as well
+- Eventually introduce a cloud saving feature that can be hosted on my site
+- Implement a simple database for saving people's games through a user account
+- Keep the cloud saves minimal to allow for many people to save their games for free
+- Need to figure out a way to keep the cloud saves from allowing cheating
+- Add a dashboard of players and stats that only include players not cheating
+- Look to implement a cheating system for game testing, but to disable stats etc. online
+
 ## what happens after?
 
-- A hierarchy map of skills learned from the Tomes of Magic
+- A hierarchy map of the Tomes and the skills learned therein
 - Lets you read the pages of the Tomes for EXP
 - This is where the plan gets hazy but this is where the depth of the story will come
+- More questing will be done later that requires magical powers learned from the Tomes
+- Each quest has an option to discover more parts of the tomes
+- Leaves of pages should be found that help fill out chapters of the remaining Tomes
+- Eventually, all 50 tomes will be unlocked and will allow casting of pure magical force
+- The story will reveal that these Tomes are all that is left from a magical world gone by
+- The final Tome describes how to potentially create your own magic
+- Not sure if the game should end here or progress further with new dynamics
