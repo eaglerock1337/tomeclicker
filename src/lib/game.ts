@@ -15,80 +15,212 @@ export class Game {
     public name: string;
     public tickrate: number;
     public exp: number;
+    public lifetimeExp: number;
+    public level: number;
     public tick: number;
     public text: string;
     public menu: string;
     public clickMultiplier: number;
     public upgrades: { [key: string]: Upgrade };
+    public saveIntegrity: string;
+    public lastValidation: number;
+    private _validationKey: string;
 
     constructor(name?: string) {
         this.name = name || 'A Stranger';
         this.tickrate = 1000;
-        this.exp = 0;
+        this.exp = 0.0;
+        this.lifetimeExp = 0.0;
+        this.level = 1;
         this.tick = 0;
         this.text = "click me";
         this.menu = "practice";
         this.clickMultiplier = 1.0;
         this.upgrades = this.initializeUpgrades();
+        this.saveIntegrity = 'valid';
+        this.lastValidation = Date.now();
+        this._validationKey = this.generateValidationKey();
+        this.startIntegrityMonitoring();
+        this.recalculateClickMultiplier();
+    }
+
+    recalculateClickMultiplier() {
+        this.clickMultiplier = 1.0;
+        for (const upgrade of Object.values(this.upgrades)) {
+            if (upgrade.effectType === 'clickMultiplier') {
+                this.clickMultiplier += upgrade.effectValue * upgrade.currentLevel;
+            }
+        }
+    }
+
+    updateClickText() {
+        if (this.lifetimeExp >= 50) {
+            return "practice";
+        }
+        return "click me";
     }
 
     private initializeUpgrades(): { [key: string]: Upgrade } {
         return {
-            'better-training': {
-                id: 'better-training',
-                name: 'Better Training',
-                description: 'Improve your practice technique for more EXP per click',
-                effect: '+10% EXP per click',
-                baseCost: 10,
-                costMultiplier: 1.5,
-                maxLevel: 10,
+            'basic-training': {
+                id: 'basic-training',
+                name: 'Basic Training',
+                description: 'Learn fundamental practice techniques',
+                effect: '+5% EXP per click',
+                baseCost: 5,
+                costMultiplier: 1.15,
+                maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 0.1
+                effectValue: 0.05
             },
             'focused-practice': {
                 id: 'focused-practice',
                 name: 'Focused Practice',
                 description: 'Deep concentration yields greater rewards',
-                effect: '+20% EXP per click',
+                effect: '+10% EXP per click',
                 baseCost: 25,
-                costMultiplier: 1.6,
-                maxLevel: 8,
+                costMultiplier: 1.2,
+                maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 0.2
+                effectValue: 0.1
             },
             'mental-discipline': {
                 id: 'mental-discipline',
                 name: 'Mental Discipline',
                 description: 'Master your mind to unlock greater potential',
-                effect: '+30% EXP per click',
-                baseCost: 50,
-                costMultiplier: 1.7,
-                maxLevel: 6,
+                effect: '+15% EXP per click',
+                baseCost: 100,
+                costMultiplier: 1.25,
+                maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 0.3
+                effectValue: 0.15
             },
-            'level-up': {
-                id: 'level-up',
-                name: 'Level Up',
-                description: 'Purchase your next level directly',
-                effect: 'Advance to next level',
-                baseCost: 1000,
-                costMultiplier: 10,
-                maxLevel: 99,
+            'advanced-techniques': {
+                id: 'advanced-techniques',
+                name: 'Advanced Techniques',
+                description: 'Complex methods for exponential growth',
+                effect: '+25% EXP per click',
+                baseCost: 500,
+                costMultiplier: 1.3,
+                maxLevel: 100,
                 currentLevel: 0,
-                effectType: 'levelUp',
-                effectValue: 1
+                effectType: 'clickMultiplier',
+                effectValue: 0.25
+            },
+            'mastery-training': {
+                id: 'mastery-training',
+                name: 'Mastery Training',
+                description: 'Achieve perfect form and technique',
+                effect: '+40% EXP per click',
+                baseCost: 2500,
+                costMultiplier: 1.35,
+                maxLevel: 100,
+                currentLevel: 0,
+                effectType: 'clickMultiplier',
+                effectValue: 0.4
+            },
+            'transcendent-focus': {
+                id: 'transcendent-focus',
+                name: 'Transcendent Focus',
+                description: 'Reach beyond normal limitations',
+                effect: 'Double total EXP per click',
+                baseCost: 10000,
+                costMultiplier: 2.0,
+                maxLevel: 25,
+                currentLevel: 0,
+                effectType: 'clickMultiplier',
+                effectValue: 1.0
             }
         };
     }
 
-    /** Derivative Getters */
+    /** Integrity Monitoring */
 
-    get level() {
-        return Math.floor(Math.log10(this.exp) / 3) + 1;
+    private generateValidationKey(): string {
+        if (typeof btoa === 'undefined') {
+            // Fallback for server-side rendering
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+        return btoa(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
+    }
+
+    private startIntegrityMonitoring() {
+        // Only run in browser environment
+        if (typeof window === 'undefined') return;
+
+        // Monitor for dev tools and suspicious changes
+        const originalConsole = window.console;
+        let devToolsOpen = false;
+
+        // Detect dev tools opening
+        const detectDevTools = () => {
+            const start = Date.now();
+            debugger;
+            if (Date.now() - start > 100) {
+                devToolsOpen = true;
+                this.markIntegrityViolation('dev-tools-detected');
+            }
+        };
+
+        // Check periodically for dev tools
+        setInterval(detectDevTools, 5000);
+
+        // Monitor for direct property manipulation
+        const checkValues = () => {
+            const expectedClickMultiplier = this.calculateExpectedClickMultiplier();
+            if (Math.abs(this.clickMultiplier - expectedClickMultiplier) > 0.001) {
+                this.markIntegrityViolation('click-multiplier-manipulation');
+            }
+
+            if (this.exp > this.lifetimeExp) {
+                this.markIntegrityViolation('exp-exceeds-lifetime');
+            }
+
+            this.lastValidation = Date.now();
+        };
+
+        setInterval(checkValues, 1000);
+    }
+
+    private calculateExpectedClickMultiplier(): number {
+        let expected = 1.0;
+        for (const upgrade of Object.values(this.upgrades)) {
+            if (upgrade.effectType === 'clickMultiplier') {
+                expected += upgrade.effectValue * upgrade.currentLevel;
+            }
+        }
+        return expected;
+    }
+
+    private markIntegrityViolation(reason: string) {
+        this.saveIntegrity = `compromised-${reason}-${Date.now()}`;
+        console.warn(`Game integrity violation detected: ${reason}`);
+    }
+
+    addExp(amount: number) {
+        this.exp += amount;
+        this.lifetimeExp += amount;
+        this.text = `+${amount} EXP (${this.exp} total)`;
+    }
+
+    /** Level System */
+
+    getLevelUpCost(): number {
+        return 10000 + (this.level - 1) * 100;
+    }
+
+    canLevelUp(): boolean {
+        return this.exp >= this.getLevelUpCost();
+    }
+
+    levelUp(): boolean {
+        if (!this.canLevelUp()) return false;
+        this.exp -= this.getLevelUpCost();
+        this.level++;
+        return true;
     }
 
     /** Upgrade Methods */
@@ -108,9 +240,6 @@ export class Game {
         const upgrade = this.upgrades[upgradeId];
         if (!upgrade) return false;
 
-        // Special requirements
-        if (upgradeId === 'level-up' && this.exp < 1000) return false;
-
         return this.canAffordUpgrade(upgradeId) && upgrade.currentLevel < upgrade.maxLevel;
     }
 
@@ -123,33 +252,193 @@ export class Game {
         this.exp -= cost;
         upgrade.currentLevel++;
 
-        // Apply upgrade effects
-        if (upgrade.effectType === 'clickMultiplier') {
-            this.clickMultiplier += upgrade.effectValue;
-        } else if (upgrade.effectType === 'levelUp') {
-            // Level up is handled by increasing exp to the next level threshold
-            const nextLevelExp = Math.pow(10, (this.level * 3));
-            this.exp = Math.max(this.exp, nextLevelExp);
-        }
+        // Recalculate click multiplier after purchase
+        this.recalculateClickMultiplier();
 
         return true;
     }
 
     getClickValue(): number {
-        return Math.floor(this.clickMultiplier);
+        return this.clickMultiplier;
     }
 
     /** Conditionals */
 
     showHeader() {
-        return this.exp > 10;
+        return this.lifetimeExp >= 50;
     }
 
     showMenu() {
-        return this.exp > 50;
+        return this.lifetimeExp >= 100;
     }
 
     showUpgrades() {
-        return this.exp >= 100;
+        return this.lifetimeExp >= 100;
+    }
+
+    /** Save/Load System */
+
+    private generateSaveHash(data: string): string {
+        // Simple hash for save validation - not cryptographically secure but detects tampering
+        let hash = 0;
+        for (let i = 0; i < data.length; i++) {
+            const char = data.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32-bit integer
+        }
+        return hash.toString(36) + this._validationKey;
+    }
+
+    private encryptSave(data: string): string {
+        // Simple XOR encryption - not secure but obfuscates the data
+        const key = 'tomeclicker-save-key';
+        let encrypted = '';
+        for (let i = 0; i < data.length; i++) {
+            encrypted += String.fromCharCode(data.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+        }
+
+        if (typeof btoa === 'undefined') {
+            // Fallback for server-side rendering
+            return Buffer.from(encrypted).toString('base64');
+        }
+        return btoa(encrypted);
+    }
+
+    private decryptSave(encryptedData: string): string {
+        try {
+            let encrypted: string;
+            if (typeof atob === 'undefined') {
+                // Fallback for server-side rendering
+                encrypted = Buffer.from(encryptedData, 'base64').toString();
+            } else {
+                encrypted = atob(encryptedData);
+            }
+
+            const key = 'tomeclicker-save-key';
+            let decrypted = '';
+            for (let i = 0; i < encrypted.length; i++) {
+                decrypted += String.fromCharCode(encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            return decrypted;
+        } catch {
+            throw new Error('Invalid encrypted save data');
+        }
+    }
+
+    exportSave(encrypted = true): string {
+        const saveData = {
+            name: this.name,
+            exp: this.exp,
+            lifetimeExp: this.lifetimeExp,
+            level: this.level,
+            clickMultiplier: this.clickMultiplier,
+            upgrades: this.upgrades,
+            saveIntegrity: this.saveIntegrity,
+            lastValidation: this.lastValidation,
+            version: '0.1.0',
+            timestamp: Date.now()
+        };
+
+        const jsonData = JSON.stringify(saveData);
+
+        if (encrypted) {
+            const hash = this.generateSaveHash(jsonData);
+            const encryptedData = this.encryptSave(jsonData);
+            return JSON.stringify({
+                encrypted: true,
+                data: encryptedData,
+                hash: hash,
+                version: '0.1.0'
+            });
+        } else {
+            return JSON.stringify({
+                ...saveData,
+                encrypted: false,
+                warning: 'This save is not eligible for leaderboard participation'
+            });
+        }
+    }
+
+    importSave(saveString: string): { success: boolean, warning?: string, error?: string } {
+        try {
+            const saveWrapper = JSON.parse(saveString);
+            let saveData;
+            let warning = '';
+
+            if (saveWrapper.encrypted === false) {
+                // Unencrypted save - mark as compromised
+                saveData = saveWrapper;
+                this.saveIntegrity = 'unencrypted-import';
+                warning = 'This save is not eligible for leaderboard participation due to unencrypted import.';
+            } else if (saveWrapper.encrypted === true) {
+                // Encrypted save - validate hash
+                const decryptedData = this.decryptSave(saveWrapper.data);
+                const expectedHash = this.generateSaveHash(decryptedData);
+
+                if (saveWrapper.hash !== expectedHash) {
+                    return { success: false, error: 'Save data appears to be corrupted or tampered with.' };
+                }
+
+                saveData = JSON.parse(decryptedData);
+            } else {
+                return { success: false, error: 'Invalid save format.' };
+            }
+
+            // Validate save data structure
+            if (!this.validateSaveData(saveData)) {
+                return { success: false, error: 'Save data is invalid or corrupted.' };
+            }
+
+            // Load the save data
+            this.name = saveData.name;
+            this.exp = saveData.exp;
+            this.lifetimeExp = saveData.lifetimeExp;
+            this.level = saveData.level || 1;
+            this.upgrades = saveData.upgrades;
+            this.saveIntegrity = saveData.saveIntegrity || this.saveIntegrity;
+            this.lastValidation = Date.now();
+
+            // Recalculate click multiplier from upgrades
+            this.recalculateClickMultiplier();
+
+            return { success: true, warning };
+        } catch (error) {
+            return { success: false, error: `Failed to import save: ${error}` };
+        }
+    }
+
+    private validateSaveData(data: any): boolean {
+        return (
+            typeof data.name === 'string' &&
+            typeof data.exp === 'number' &&
+            typeof data.lifetimeExp === 'number' &&
+            (typeof data.level === 'number' || data.level === undefined) &&
+            typeof data.clickMultiplier === 'number' &&
+            typeof data.upgrades === 'object' &&
+            data.exp <= data.lifetimeExp
+        );
+    }
+
+    saveToCookies(): void {
+        if (typeof document === 'undefined') return;
+        const saveData = this.exportSave(true);
+        document.cookie = `tomeclicker_save=${encodeURIComponent(saveData)}; expires=${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+    }
+
+    loadFromCookies(): boolean {
+        if (typeof document === 'undefined') return false;
+        const cookies = document.cookie.split(';');
+        for (const cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'tomeclicker_save') {
+                const result = this.importSave(decodeURIComponent(value));
+                return result.success;
+            }
+        }
+        return false;
+    }
+
+    autoSave(): void {
+        this.saveToCookies();
     }
 };

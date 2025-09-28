@@ -28,7 +28,13 @@
     let config = new Config("prussian-blue", true);
 
     // Game values
-    let game = new Game();
+    let game: Game;
+
+    // Initialize game in browser only
+    onMount(() => {
+        game = new Game();
+        game.loadFromCookies();
+    });
 
     // Color theme
     let theme = "";
@@ -44,16 +50,22 @@
 </svelte:head>
 
 <div class="app {theme}">
-    {#if game.showHeader()}
-        <Header bind:game/>
-    {/if}
-    <main class="main-content">
-        <View bind:game bind:config/>
-    </main>
-    {#if game.showMenu()}
-        <footer class="footer">
-            <Navbar bind:game/>
-        </footer>
+    {#if game}
+        {#if game.showHeader()}
+            <Header bind:game/>
+        {/if}
+        <main class="main-content">
+            <View bind:game bind:config/>
+        </main>
+        {#if game.showMenu()}
+            <footer class="footer">
+                <Navbar bind:game/>
+            </footer>
+        {/if}
+    {:else}
+        <div class="loading">
+            <h1>Loading TomeClicker...</h1>
+        </div>
     {/if}
 </div>
 
@@ -93,6 +105,16 @@
         padding-bottom: env(safe-area-inset-bottom, 0);
         position: relative;
         z-index: 100;
+    }
+
+    .loading {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--text);
+        font-family: Lato, sans-serif;
+        font-weight: 300;
     }
 
     /* Red and Green Color text */

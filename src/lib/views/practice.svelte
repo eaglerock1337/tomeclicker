@@ -9,8 +9,9 @@
 
     function clickMe() {
         const clickValue = game.getClickValue();
-        game.exp += clickValue;
-        game.text = `+${clickValue} EXP (${game.exp} total)`;
+        game.addExp(clickValue);
+        // Force Svelte reactivity update
+        game = game;
     }
 
     /** temporary hack for svelte errors since it's not used yet */
@@ -20,7 +21,8 @@
 <div class="thebutton">
     <button on:click={clickMe}>
         <div class="item">
-            <MousePointer size={48}/><br>{game.text}
+            <MousePointer size={48}/><br>{game.updateClickText()}<br>
+            <small>EXP: {game.exp.toFixed(1)} | Click: {game.getClickValue().toFixed(1)}</small>
         </div>
     </button>
 </div>

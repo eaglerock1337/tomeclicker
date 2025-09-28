@@ -84,3 +84,13 @@ The `ref/OUTLINE.md` file contains the complete game design document with detail
 - Iterate and flesh out game design as outlined in `ref/OUTLINE.md`
 - Migrate to Typescript and use the latest-and-greatest version of Svelte
 - Implement mechanics for saving and loading games locally and through a cloud save
+
+### TODOs for next time
+
+- Fix formatting and styling on upgrades page
+- Remove debug EXP/Click display from practice page
+- Enhance click text with contextual help messages
+- Add level-up ready notification in click text
+- Implement hard reset functionality with warning
+- Refactor upgrades into separate class under Game
+- Create modular class structure for better code organization

@@ -18,27 +18,18 @@
         Shield,
         Workflow,
         Trophy,
-        TrendingUp
+        TrendingUp,
+        Save
     } from 'lucide-svelte';
 
     import type { Game } from '$lib/game';
 
     export let game: Game;
-
-    /** temporary hack for svelte errors since it's not used yet */
-    game = game;
-
-    function sendTick() {
-        game.tick++;
-        game.text = "tock " + game.tick;
-    }
 </script>
 
 <div class="navbar">
-    <div class="tick">
-        <button class="tick" on:click="{sendTick}">
-            <p>tick</p>
-        </button>
+    <div class="page-name">
+        <span>{game.menu}</span>
     </div>
     <div class="menu">
         <button on:click="{() => game.menu = 'practice'}">
@@ -54,6 +45,9 @@
         </button>
         <button on:click="{() => game.menu = 'help'}">
             <p class:red="{game.menu === 'help'}"><HelpCircle size={24}/></p>
+        </button>
+        <button on:click="{() => game.menu = 'saves'}">
+            <p class:red="{game.menu === 'saves'}"><Save size={24}/></p>
         </button>
         <button on:click="{() => game.menu = 'settings'}">
             <p class:red="{game.menu === 'settings'}"><Settings size={24}/></p>
@@ -105,29 +99,21 @@
         border-radius: 5px;
     }
 
-    .tick {
+    .page-name {
         color: var(--text);
         background-color: var(--bg);
         font-family: JetBrains Mono, monospace;
-        font-weight: 400;
+        font-weight: 300;
         display: flex;
-        flex-direction: row;
         justify-content: center;
-        color: var(--text);
+        align-items: center;
+        padding: 0.5rem;
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
-    .tick button {
-        color: var(--text);
-        background-color: var(--alt-bg);
-        font-size: 1.4em;
-        font-family: JetBrains Mono, monospace;
-        font-weight: 400;
-        margin: 2px 2px 10px;
-        padding: 5px 10px;
-        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
-        border: 2px solid var(--text);
-        border-radius: 10px;
+    .page-name span {
+        font-size: 1em;
+        opacity: 0.8;
     }
 
     p {

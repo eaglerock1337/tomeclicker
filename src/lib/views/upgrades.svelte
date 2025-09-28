@@ -22,11 +22,13 @@
         return cost.toLocaleString();
     }
 
-    $: availableUpgrades = Object.values(game.upgrades).filter(upgrade => {
-        // Show all upgrades except level-up until 1000 EXP
-        if (upgrade.id === 'level-up') return game.exp >= 1000;
-        return true;
-    });
+    $: availableUpgrades = Object.values(game.upgrades);
+
+    function levelUp() {
+        if (game.levelUp()) {
+            game = game; // Force reactivity
+        }
+    }
 </script>
 
 <div class="upgrades">
@@ -34,6 +36,18 @@
 
     <div class="upgrades-layout">
         <div class="upgrade-grid">
+        <!-- Level Up Special Button -->
+        <button
+            class="level-up-btn"
+            class:affordable={game.canLevelUp()}
+            on:click={levelUp}
+            disabled={!game.canLevelUp()}
+        >
+            <div class="upgrade-name">Level Up</div>
+            <div class="upgrade-level">Level {game.level} → {game.level + 1}</div>
+            <div class="upgrade-cost">{formatCost(game.getLevelUpCost())} EXP</div>
+        </button>
+
         {#each availableUpgrades as upgrade (upgrade.id)}
             <button
                 class="upgrade-btn"
@@ -159,6 +173,43 @@
     .upgrade-btn:hover {
         background-color: var(--text);
         color: var(--bg);
+    }
+
+    .level-up-btn {
+        color: var(--alt-bg);
+        background-color: var(--blue);
+        font-family: JetBrains Mono, monospace;
+        font-weight: 400;
+        padding: 1rem;
+        text-align: center;
+        border: 2px solid var(--blue);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        grid-column: 1 / -1; /* Span full width */
+        margin-bottom: 1rem;
+    }
+
+    .level-up-btn:hover:not(:disabled) {
+        background-color: var(--green);
+        border-color: var(--green);
+    }
+
+    .level-up-btn.affordable {
+        background-color: var(--green);
+        border-color: var(--green);
+    }
+
+    .level-up-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: var(--alt-bg);
+        border-color: var(--text);
+        color: var(--text);
     }
 
     .upgrade-btn.selected {
