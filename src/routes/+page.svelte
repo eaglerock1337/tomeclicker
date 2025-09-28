@@ -43,13 +43,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 </svelte:head>
 
-<div class="{theme}">
+<div class="app {theme}">
     {#if game.showHeader()}
         <Header bind:game/>
     {/if}
-    <View bind:game bind:config/>
+    <main class="main-content">
+        <View bind:game bind:config/>
+    </main>
     {#if game.showMenu()}
-        <Navbar bind:game/>
+        <footer class="footer">
+            <Navbar bind:game/>
+        </footer>
     {/if}
 </div>
 
@@ -57,20 +61,38 @@
     :root {
         font-size: 18px;
         background-color: #28262cff;
-        width: 100%;
-        height: 98vh;
     }
 
-    :global(body) {
-        display: flex;
+    :global(html, body) {
+        margin: 0;
+        padding: 0;
         height: 100%;
-        flex-direction: column;
+        overflow: hidden;
     }
 
-    :global(div) {
+    .app {
         display: flex;
-        height: 100%;
         flex-direction: column;
+        height: 100vh;
+        height: 100dvh; /* Dynamic viewport height for mobile */
+        width: 100vw;
+        overflow: hidden;
+    }
+
+    .main-content {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        /* Safe area padding for mobile devices */
+        padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    .footer {
+        flex-shrink: 0;
+        /* Ensure footer stays above device UI on mobile */
+        padding-bottom: env(safe-area-inset-bottom, 0);
+        position: relative;
+        z-index: 100;
     }
 
     /* Red and Green Color text */

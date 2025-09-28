@@ -8,8 +8,9 @@
     export let game: Game;
 
     function clickMe() {
-        game.exp++;
-        game.text = 'ayy ' + game.exp;
+        const clickValue = game.getClickValue();
+        game.exp += clickValue;
+        game.text = `+${clickValue} EXP (${game.exp} total)`;
     }
 
     /** temporary hack for svelte errors since it's not used yet */

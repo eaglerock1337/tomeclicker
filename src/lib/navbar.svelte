@@ -17,7 +17,8 @@
         HelpCircle,
         Shield,
         Workflow,
-        Trophy
+        Trophy,
+        TrendingUp
     } from 'lucide-svelte';
 
     import type { Game } from '$lib/game';
@@ -43,6 +44,11 @@
         <button on:click="{() => game.menu = 'practice'}">
             <p class:red="{game.menu === 'practice'}"><MousePointer size={24}/></p>
         </button>
+        {#if game.showUpgrades()}
+            <button on:click="{() => game.menu = 'upgrades'}">
+                <p class:red="{game.menu === 'upgrades'}"><TrendingUp size={24}/></p>
+            </button>
+        {/if}
         <button on:click="{() => game.menu = 'story'}">
             <p class:red="{game.menu === 'story'}"><Edit size={24}/></p>
         </button>
@@ -60,8 +66,12 @@
 
 <style>
     .navbar {
+        display: flex;
         flex-direction: column;
-        flex: 0;
+        flex-shrink: 0;
+        background-color: var(--bg);
+        border-top: 1px solid var(--text);
+        width: 100%;
     }
 
     .menu {

@@ -1,5 +1,6 @@
 <script lang="ts">
     import Practice from '$lib/views/practice.svelte';
+    import Upgrades from '$lib/views/upgrades.svelte';
     import Settings from '$lib/views/settings.svelte';
     import Story from '$lib/views/story.svelte';
 
@@ -13,6 +14,8 @@
 <div class="view">
     {#if game.menu === "practice"}
         <Practice bind:config bind:game/>
+    {:else if game.menu === "upgrades"}
+        <Upgrades bind:config bind:game/>
     {:else if game.menu === "story"}
         <Story bind:game/>
     {:else if game.menu === "settings"}
@@ -24,8 +27,10 @@
 
 <style>
     .view {
+        display: flex;
         flex-direction: column;
-        flex: 1;
-        /* max-height: 82%; */
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
     }
 </style>
