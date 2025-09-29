@@ -125,7 +125,6 @@
             game.lifetimeExp = 0.0;
             game.level = 1;
             game.tick = 0;
-            game.text = "click me";
             game.menu = "practice";
             game.clickMultiplier = 1.0;
             game.upgrades = game.initializeUpgrades();

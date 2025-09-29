@@ -10,8 +10,7 @@
 
 <div class="settings">
     <h1>settings</h1>
-    <p>EXP: {game.exp} Tick: {game.tick} Level: {game.level}<br>
-    {game.text}</p>
+    <p>EXP: {game.exp} Tick: {game.tick} Level: {game.level}</p>
     <h2>test buttons</h2>
     <div class="container">
         <button on:click={() => {game.exp++;}}>EXP</button>

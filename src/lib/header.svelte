@@ -5,7 +5,7 @@
 
 <header>
     <div class="container">
-        <div class="item">EXP: {game.exp}</div>
+        <div class="item">EXP: {Math.floor(game.exp).toLocaleString()}</div>
         <div class="item">Level: {game.level}</div>
     </div>
 </header>

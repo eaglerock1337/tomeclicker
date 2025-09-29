@@ -18,7 +18,6 @@ export class Game {
     public lifetimeExp: number;
     public level: number;
     public tick: number;
-    public text: string;
     public menu: string;
     public clickMultiplier: number;
     public upgrades: { [key: string]: Upgrade };
@@ -33,7 +32,6 @@ export class Game {
         this.lifetimeExp = 0.0;
         this.level = 1;
         this.tick = 0;
-        this.text = 'click me';
         this.menu = 'practice';
         this.clickMultiplier = 1.0;
         this.upgrades = this.initializeUpgrades();
@@ -182,7 +180,6 @@ export class Game {
     addExp(amount: number) {
         this.exp += amount;
         this.lifetimeExp += amount;
-        this.text = `+${amount} EXP (${this.exp} total)`;
     }
 
     /** Level System */
