@@ -44,17 +44,34 @@ export class Game {
 
     recalculateClickMultiplier() {
         this.clickMultiplier = 1.0;
+
+        // Add additive upgrades first
         for (const upgrade of Object.values(this.upgrades)) {
-            if (upgrade.effectType === 'clickMultiplier') {
+            if (upgrade.effectType === 'clickMultiplier' && upgrade.id !== 'transcendent-focus') {
                 this.clickMultiplier += upgrade.effectValue * upgrade.currentLevel;
             }
+        }
+
+        // Apply multiplicative Transcendent Focus (5x per level)
+        const transcendentFocus = this.upgrades['transcendent-focus'];
+        if (transcendentFocus && transcendentFocus.currentLevel > 0) {
+            this.clickMultiplier *= Math.pow(5, transcendentFocus.currentLevel);
         }
     }
 
     updateClickText() {
         // Check if ready to level up
         if (this.canLevelUp()) {
-            return 'LEVEL UP READY!<br><small>Visit upgrades to advance</small>';
+            return 'level up available';
+        }
+
+        // Check if any upgrades are available
+        if (this.showUpgrades()) {
+            for (const upgrade of Object.values(this.upgrades)) {
+                if (this.canPurchaseUpgrade(upgrade.id)) {
+                    return 'upgrade available';
+                }
+            }
         }
 
         // Show click me only at the very beginning
@@ -66,79 +83,93 @@ export class Game {
         return '';
     }
 
+    migrateUpgrades(savedUpgrades: { [key: string]: Upgrade }) {
+        // Get fresh upgrade definitions
+        const freshUpgrades = this.initializeUpgrades();
+
+        // Preserve current levels from saved upgrades
+        for (const upgradeId in freshUpgrades) {
+            if (savedUpgrades[upgradeId]) {
+                freshUpgrades[upgradeId].currentLevel = savedUpgrades[upgradeId].currentLevel;
+            }
+        }
+
+        this.upgrades = freshUpgrades;
+    }
+
     initializeUpgrades(): { [key: string]: Upgrade } {
         return {
             'basic-training': {
                 id: 'basic-training',
                 name: 'Basic Training',
                 description: 'Learn fundamental practice techniques',
-                effect: '+5% EXP per click',
-                baseCost: 5,
+                effect: '+50% EXP per click',
+                baseCost: 50,
                 costMultiplier: 1.15,
                 maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 0.05
+                effectValue: 0.5
             },
             'focused-practice': {
                 id: 'focused-practice',
                 name: 'Focused Practice',
                 description: 'Deep concentration yields greater rewards',
-                effect: '+10% EXP per click',
-                baseCost: 25,
-                costMultiplier: 1.2,
+                effect: '+100% EXP per click',
+                baseCost: 16000,  // Approx cost of 90th Basic Training
+                costMultiplier: 1.15,
                 maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 0.1
+                effectValue: 1.0
             },
             'mental-discipline': {
                 id: 'mental-discipline',
                 name: 'Mental Discipline',
                 description: 'Master your mind to unlock greater potential',
-                effect: '+15% EXP per click',
-                baseCost: 100,
-                costMultiplier: 1.25,
+                effect: '+150% EXP per click',
+                baseCost: 5200000,  // Approx cost of 90th Focused Practice
+                costMultiplier: 1.15,
                 maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 0.15
+                effectValue: 1.5
             },
             'advanced-techniques': {
                 id: 'advanced-techniques',
                 name: 'Advanced Techniques',
                 description: 'Complex methods for exponential growth',
-                effect: '+25% EXP per click',
-                baseCost: 500,
-                costMultiplier: 1.3,
+                effect: '+200% EXP per click',
+                baseCost: 1700000000,  // Approx cost of 90th Mental Discipline
+                costMultiplier: 1.15,
                 maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 0.25
+                effectValue: 2.0
             },
             'mastery-training': {
                 id: 'mastery-training',
                 name: 'Mastery Training',
                 description: 'Achieve perfect form and technique',
-                effect: '+40% EXP per click',
-                baseCost: 2500,
-                costMultiplier: 1.35,
+                effect: '+250% EXP per click',
+                baseCost: 555000000000,  // Approx cost of 90th Advanced Techniques
+                costMultiplier: 1.15,
                 maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 0.4
+                effectValue: 2.5
             },
             'transcendent-focus': {
                 id: 'transcendent-focus',
                 name: 'Transcendent Focus',
                 description: 'Reach beyond normal limitations',
-                effect: 'Double total EXP per click',
-                baseCost: 10000,
-                costMultiplier: 2.0,
+                effect: '5x total EXP per click',
+                baseCost: 1000,
+                costMultiplier: 1.1,  // Lower multiplier, additive cost
                 maxLevel: 25,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 1.0
+                effectValue: 5.0  // This value is not used for transcendent focus anymore
             }
         };
     }
@@ -185,7 +216,7 @@ export class Game {
     /** Level System */
 
     getLevelUpCost(): number {
-        return 10000 + (this.level - 1) * 100;
+        return 10000 * Math.pow(100, this.level - 1);
     }
 
     canLevelUp(): boolean {
@@ -204,6 +235,12 @@ export class Game {
     getUpgradeCost(upgradeId: string): number {
         const upgrade = this.upgrades[upgradeId];
         if (!upgrade) return 0;
+
+        // Special handling for Transcendent Focus (multiplicative cost like level ups)
+        if (upgradeId === 'transcendent-focus') {
+            return upgrade.baseCost * Math.pow(100, upgrade.currentLevel);
+        }
+
         return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMultiplier, upgrade.currentLevel));
     }
 
@@ -245,11 +282,11 @@ export class Game {
     }
 
     showMenu() {
-        return this.lifetimeExp >= 100;
+        return this.lifetimeExp >= 50;
     }
 
     showUpgrades() {
-        return this.lifetimeExp >= 100;
+        return this.lifetimeExp >= 50;
     }
 
     /** Save/Load System */
@@ -365,7 +402,10 @@ export class Game {
             this.exp = saveData.exp;
             this.lifetimeExp = saveData.lifetimeExp;
             this.level = saveData.level || 1;
-            this.upgrades = saveData.upgrades;
+
+            // Migrate upgrades: preserve levels but update definitions
+            this.migrateUpgrades(saveData.upgrades);
+
             this.saveIntegrity = saveData.saveIntegrity || this.saveIntegrity;
             this.lastValidation = Date.now();
 
