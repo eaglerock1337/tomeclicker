@@ -74,4 +74,8 @@
     .item:active {
         scale: 0.95;
     }
+
+    .thebutton button:active .item {
+        scale: 0.95;
+    }
 </style>

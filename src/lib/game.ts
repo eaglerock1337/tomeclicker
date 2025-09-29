@@ -52,6 +52,11 @@ export class Game {
             }
         }
 
+        // Apply multiplicative level bonuses (2x per level after 1)
+        if (this.level > 1) {
+            this.clickMultiplier *= Math.pow(2, this.level - 1);
+        }
+
         // Apply multiplicative Transcendent Focus (5x per level)
         const transcendentFocus = this.upgrades['transcendent-focus'];
         if (transcendentFocus && transcendentFocus.currentLevel > 0) {

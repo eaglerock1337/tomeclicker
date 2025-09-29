@@ -66,6 +66,7 @@
         if (result.success) {
             showMessageFor(result.warning || 'Save imported successfully!', result.warning ? 'warning' : 'success');
             importText = '';
+            game = game; // Force reactivity to update UI
             game.autoSave(); // Auto-save after successful import
         } else {
             showMessageFor(result.error || 'Failed to import save', 'error');
@@ -322,6 +323,8 @@
         border-radius: 10px;
         padding: 1.5rem;
         text-align: left;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
     }
 
     .button-group {
@@ -396,6 +399,7 @@
     textarea {
         width: 100%;
         min-height: 120px;
+        max-width: 100%;
         padding: 0.8rem;
         font-family: JetBrains Mono, monospace;
         font-size: 0.9em;
@@ -404,6 +408,9 @@
         border: 2px solid var(--text);
         border-radius: 8px;
         resize: vertical;
+        box-sizing: border-box;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     .note {

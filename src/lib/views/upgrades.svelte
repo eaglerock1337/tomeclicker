@@ -15,6 +15,10 @@
         if (selectedUpgrade && game.purchaseUpgrade(selectedUpgrade.id)) {
             // Refresh the selected upgrade data
             selectedUpgrade = game.upgrades[selectedUpgrade.id];
+            // Force reactivity update
+            game = game;
+            // Save progress
+            game.autoSave();
         }
     }
 
@@ -22,11 +26,13 @@
         return cost.toLocaleString();
     }
 
-    $: availableUpgrades = Object.values(game.upgrades);
+    $: availableUpgrades = Object.values(game.upgrades).filter(u => u.id !== 'transcendent-focus');
+    $: transcendentFocus = game.upgrades['transcendent-focus'];
 
     function levelUp() {
         if (game.levelUp()) {
             game = game; // Force reactivity
+            game.autoSave(); // Save progress
         }
     }
 </script>
@@ -36,17 +42,34 @@
 
     <div class="upgrades-layout">
         <div class="upgrade-grid">
-        <!-- Level Up Special Button -->
-        <button
-            class="level-up-btn"
-            class:affordable={game.canLevelUp()}
-            on:click={levelUp}
-            disabled={!game.canLevelUp()}
-        >
-            <div class="upgrade-name">Level Up</div>
-            <div class="upgrade-level">Level {game.level} → {game.level + 1}</div>
-            <div class="upgrade-cost">{formatCost(game.getLevelUpCost())} EXP</div>
-        </button>
+        <!-- Special Top Row Buttons -->
+        <div class="special-buttons">
+            <!-- Level Up Special Button -->
+            <button
+                class="special-upgrade-btn"
+                class:affordable={game.canLevelUp()}
+                on:click={levelUp}
+                disabled={!game.canLevelUp()}
+            >
+                <div class="upgrade-name">Level Up</div>
+                <div class="upgrade-level">Level {game.level} → {game.level + 1}</div>
+                <div class="upgrade-cost">{formatCost(game.getLevelUpCost())} EXP</div>
+            </button>
+
+            <!-- Transcendent Focus Special Button -->
+            <button
+                class="special-upgrade-btn"
+                class:selected={selectedUpgrade?.id === transcendentFocus.id}
+                class:affordable={game.canAffordUpgrade(transcendentFocus.id)}
+                class:maxed={transcendentFocus.currentLevel >= transcendentFocus.maxLevel}
+                disabled={transcendentFocus.currentLevel >= transcendentFocus.maxLevel}
+                on:click={() => selectUpgrade(transcendentFocus)}
+            >
+                <div class="upgrade-name">{transcendentFocus.name}</div>
+                <div class="upgrade-level">Level {transcendentFocus.currentLevel}/{transcendentFocus.maxLevel}</div>
+                <div class="upgrade-cost">{formatCost(game.getUpgradeCost(transcendentFocus.id))} EXP</div>
+            </button>
+        </div>
 
         {#each availableUpgrades as upgrade (upgrade.id)}
             <button
@@ -175,14 +198,22 @@
         color: var(--bg);
     }
 
-    .level-up-btn {
-        color: var(--alt-bg);
-        background-color: var(--blue);
+    .special-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        grid-column: 1 / -1; /* Span full width */
+    }
+
+    .special-upgrade-btn {
+        color: var(--text);
+        background-color: var(--alt-bg);
         font-family: JetBrains Mono, monospace;
         font-weight: 400;
         padding: 1rem;
         text-align: center;
-        border: 2px solid var(--blue);
+        border: 2px solid var(--text);
         border-radius: 10px;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -190,26 +221,33 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        grid-column: 1 / -1; /* Span full width */
-        margin-bottom: 1rem;
     }
 
-    .level-up-btn:hover:not(:disabled) {
+    .special-upgrade-btn:hover:not(:disabled):not(.maxed) {
         background-color: var(--green);
         border-color: var(--green);
+        color: var(--alt-bg);
     }
 
-    .level-up-btn.affordable {
+    .special-upgrade-btn.affordable {
         background-color: var(--green);
         border-color: var(--green);
+        color: var(--alt-bg);
     }
 
-    .level-up-btn:disabled {
+    .special-upgrade-btn:disabled,
+    .special-upgrade-btn.maxed {
         opacity: 0.5;
         cursor: not-allowed;
         background-color: var(--alt-bg);
         border-color: var(--text);
         color: var(--text);
+    }
+
+    .special-upgrade-btn.selected {
+        background-color: var(--blue);
+        color: var(--alt-bg);
+        border-color: var(--blue);
     }
 
     .upgrade-btn.selected {
