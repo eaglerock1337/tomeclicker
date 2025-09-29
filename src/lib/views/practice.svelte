@@ -8,9 +8,10 @@
     export let game: Game;
 
     function clickMe() {
+        if (!game) return;
+
         const clickValue = game.getClickValue();
         game.addExp(clickValue);
-        // Force Svelte reactivity update
         game = game;
     }
 
@@ -21,8 +22,7 @@
 <div class="thebutton">
     <button on:click={clickMe}>
         <div class="item">
-            <MousePointer size={48}/><br>{game.updateClickText()}<br>
-            <small>EXP: {game.exp.toFixed(1)} | Click: {game.getClickValue().toFixed(1)}</small>
+            <MousePointer size={48}/><br>{game ? game.updateClickText() : 'Loading...'}
         </div>
     </button>
 </div>
@@ -50,7 +50,14 @@
         font-size: 1em;
         touch-action: manipulation;
         transition: color 1s cubic-bezier(0,.5,0,1),
-                    background-color 1s cubic-bezier(0,.5,0,1),
+                    background-color 1s cubic-bezier(0,.5,0,1);
+        /* Prevent text selection during rapid clicking */
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 
     .item {

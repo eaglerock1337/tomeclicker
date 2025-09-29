@@ -5,11 +5,10 @@ name: publish-github-pages
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     permissions:
@@ -20,26 +19,26 @@ jobs:
         node-version: [20.x]
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
-    - run: npm ci
-    - run: npm run build
+      - run: npm ci
+      - run: npm run build
 
-    - name: Copy build to docs for GitHub Pages
-      run: |
-        rm -rf docs
-        cp -r build docs
+      - name: Copy build to docs for GitHub Pages
+        run: |
+          rm -rf docs
+          cp -r build docs
 
-    - name: GitHub Commit & Push
-      uses: actions-js/push@v1.3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        author_email: github-actions@marks.dev
-        author_name: marks.dev github action
-        message: Publish Static Site to GitHub Pages
+      - name: GitHub Commit & Push
+        uses: actions-js/push@v1.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          author_email: github-actions@marks.dev
+          author_name: marks.dev github action
+          message: Publish Static Site to GitHub Pages

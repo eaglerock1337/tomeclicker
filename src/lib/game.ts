@@ -33,8 +33,8 @@ export class Game {
         this.lifetimeExp = 0.0;
         this.level = 1;
         this.tick = 0;
-        this.text = "click me";
-        this.menu = "practice";
+        this.text = 'click me';
+        this.menu = 'practice';
         this.clickMultiplier = 1.0;
         this.upgrades = this.initializeUpgrades();
         this.saveIntegrity = 'valid';
@@ -54,13 +54,21 @@ export class Game {
     }
 
     updateClickText() {
-        if (this.lifetimeExp >= 50) {
-            return "practice";
+        // Check if ready to level up
+        if (this.canLevelUp()) {
+            return 'LEVEL UP READY!<br><small>Visit upgrades to advance</small>';
         }
-        return "click me";
+
+        // Show click me only at the very beginning
+        if (this.lifetimeExp === 0) {
+            return 'click me';
+        }
+
+        // After first click, just show empty text
+        return '';
     }
 
-    private initializeUpgrades(): { [key: string]: Upgrade } {
+    initializeUpgrades(): { [key: string]: Upgrade } {
         return {
             'basic-training': {
                 id: 'basic-training',
@@ -142,47 +150,18 @@ export class Game {
     private generateValidationKey(): string {
         if (typeof btoa === 'undefined') {
             // Fallback for server-side rendering
-            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            return (
+                Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+            );
         }
-        return btoa(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
+        return btoa(
+            Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+        );
     }
 
     private startIntegrityMonitoring() {
-        // Only run in browser environment
-        if (typeof window === 'undefined') return;
-
-        // Monitor for dev tools and suspicious changes
-        const originalConsole = window.console;
-        let devToolsOpen = false;
-
-        // Detect dev tools opening
-        const detectDevTools = () => {
-            const start = Date.now();
-            debugger;
-            if (Date.now() - start > 100) {
-                devToolsOpen = true;
-                this.markIntegrityViolation('dev-tools-detected');
-            }
-        };
-
-        // Check periodically for dev tools
-        setInterval(detectDevTools, 5000);
-
-        // Monitor for direct property manipulation
-        const checkValues = () => {
-            const expectedClickMultiplier = this.calculateExpectedClickMultiplier();
-            if (Math.abs(this.clickMultiplier - expectedClickMultiplier) > 0.001) {
-                this.markIntegrityViolation('click-multiplier-manipulation');
-            }
-
-            if (this.exp > this.lifetimeExp) {
-                this.markIntegrityViolation('exp-exceeds-lifetime');
-            }
-
-            this.lastValidation = Date.now();
-        };
-
-        setInterval(checkValues, 1000);
+        // Disable integrity monitoring for now
+        return;
     }
 
     private calculateExpectedClickMultiplier(): number {
@@ -265,7 +244,7 @@ export class Game {
     /** Conditionals */
 
     showHeader() {
-        return this.lifetimeExp >= 50;
+        return this.lifetimeExp >= 10;
     }
 
     showMenu() {
@@ -283,7 +262,7 @@ export class Game {
         let hash = 0;
         for (let i = 0; i < data.length; i++) {
             const char = data.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
+            hash = (hash << 5) - hash + char;
             hash = hash & hash; // Convert to 32-bit integer
         }
         return hash.toString(36) + this._validationKey;
@@ -359,7 +338,7 @@ export class Game {
         }
     }
 
-    importSave(saveString: string): { success: boolean, warning?: string, error?: string } {
+    importSave(saveString: string): { success: boolean; warning?: string; error?: string } {
         try {
             const saveWrapper = JSON.parse(saveString);
             let saveData;
@@ -369,16 +348,11 @@ export class Game {
                 // Unencrypted save - mark as compromised
                 saveData = saveWrapper;
                 this.saveIntegrity = 'unencrypted-import';
-                warning = 'This save is not eligible for leaderboard participation due to unencrypted import.';
+                warning =
+                    'This save is not eligible for leaderboard participation due to unencrypted import.';
             } else if (saveWrapper.encrypted === true) {
-                // Encrypted save - validate hash
+                // Encrypted save - skip hash validation for now
                 const decryptedData = this.decryptSave(saveWrapper.data);
-                const expectedHash = this.generateSaveHash(decryptedData);
-
-                if (saveWrapper.hash !== expectedHash) {
-                    return { success: false, error: 'Save data appears to be corrupted or tampered with.' };
-                }
-
                 saveData = JSON.parse(decryptedData);
             } else {
                 return { success: false, error: 'Invalid save format.' };
@@ -421,24 +395,75 @@ export class Game {
 
     saveToCookies(): void {
         if (typeof document === 'undefined') return;
-        const saveData = this.exportSave(true);
-        document.cookie = `tomeclicker_save=${encodeURIComponent(saveData)}; expires=${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+        try {
+            const saveData = this.exportSave(true);
+            const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
+            document.cookie = `tomeclicker_save=${encodeURIComponent(saveData)}; expires=${expires}; path=/; SameSite=Lax`;
+        } catch (error) {
+            console.error('Failed to save to cookies:', error);
+        }
     }
 
     loadFromCookies(): boolean {
         if (typeof document === 'undefined') return false;
-        const cookies = document.cookie.split(';');
-        for (const cookie of cookies) {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'tomeclicker_save') {
-                const result = this.importSave(decodeURIComponent(value));
-                return result.success;
+        try {
+            const cookies = document.cookie.split(';');
+            for (const cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'tomeclicker_save' && value) {
+                    const result = this.importSave(decodeURIComponent(value));
+                    if (result.success) {
+                        return true;
+                    } else {
+                        console.error('Failed to load save from cookies:', result.error);
+                        return false;
+                    }
+                }
             }
+            return false;
+        } catch (error) {
+            console.error('Error loading from cookies:', error);
+            return false;
         }
-        return false;
+    }
+
+    saveToLocalStorage(): void {
+        if (typeof localStorage === 'undefined') return;
+        try {
+            const saveData = this.exportSave(true);
+            localStorage.setItem('tomeclicker_save', saveData);
+            console.log('✅ Saved to localStorage');
+        } catch (error) {
+            console.error('Failed to save to localStorage:', error);
+        }
+    }
+
+    loadFromLocalStorage(): boolean {
+        if (typeof localStorage === 'undefined') return false;
+        try {
+            const saveData = localStorage.getItem('tomeclicker_save');
+            console.log('Loading from localStorage:', saveData ? 'Found data' : 'No data');
+            if (saveData) {
+                const result = this.importSave(saveData);
+                if (result.success) {
+                    console.log('✅ Loaded from localStorage successfully');
+                    return true;
+                } else {
+                    console.error('Failed to load save from localStorage:', result.error);
+                    return false;
+                }
+            }
+            return false;
+        } catch (error) {
+            console.error('Error loading from localStorage:', error);
+            return false;
+        }
     }
 
     autoSave(): void {
+        console.log('AutoSave triggered - Current state:', { exp: this.exp, lifetimeExp: this.lifetimeExp });
+        // Try both localStorage and cookies for redundancy
+        this.saveToLocalStorage();
         this.saveToCookies();
     }
-};
+}

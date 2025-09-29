@@ -11,6 +11,7 @@ TomeClicker employs a unique progression philosophy where what initially appears
 ## Game Structure: Three-Act Progression
 
 ### Act I: The Mundane Beginning (Character Levels 1-4)
+
 - **Primary Loop**: Click for EXP → Unlock pages → Train stats → Begin adventures
 - **Key Unlocks**:
   - 10 EXP: Header visibility
@@ -24,6 +25,7 @@ TomeClicker employs a unique progression philosophy where what initially appears
   - Equipment system providing multiplicative scaling
 
 ### Act II: The Prestige Loop (Retreats & Knowledge)
+
 - **Primary Loop**: Retreat → Gain KP → Unlock improvements → Progress faster
 - **Key Systems**:
   - Retreat mechanics (reset progress, increase level cap)
@@ -37,6 +39,7 @@ TomeClicker employs a unique progression philosophy where what initially appears
   - Later retreats: Tome discoveries
 
 ### Act III: The Magical Revelation (Tomes System)
+
 - **Primary Loop**: Discover tomes → Learn spells → Transcend physical limits
 - **Scope**: 50 Tomes across 15 tiers
 - **Progression**:
@@ -50,7 +53,9 @@ TomeClicker employs a unique progression philosophy where what initially appears
 ## Key Design Patterns
 
 ### Mechanical Obsolescence
+
 Each system intentionally becomes less relevant as new ones emerge:
+
 - Practice Page → Replaced by idle mechanics
 - Basic Upgrades → Diminishing returns force progression
 - Training → Superseded by adventure AP spending
@@ -58,14 +63,18 @@ Each system intentionally becomes less relevant as new ones emerge:
 - Physical Combat → Transcended by magical abilities
 
 ### Exponential Scaling Framework
+
 Multiple overlapping exponential systems create satisfying progression:
+
 - **EXP Requirements**: ~10x per character level
 - **Stat Scaling**: Equipment multiplies base stats exponentially
 - **Retreat Benefits**: Linear cap increases compound with other systems
 - **Tome Progression**: 15 tiers with exponentially increasing power
 
 ### Idle vs Active Tension
+
 Creates meaningful player decisions through competing priorities:
+
 - **Resource Competition**: Can't train while practicing
 - **Synergies**: Adventure + practice simultaneously
 - **Risk Management**: Safe training vs dangerous adventures
@@ -74,13 +83,16 @@ Creates meaningful player decisions through competing priorities:
 ## Game Systems Breakdown
 
 ### Experience & Leveling
+
 - **EXP Sources**: Clicking, research (idle), adventures, quests
 - **Level Formula**: `Math.floor(Math.log10(exp) / 3) + 1`
 - **Level Caps**: Start at 4, increase by 1 per retreat, max 20
 - **Scaling**: Exponential requirements maintain long-term goals
 
 ### Stats System
+
 Six core stats with different scaling behaviors:
+
 - **Strength**: +attack (1:1 ratio)
 - **Agility**: +attack speed (1:1 ratio)
 - **Willpower**: +defense (1:1 ratio)
@@ -89,6 +101,7 @@ Six core stats with different scaling behaviors:
 - **Wisdom**: +mana regen (level/4 per second)
 
 ### Adventure & Combat
+
 - **Zone Progression**: Minimum stat requirements gate content
 - **Combat Loop**: Success chains vs HP loss on failure
 - **Rewards**: Equipment unlocks, AP for stat training, EXP
@@ -96,6 +109,7 @@ Six core stats with different scaling behaviors:
 - **Scaling**: Enemy difficulty and rewards scale with zone
 
 ### Prestige Systems
+
 - **Retreats**: Hard reset with permanent benefits
   - Increase level cap by 1
   - Increase stat caps by 5
@@ -105,6 +119,7 @@ Six core stats with different scaling behaviors:
 - **Achievements**: Provide multipliers and QoL improvements
 
 ### Magic & Tomes
+
 - **Discovery**: Pages → Chapters → Complete tomes
 - **Elements**: Fire, Frost, Shock
 - **Alignments**: Holy, Black (mutually exclusive choices)
@@ -114,24 +129,28 @@ Six core stats with different scaling behaviors:
 ## Implementation Priorities
 
 ### Phase 1: Core Loop (MVP)
+
 1. Perfect EXP gain/spend balance
 2. Implement basic upgrade system with diminishing returns
 3. Create satisfying progression feedback
 4. Establish save/load functionality
 
 ### Phase 2: RPG Systems
+
 1. Implement stats and training mechanics
 2. Design adventure zones with proper scaling
 3. Create equipment system with tier progression
 4. Balance risk/reward for different activities
 
 ### Phase 3: Meta-Progression
+
 1. Implement retreat mechanics
 2. Design knowledge tree with meaningful choices
 3. Create achievement system with tangible benefits
 4. Add automation unlocks for QoL
 
 ### Phase 4: Magical Systems
+
 1. Implement tome discovery mechanics
 2. Create spell system that obsoletes physical combat
 3. Design alignment choices with meaningful consequences
@@ -140,6 +159,7 @@ Six core stats with different scaling behaviors:
 ## Technical Architecture Notes
 
 ### TypeScript Migration Benefits
+
 - **Type Safety**: Prevent state inconsistencies
 - **Enums**: Game states, elements, alignments, spell types
 - **Interfaces**: Equipment, tomes, achievements structures
@@ -147,38 +167,40 @@ Six core stats with different scaling behaviors:
 - **Union Types**: Different action types with specific parameters
 
 ### State Management Structure
+
 ```typescript
 interface GameState {
-  player: {
-    exp: number;
-    level: number;
-    stats: StatBlock;
-    equipment: EquipmentSet;
-  };
-  progression: {
-    unlockedPages: Set<PageId>;
-    currentActivity: ActivityType;
-    retreatCount: number;
-  };
-  combat: {
-    currentZone: ZoneId;
-    enemiesDefeated: number;
-    hp: number;
-  };
-  tomes: {
-    discovered: Map<TomeId, DiscoveryState>;
-    spellsKnown: Set<SpellId>;
-    alignment: Alignment | null;
-  };
-  meta: {
-    knowledgePoints: number;
-    achievements: Set<AchievementId>;
-    totalAPEarned: number;
-  };
+	player: {
+		exp: number;
+		level: number;
+		stats: StatBlock;
+		equipment: EquipmentSet;
+	};
+	progression: {
+		unlockedPages: Set<PageId>;
+		currentActivity: ActivityType;
+		retreatCount: number;
+	};
+	combat: {
+		currentZone: ZoneId;
+		enemiesDefeated: number;
+		hp: number;
+	};
+	tomes: {
+		discovered: Map<TomeId, DiscoveryState>;
+		spellsKnown: Set<SpellId>;
+		alignment: Alignment | null;
+	};
+	meta: {
+		knowledgePoints: number;
+		achievements: Set<AchievementId>;
+		totalAPEarned: number;
+	};
 }
 ```
 
 ### Save System Considerations
+
 - **Local Storage**: Browser-based saves with compression
 - **Cloud Saves**: Minimal data structure for scalability
 - **Anti-Cheat**: Statistical validation for leaderboards
@@ -187,17 +209,21 @@ interface GameState {
 ## Design Challenges & Solutions
 
 ### The Grind Valley
+
 **Problem**: Period between unlocking stats and achieving level 1 in all stats feels too slow.
 **Solution**: Provide intermediate rewards, visual progress indicators, and story elements to maintain engagement.
 
 ### The Retreat Decision
+
 **Problem**: Players hesitant to give up progress.
 **Solution**: Clear preview of benefits, optimal retreat indicators, and make first retreat feel necessary for progression.
 
 ### Pacing Tome Discovery
+
 **Problem**: Revealing magic too early reduces mystery, too late causes frustration.
 **Solution**: Gradual hints through story, partial page discoveries, and preview system showing what's possible.
 
 ### Endgame Content
+
 **Problem**: What happens after all 50 tomes are discovered?
 **Solution**: Player transcende

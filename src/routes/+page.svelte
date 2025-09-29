@@ -1,22 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
 
-    onMount(() => {
-        document.addEventListener('touchstart', function (event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
-            }
-        }, { passive: false });
-
-        return () => {
-            document.removeEventListener('touchstart', function (event) {
-                if (event.touches.length > 1) {
-                    event.preventDefault();
-                }
-            });
-        };
-    });
-
     import { Config } from '$lib/config';
     import { Game } from '$lib/game';
 
@@ -30,15 +14,68 @@
     // Game values
     let game: Game;
 
-    // Initialize game in browser only
     onMount(() => {
         game = new Game();
-        game.loadFromCookies();
+
+        // Load saved data
+        setTimeout(() => {
+            if (game) {
+                console.log('🔄 Attempting to load saved data...');
+                const loadedFromLocalStorage = game.loadFromLocalStorage();
+                if (!loadedFromLocalStorage) {
+                    console.log('📱 LocalStorage failed, trying cookies...');
+                    game.loadFromCookies();
+                } else {
+                    console.log('✅ Game loaded from localStorage');
+                }
+                console.log('🎮 Final game state after load attempt:', { exp: game.exp, lifetimeExp: game.lifetimeExp });
+                game = game; // Force reactivity
+            }
+        }, 100);
+
+        // Set up autosave every 15 seconds
+        const autosaveInterval = setInterval(() => {
+            if (game) {
+                game.autoSave();
+            }
+        }, 15000);
+
+        // Cleanup on component destroy
+        return () => {
+            clearInterval(autosaveInterval);
+        };
+
+        // Setup touch event handling for iOS double-tap prevention
+        let lastTouchTime = 0;
+
+        const handleTouchStart = (event: TouchEvent) => {
+            // Allow pinch-zoom (multi-touch)
+            if (event.touches.length > 1) {
+                return;
+            }
+
+            // Prevent double-tap zoom by checking time between taps
+            const currentTime = Date.now();
+            const timeDiff = currentTime - lastTouchTime;
+            lastTouchTime = currentTime;
+
+            // If touches are too close together (< 300ms), prevent default
+            if (timeDiff < 300) {
+                event.preventDefault();
+            }
+        };
+
+        document.addEventListener('touchstart', handleTouchStart, { passive: false });
+
+        return () => {
+            document.removeEventListener('touchstart', handleTouchStart);
+        };
     });
 
     // Color theme
     let theme = "";
     $: theme = config.getTheme();
+
 </script>
 
 <svelte:head>
@@ -80,6 +117,8 @@
         padding: 0;
         height: 100%;
         overflow: hidden;
+        /* Prevent double-tap zoom while allowing pinch-zoom */
+        touch-action: manipulation;
     }
 
     .app {
@@ -139,32 +178,40 @@
         --bg: #2d384eff;
         --alt-bg: #1e2534ff;
         --text: #57adefff;
+        --blue: #57adefff;
         --green: #1aefc4ff;
         --red: #ffa047ff;
+        --yellow: #ffd700ff;
     }
 
     .prussian-blue-light {
         --bg: #97a6c3ff;
         --alt-bg: #a4b1cbff;
         --text: #0c4f83ff;
+        --blue: #0c4f83ff;
         --green: #08725dff;
         --red: #cc6300ff;
+        --yellow: #b8860bff;
     }
 
     .graphite-light {
         --bg: #d5d3d9ff;
         --alt-bg: #b6b3bdff;
         --text: #1e1c21ff;
+        --blue: #4a5568ff;
         --red: #c14b1fff;
         --green: #406354ff;
+        --yellow: #d69e2eff;
     }
 
     .graphite-dark {
         --bg: #28262cff;
         --alt-bg: #1e1c21ff;
         --text: #cbc8d0ff;
+        --blue: #8bb5e8ff;
         --red: #e27750ff;
         --green: #6b9e88ff;
+        --yellow: #f7dc6fff;
     }
 
 </style>

@@ -40,10 +40,12 @@ npm run prepare
 ## Architecture
 
 ### Core Game Classes
+
 - `Game` class (`src/lib/game.js`): Main game state including exp, level, menu navigation, and progression conditions
 - `Config` class (`src/lib/config.js`): Handles theme and UI configuration
 
 ### Component Structure
+
 - **Main Layout**: `src/routes/index.svelte` - Root component with responsive layout and theme system
 - **Core Components**:
   - `src/lib/header.svelte` - Game header (shows when exp > 10)
@@ -52,24 +54,29 @@ npm run prepare
 - **Views**: `src/lib/views/` - Individual game screens (practice, settings, story)
 
 ### Game Progression System
+
 The game uses a tiered unlock system based on experience points:
+
 - Header unlocks at 10+ exp
 - Menu navigation unlocks at 50+ exp
 - Level calculation: `Math.floor(Math.log10(exp) / 3) + 1`
 
 ### Build Configuration
+
 - Uses `@sveltejs/adapter-static` for static site generation
 - Outputs to `docs/` directory for GitHub Pages deployment
 - Base path configured as `/tomeclicker` for GitHub Pages
 - Prerendering enabled for all routes
 
 ### Theme System
+
 - CSS custom properties-based theming
 - Two themes: "prussian-blue" and "graphite"
 - Light/dark mode variants for each theme
 - Theme classes applied dynamically to root element
 
 ### Game Design Reference
+
 The `ref/OUTLINE.md` file contains the complete game design document with detailed progression mechanics, stats system, and future features including adventure zones, equipment, retreats, and the tome magic system.
 
 ## Development Notes

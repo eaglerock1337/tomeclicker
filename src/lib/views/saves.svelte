@@ -10,6 +10,7 @@
     let message = '';
     let messageType: 'success' | 'warning' | 'error' = 'success';
     let showMessage = false;
+    let showResetConfirm = false;
 
     function showMessageFor(msg: string, type: 'success' | 'warning' | 'error', duration = 3000) {
         message = msg;
@@ -73,7 +74,7 @@
 
     function saveToFile() {
         try {
-            game.saveToCookies();
+            game.autoSave(); // This saves to both localStorage and cookies
             showMessageFor('Game saved to browser storage!', 'success');
         } catch (error) {
             showMessageFor('Failed to save game', 'error');
@@ -82,14 +83,63 @@
 
     function loadFromFile() {
         try {
-            const loaded = game.loadFromCookies();
-            if (loaded) {
-                showMessageFor('Game loaded from browser storage!', 'success');
+            // Try localStorage first, then cookies
+            const loadedFromLocalStorage = game.loadFromLocalStorage();
+            const loadedFromCookies = !loadedFromLocalStorage ? game.loadFromCookies() : false;
+
+            if (loadedFromLocalStorage || loadedFromCookies) {
+                const source = loadedFromLocalStorage ? 'localStorage' : 'cookies';
+                showMessageFor(`Game loaded from ${source}!`, 'success');
+                game = game; // Force reactivity
             } else {
                 showMessageFor('No save found in browser storage', 'warning');
             }
         } catch (error) {
             showMessageFor('Failed to load game', 'error');
+        }
+    }
+
+    function confirmHardReset() {
+        showResetConfirm = true;
+    }
+
+    function cancelReset() {
+        showResetConfirm = false;
+    }
+
+    function performHardReset() {
+        try {
+            // Clear localStorage
+            if (typeof localStorage !== 'undefined') {
+                localStorage.removeItem('tomeclicker_save');
+            }
+
+            // Clear cookies
+            if (typeof document !== 'undefined') {
+                document.cookie = 'tomeclicker_save=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            }
+
+            // Reset game state to initial values
+            game.name = 'A Stranger';
+            game.exp = 0.0;
+            game.lifetimeExp = 0.0;
+            game.level = 1;
+            game.tick = 0;
+            game.text = "click me";
+            game.menu = "practice";
+            game.clickMultiplier = 1.0;
+            game.upgrades = game.initializeUpgrades();
+            game.saveIntegrity = 'valid';
+            game.lastValidation = Date.now();
+            game.recalculateClickMultiplier();
+
+            // Force Svelte reactivity
+            game = game;
+
+            showResetConfirm = false;
+            showMessageFor('Game has been completely reset!', 'success');
+        } catch (error) {
+            showMessageFor('Failed to reset game', 'error');
         }
     }
 
@@ -171,7 +221,37 @@
                 <p><strong>Lifetime EXP:</strong> {game.lifetimeExp.toLocaleString()}</p>
             </div>
         </div>
+
+        <div class="save-section danger-section">
+            <h2>Danger Zone</h2>
+            <p>Permanently delete all progress and start over from the beginning.</p>
+            <button class="danger-btn" on:click={confirmHardReset}>
+                <AlertTriangle size={20}/> Hard Reset
+            </button>
+        </div>
     </div>
+
+    {#if showResetConfirm}
+        <div class="modal-overlay">
+            <div class="modal">
+                <h3>Confirm Hard Reset</h3>
+                <p>This will permanently delete ALL your progress, including:</p>
+                <ul>
+                    <li>All EXP and levels</li>
+                    <li>All upgrades</li>
+                    <li>All save data</li>
+                    <li>Browser storage</li>
+                </ul>
+                <p><strong>This action cannot be undone!</strong></p>
+                <div class="modal-buttons">
+                    <button class="cancel-btn" on:click={cancelReset}>Cancel</button>
+                    <button class="confirm-reset-btn" on:click={performHardReset}>
+                        <AlertTriangle size={20}/> Confirm Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+    {/if}
 </div>
 
 <style>
@@ -340,5 +420,93 @@
 
     .status-info p {
         margin: 0.5rem 0;
+    }
+
+    .danger-section {
+        border-color: var(--red) !important;
+    }
+
+    .danger-section h2 {
+        color: var(--red);
+    }
+
+    .danger-btn {
+        background-color: var(--red);
+        color: var(--bg);
+        border-color: var(--red);
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .danger-btn:hover {
+        background-color: var(--text);
+        border-color: var(--text);
+        color: var(--bg);
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal {
+        background-color: var(--alt-bg);
+        border: 2px solid var(--red);
+        border-radius: 10px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        text-align: left;
+        color: var(--text);
+    }
+
+    .modal h3 {
+        color: var(--red);
+        margin-bottom: 1rem;
+        font-family: Lato, sans-serif;
+        font-weight: 300;
+    }
+
+    .modal ul {
+        margin: 1rem 0;
+        padding-left: 1.5rem;
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .cancel-btn {
+        background-color: var(--text);
+        color: var(--bg);
+        border-color: var(--text);
+        flex: 1;
+    }
+
+    .confirm-reset-btn {
+        background-color: var(--red);
+        color: var(--bg);
+        border-color: var(--red);
+        flex: 1;
+    }
+
+    .cancel-btn:hover {
+        background-color: var(--green);
+        border-color: var(--green);
+    }
+
+    .confirm-reset-btn:hover {
+        background-color: var(--text);
+        border-color: var(--text);
     }
 </style>
