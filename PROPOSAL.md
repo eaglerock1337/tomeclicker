@@ -43,11 +43,122 @@ These changes address current TODOs and polish the existing experience without r
 
 ---
 
+## Phase 1.5: Quality Infrastructure
+
+### Priority: High | Estimated Time: 3-5 days
+
+**Added 2025-10-18**: This phase was inserted between Phase 1 and Phase 2 based on user feedback to establish quality guardrails before major refactoring work.
+
+This phase sets up testing and code quality infrastructure to enable confident refactoring in Phase 2.
+
+#### 1.5.1 Linting & Code Quality
+
+**ESLint Setup**:
+- Install and configure ESLint
+- Add TypeScript ESLint plugin
+- Add Svelte ESLint plugin
+- Configure rules for code consistency
+- Add `.eslintrc.js` with project-specific rules
+
+**TypeScript Strict Mode**:
+- Enable stricter compiler options
+- Add `noImplicitAny`, `strictNullChecks`, etc.
+- Fix any type errors that surface
+
+**Prettier Integration**:
+- Ensure ESLint and Prettier work together
+- Configure auto-format on save
+
+#### 1.5.2 Testing Framework Setup
+
+**Vitest Configuration**:
+1. Install Vitest and testing dependencies
+2. Configure `vite.config.ts` for testing
+3. Set up test file structure (`src/**/*.spec.ts`)
+4. Configure code coverage reporting (target: 80%+)
+
+**First Unit Tests**:
+- Write tests for `Game` class core methods:
+  - `calculateLevel(exp)` with edge cases
+  - `getUpgradeCost()` with various tiers
+  - `clickMultiplier` calculation
+  - `save()` and `load()` functionality
+- Establish testing patterns for future tests
+
+**Component Testing** (optional for Phase 1.5):
+- Set up Svelte Testing Library
+- Write basic component tests
+- Can be deferred to Phase 2 if time-constrained
+
+#### 1.5.3 Pre-Commit Hooks
+
+**Husky + lint-staged Setup**:
+- Install Husky for Git hooks
+- Configure lint-staged for pre-commit
+- Run linting on staged files
+- Run formatting on staged files
+- Prevent commits with lint errors
+
+**Pre-Push Hooks**:
+- Run `npm run check` (type checking)
+- Run `npm run test` (unit tests)
+- Ensure builds succeed before push
+
+#### 1.5.4 CI/CD Pipeline
+
+**GitHub Actions Workflow**:
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run check
+      - run: npm run test
+      - run: npm run build
+      - uses: codecov/codecov-action@v3
+```
+
+**Branch Protection**:
+- Require CI checks to pass before merge
+- Require code review (optional)
+- Enable auto-merge when checks pass
+
+#### 1.5.5 E2E Testing Setup (Basic)
+
+**Playwright Configuration**:
+- Install Playwright
+- Configure for Chromium, Firefox, Webkit
+- Set up basic smoke tests:
+  - Page loads successfully
+  - Click button works
+  - Navigation between views works
+- Full E2E suite can grow in Phase 2
+
+**Benefits of Phase 1.5**:
+- Catch bugs before they reach production
+- Enable confident refactoring in Phase 2
+- Establish quality baseline
+- Automated checks prevent regressions
+- Test-driven development becomes possible
+
+---
+
 ## Phase 2: Technical Modernization
 
 ### Priority: High | Estimated Time: 1-2 weeks
 
 This phase brings the codebase up to modern standards and sets the foundation for complex feature development.
+
+**Note**: Phase 2 now has a safety net from Phase 1.5 testing infrastructure.
 
 #### 2.1 Svelte 5 Migration
 
@@ -534,11 +645,17 @@ Work on this project may require coordinating across multiple repositories:
 
 ## Success Metrics
 
-### Phase 1
-- Zero debug UI visible in production
-- Hard reset functional with confirmation
-- Enhanced click feedback implemented
-- Upgrades page properly formatted
+### Phase 1.x
+- Upgrades menu: Improved navigation, mobile-friendly
+- Story page: Centered layout, navigation system added
+- Settings/Saves: Clean layout, test buttons removed
+
+### Phase 1.5
+- ESLint configured and passing
+- Vitest test suite with 80%+ coverage on core logic
+- Pre-commit hooks prevent bad commits
+- GitHub Actions CI pipeline running
+- All tests passing on main branch
 
 ### Phase 2
 - 100% TypeScript coverage
@@ -561,7 +678,8 @@ Work on this project may require coordinating across multiple repositories:
 
 | Phase | Duration | Deliverables |
 |-------|----------|--------------|
-| 1.1-1.2 | 1-2 days | Polished UI, hard reset |
+| 1.x | 1-2 days | Settings, Upgrades, Story page fixes |
+| 1.5 | 3-5 days | **NEW**: ESLint, Vitest, CI/CD, pre-commit hooks |
 | 2.1 | 3-5 days | Svelte 5 migration complete |
 | 2.2 | 3-5 days | Full TypeScript migration |
 | 2.3 | 5-7 days | Modular architecture |
@@ -570,7 +688,7 @@ Work on this project may require coordinating across multiple repositories:
 | 3.2.2 | 1 week | Client integration |
 | 3.2.3 | 1 week | Anti-cheat & leaderboard |
 
-**Total Estimated Time:** 6-8 weeks for complete implementation
+**Total Estimated Time:** 7-9 weeks for complete implementation (updated with Phase 1.5)
 
 ---
 

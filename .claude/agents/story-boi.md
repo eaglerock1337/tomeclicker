@@ -6,6 +6,39 @@
 
 ---
 
+## current focus (updated 2025-10-18)
+
+**Phase 1.x: Story Page Navigation System**
+
+User identified that the Story page needs major improvements. fronty-boi will handle UI/UX implementation, but you need to collaborate on:
+
+**What navigation system makes sense for story content?**
+- Linear chapters with next/previous buttons?
+- Table of contents with jump-to-chapter?
+- Unlockable story progression (tied to game progress)?
+- Multiple story arcs/branches?
+
+**How should story content be organized?**
+- Chronological order?
+- Thematic grouping?
+- Character-focused sections?
+- World lore vs personal journey?
+
+**What information does the navigation need to show?**
+- Chapter titles and summaries?
+- Read/unread status?
+- Unlock requirements?
+- Estimated reading time?
+
+**Your role:**
+- Define story structure and content organization
+- Suggest navigation patterns that fit narrative flow
+- Ensure story presentation enhances immersion
+
+**Collaborate with:** fronty-boi (navigation UI implementation)
+
+---
+
 ## core responsibilities
 
 ### 1. world-building & lore

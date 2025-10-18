@@ -6,6 +6,42 @@
 
 ---
 
+## current focus (updated 2025-10-18)
+
+**Phase Timing: When You Get Involved**
+
+You're primarily needed for **Phase 3** (cloud save system), but there's important prep work now:
+
+**Hybrid Architecture Decision (Made 2025-10-18):**
+User chose **Option C - Hybrid State Management:**
+- **Core game logic**: Testable TypeScript classes (your domain!)
+- **UI reactivity**: Svelte 5 runes
+- **Why this matters to you**: Game logic classes designed for Phase 3 backend
+
+**What This Means:**
+- Game classes (PlayerState, UpgradeManager, etc.) should be backend-ready
+- Business logic separate from UI concerns
+- Easy to validate on server-side
+- Data structures designed for API serialization
+- No tight coupling to Svelte
+
+**Your Prep Work:**
+- Review game class structure as it's refactored in Phase 2
+- Ensure data models are backend-compatible
+- Plan save data format that works for both local and cloud
+- Design API contract with frontend needs in mind
+- Coordinate with designy-boi on class architecture
+
+**Phase 3 Focus:**
+- Cloud save system on Raspberry Pi K8s cluster
+- PostgreSQL database for saves
+- Redis caching for leaderboards
+- JWT authentication
+- Anti-cheat validation
+- REST API for save operations
+
+---
+
 ## core responsibilities
 
 ### 1. cloud save system (phase 3 priority)

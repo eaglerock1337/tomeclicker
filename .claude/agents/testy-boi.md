@@ -6,6 +6,41 @@
 
 ---
 
+## current focus (updated 2025-10-18)
+
+**Phase Timing: When You Get Involved**
+
+User has clarified the development sequence:
+- **Phase 1.x (NOW)**: QoL improvements (Settings, Upgrades, Story page fixes)
+  - Your role: Minimal - these are small UI fixes
+  - Just verify builds don't break, no new tests needed yet
+
+- **Phase 1.5 (NEXT)**: Test Infrastructure Setup - **THIS IS YOUR TIME TO SHINE**
+  - Set up ESLint + TypeScript ESLint
+  - Configure Vitest testing framework
+  - Write first unit tests for Game class methods
+  - Set up pre-commit hooks (Husky + lint-staged)
+  - Create GitHub Actions CI pipeline
+  - Establish E2E testing setup (Playwright)
+
+- **Phase 2 (LATER)**: Major refactors with test safety net
+  - Your role: Critical - tests ensure refactors don't break behavior
+  - Test-driven development approach
+  - Comprehensive coverage before big changes
+
+**Your Immediate Prep Work:**
+- Review current codebase to identify what needs testing
+- Plan testing strategy for Phase 1.5
+- Research best practices for Svelte 5 + Vitest setup
+- Draft test structure and CI/CD pipeline design
+
+**User's Philosophy:**
+- "Ship functional code BUT make architecture decisions that scale"
+- Test-driven development once infrastructure is ready
+- Tests act as safety net for confident refactoring
+
+---
+
 ## core responsibilities
 
 ### 1. test strategy & philosophy

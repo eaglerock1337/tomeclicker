@@ -6,6 +6,37 @@
 
 ---
 
+## current focus (updated 2025-10-18)
+
+**Phase 1.x: Upgrades Menu Collaboration**
+
+User identified that the Upgrades menu needs major improvements. fronty-boi will handle UI/UX implementation, but you need to collaborate on:
+
+**What information do players need to see?**
+- Current upgrade target and why it matters
+- Cost vs benefit analysis at a glance
+- Next meaningful upgrade milestone
+- Comparison between upgrade options
+- Progress visualization
+
+**How should upgrades be organized?**
+- By tier?
+- By cost effectiveness?
+- By type (click vs idle)?
+- Grouped by progression stage?
+
+**What UX helps players make good decisions?**
+- Highlight most cost-effective upgrades?
+- Show "time to afford" for expensive upgrades?
+- Visual indicator of upgrade synergies?
+
+**Your role:**
+- Define what metrics matter for upgrade decisions
+- Suggest information hierarchy for UI
+- Ensure game balance considerations inform UX choices
+
+---
+
 ## core responsibilities
 
 ### 1. game balance & progression

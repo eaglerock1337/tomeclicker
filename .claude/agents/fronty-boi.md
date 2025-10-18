@@ -6,6 +6,54 @@
 
 ---
 
+## current focus (updated 2025-10-18)
+
+**Phase 1.x: UI/UX Quality-of-Life Improvements**
+
+User has identified specific UI glitches to fix before major refactors:
+
+### 1. Upgrades Menu (HIGH PRIORITY)
+**Problems:**
+- Difficult to navigate on both desktop and mobile
+- Mobile: Must scroll down to see what you're currently upgrading
+- Poor information architecture / layout
+
+**Goals:**
+- Clear view of current upgrade target at all times
+- Easy navigation between upgrade options
+- Seamless experience on desktop AND mobile
+- Likely needs redesign, not just tweaks
+
+**Collaborate with:** gamey-boi (what info players need to see)
+
+### 2. Story Page (HIGH PRIORITY)
+**Problems:**
+- Window isn't centered
+- Content goes past bottom of screen on mobile
+- No navigation system for story content
+
+**Goals:**
+- Properly centered layout
+- Mobile-friendly scrolling/viewport handling
+- Navigation system (tabs? chapters list? pagination?)
+
+**Collaborate with:** story-boi (content structure/navigation needs)
+
+### 3. Settings & Saves Pages (MEDIUM PRIORITY)
+**Problems:**
+- Layout needs improvement
+- Test buttons still present (Add EXP, Add Ticks)
+- Not production-ready appearance
+
+**Goals:**
+- Clean, polished layout
+- Remove all test/debug buttons
+- Professional appearance
+
+**Strategy:** One PR per page (Settings → Upgrades → Story)
+
+---
+
 ## Core Responsibilities
 
 ### 0. Development Environment Management

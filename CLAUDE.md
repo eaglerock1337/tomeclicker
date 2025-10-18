@@ -111,11 +111,19 @@ The `ref/OUTLINE.md` file contains the complete game design document with detail
 - **Svelte**: Using v5 but with v4 patterns (runes not yet adopted)
 - **Architecture**: Monolithic Game class (~500 lines, needs refactoring)
 - **Save System**: Basic localStorage + cookies (cloud saves planned)
+- **Architecture Decision (2025-10-18)**: Hybrid state management
+  - Core game logic in testable TypeScript classes
+  - Svelte 5 runes for UI reactivity
+  - Backend-ready for Phase 3
 
 ### Roadmap
 
 See `PROPOSAL.md` for the complete modernization and enhancement roadmap, including:
-- **Phase 1**: Immediate QoL improvements and bug fixes
+- **Phase 1.x (Current)**: Immediate QoL improvements
+  - Upgrades menu: Fix mobile navigation issues
+  - Story page: Center layout, add navigation system
+  - Settings/Saves: Polish layout, remove test buttons
+- **Phase 1.5 (Next)**: Test infrastructure (ESLint, Vitest, CI/CD)
 - **Phase 2**: Technical modernization (Svelte 5, TypeScript, modular architecture)
 - **Phase 3**: Cloud save system on Raspberry Pi Kubernetes cluster
 
