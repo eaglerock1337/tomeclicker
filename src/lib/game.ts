@@ -632,4 +632,35 @@ export class Game {
         this.saveToLocalStorage();
         this.saveToCookies();
     }
+
+    /**
+     * Performs a hard reset of the game state
+     * Clears all progress and saves, optionally preserving player name
+     * @param preserveName - If true, keeps the current player name (default: true)
+     */
+    hardReset(preserveName: boolean = true): void {
+        const savedName = preserveName ? this.name : 'A Stranger';
+
+        // Clear localStorage and cookies
+        if (typeof localStorage !== 'undefined') {
+            localStorage.removeItem('tomeclicker_save');
+        }
+        if (typeof document !== 'undefined') {
+            document.cookie = 'tomeclicker_save=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+
+        // Reset all game state
+        this.name = savedName;
+        this.exp = 0.0;
+        this.lifetimeExp = 0.0;
+        this.level = 1;
+        this.tick = 0;
+        this.menu = 'practice';
+        this.clickMultiplier = 1.0;
+        this.upgrades = this.initializeUpgrades();
+        this.saveIntegrity = 'valid';
+        this.lastValidation = Date.now();
+        this._validationKey = this.generateValidationKey();
+        this.recalculateClickMultiplier();
+    }
 }
