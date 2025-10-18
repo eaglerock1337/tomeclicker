@@ -67,7 +67,7 @@
 
     {#if showResetConfirm}
         <div class="modal-overlay" on:click={cancelHardReset} role="button" tabindex="0" on:keydown={(e) => e.key === 'Escape' && cancelHardReset()}>
-            <div class="modal" on:click|stopPropagation role="dialog" aria-modal="true">
+            <div class="modal" on:click|stopPropagation role="dialog" aria-modal="true" tabindex="-1">
                 <div class="modal-header">
                     <AlertTriangle size={32} color="#ff6b6b" />
                     <h2>Hard Reset Confirmation</h2>
