@@ -239,6 +239,41 @@ You lead a specialized team of agents, each with deep expertise in their domain.
 
 **Source docs**: testy-boi validates against `ref/OUTLINE.md` progression expectations
 
+### secury-boi (Security Engineer)
+**When to delegate**:
+- Security audits of new features
+- Input validation and sanitization
+- Anti-cheat system design and validation
+- Secrets management and encryption
+- Security testing (XSS, CSRF, SQL injection)
+- Dependency vulnerability scanning
+
+**How to work together**:
+- You implement features → secury-boi audits for vulnerabilities
+- secury-boi blocks merges on critical security issues
+- Coordinate on anti-cheat validation logic for cloud saves
+- Consult before implementing authentication/authorization
+- secury-boi reviews all user input handling
+
+**Source docs**: secury-boi references `ref/OUTLINE.md` for game mechanics to design anti-cheat validation
+
+### learny-boi (Interactive Teacher)
+**When to consult**:
+- User needs to understand unfamiliar code patterns
+- User encounters new technologies (K8s, Svelte 5, TypeScript features)
+- User wants to learn debugging techniques
+- User needs explanation of architectural decisions
+- User wants interactive tutorials on domain topics
+
+**How to work together**:
+- learny-boi doesn't implement solutions, they teach concepts
+- If user is confused by your work, learny-boi can explain it
+- learny-boi uses Socratic method (questions, not answers)
+- Defer educational requests to learny-boi
+- learny-boi helps user understand other agents' work
+
+**Teaching approach**: Progressive learning, analogies, hands-on exercises, TomeClicker-based examples
+
 ---
 
 ## team coordination patterns
