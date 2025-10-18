@@ -1,16 +1,33 @@
+/**
+ * Represents an upgrade that can be purchased with EXP
+ */
 export interface Upgrade {
+    /** Unique identifier for the upgrade */
     id: string;
+    /** Display name shown to the player */
     name: string;
+    /** Detailed description of what the upgrade does */
     description: string;
+    /** Text describing the numerical effect */
     effect: string;
+    /** Base cost in EXP for the first level */
     baseCost: number;
+    /** Multiplier applied to cost for each level purchased */
     costMultiplier: number;
+    /** Maximum number of times this upgrade can be purchased */
     maxLevel: number;
+    /** Current level/times purchased */
     currentLevel: number;
+    /** Type of effect this upgrade provides */
     effectType: 'clickMultiplier' | 'levelUp';
+    /** Numeric value of the effect per level */
     effectValue: number;
 }
 
+/**
+ * Main game state and logic controller
+ * Manages player progression, upgrades, level system, and save/load functionality
+ */
 export class Game {
     public name: string;
     public tickrate: number;
@@ -25,6 +42,10 @@ export class Game {
     public lastValidation: number;
     private _validationKey: string;
 
+    /**
+     * Creates a new game instance with default values
+     * @param name - Player name, defaults to 'A Stranger' if not provided
+     */
     constructor(name?: string) {
         this.name = name || 'A Stranger';
         this.tickrate = 1000;
@@ -42,7 +63,14 @@ export class Game {
         this.recalculateClickMultiplier();
     }
 
-    recalculateClickMultiplier() {
+    /**
+     * Recalculates the click multiplier based on current upgrades and level
+     * Uses a hybrid additive+multiplicative system:
+     * - Most upgrades add to base multiplier (additive)
+     * - Level bonuses multiply by 2^(level-1)
+     * - Transcendent Focus multiplies by 5^level
+     */
+    recalculateClickMultiplier(): void {
         this.clickMultiplier = 1.0;
 
         // Add additive upgrades first
@@ -64,7 +92,11 @@ export class Game {
         }
     }
 
-    updateClickText() {
+    /**
+     * Generates contextual help text for the practice page click button
+     * @returns Text hint for the player based on current game state
+     */
+    updateClickText(): string {
         // Check if ready to level up
         if (this.canLevelUp()) {
             return 'level up available';
@@ -88,7 +120,12 @@ export class Game {
         return '';
     }
 
-    migrateUpgrades(savedUpgrades: { [key: string]: Upgrade }) {
+    /**
+     * Migrates saved upgrade data to current upgrade definitions
+     * Preserves progress while allowing upgrade balance changes
+     * @param savedUpgrades - Upgrade data from a saved game
+     */
+    migrateUpgrades(savedUpgrades: { [key: string]: Upgrade }): void {
         // Get fresh upgrade definitions
         const freshUpgrades = this.initializeUpgrades();
 
@@ -102,6 +139,10 @@ export class Game {
         this.upgrades = freshUpgrades;
     }
 
+    /**
+     * Initializes all available upgrades with default values
+     * @returns Object map of upgrade ID to upgrade definition
+     */
     initializeUpgrades(): { [key: string]: Upgrade } {
         return {
             'basic-training': {
@@ -213,21 +254,38 @@ export class Game {
         console.warn(`Game integrity violation detected: ${reason}`);
     }
 
-    addExp(amount: number) {
+    /**
+     * Adds experience points to both current and lifetime totals
+     * @param amount - Amount of EXP to add
+     */
+    addExp(amount: number): void {
         this.exp += amount;
         this.lifetimeExp += amount;
     }
 
     /** Level System */
 
+    /**
+     * Calculates the EXP cost to reach the next level
+     * Uses exponential scaling: 10,000 * 100^(level-1)
+     * @returns EXP required for next level
+     */
     getLevelUpCost(): number {
         return 10000 * Math.pow(100, this.level - 1);
     }
 
+    /**
+     * Checks if player has enough EXP to level up
+     * @returns True if level up is affordable
+     */
     canLevelUp(): boolean {
         return this.exp >= this.getLevelUpCost();
     }
 
+    /**
+     * Attempts to level up by spending EXP
+     * @returns True if level up succeeded, false otherwise
+     */
     levelUp(): boolean {
         if (!this.canLevelUp()) return false;
         this.exp -= this.getLevelUpCost();
@@ -237,6 +295,11 @@ export class Game {
 
     /** Upgrade Methods */
 
+    /**
+     * Calculates the current cost to purchase the next level of an upgrade
+     * @param upgradeId - ID of the upgrade to check
+     * @returns EXP cost for next level, or 0 if upgrade doesn't exist
+     */
     getUpgradeCost(upgradeId: string): number {
         const upgrade = this.upgrades[upgradeId];
         if (!upgrade) return 0;
@@ -249,11 +312,21 @@ export class Game {
         return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMultiplier, upgrade.currentLevel));
     }
 
+    /**
+     * Checks if player has enough EXP to afford an upgrade
+     * @param upgradeId - ID of the upgrade to check
+     * @returns True if affordable, false otherwise
+     */
     canAffordUpgrade(upgradeId: string): boolean {
         const cost = this.getUpgradeCost(upgradeId);
         return this.exp >= cost;
     }
 
+    /**
+     * Checks if an upgrade can be purchased (affordable AND not maxed)
+     * @param upgradeId - ID of the upgrade to check
+     * @returns True if purchaseable, false otherwise
+     */
     canPurchaseUpgrade(upgradeId: string): boolean {
         const upgrade = this.upgrades[upgradeId];
         if (!upgrade) return false;
@@ -261,6 +334,12 @@ export class Game {
         return this.canAffordUpgrade(upgradeId) && upgrade.currentLevel < upgrade.maxLevel;
     }
 
+    /**
+     * Attempts to purchase the next level of an upgrade
+     * Spends EXP and recalculates click multiplier on success
+     * @param upgradeId - ID of the upgrade to purchase
+     * @returns True if purchase succeeded, false otherwise
+     */
     purchaseUpgrade(upgradeId: string): boolean {
         if (!this.canPurchaseUpgrade(upgradeId)) return false;
 
@@ -276,21 +355,37 @@ export class Game {
         return true;
     }
 
+    /**
+     * Gets the current EXP value per click
+     * @returns Current click multiplier value
+     */
     getClickValue(): number {
         return this.clickMultiplier;
     }
 
     /** Conditionals */
 
-    showHeader() {
+    /**
+     * Determines if the header should be displayed
+     * @returns True if player has earned at least 10 lifetime EXP
+     */
+    showHeader(): boolean {
         return this.lifetimeExp >= 10;
     }
 
-    showMenu() {
+    /**
+     * Determines if the navigation menu should be displayed
+     * @returns True if player has earned at least 50 lifetime EXP
+     */
+    showMenu(): boolean {
         return this.lifetimeExp >= 50;
     }
 
-    showUpgrades() {
+    /**
+     * Determines if the upgrades page should be accessible
+     * @returns True if player has earned at least 50 lifetime EXP
+     */
+    showUpgrades(): boolean {
         return this.lifetimeExp >= 50;
     }
 
@@ -343,6 +438,11 @@ export class Game {
         }
     }
 
+    /**
+     * Exports the current game state as a save string
+     * @param encrypted - Whether to encrypt the save data (default: true)
+     * @returns JSON string containing save data and metadata
+     */
     exportSave(encrypted = true): string {
         const saveData = {
             name: this.name,
@@ -377,6 +477,11 @@ export class Game {
         }
     }
 
+    /**
+     * Imports a save string and restores game state
+     * @param saveString - JSON save data from exportSave()
+     * @returns Result object with success status and optional warning/error messages
+     */
     importSave(saveString: string): { success: boolean; warning?: string; error?: string } {
         try {
             const saveWrapper = JSON.parse(saveString);
@@ -435,6 +540,10 @@ export class Game {
         );
     }
 
+    /**
+     * Saves current game state to browser cookies
+     * Cookie expires in 365 days
+     */
     saveToCookies(): void {
         if (typeof document === 'undefined') return;
         try {
@@ -446,6 +555,10 @@ export class Game {
         }
     }
 
+    /**
+     * Attempts to load game state from browser cookies
+     * @returns True if load succeeded, false otherwise
+     */
     loadFromCookies(): boolean {
         if (typeof document === 'undefined') return false;
         try {
@@ -469,6 +582,9 @@ export class Game {
         }
     }
 
+    /**
+     * Saves current game state to browser localStorage
+     */
     saveToLocalStorage(): void {
         if (typeof localStorage === 'undefined') return;
         try {
@@ -480,6 +596,10 @@ export class Game {
         }
     }
 
+    /**
+     * Attempts to load game state from browser localStorage
+     * @returns True if load succeeded, false otherwise
+     */
     loadFromLocalStorage(): boolean {
         if (typeof localStorage === 'undefined') return false;
         try {
@@ -502,6 +622,10 @@ export class Game {
         }
     }
 
+    /**
+     * Automatically saves to both localStorage and cookies for redundancy
+     * Called periodically by the game loop
+     */
     autoSave(): void {
         console.log('AutoSave triggered - Current state:', { exp: this.exp, lifetimeExp: this.lifetimeExp });
         // Try both localStorage and cookies for redundancy
