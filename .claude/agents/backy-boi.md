@@ -40,6 +40,14 @@ User chose **Option C - Hybrid State Management:**
 - Anti-cheat validation
 - REST API for save operations
 
+**Future Backend Systems (2025-10-18 Context Update):**
+- **Treasure Chest System**: Store loot tables, validate equipment drops
+- **Wizard's Notes System**: Track tome page discoveries, validate acquisition
+- **Idle Action Tracking**: Validate player can't run multiple idle actions simultaneously
+- **Menu Automation State**: Store which menus are automated/hidden per player
+- **Combat Validation**: Ensure adventure results match player stats + zone difficulty
+- **50 Tomes System**: Eventually validate tome unlocks, chapter reading, spell casting
+
 ---
 
 ## core responsibilities

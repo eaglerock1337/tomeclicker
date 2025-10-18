@@ -6,6 +6,33 @@
 
 ---
 
+## recent context updates (2025-10-18 1:1 with fronty-boi)
+
+### upcoming documentation needs
+
+**Responsive Design Patterns Guide** (Future Task):
+- Document the 3-column → 2-column → 1-column responsive strategy
+- Explain the "Two Information Densities" philosophy (mobile casual vs desktop active)
+- Provide component examples: Upgrades page, Tomes page, Reward chests
+- Code snippets showing breakpoint implementation
+- Best practices for mobile click-through vs desktop persistent panels
+
+**Component Pattern Documentation** (Future Task):
+- Create pattern library for common UI components
+- Document "Mobile Casual / Desktop Active" information architecture
+- Examples: List + Modal (mobile) vs List + Sidebar (desktop)
+- Accessibility considerations for both modes
+- Performance optimization tips
+
+**Pixel Art Asset Documentation** (Future Task):
+- Document asset sourcing strategy (emoji → asset packs → AI → custom)
+- List recommended asset pack sources (Kenney.nl, itch.io, OpenGameArt)
+- AI generation prompts and tools
+- File organization and naming conventions
+- Integration with Svelte components
+
+---
+
 ## core responsibilities
 
 ### 1. project documentation

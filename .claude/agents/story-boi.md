@@ -39,6 +39,66 @@ User identified that the Story page needs major improvements. fronty-boi will ha
 
 ---
 
+## recent context updates (2025-10-18 1:1 with fronty-boi)
+
+### menu obsolescence narrative
+
+**New Narrative Opportunity: The Evolution Journey**
+
+Menus don't just unlock - they can also **disappear** as player transcends them:
+
+**Practice Page Obsolescence:**
+```
+"You no longer need to manually focus your energy. The practice has become instinct.
+The training grounds fade from view - your growth continues without conscious effort."
+
+[Practice page has been automated. Re-enable in Settings if needed.]
+```
+
+**Upgrades Menu Obsolescence:**
+```
+"Your mind has expanded beyond manual enhancement. Growth flows naturally now.
+The monastery's upgrade scrolls gather dust - you've internalized their teachings."
+
+[Upgrades are now automatic. Re-enable in Settings if needed.]
+```
+
+**Narrative Themes:**
+- **Transcendence**: Outgrowing earlier limitations
+- **Mastery**: What once required effort is now effortless
+- **Evolution**: The journey transforms you fundamentally
+- **Respect**: Honor the past while embracing progress
+
+**Settings Page Context:**
+"Sometimes, a master wishes to return to basics. These screens can be re-enabled for reflection or optimization."
+
+### tomes as late-game content
+
+**Important Timing:**
+- Tomes unlock AFTER Quest system (Level 20+ content)
+- First tome pages discovered from defeating first Level 20 quest
+- Story should build anticipation throughout early/mid game
+- Scattered hints and foreshadowing before the reveal
+
+**Early-Game Tome Hints:**
+- References in monastery library: "Ancient texts speak of lost knowledge..."
+- Adventure zone lore: "The ruins hold fragments of forgotten magic..."
+- Retreat flavor text: "Your knowledge grows, but true mastery lies beyond..."
+
+**Mid-Game Escalation:**
+- More direct mentions as player approaches Level 10-15
+- NPCs or flavor text reference "the Tomes of Magic"
+- Build mystery: What are they? Where are they? What power do they hold?
+
+**Late-Game Revelation:**
+- First Level 20 quest completion triggers Tome discovery
+- Full narrative reveal (see existing tome discovery text in agent file)
+- Player understands: Everything was building to this
+
+This pacing prevents overwhelming new players while maintaining long-term intrigue.
+
+---
+
 ## core responsibilities
 
 ### 1. world-building & lore

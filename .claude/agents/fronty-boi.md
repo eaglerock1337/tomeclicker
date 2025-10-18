@@ -54,6 +54,187 @@ User has identified specific UI glitches to fix before major refactors:
 
 ---
 
+## design vision (updated 2025-10-18 after 1:1 with user)
+
+### visual aesthetic
+**Inspiration Games:**
+- **Grimoire** (iOS) - Clean, minimalist mobile-first design
+- **Antimatter Dimensions** - Complex strategy with simplistic visual design
+- **Idling to Rule the Gods** - Satisfying progress bars everywhere
+- **Progress Knight** - Activity-based progression with clean UI
+- **NGU Idle** - Functional navigation (reference only, not style)
+
+**Core Visual Language:**
+- **Numbers-focused** with depth (like Antimatter Dimensions)
+- **Clean minimalist theme** (like Grimoire)
+- **Pixel art accents** for personality (spells, enemies, items)
+- **Progress bar satisfaction** (like Idling to Rule the Gods)
+- **Bubbly feeling** with cute pixel art icons
+
+**NOT:**
+- Silly interface like NGU Idle (function over form)
+- Overwhelming animations or visual noise
+- Dark/gritty aesthetic
+
+### responsive information architecture
+
+**Critical Philosophy: Two Distinct Experiences**
+
+This is NOT just "responsive shrinking" - it's **two information densities**:
+
+**Mobile (Casual Gameplay):**
+- Click-through, on-demand info display
+- Show one thing at a time
+- Tap to reveal details in modals/popups
+- Swipe through items one-by-one
+- Maximize use of small screen real estate
+- Example: Upgrades list → tap upgrade → info popup at top
+
+**Desktop (Active Gameplay):**
+- Persistent panels with always-visible info
+- Multi-tasking friendly, side-by-side views
+- All information available at once
+- Grid display of items/rewards
+- Example: Upgrades list on left → selected upgrade details panel on right (always visible)
+
+**Multi-Column Responsive Strategy:**
+- **3 columns** on wide desktop (1440px+)
+- **2 columns** on medium screens (1024px-1439px)
+- **1 column** on mobile (< 1024px)
+
+**Examples:**
+- **Upgrades page**: Mobile = list + tap for info; Desktop = list + persistent info panel
+- **Tomes page**: Mobile = book + click-through chapters; Desktop = chapter list + chapter details side-by-side
+- **Reward chests**: Mobile = swipe through loot one-by-one; Desktop = grid of all loot at once
+
+### progressive revelation & menu obsolescence
+
+**Key Concept:** Menus appear, evolve, and eventually **disappear** as they become automated.
+
+**Menu Lifecycle:**
+1. **Hidden** - Menu doesn't exist yet (early game)
+2. **Unlocked** - Menu appears when player reaches threshold
+3. **Active** - Player actively uses this menu
+4. **Automation** - Menu tasks become automated by prestige currency
+5. **Obsolete** - Menu auto-hides, player notified
+6. **Re-enable** - Settings page has toggle to bring back obsolete menus
+
+**Example Progression:**
+- Practice page eventually disappears (you no longer need to click)
+- Upgrades menu might become obsolete (fully automated)
+- Early menus hide to make room for late-game complexity (Tomes, Spells)
+
+**Design Implications:**
+- Build components knowing they'll eventually hide
+- No bloat from keeping old systems visible
+- Sense of evolution and progression
+- Settings page needs "Disabled Menus" section with checkboxes
+
+### idle action system
+
+**Only ONE idle action at a time** (mutual exclusivity):
+- Research (early game idle EXP)
+- Training (stat XP gain)
+- Adventure (combat + loot)
+- Meditation (technique study)
+- Tome Study (reading chapters)
+
+**Exception:** Practice (clicking) does NOT block Adventure (can run simultaneously)
+
+**UI Requirements:**
+- Clear indication of current idle action
+- Progress bar showing idle action progress
+- Easy switching between idle actions
+- Warning when switching (you'll lose current progress)
+
+### animation & "juice" philosophy
+
+**Progress Bars Are King:**
+- Most satisfaction comes from watching progress bars complete
+- Levels completing gives feeling of accomplishment
+- Adventures have enemy HP progress bar
+- Training has progress bars for each stat
+- Tome reading has chapter progress
+
+**Reward Moments:**
+- **Treasure Chests** (adventure loot):
+  - Suspenseful pixel art chest opening animation (frame-by-frame)
+  - Pop-up modal showing loot
+  - Mobile: Tap through items one-by-one
+  - Desktop: Grid of all items at once
+
+- **Wizard's Notes** (tome page drops):
+  - Similar suspenseful opening animation
+  - Reveals tome pages discovered
+  - Mobile: Swipe through pages
+  - Desktop: All pages displayed at once
+
+**Animation Budget:**
+- Subtle and clean (not overwhelming)
+- Celebratory when earned (level-ups, loot drops)
+- Respect accessibility (reduced motion setting)
+- Performance-conscious (budget phones matter)
+
+### pixel art strategy
+
+**Approach:**
+- **Start simple**: CSS placeholders, emoji (🔥 for fire, ⚔️ for combat)
+- **Asset packs**: Use itch.io, Kenney.nl, OpenGameArt for common elements
+- **AI generation**: Use for unique/specific assets when needed
+- **Iterate later**: Don't block features on art, polish after implementation
+
+**Where Pixel Art Matters:**
+- Spell icons (fire, frost, shock, holy, black)
+- Enemy sprites (combat visualization)
+- Items/equipment icons
+- Treasure chest/Wizard's Notes animations
+- Adventure zone ambiance
+
+### combat ui vision
+
+**Simple, Readable, Tactile:**
+```
+     [Pixel Art Enemy Sprite]
+     ▓▓▓▓▓▓▓▓░░░░░░░░ 60% HP
+
+     Your HP: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ 85%
+```
+
+- Enemy sprite displayed prominently
+- Enemy HP progress bar (satisfying to watch deplete)
+- Player HP progress bar somewhere visible
+- Clean, minimal chrome
+- Mobile-friendly layout
+
+### tomes ui vision (late-game, not immediate priority)
+
+**"Book" Navigation Metaphor:**
+```
+┌─────────────────────────────────┐
+│  ← Tome 3: The Crimson Codex →  │ (arrows for prev/next tome)
+├─────────────────────────────────┤
+│ 1. Fire Fundamentals         [>]│ (scrollable chapter list)
+│ 2. Ember Techniques          [>]│
+│ 3. Fireball Mastery          [>]│
+│ ...                              │
+└─────────────────────────────────┘
+```
+
+**Interaction:**
+- Click `[>]` → Header switches to chapter details
+- Mobile: Click-through to show chapter info
+- Desktop: Chapter list on left, details on right (persistent)
+
+**50 Tomes Navigation:**
+- Left/right arrows to cycle through tomes
+- Scrollable chapter list within each tome
+- Locked vs unlocked visual states
+- Clean, minimalist book aesthetic
+
+**Not Needed Immediately:** Tomes are late-game (post-Quest system), focus on Practice → Stats → Adventure first
+
+---
+
 ## Core Responsibilities
 
 ### 0. Development Environment Management

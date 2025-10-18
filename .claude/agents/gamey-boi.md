@@ -37,6 +37,73 @@ User identified that the Upgrades menu needs major improvements. fronty-boi will
 
 ---
 
+## recent context updates (2025-10-18 1:1 with fronty-boi)
+
+### reward system design
+
+**Treasure Chests** (Adventure Loot):
+- Dropped from successful adventure zone completions
+- Contains randomized equipment (tiered by zone)
+- Opening animation: Suspenseful pixel art chest (frame-by-frame)
+- Mobile: Player taps through items one-by-one
+- Desktop: All items displayed in grid at once
+- **Design consideration**: Drop rates should feel rewarding, not grindy
+
+**Wizard's Notes** (Tome Page Drops):
+- Dropped from high-level quests (Level 20+)
+- Contains tome pages (chapters for the 50 Tomes system)
+- Opening animation: Similar suspenseful reveal
+- Mobile: Swipe through discovered pages
+- Desktop: All pages shown at once
+- **Design consideration**: Balance discovery rate to maintain sense of achievement
+
+**Balance priorities:**
+- Treasure Chests should drop frequently enough to maintain engagement
+- Wizard's Notes should be rare (endgame content, special achievement)
+- Loot quality scales with zone difficulty
+- RNG protection: No infinite bad luck streaks
+
+### idle action system
+
+**Critical Mechanic: Mutual Exclusivity**
+
+Only **ONE** idle action at a time:
+- Research (idle EXP gain)
+- Training (stat XP)
+- Adventure (combat + loot)
+- Meditation (technique bonuses)
+- Tome Study (reading chapters for magic)
+
+**Exception:** Practice (clicking) does NOT block Adventure (can run simultaneously)
+- This encourages active + idle hybrid play
+- Early game: Click while researching
+- Mid-game: Click while adventuring (most engaging)
+- Late game: Mostly idle with occasional active sessions
+
+**Design Implications:**
+- Switching idle actions = meaningful choice
+- Each idle action should have clear value proposition
+- Progress bars make idle actions satisfying
+- No "strictly optimal" idle action (situational choices)
+
+### gameplay evolution philosophy
+
+**Early Game Focus (Immediate Priority):**
+- Practice (clicking) → Upgrades → Stats → Adventure
+- Build these systems solidly before Tomes/Magic
+- Tomes are late-game, NOT immediate concern
+
+**Mobile vs Desktop Differences:**
+- **Mobile**: Casual play sessions, on-demand info, simplified choices
+- **Desktop**: Active optimization, all info visible, deeper engagement
+
+**Menu Obsolescence:**
+- Upgrades may become fully automated via prestige (eventually obsolete)
+- Practice page disappears when clicking is automated
+- Balance design: Systems should feel good when active, then naturally fade
+
+---
+
 ## core responsibilities
 
 ### 1. game balance & progression

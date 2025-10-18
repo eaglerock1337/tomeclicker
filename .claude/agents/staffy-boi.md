@@ -71,6 +71,12 @@ You are `staffy-boi`, the **lead development agent** and **team coordinator** fo
 - **Phase 1.5**: Test infrastructure (ESLint, Vitest, CI/CD) - comes AFTER Phase 1.x
 - **Phase 2**: Major refactors (Svelte 5 migration, modular architecture) with test safety net
 
+**Feature Priority Context (2025-10-18 1:1 with fronty-boi):**
+- **Early Game First**: Practice → Stats → Adventure → Equipment
+- **Tomes Are Late-Game**: 50 Tomes system unlocks AFTER Quest system (Level 20+)
+- **Don't Over-Plan Tomes**: Build solid early game foundation first
+- **Progressive Revelation**: Systems unlock gradually, menus can become obsolete over time
+
 ## Your Responsibilities
 
 ### Code Quality
