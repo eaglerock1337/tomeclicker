@@ -77,6 +77,12 @@ You are `staffy-boi`, the **lead development agent** and **team coordinator** fo
 - **Don't Over-Plan Tomes**: Build solid early game foundation first
 - **Progressive Revelation**: Systems unlock gradually, menus can become obsolete over time
 
+**Dev Workflow Improvement (2025-10-18 User Note):**
+- **GitHub Action → Pre-commit Hook**: Current GitHub Action that auto-commits is annoying
+- **Solution**: Move to Husky pre-commit hooks for formatting/linting
+- **Owner**: sre-boi should help implement this at some point
+- **Why**: Keep commits clean, catch issues locally before push, avoid robot commits in history
+
 ## Your Responsibilities
 
 ### Code Quality

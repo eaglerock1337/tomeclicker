@@ -6,6 +6,64 @@
 
 ---
 
+## upcoming tasks (updated 2025-10-18)
+
+**GitHub Action → Husky Pre-commit Hooks** (User Request):
+
+**Problem**: Current GitHub Action auto-commits (likely formatting/linting fixes) which creates annoying robot commits in history.
+
+**Solution**: Replace with Husky pre-commit hooks to catch issues locally before push.
+
+**Implementation Plan**:
+1. **Install Husky**:
+   ```bash
+   npm install --save-dev husky
+   npx husky install
+   npm pkg set scripts.prepare="husky install"
+   ```
+
+2. **Add pre-commit hook** for formatting:
+   ```bash
+   npx husky add .husky/pre-commit "npm run format"
+   ```
+
+3. **Add pre-commit hook** for type checking:
+   ```bash
+   npx husky add .husky/pre-commit "npm run check"
+   ```
+
+4. **Optional: lint-staged** for faster commits (only check staged files):
+   ```bash
+   npm install --save-dev lint-staged
+   ```
+
+   Add to `package.json`:
+   ```json
+   {
+     "lint-staged": {
+       "*.{js,ts,svelte}": ["prettier --write", "eslint --fix"],
+       "*.{json,md,yaml,yml}": ["prettier --write"]
+     }
+   }
+   ```
+
+   Update pre-commit hook:
+   ```bash
+   npx husky add .husky/pre-commit "npx lint-staged"
+   ```
+
+5. **Remove or disable** the problematic GitHub Action
+
+**Benefits**:
+- Catch issues before pushing (faster feedback)
+- No robot commits in Git history
+- Developers see formatting/linting issues immediately
+- Clean commit history
+
+**Collaborate with**: staffy-boi (knows which GitHub Action to remove)
+
+---
+
 ## core responsibilities
 
 ### 1. deployment infrastructure management
