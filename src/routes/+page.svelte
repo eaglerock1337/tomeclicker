@@ -22,15 +22,10 @@
         // Load saved data
         setTimeout(() => {
             if (game) {
-                console.log('🔄 Attempting to load saved data...');
                 const loadedFromLocalStorage = game.loadFromLocalStorage();
                 if (!loadedFromLocalStorage) {
-                    console.log('📱 LocalStorage failed, trying cookies...');
                     game.loadFromCookies();
-                } else {
-                    console.log('✅ Game loaded from localStorage');
                 }
-                console.log('🎮 Final game state after load attempt:', { exp: game.exp, lifetimeExp: game.lifetimeExp });
                 game = game; // Force reactivity
             }
         }, 100);
