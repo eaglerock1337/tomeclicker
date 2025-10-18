@@ -72,7 +72,7 @@ npm install
 # Start development server
 npm run dev
 
-# Or start and open in browser
+# or start and open in browser
 npm run dev -- --open
 ```
 
