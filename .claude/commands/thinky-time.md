@@ -26,10 +26,102 @@ Work autonomously on complex, multi-file changes that form a complete, reviewabl
 ## Guidelines
 
 ### 1. Planning Phase
+
+**Initial Assessment:**
 - Use TodoWrite extensively to break down the task
 - Identify all files that need changes
 - Plan the logical sequence of modifications
 - Consider migration paths and backward compatibility
+
+**Agent Consultation (staffy-boi Coordination):**
+
+Before diving into implementation, consult with relevant agents to gather expert perspectives. As **staffy-boi**, you coordinate the team:
+
+1. **Identify Affected Domains** - Which agents have expertise relevant to this task?
+2. **Gather Agent Input** - For each relevant agent, provide their perspective:
+   - What considerations matter from their domain?
+   - What risks or concerns do they see?
+   - What patterns or best practices should be followed?
+   - What dependencies exist with other agents' work?
+
+3. **Available Agents:**
+   - **fronty-boi** - UI/UX, Svelte components, visual design
+   - **gamey-boi** - Game design, balance, progression mechanics
+   - **story-boi** - Narrative, lore, tome chapter writing
+   - **docy-boi** - Documentation, guides, onboarding
+   - **backy-boi** - Backend APIs, database, auth
+   - **sre-boi** - Infrastructure, K8s, deployment
+   - **testy-boi** - Testing strategy, QA, validation
+   - **secury-boi** - Security, anti-cheat, vulnerability assessment
+   - **learny-boi** - Teaching, explanations, interactive learning
+
+4. **Synthesize Plan** - Combine agent input into coherent implementation strategy
+
+**Example Agent Consultation:**
+
+```markdown
+## 🎯 Task: Implement Tome Discovery UI
+
+### Agent Consultation
+
+#### fronty-boi (UI/UX)
+- Use Svelte 5 runes for reactive tome state
+- Modal overlay with backdrop for discovery moments
+- Mobile-first: ensure touch targets are 44px minimum
+- Accessibility: ARIA labels, keyboard navigation (Escape to close)
+- Animation: Subtle fade-in for discovery, more dramatic for breakthrough moments
+- Component structure: TomeDiscovery.svelte with props for tome data
+
+#### gamey-boi (Game Design)
+- Discovery should feel rewarding - 2-3 second animation minimum
+- Show tome tier, element type, and first chapter teaser
+- Consider sound effects (future enhancement)
+- Breakthrough moments need extra "juice" - particle effects, longer animation
+- Don't block gameplay - allow dismissing discovery to continue
+- Track "new" state for each tome until player views it
+
+#### story-boi (Narrative)
+- Each discovery shows tome title, element flavor, and opening lore snippet
+- Breakthrough discoveries include additional "Lost Civilization" hint
+- Text should build mystery and anticipation for chapters within
+- Reference ref/tomes.yaml for canonical tome names and descriptions
+
+#### docy-boi (Documentation)
+- Update README with Tome Discovery feature
+- Add component documentation to TomeDiscovery.svelte JSDoc
+- Document props interface and usage examples
+- Update OUTLINE.md if discovery mechanics differ from original design
+
+#### secury-boi (Security)
+- Validate tome unlock conditions on both client and (future) server
+- Don't expose undiscovered tome data in client bundle
+- Sanitize any user-generated content if names become customizable
+- Rate limiting not needed for discovery (single-player, client-side)
+
+### Synthesized Plan (staffy-boi)
+Based on agent input, here's the implementation approach:
+
+1. Create TomeDiscovery.svelte component with Svelte 5 runes
+2. Implement modal overlay with accessibility features
+3. Add tome unlock validation in Game class
+4. Create discovery animation (basic fade-in, enhanced for breakthroughs)
+5. Wire up game progression to trigger discoveries
+6. Add JSDoc documentation to component
+7. Test on mobile viewport
+8. Update README with feature description
+
+Agents to involve during implementation:
+- fronty-boi: Component development
+- gamey-boi: Unlock logic and feel
+- story-boi: Lore text integration
+- docy-boi: Documentation pass
+
+Let's proceed with implementation!
+```
+
+**When to Skip Agent Consultation:**
+
+For straightforward tasks that don't require cross-domain coordination (simple bug fixes, typo corrections, minor refactors), you can skip the formal agent consultation and proceed directly to implementation.
 
 ### 2. Implementation Phase
 - Make atomic, logical commits when appropriate
