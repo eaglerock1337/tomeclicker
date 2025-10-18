@@ -590,7 +590,6 @@ export class Game {
         try {
             const saveData = this.exportSave(true);
             localStorage.setItem('tomeclicker_save', saveData);
-            console.log('✅ Saved to localStorage');
         } catch (error) {
             console.error('Failed to save to localStorage:', error);
         }
@@ -604,11 +603,9 @@ export class Game {
         if (typeof localStorage === 'undefined') return false;
         try {
             const saveData = localStorage.getItem('tomeclicker_save');
-            console.log('Loading from localStorage:', saveData ? 'Found data' : 'No data');
             if (saveData) {
                 const result = this.importSave(saveData);
                 if (result.success) {
-                    console.log('✅ Loaded from localStorage successfully');
                     return true;
                 } else {
                     console.error('Failed to load save from localStorage:', result.error);
@@ -627,7 +624,6 @@ export class Game {
      * Called periodically by the game loop
      */
     autoSave(): void {
-        console.log('AutoSave triggered - Current state:', { exp: this.exp, lifetimeExp: this.lifetimeExp });
         // Try both localStorage and cookies for redundancy
         this.saveToLocalStorage();
         this.saveToCookies();
