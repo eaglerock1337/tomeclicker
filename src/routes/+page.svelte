@@ -8,6 +8,8 @@
     import Navbar from '$lib/navbar.svelte';
     import View from '$lib/view.svelte';
 
+    import '$lib/styles/themes.css';
+
     // Config values
     let config = new Config("prussian-blue", true);
 
@@ -172,46 +174,6 @@
         transition: color 1s cubic-bezier(0,.5,0,1);
     }
 
-    /* proto-theme stuff...pull this into its own file later */
-
-    .prussian-blue-dark {
-        --bg: #2d384eff;
-        --alt-bg: #1e2534ff;
-        --text: #57adefff;
-        --blue: #57adefff;
-        --green: #1aefc4ff;
-        --red: #ffa047ff;
-        --yellow: #ffd700ff;
-    }
-
-    .prussian-blue-light {
-        --bg: #97a6c3ff;
-        --alt-bg: #a4b1cbff;
-        --text: #0c4f83ff;
-        --blue: #0c4f83ff;
-        --green: #08725dff;
-        --red: #cc6300ff;
-        --yellow: #b8860bff;
-    }
-
-    .graphite-light {
-        --bg: #d5d3d9ff;
-        --alt-bg: #b6b3bdff;
-        --text: #1e1c21ff;
-        --blue: #4a5568ff;
-        --red: #c14b1fff;
-        --green: #406354ff;
-        --yellow: #d69e2eff;
-    }
-
-    .graphite-dark {
-        --bg: #28262cff;
-        --alt-bg: #1e1c21ff;
-        --text: #cbc8d0ff;
-        --blue: #8bb5e8ff;
-        --red: #e27750ff;
-        --green: #6b9e88ff;
-        --yellow: #f7dc6fff;
-    }
+    /* Theme definitions moved to src/lib/styles/themes.css */
 
 </style>
