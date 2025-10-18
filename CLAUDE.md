@@ -6,6 +6,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 TomeClicker is an open-source web-based incremental game built with SvelteKit. The game features an RPG-style progression system where players click to gain experience, level up, train stats, adventure, and eventually discover magical tomes.
 
+### Deployment Architecture
+
+- **Frontend**: Static SvelteKit build
+  - **Preview/Staging**: GitHub Pages at `/tomeclicker` path
+  - **Production**: `tomeclicker.marks.dev` via ArgoCD GitOps deployment
+- **Backend** (planned): Self-hosted Raspberry Pi Kubernetes cluster
+  - Current cluster serves `marks.dev` ✅
+  - ArgoCD for GitOps deployments
+  - No shared storage currently (local PVs with node affinity)
+  - Planned: Raspberry Pi 5 + NVMe storage (Linux support pending)
+  - See `PROPOSAL.md` for detailed infrastructure plans
+
+### Related Repositories
+
+- **tomeclicker** (this repo): Game application code
+- **happy-little-cloud**: K8s manifests, ArgoCD applications, infrastructure config
+- **nix-config**: System configuration, Raspberry Pi setup, NixOS configs
+
 ## Development Commands
 
 ```bash
@@ -41,8 +59,8 @@ npm run prepare
 
 ### Core Game Classes
 
-- `Game` class (`src/lib/game.js`): Main game state including exp, level, menu navigation, and progression conditions
-- `Config` class (`src/lib/config.js`): Handles theme and UI configuration
+- `Game` class (`src/lib/game.ts`): Main game state including exp, level, menu navigation, and progression conditions
+- `Config` class (`src/lib/config.ts`): Handles theme and UI configuration
 
 ### Component Structure
 
@@ -81,23 +99,63 @@ The `ref/OUTLINE.md` file contains the complete game design document with detail
 
 ## Development Notes
 
-- The project uses TypeScript checking via JSDoc comments
+- The project uses TypeScript (game.ts, config.ts fully migrated; components partially migrated)
 - Mobile-optimized with touch event handling to prevent zoom
 - No test framework currently configured
 - Uses Vite as build tool with SvelteKit
+- Svelte 5.39.6 installed but using Svelte 4 patterns (migration planned)
+
+### Current Project State
+
+- **TypeScript**: Partial migration (core classes done, components need migration)
+- **Svelte**: Using v5 but with v4 patterns (runes not yet adopted)
+- **Architecture**: Monolithic Game class (~500 lines, needs refactoring)
+- **Save System**: Basic localStorage + cookies (cloud saves planned)
+
+### Roadmap
+
+See `PROPOSAL.md` for the complete modernization and enhancement roadmap, including:
+- **Phase 1**: Immediate QoL improvements and bug fixes
+- **Phase 2**: Technical modernization (Svelte 5, TypeScript, modular architecture)
+- **Phase 3**: Cloud save system on Raspberry Pi Kubernetes cluster
 
 ### Goals
 
 - Iterate and flesh out game design as outlined in `ref/OUTLINE.md`
-- Migrate to Typescript and use the latest-and-greatest version of Svelte
-- Implement mechanics for saving and loading games locally and through a cloud save
+- Complete migration to TypeScript and Svelte 5 (with runes)
+- Implement modular class structure for better maintainability
+- Deploy backend services to home Raspberry Pi Kubernetes cluster
+- Implement cloud save system with anti-cheat validation
 
-### TODOs for next time
+## Workflow & Git Strategy
 
-- Fix formatting and styling on upgrades page
-- Remove debug EXP/Click display from practice page
-- Enhance click text with contextual help messages
-- Add level-up ready notification in click text
-- Implement hard reset functionality with warning
-- Refactor upgrades into separate class under Game
-- Create modular class structure for better code organization
+### Slash Commands
+
+- **`/thinky-time`**: Deep work mode for comprehensive PRs with multiple file changes
+  - Use for feature implementation, refactoring, migrations
+  - Make logical commits authored by Claude during branch work
+  - PRs will be reviewed with full commit history
+  - Final merge will be squashed into user-authored commit
+
+### Branch & PR Strategy
+
+- Feature branches for all work
+- Commits on branches are authored by Claude with signature:
+  ```
+  🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+  Co-Authored-By: Claude <noreply@anthropic.com>
+  ```
+- PRs maintained for session history and review
+- Squash merge to main branch (final commit authored by user)
+- This keeps main branch clean while preserving work history in PRs
+
+### Code Quality Standards
+
+When making changes, ensure:
+- **TypeScript**: Strict typing, no `any` types
+- **Svelte 5**: Use runes ($state, $derived, $effect) when refactoring
+- **Build**: `npm run build` succeeds without errors
+- **Type Check**: `npm run check` passes
+- **Performance**: Keep bundle sizes small (< 100KB gzipped target)
+- **Mobile**: Test on mobile viewports

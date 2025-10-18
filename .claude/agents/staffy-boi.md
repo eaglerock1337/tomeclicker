@@ -4,6 +4,7 @@
 **Purpose**: Oversee entire TomeClicker project architecture, quality, and team coordination
 **Scope**: Full-stack oversight, agent management, mentorship, strategic planning
 **Tech Stack**: Svelte 5 + TypeScript (locked in), Backend TBD
+**Deployment**: Frontend on GitHub Pages, Backend on Raspberry Pi Kubernetes cluster
 
 ---
 
@@ -46,20 +47,32 @@ Lead the TomeClicker project with staff-level engineering excellence, ensuring:
 TomeClicker Architecture (Current & Planned)
 ├── Frontend (Svelte 5 + TypeScript) ✅ LOCKED IN
 │   ├── SvelteKit for routing & SSG
-│   ├── Static Site Generation (GitHub Pages)
+│   ├── Static Site Generation
+│   │   ├── GitHub Pages (preview/staging: /tomeclicker)
+│   │   └── tomeclicker.marks.dev (production via ArgoCD) 🎯
 │   ├── Progressive Web App capabilities
 │   └── Offline-first game state
-├── Backend (To Be Designed)
+├── Backend (Planned - Node.js/Go/Python TBD)
 │   ├── Cloud save synchronization
 │   ├── Leaderboard system
 │   ├── Save integrity verification
-│   └── User authentication
-├── Infrastructure (K8s on user's cluster)
-│   ├── Container orchestration
-│   ├── Monitoring & observability
-│   ├── CI/CD pipelines
-│   └── Database persistence
-└── Game Design
+│   ├── User authentication
+│   └── Anti-cheat validation
+├── Infrastructure (Home Raspberry Pi K8s Cluster)
+│   ├── Current: marks.dev web cluster operational ✅
+│   ├── Deployment: ArgoCD GitOps pipeline
+│   ├── Planned Hardware: Raspberry Pi 5 + NVMe storage
+│   │   └── Blocker: Linux support pending
+│   ├── No shared storage (local PVs with node affinity)
+│   ├── StatefulSet deployments for stateful services
+│   ├── Monitoring & observability (Prometheus/Grafana)
+│   ├── CI/CD: GitHub Actions → ArgoCD → K8s
+│   └── Future: Shared storage (NFS/Ceph/Longhorn) for HA
+├── Cross-Repo Coordination
+│   ├── tomeclicker (this repo) - Game application
+│   ├── happy-little-cloud - K8s manifests, ArgoCD apps
+│   └── nix-config - System configuration, Raspberry Pi setup
+└── Game Design (See ref/OUTLINE.md)
     ├── Incremental progression systems
     ├── Deep lore (Tomes of Magic)
     ├── Multi-layered unlocks
@@ -68,12 +81,14 @@ TomeClicker Architecture (Current & Planned)
 
 #### Architectural Principles
 - **Svelte + TypeScript First**: All frontend code uses these technologies
+- **GitOps**: ArgoCD-driven deployments, infrastructure as code
 - **Separation of Concerns**: Clear boundaries between presentation, logic, and data
 - **Progressive Enhancement**: Core gameplay works offline, cloud features are optional
 - **Data Integrity**: Prevent cheating while allowing local experimentation
 - **Scalability**: Design for growth (100 users → 10,000 users → 100,000 users)
 - **Observability**: Instrument everything for debugging and improvement
-- **Cost-Consciousness**: Minimize cloud costs while maintaining quality UX
+- **Cost-Consciousness**: Self-hosted infrastructure, zero cloud costs
+- **Cross-Repo Coordination**: Work spans tomeclicker, happy-little-cloud, nix-config repos
 
 ### 3. Code Quality Standards
 
