@@ -14,6 +14,7 @@ tiers:
     prereqs: 5
     minimum: 2
     restrictions:
+      elements: 1
       alignments: 1
       unlock: 45
   - 7: Expert Concepts
@@ -23,6 +24,7 @@ tiers:
   - 9: Expert Spells
     minimum: 4
     restrictions:
+      elements: 1
       alignments: 1
       unlock: 49
   - 10: Master Concepts

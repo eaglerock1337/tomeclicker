@@ -104,6 +104,360 @@ Only **ONE** idle action at a time:
 
 ---
 
+## game design deep dive (2025-10-18 1:1 with user)
+
+This section contains comprehensive game design context from an extensive 1:1 session with the user, covering the complete three-act structure, combat systems, magic mechanics, and endgame content.
+
+### three-act progression structure
+
+**Act I: The Clicker** (0-4 Retreats, ~10-20 hours)
+- Focus: Practice → Upgrades → Stats → Adventure → Equipment
+- Core loop: Click for EXP, buy upgrades, train stats, adventure for gear
+- Max Level: 4-5 on first run, progressing to Level 10-12 by Act II
+- Goal: Unlock all basic Adventure Zones, build stat foundation
+- Feel: Exponential power growth, classic incremental gameplay
+
+**Act II: The Quester** (4-16 Retreats, ~50-200 hours)
+- Focus: Quest system → Knowledge Point optimization → Achievement hunting
+- Core loop: Quests unlock at higher levels, provide unique rewards
+- Max Level: 16-20 (Level 20 requires significant progression)
+- EXP Relevance: EXP becomes obsolete after ~16 Retreats, replaced by AP/KP focus
+- Goal: Complete Quest system, prepare for Tomes
+- Feel: Strategic depth, long-term optimization
+
+**Act III: The Mage** (16+ Retreats, 100-1000+ hours)
+- Focus: 50 Tomes of Magic → Spell Mastery → Wizard Caves → Transcendence
+- Core loop: Discover tome pages, read chapters, practice spells, master elements
+- Max Level: Level 20+ (stats continue scaling)
+- Goal: Master all 50 Tomes, complete Tome 50 (custom spell creation)
+- Feel: Completionist endgame, deep mastery systems
+
+**Key Insight:** EXP is the primary currency in Act I-II, but becomes obsolete in Act III. The game evolves from incremental clicker to RPG progression to magical mastery.
+
+### adventure → quest → wizard cave pipeline
+
+**Adventure Zones** (Act I: Early-Mid Game)
+- **Structure**: Multiple zones with 20 levels each
+- **Enemies**: 5-10 creatures per zone, automatic combat
+- **Rewards**: Treasure Chests with tiered equipment
+- **Progression**: Complete zones to unlock higher tiers
+- **Can Die**: No, adventures are safe (failure = small stat gain, no equipment)
+- **Zone Retirement**: After completing 10→20→30+ zones, retire zone for permanent upgrade
+  - Retired zones provide passive bonuses (e.g., +5% click multiplier)
+  - Creates long-term completionist goals
+  - Scaling: 10 zones for first boost, 20 for second, 30 for third, etc.
+
+**Quest System** (Act II: Mid-Late Game)
+- **Unlock**: After several retreats, higher character levels
+- **Structure**: Each Quest level is harder, requires more enemies killed
+- **Level Range**: Quest Level 1 through Quest Level 20
+- **Level 20 Requirement**: Max stats, top-tier equipment, significant progression
+- **Rewards**: Unique unlocks, Wizard's Notes (tome page drops)
+- **Can Die**: No, quests are challenging but safe
+- **First Tome Discovery**: Defeating Quest Level 20 reveals first Wizard's Notes
+
+**Wizard Caves** (Act III: Endgame)
+- **Structure**: 50 Wizard Caves, one per Tome
+- **Enemies**: 10 creatures per cave, hardest content in game
+- **Can Die**: YES! Dying = no reward, wasted time (high stakes)
+- **Gear Gating**: WoW-style progression (need Tier 5 gear to attempt Tier 6 caves)
+- **Rewards**: Wizard's Notes with tome pages
+- **Purpose**: Provide challenge and pacing for 50-tome collection
+- **Tome Locations**:
+  - **Tiers 1-4**: Fixed tome per cave (predictable progression)
+  - **Tiers 5+**: Random tome pages (RNG discovery, replayability)
+
+**Wizard's Notes System:**
+- Dropped from Quest Level 20 and Wizard Caves
+- Contain random pages from tome chapters (1-12 pages per drop)
+- Drop rate upgradeable over time (Knowledge Point upgrades)
+- Opening animation: Suspenseful reveal (like loot boxes, but earned)
+- Pages are tracked per tome, per chapter (50 tomes × 12 chapters = 600 chapters)
+
+### combat stance system
+
+**Three Stances: Aggressive, Balanced, Defensive**
+
+**Stance Matrix:**
+```
+Player Stance + Enemy Stance = Combat Range
+
+Aggressive + Aggressive = Long Range (both engage at distance)
+Aggressive + Balanced = Mid Range
+Aggressive + Defensive = Melee Range
+Balanced + Balanced = Mid Range
+Balanced + Defensive = Mid Range
+Defensive + Defensive = Long Range (both keep distance)
+```
+
+**Range Progression:**
+- Combat always starts at Long Range
+- Progresses: Long → Mid → Melee as battle continues
+- Stance determines starting range and progression speed
+- Can change stance between enemy fights (resets combat)
+- **Strategic Depth**: Match stance to your spell loadout
+
+**Spell Ranges:**
+- **Long Range**: Long-range spells only (e.g., Fire Bolt, Lightning Strike)
+- **Mid Range**: Mid-range spells (e.g., Fire Wave, Ice Shard)
+- **Melee Range**: Touch spells (e.g., Fire Hand, Shocking Grasp)
+
+**Example Strategy:**
+- Fire mage with mostly long-range spells → Defensive stance (stay at range)
+- Melee-focused spell loadout → Aggressive stance (rush to melee)
+- Hybrid build → Balanced stance (access all ranges)
+
+### tome chapter types: concepts, techniques, spells
+
+Each of the 50 Tomes has 12 chapters, divided into three types:
+
+**Concepts (Chapters 1-3): Understanding Magic**
+- **Purpose**: Unlock content, provide lore, teach magical theory
+- **Mechanic**: Read to unlock (linear time, no practice required)
+- **Effect**: Unlocks techniques and spells in later chapters
+- **Reading Time**: 5 min (Tier 1) to 150 min (Tier 15) per concept chapter
+- **Example**: "Chapter 1: Understanding Fire Magic" unlocks fire spell chapters
+
+**Techniques (Chapters 4-7): Passive Mastery**
+- **Purpose**: Meditate for passive bonuses (Progress Knight style)
+- **Mechanic**: Read to unlock → Meditate to gain mastery levels (0-100+)
+- **Effect**: Passive bonuses that stack (e.g., +1% fire damage per level)
+- **Meditation**: Costs EXP, takes idle action slot
+- **Level 100**: Soft goal, technique fully mastered (100+ = trailing bonuses)
+- **Example**: "Chapter 5: Fire Orb Crafting" → Meditate for +fire spell damage
+
+**Spells (Chapters 8-12): Active Abilities**
+- **Purpose**: Practice to gain mastery, use in combat
+- **Mechanic**: Read to unlock → Practice to awaken → Master for power
+- **Mastery Levels**: 0-100+ (soft cap at 100)
+- **Practice**: Costs EXP, takes idle action slot
+- **Spell Viability Curve**:
+  - **0-100**: Linear awakening (spell feels weak, becomes viable)
+  - **100+**: Diminishing returns (trailing bonuses, minor gains)
+- **Example**: "Chapter 10: Fire Hand" → Practice to awaken spell → Use in Wizard Caves
+
+**Reading Prerequisites:**
+- Chapters unlock sequentially (must read Ch1 before Ch2)
+- Some chapters have cross-tome prerequisites (e.g., Tome 9 Ch5 requires Tome 7 Ch3)
+- Full prerequisite tree defined in `ref/tomes.yaml`
+
+**Reading Speed:**
+- Upgradeable via Knowledge Point tree
+- Base time: 5 min/chapter (Tier 1) scaling to 150 min/chapter (Tier 15)
+- Total reading time: ~467 hours for all 600 chapters (before speed upgrades)
+
+### element/alignment mastery system
+
+**Two Layers of Mastery:**
+
+**Layer 1: Mastery Bonuses**
+- Practicing spells of an element/alignment increases mastery level (0-100)
+- **Example**: Practicing "Fire Hand", "Fire Bolt", "Fire Wave" → Fire Mastery Level 30
+- **Effect**: +X% damage/effectiveness for all spells of that element
+- **Cap**: Level 100 (soft cap, 100+ gives diminishing returns)
+- **Twofold Benefit**: Bonuses + unlocks (see Layer 2)
+
+**Layer 2: Advanced Spell Unlocks**
+- Higher-tier spells require mastery thresholds
+- **Example**: Tome 20 (Tier 8) "Advanced Fire Magic" requires Fire Mastery 50+
+- **Example**: Tome 45 (Tier 14) "Balance" requires Holy Mastery 75+ AND Black Mastery 75+
+- **Purpose**: Gates advanced content, rewards focused progression
+
+**Elements (6 total):**
+1. Fire
+2. Frost
+3. Shock (Lightning)
+4. Earth (implied in tier structure)
+5. Air (implied in tier structure)
+6. Water (implied in tier structure)
+
+**Alignments (2 total):**
+1. Holy (Light)
+2. Black (Dark/Shadow)
+
+**Rock-Paper-Scissors Combat:**
+- **Fire > Frost > Shock > Fire** (elemental triangle)
+- **Holy vs Black** (oppositional, mutually effective)
+
+**Spectral vs Elemental (Tier 10+ Choice):**
+- **Spectral Path**: No element, defensive focus, protective spells
+- **Elemental Path**: All elements, offensive focus, damage spells
+- **Mutually Exclusive**: Can only choose ONE until Tome 49 (Transcendence) lifts restriction
+- **Tome 49**: Unlocks BOTH Spectral and Elemental (endgame unification)
+
+### tier progression and restrictions
+
+**15 Tiers, 50 Tomes** (see `ref/tiers.yaml` for complete structure)
+
+**Key Tier Milestones:**
+
+**Tier 1-5: Foundation** (Tomes 1-20)
+- Open progression, minimal restrictions
+- Learn basic elements and alignments
+- Tier 1-4: Fixed tome locations in Wizard Caves
+- Tier 5+: Random tome page drops (RNG collection)
+
+**Tier 6: Alignment Restriction** (Tomes 21-24)
+- **Restriction**: Choose ONE alignment (Holy OR Black)
+- **Locked Until**: Tome 45 "Balance" lifts restriction
+- **Impact**: Prevents mixing light and dark magic early
+- **Narrative**: Moral choice, commitment to path
+
+**Tier 10: Spectral vs Elemental Fork** (Tomes 35-37)
+- **Restriction**: Choose Spectral (defensive) OR Elemental (offensive)
+- **Locked Until**: Tome 49 "Transcendence" lifts restriction
+- **Spectral**: No element, protective spells, defensive mastery
+- **Elemental**: All 6 elements, offensive spells, damage mastery
+- **Impact**: Defines playstyle for Tiers 10-14
+
+**Tier 14: Balance (Tome 45)**
+- **Effect**: Lifts Tier 6 alignment restriction
+- **Enables**: Holy + Black magic simultaneously
+- **Prerequisite**: High mastery in both alignments (75+ each)
+- **Narrative**: Achieving balance between light and dark
+
+**Tier 15: Transcendence (Tome 49) and Creation (Tome 50)**
+- **Tome 49**: Lifts Tier 10 restriction (gain BOTH Spectral and Elemental)
+- **Tome 50**: Custom spell creation (endgame sandbox)
+- **Narrative**: Transcending limitations, becoming a true master
+
+**Prerequisite System:**
+- Each tier requires completing previous tier (e.g., Tier 6 requires Tier 5 complete)
+- Some tiers require minimum number of tomes from previous tier
+- Example: Tier 6 requires at least 2 Tier 5 tomes completed
+- Cross-tome chapter prerequisites (see `ref/tomes.yaml`)
+
+### spell mechanics and combat
+
+**Spell Properties:**
+- **Element**: Fire, Frost, Shock, Earth, Air, Water, None (Spectral)
+- **Alignment**: Holy, Black, Neutral
+- **Range**: Long, Mid, Melee (Touch)
+- **Stance**: Attack, Balanced, Defense (affects range matching)
+- **Form**: Bolt, Touch, Wave, etc. (cosmetic/flavor)
+- **Subtype**: Damage, Melee, Ranged, Defensive, Utility
+
+**Spell Awakening (Viability Curve):**
+```
+Mastery Level 0-100: Linear awakening
+- Level 0: Spell feels weak, barely functional
+- Level 50: Spell becomes viable, useful in combat
+- Level 100: Spell fully awakened, strong and effective
+
+Mastery Level 100+: Diminishing returns
+- Level 101-150: Small incremental gains
+- Level 150+: Tiny trailing bonuses
+- Cap: No hard cap, but 200+ is excessive investment
+```
+
+**Why This Design:**
+- Solves "magic feels bad early" problem
+- Rewards focused practice and mastery
+- Creates long-term progression goals
+- Prevents overpowered early spells
+
+**Combat Hierarchy:**
+- **Defensive spells** beat **Offensive spells** (Rock-Paper-Scissors layer)
+- **Offensive spells** beat **Utility spells**
+- **Utility spells** beat **Defensive spells**
+- Element triangle: Fire > Frost > Shock > Fire
+- Alignment: Holy vs Black (mutually effective)
+
+### titles and completionist goals
+
+**Titles System:**
+- Earned by achieving mastery milestones
+- **Example**: "Master of Fire" (Fire Mastery 100)
+- **Example**: "Transcendent Mage" (All elements at 100)
+- **Example**: "Tome Collector" (All 50 tomes discovered)
+- **Purpose**: Cosmetic achievement, bragging rights, completionist goals
+
+**Zone Retirement Bonuses:**
+- Completing 10 Adventure Zones → retire for +5% click multiplier
+- Completing 20 zones → retire for +10% click multiplier
+- Completing 30 zones → retire for +15% click multiplier
+- Scaling: Each tier requires more zones for next bonus
+- **Purpose**: Long-term passive progression, rewards exploration
+
+### permanence and prestige
+
+**Tome Progress is PERMANENT:**
+- Tome pages discovered, chapters read, spell mastery → NEVER reset on prestige
+- **Rationale**: 467+ hour reading time would be punishing to reset
+- **Effect**: Tomes become ultimate completionist content
+- **Prestige (Retreats) Resets**: EXP, stats, equipment, Knowledge Points spent (refundable)
+- **Prestige KEEPS**: Tome progress, achievements, titles
+
+**This Creates:**
+- Incremental progress on tomes across multiple prestige runs
+- No fear of losing tome progress
+- Encourages long-term commitment to tome collection
+
+### key formulas and scaling
+
+**Reading Time per Chapter:**
+```
+Tier 1: 5 minutes/chapter
+Tier 5: 25 minutes/chapter
+Tier 10: 75 minutes/chapter
+Tier 15: 150 minutes/chapter
+
+Formula: baseTime * tierMultiplier
+(exact formula TBD during implementation)
+```
+
+**Total Reading Time:**
+- 50 tomes × 12 chapters = 600 chapters
+- Average ~47 minutes/chapter (weighted by tier distribution)
+- Total: ~467 hours of reading (before speed upgrades)
+- With upgrades: Potentially 200-300 hours
+
+**Total Completion Estimate:**
+- Act I: 10-20 hours
+- Act II: 50-200 hours
+- Act III: 500-2000 hours (reading + practice + mastery)
+- **Grand Total**: 1,000-5,000 hours for true completion
+- **Comparable to**: RuneScape maxing, Path of Exile league completion
+
+**Spell Mastery Formula (TBD):**
+```
+Damage = baseSpellPower * (1 + spellMastery/100) * elementMasteryBonus * equipmentBonus
+
+Example:
+- Fire Hand: 100 base power
+- Spell Mastery: 75
+- Fire Mastery: 50 (+50% bonus)
+- Equipment: +200% fire damage
+- Total: 100 * 1.75 * 1.5 * 3 = 787.5 damage
+```
+
+**Meditation Bonus Formula (TBD):**
+```
+Bonus = baseTechniqueEffect * (1 + meditationLevel/100)^diminishingFactor
+
+Example:
+- Technique: "Fire Orb Crafting" (+10% fire damage base)
+- Meditation Level: 100
+- Diminishing Factor: 0.8
+- Bonus: 10% * (1 + 100/100)^0.8 = 10% * 1.74 = 17.4% fire damage
+```
+
+### future systems (noted during 1:1)
+
+**Second Prestige System: Ascension (beyond Retreats)**
+- Tentative idea, not fully designed
+- Would occur after multiple retreats
+- Provides deeper prestige bonuses
+- Not critical for initial implementation
+
+**Custom Spell Creation (Tome 50):**
+- Endgame sandbox mechanic
+- Combine elements, ranges, effects
+- Balance required to prevent overpowered combinations
+- Design details TBD
+
+---
+
 ## core responsibilities
 
 ### 1. game balance & progression

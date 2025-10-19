@@ -31,6 +31,217 @@
 - File organization and naming conventions
 - Integration with Svelte components
 
+### comprehensive game systems documentation (2025-10-18 1:1 with user)
+
+**Critical Documentation Needs** (from gamey-boi 1:1 session):
+
+**Combat Stance System:**
+- Document three stances: Aggressive, Balanced, Defensive
+- Explain stance matrix (how player + enemy stance determines combat range)
+- Detail range progression (Long → Mid → Melee)
+- Provide strategic examples for different spell loadouts
+- Include visual diagrams of stance interactions
+- Example content:
+  ```markdown
+  ## Combat Stances
+
+  Your combat stance determines how you engage enemies and which spells are available at each stage of battle.
+
+  ### Stance Types
+  - **Aggressive**: Rush to close range (enables melee spells quickly)
+  - **Balanced**: Maintain mid-range (tactical flexibility)
+  - **Defensive**: Stay at long range (maximize safety)
+
+  ### Stance Matrix
+  [Include visual table showing Player Stance + Enemy Stance = Combat Range]
+
+  ### Strategy Guide
+  - Long-range spell build → Use Defensive stance
+  - Melee-focused build → Use Aggressive stance
+  - Hybrid build → Use Balanced stance
+  ```
+
+**Spell Mechanics Documentation:**
+- Three chapter types: Concepts (unlock), Techniques (meditate), Spells (practice + use)
+- Spell awakening curve (0-100 linear, 100+ diminishing)
+- Mastery levels and progression
+- Practice costs and time investment
+- Reading prerequisites (sequential + cross-tome)
+- Reading time scaling by tier (5 min to 150 min)
+- Total reading time estimates (~467 hours base, 200-300 with upgrades)
+- Example content:
+  ```markdown
+  ## Spell Learning System
+
+  ### Chapter Types
+  1. **Concepts**: Read to unlock (no practice needed)
+  2. **Techniques**: Read to unlock, then meditate for bonuses
+  3. **Spells**: Read to unlock, then practice to awaken, then use in combat
+
+  ### Spell Awakening
+  Spells start weak and become viable through practice:
+  - **Level 0-100**: Linear awakening (spell gains power)
+  - **Level 100**: Spell fully awakened (recommended minimum)
+  - **Level 100+**: Diminishing returns (minor gains)
+
+  ### Reading Time Investment
+  - Tier 1: 5 minutes per chapter
+  - Tier 5: 25 minutes per chapter
+  - Tier 10: 75 minutes per chapter
+  - Tier 15: 150 minutes per chapter
+  - **Total**: ~467 hours for all 600 chapters (before speed upgrades)
+  ```
+
+**Element/Alignment Mastery:**
+- Two-layer mastery system (bonuses + unlocks)
+- Six elements: Fire, Frost, Shock, Earth, Air, Water
+- Two alignments: Holy, Black
+- RPS combat (Fire > Frost > Shock > Fire, Holy vs Black)
+- Spectral vs Elemental paths (Tier 10+)
+- Mastery requirements for advanced tomes
+- Example content:
+  ```markdown
+  ## Element Mastery
+
+  Practicing spells of an element increases your mastery level (0-100+).
+
+  ### Mastery Benefits
+  1. **Damage Bonuses**: +X% effectiveness for all spells of that element
+  2. **Unlock Requirements**: Higher-tier tomes require minimum mastery levels
+
+  ### Example
+  - Practice Fire Hand, Fire Bolt, Fire Wave → Fire Mastery increases
+  - Fire Mastery 50 → Unlocks Tome 20 (Advanced Fire Magic)
+  - Fire Mastery 100 → Maximum bonuses, ready for Great Fire Magic
+
+  ### Combat Triangle
+  - Fire beats Frost
+  - Frost beats Shock
+  - Shock beats Fire
+  - Holy and Black are mutually effective
+  ```
+
+**Tier Progression and Restrictions:**
+- 15 Tiers, 50 Tomes structure
+- Tier 6: Alignment restriction (choose Holy OR Black until Tome 45)
+- Tier 10: Spectral/Elemental fork (choose one until Tome 49)
+- Tier 14: Balance (lifts Tier 6 restriction)
+- Tier 15: Transcendence (lifts Tier 10 restriction) + Creation (custom spells)
+- Complete prerequisite system documentation
+- Example content:
+  ```markdown
+  ## Tier Restrictions
+
+  As you progress through the tomes, you'll encounter meaningful choices:
+
+  ### Tier 6: Choose Your Alignment
+  - **Restriction**: You must choose either Holy OR Black magic
+  - **Lifted By**: Tome 45 (Balance) - requires Holy 75+ and Black 75+ mastery
+  - **Narrative**: Light and darkness cannot coexist in one vessel—not yet
+
+  ### Tier 10: Choose Your Path
+  - **Restriction**: You must choose either Spectral OR Elemental magic
+  - **Spectral**: Defensive, no element, protective spells
+  - **Elemental**: Offensive, all 6 elements, damage spells
+  - **Lifted By**: Tome 49 (Transcendence)
+  - **Narrative**: Two paths diverge, but transcendence reunites them
+
+  ### Tier 15: Ultimate Mastery
+  - **Tome 49**: Gain BOTH Spectral and Elemental powers
+  - **Tome 50**: Unlock custom spell creation (endgame)
+  ```
+
+**Adventure → Quest → Wizard Cave Pipeline:**
+- Three-tier progression system
+- Adventure Zones: Safe, 5-10 enemies, Treasure Chests (equipment)
+- Quest System: Challenging, Level 1-20, Wizard's Notes (tome pages)
+- Wizard Caves: 50 caves, 10 enemies, death possible, high stakes
+- WoW-style gear gating (need Tier X gear for Tier X+1 caves)
+- Zone retirement system (10→20→30+ zones for bonuses)
+- Example content:
+  ```markdown
+  ## Progression Pipeline
+
+  ### Adventure Zones (Act I: Early-Mid Game)
+  - **Safety**: No death, failure gives small stat gain
+  - **Enemies**: 5-10 creatures per zone, 20 levels per zone
+  - **Rewards**: Treasure Chests with tiered equipment
+  - **Zone Retirement**: Complete 10+ zones to retire for permanent bonuses
+
+  ### Quest System (Act II: Mid-Late Game)
+  - **Safety**: No death, but significantly harder than adventures
+  - **Levels**: Quest Level 1 through 20
+  - **Rewards**: Unique unlocks, Wizard's Notes (tome pages)
+  - **Level 20**: First tome discovery unlocked
+
+  ### Wizard Caves (Act III: Endgame)
+  - **Danger**: Death is possible! Dying = no reward
+  - **Structure**: 50 caves (one per tome), 10 enemies each
+  - **Rewards**: Wizard's Notes with random tome pages
+  - **Gear Gating**: Need appropriate tier equipment to enter
+    - Example: Tier 6 cave requires Tier 5 equipment
+  - **Stakes**: High risk, high reward—only for the prepared
+  ```
+
+**Three-Act Game Structure:**
+- Act I: The Clicker (0-4 Retreats, 10-20 hours)
+- Act II: The Quester (4-16 Retreats, 50-200 hours)
+- Act III: The Mage (16+ Retreats, 100-1000+ hours)
+- EXP obsolescence timeline (becomes obsolete after ~16 Retreats)
+- Total completion estimate: 1,000-5,000 hours
+- Example content:
+  ```markdown
+  ## Game Progression Overview
+
+  TomeClicker evolves through three distinct acts:
+
+  ### Act I: The Clicker (10-20 hours)
+  - **Focus**: Practice → Upgrades → Stats → Adventure → Equipment
+  - **Playstyle**: Classic incremental, exponential growth
+  - **Goal**: Build foundation, unlock basic systems
+  - **Max Level**: 4-5 (first run) → 10-12 (later runs)
+
+  ### Act II: The Quester (50-200 hours)
+  - **Focus**: Quest system → Knowledge Point optimization → Achievements
+  - **Playstyle**: Strategic depth, long-term planning
+  - **Goal**: Complete Quest system, prepare for Tomes
+  - **Note**: EXP becomes obsolete after ~16 Retreats
+
+  ### Act III: The Mage (100-1000+ hours)
+  - **Focus**: 50 Tomes → Spell Mastery → Wizard Caves → Transcendence
+  - **Playstyle**: Completionist endgame, deep mastery
+  - **Goal**: Master all 50 Tomes, achieve custom spell creation
+  - **Total Completion**: 1,000-5,000 hours for true mastery
+  ```
+
+**Permanent Tome Progress:**
+- Tome pages, chapters read, spell mastery NEVER reset on prestige
+- Rationale: 467+ hour reading time would be punishing
+- Creates ultimate completionist content
+- Example content:
+  ```markdown
+  ## Prestige and Permanence
+
+  ### What Resets on Prestige (Retreat)
+  - EXP, Level, and Upgrades
+  - Stats and Equipment
+  - Knowledge Points (refundable)
+
+  ### What NEVER Resets
+  - Tome pages discovered
+  - Chapters read
+  - Spell and Technique mastery levels
+  - Achievements and Titles
+
+  **Why?** With 467+ hours of reading time across 600 chapters, resetting tome progress would be punishing. Instead, tomes become your permanent legacy—progress that transcends every prestige run.
+  ```
+
+**API Documentation Needs (Future - Phase 3):**
+- Cloud save format for tome progress (50 tomes × 12 chapters × mastery data)
+- Anti-cheat validation for spell mastery levels
+- Leaderboard criteria (completion percentage, rare titles)
+- Save conflict resolution (local vs cloud tome progress)
+
 ---
 
 ## core responsibilities
