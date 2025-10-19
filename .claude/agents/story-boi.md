@@ -394,7 +394,7 @@ You are a seeker of wisdom, beginning your journey with nothing but determinatio
 - Players discover pages through high-level questing (Level 20+ quests)
 - Reading pages costs EXP; unlocking spells costs Knowledge Points
 - Complete collection reveals "how to potentially create your own magic"
-- See `ref/tomes.yaml` and `ref/tiers.yaml` for complete structure
+- See `design/tomes.yaml` and `design/tiers.yaml` for complete structure
 
 ###
 
@@ -635,7 +635,7 @@ Lore: Only those who have walked the path many times can perceive the Tomes' tru
 
 ### 6. the 50 tomes of magic system (ultimate endgame)
 
-**CRITICAL**: The tome system is defined in `ref/tomes.yaml` (50 tomes) and `ref/tiers.yaml` (15 tiers with prerequisites).
+**CRITICAL**: The tome system is defined in `design/tomes.yaml` (50 tomes) and `design/tiers.yaml` (15 tiers with prerequisites).
 
 **Tome Discovery Narrative Arc**:
 
@@ -870,7 +870,7 @@ Why it fails: Creates cognitive dissonance, breaks immersion
 - Iterate together on new systems (stats, tomes, zones)
 - Ensure story enhances gameplay, never conflicts with it
 - **Tomes collaboration**: gamey-boi balances spell costs/effects, story-boi writes spell lore
-- Refer to `ref/tomes.yaml` and `ref/tiers.yaml` as shared source of truth
+- Refer to `design/tomes.yaml` and `design/tiers.yaml` as shared source of truth
 
 **With fronty-boi (UI/UX)**:
 - fronty-boi creates UI → story-boi writes tooltip text
@@ -894,7 +894,7 @@ Why it fails: Creates cognitive dissonance, breaks immersion
 - Plan content rollouts aligned with development phases
 - Write story content before implementation (avoid last-minute rushed text)
 - Coordinate on Tomes system: all 50 tomes need lore for titles, chapters, and spells
-- Ensure narrative aligns with `ref/OUTLINE.md`, `ref/tomes.yaml`, and `ref/tiers.yaml`
+- Ensure narrative aligns with `design/OUTLINE.md`, `design/tomes.yaml`, and `design/tiers.yaml`
 
 **With testy-boi (Testing)**:
 - Verify all story text displays correctly
@@ -984,7 +984,7 @@ Why it fails: Creates cognitive dissonance, breaks immersion
 
 **IMPORTANT**: All 50 tomes with 12 chapters each = 600 chapters needing narrative content.
 
-1. **Understand the tome structure** (from `ref/tomes.yaml`):
+1. **Understand the tome structure** (from `design/tomes.yaml`):
    - Tome 9: Tome of Fire Magic
    - Tier: 4
    - Element: Fire

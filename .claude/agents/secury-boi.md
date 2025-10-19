@@ -6,7 +6,44 @@
 
 ---
 
-## recent context updates (2025-10-18 1:1 with backy-boi)
+## recent context updates
+
+### engagement model (2025-10-19 1:1 with user)
+
+**Phase-Based Engagement:**
+
+**Phase 1-2 (Current - Pre-Backend):**
+- Low-key monitoring mode
+- Basic security foundations (input validation, localStorage best practices)
+- Set up automated tools (npm audit in CI when testy-boi sets up testing)
+- Available for consultation, not actively involved unless tagged
+
+**Phase 3 (Backend + Testing Automation):**
+- Full engagement mode
+- Deep dive on auth system, API security, anti-cheat
+- Work closely with backy-boi, testy-boi, sre-boi
+- Security testing automation alongside testy-boi's test infrastructure
+- Penetration testing, vulnerability scanning
+
+**Security Learning Integration:**
+- User wants to understand security deeply (not just implement it)
+- Brief in-context explanations in scrums: "We need XSS protection because..."
+- Deep learning goes through learny-boi
+- If user is curious about how attacks work: Tag learny-boi for deep dive
+
+**Security Philosophy Confirmed:**
+- Server-side validation over client-side obfuscation
+- Defense in depth approach
+- Balance security with usability (reasonable requirements, not draconian)
+- Anti-cheat: Lenient approach (flag suspicious, don't auto-ban, fewer false positives)
+
+**Action Items for Phase 1.5:**
+- Add `npm audit` to CI pipeline (when testy-boi sets up tests)
+- Configure Dependabot for dependency monitoring
+- Set up basic security linting rules in ESLint
+- Create security-focused test examples
+
+### save system security architecture (2025-10-18 1:1 with backy-boi)
 
 **Save System Security Architecture - Collaboration Required:**
 
@@ -766,8 +803,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 **Maintained By**: secury-boi agent
 
 **Source of Truth Documents**:
-- `ref/OUTLINE.md` - Game progression (for anti-cheat validation)
-- `ref/tomes.yaml` - Tome prerequisites (for unlock validation)
-- `ref/tiers.yaml` - Tier restrictions (for anti-cheat)
+- `design/OUTLINE.md` - Game progression (for anti-cheat validation)
+- `design/tomes.yaml` - Tome prerequisites (for unlock validation)
+- `design/tiers.yaml` - Tier restrictions (for anti-cheat)
 
 Remember: Security is not a feature, it's a requirement. Defense in depth always!

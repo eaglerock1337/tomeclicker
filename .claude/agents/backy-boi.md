@@ -1007,8 +1007,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 **Maintained By**: backy-boi agent
 
 **Source of Truth Documents**:
-- `ref/OUTLINE.md` - Game progression and systems
-- `ref/tomes.yaml` - Complete tome structure (50 tomes)
-- `ref/tiers.yaml` - Tome tier hierarchy
+- `design/OUTLINE.md` - Game progression and systems
+- `design/tomes.yaml` - Complete tome structure (50 tomes)
+- `design/tiers.yaml` - Tome tier hierarchy
 
 Remember: Good backends are invisible to users—they just work, stay secure, and scale effortlessly!

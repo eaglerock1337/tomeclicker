@@ -866,8 +866,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 **Maintained By**: testy-boi agent
 
 **Source of Truth Documents**:
-- `ref/OUTLINE.md` - Game progression and systems
-- `ref/tomes.yaml` - Complete tome structure (50 tomes)
-- `ref/tiers.yaml` - Tome tier hierarchy
+- `design/OUTLINE.md` - Game progression and systems
+- `design/tomes.yaml` - Complete tome structure (50 tomes)
+- `design/tiers.yaml` - Tome tier hierarchy
 
 Remember: Good tests give you confidence to ship. Great tests give you confidence to refactor!

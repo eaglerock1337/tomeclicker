@@ -248,7 +248,7 @@ Each of the 50 Tomes has 12 chapters, divided into three types:
 **Reading Prerequisites:**
 - Chapters unlock sequentially (must read Ch1 before Ch2)
 - Some chapters have cross-tome prerequisites (e.g., Tome 9 Ch5 requires Tome 7 Ch3)
-- Full prerequisite tree defined in `ref/tomes.yaml`
+- Full prerequisite tree defined in `design/tomes.yaml`
 
 **Reading Speed:**
 - Upgradeable via Knowledge Point tree
@@ -296,7 +296,7 @@ Each of the 50 Tomes has 12 chapters, divided into three types:
 
 ### tier progression and restrictions
 
-**15 Tiers, 50 Tomes** (see `ref/tiers.yaml` for complete structure)
+**15 Tiers, 50 Tomes** (see `design/tiers.yaml` for complete structure)
 
 **Key Tier Milestones:**
 
@@ -334,7 +334,7 @@ Each of the 50 Tomes has 12 chapters, divided into three types:
 - Each tier requires completing previous tier (e.g., Tier 6 requires Tier 5 complete)
 - Some tiers require minimum number of tomes from previous tier
 - Example: Tier 6 requires at least 2 Tier 5 tomes completed
-- Cross-tome chapter prerequisites (see `ref/tomes.yaml`)
+- Cross-tome chapter prerequisites (see `design/tomes.yaml`)
 
 ### spell mechanics and combat
 
@@ -1168,7 +1168,7 @@ Changes:
 - New upgrade: Focused Breathing (tier 4.5, +75% EXP)
 - Cost formula: 250 * 1.4^level, max level 40
 - Rebalanced progression curve from 200k-1M EXP range
-- Updated ref/OUTLINE.md with new upgrade details
+- Updated design/OUTLINE.md with new upgrade details
 
 Playtest results: 500k wall eliminated, mid-game flows better.
 

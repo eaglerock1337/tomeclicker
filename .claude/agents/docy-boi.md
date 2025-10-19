@@ -6,9 +6,43 @@
 
 ---
 
-## recent context updates (2025-10-18 1:1 with fronty-boi)
+## recent context updates
 
-### upcoming documentation needs
+### documentation architecture (2025-10-19 1:1 with user)
+
+**Directory Structure Finalized:**
+- **design/** - Internal design documents (source of truth, not player-facing)
+  - `OUTLINE.md` - Complete game design document
+  - `PROPOSAL.md` - Technical roadmap and modernization plans
+  - `tomes.yaml` - All 50 Tomes structure
+  - `tiers.yaml` - Tome tier hierarchy
+  - `design-analysis-doc.md` - Design philosophy notes
+  - Future: `mechanics/`, `balancing/`, `architecture/adr/` subdirectories
+- **docs/** (future) - Public-facing documentation
+  - `player-guide/` - Player-facing guides
+  - `api/` - API documentation (Phase 3)
+  - `architecture/` - Technical architecture docs
+
+**Source of Truth Hierarchy:**
+1. `design/OUTLINE.md` - Game mechanics and design
+2. `design/tomes.yaml` - Tome data structure
+3. `design/tiers.yaml` - Tier system
+4. `design/PROPOSAL.md` - Technical roadmap
+5. `CLAUDE.md` - Development workflow
+6. Code implementation - Final authority on "what actually works"
+
+**When Conflicts Arise:**
+- Design docs (`design/`) define the vision
+- Code defines the reality
+- Agents should flag discrepancies
+
+**Documentation Standards:**
+- All markdown files use lowercase headings (project convention)
+- Code uses JSDoc for all public methods
+- Commits include clear documentation updates
+- ADRs for major architectural decisions in `design/architecture/adr/`
+
+### upcoming documentation needs (2025-10-18 1:1 with fronty-boi)
 
 **Responsive Design Patterns Guide** (Future Task):
 - Document the 3-column → 2-column → 1-column responsive strategy
@@ -251,8 +285,8 @@
 **Repository Documentation**
 - `README.md` - Main project overview, features, quick start
 - `CLAUDE.md` - Development guidelines for Claude Code agents
-- `PROPOSAL.md` - Roadmap, architecture plans, phase tracking
-- `ref/OUTLINE.md` - Complete game design document
+- `design/PROPOSAL.md` - Roadmap, architecture plans, phase tracking
+- `design/OUTLINE.md` - Complete game design document
 - `.github/PULL_REQUEST_TEMPLATE.md` - PR contribution guidelines
 - `CHANGELOG.md` - Version history and release notes (when needed)
 
@@ -471,7 +505,7 @@ const clickValue = baseValue * clickMultiplier * levelBonus;
 
 **Links**
 ```markdown
-✅ Good: See [game design document](ref/OUTLINE.md) for details
+✅ Good: See [game design document](design/OUTLINE.md) for details
 ✅ Good: Visit [Claude Code docs](https://docs.claude.com/claude-code)
 
 ❌ Bad: See game design document (link missing)
@@ -559,7 +593,7 @@ Before completing any documentation task:
 - Document game mechanics and formulas
 - Write player guides for progression systems
 - Explain balance changes in CHANGELOG
-- Maintain ref/OUTLINE.md game design doc
+- Maintain design/OUTLINE.md game design doc
 
 **With story-boi (Narrative)**:
 - Format lore and story content

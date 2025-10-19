@@ -16,7 +16,7 @@ TomeClicker is an open-source web-based incremental game built with SvelteKit. T
   - ArgoCD for GitOps deployments
   - No shared storage currently (local PVs with node affinity)
   - Planned: Raspberry Pi 5 + NVMe storage (Linux support pending)
-  - See `PROPOSAL.md` for detailed infrastructure plans
+  - See `design/PROPOSAL.md` for detailed infrastructure plans
 
 ### Related Repositories
 
@@ -95,7 +95,20 @@ The game uses a tiered unlock system based on experience points:
 
 ### Game Design Reference
 
-The `ref/OUTLINE.md` file contains the complete game design document with detailed progression mechanics, stats system, and future features including adventure zones, equipment, retreats, and the tome magic system.
+The `design/OUTLINE.md` file contains the complete game design document with detailed progression mechanics, stats system, and future features including adventure zones, equipment, retreats, and the tome magic system.
+
+### Documentation Architecture
+
+- **design/** - Internal design documents and source of truth
+  - `OUTLINE.md` - Complete game design document
+  - `PROPOSAL.md` - Technical roadmap and modernization plans
+  - `tomes.yaml` - All 50 Tomes structure and metadata
+  - `tiers.yaml` - Tome tier hierarchy
+  - `design-analysis-doc.md` - Design philosophy and architectural notes
+- **docs/** (future) - Public-facing documentation
+  - Player guides, API documentation, architecture docs
+- **CLAUDE.md** - Development guidelines for Claude Code agents
+- **README.md** - Project overview and quick start
 
 ## Development Notes
 
@@ -118,7 +131,7 @@ The `ref/OUTLINE.md` file contains the complete game design document with detail
 
 ### Roadmap
 
-See `PROPOSAL.md` for the complete modernization and enhancement roadmap, including:
+See `design/PROPOSAL.md` for the complete modernization and enhancement roadmap, including:
 - **Phase 1.x (Current)**: Immediate QoL improvements
   - Upgrades menu: Fix mobile navigation issues
   - Story page: Center layout, add navigation system
@@ -129,7 +142,7 @@ See `PROPOSAL.md` for the complete modernization and enhancement roadmap, includ
 
 ### Goals
 
-- Iterate and flesh out game design as outlined in `ref/OUTLINE.md`
+- Iterate and flesh out game design as outlined in `design/OUTLINE.md`
 - Complete migration to TypeScript and Svelte 5 (with runes)
 - Implement modular class structure for better maintainability
 - Deploy backend services to home Raspberry Pi Kubernetes cluster
