@@ -12,6 +12,18 @@
 
 User has identified specific UI glitches to fix before major refactors:
 
+**NEW TASK (2025-10-18): Save Type Selection UI**
+- **When**: Phase 2 (before cloud saves in Phase 3)
+- **What**: "Create Save Type" UI decision point
+  - Option A: "Create Leaderboard Save" (server-validated, no cheating)
+  - Option B: "Create Casual Save" (local-only, cheat-friendly)
+- **Critical UX Requirements**:
+  - **Clearly communicate trade-offs** (leaderboard eligibility is permanent)
+  - Warning: "Casual saves can NEVER be upgraded to Leaderboard saves"
+  - Visual distinction between save types
+  - Help text explaining each option
+- **Coordinate with**: backy-boi (save type implementation details)
+
 ### 1. Upgrades Menu (HIGH PRIORITY)
 **Problems:**
 - Difficult to navigate on both desktop and mobile

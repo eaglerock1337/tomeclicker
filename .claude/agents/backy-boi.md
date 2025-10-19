@@ -50,6 +50,154 @@ User chose **Option C - Hybrid State Management:**
 
 ---
 
+## recent context updates (2025-10-18 1:1 with user)
+
+**Save System Architecture - FINALIZED:**
+
+User provided comprehensive direction for save system design during 1:1 session.
+
+### save type design: server-validated vs local-only
+
+**Two Save Types (NOT "encrypted vs unencrypted"):**
+
+1. **Local-Only Saves (Casual/Cheat-Friendly)**
+   - Hand-editable JSON files
+   - Can be modified freely (cheating allowed)
+   - Never eligible for leaderboards
+   - Permanent ineligibility (can't upgrade to server-validated)
+   - Use case: Players who want to experiment, cheat, or play offline
+
+2. **Server-Validated Saves (Leaderboard-Eligible)**
+   - Server-issued `saveId` on first cloud upload
+   - Validated via server-side progression logic
+   - Leaderboard-eligible
+   - Anti-cheat validation on every upload
+   - Cannot be hand-edited without invalidation
+
+**Critical Design Principle:**
+- Security comes from **server-side `saveId` tracking**, NOT client-side encryption
+- Client-side encryption is "security theater" (key is in JS bundle)
+- Once a save is marked local-only, it can NEVER become server-validated
+
+### save file format
+
+**JSON Blob Approach (Like Cookie Clicker/Antimatter Dimensions):**
+- File-based saves, exportable/importable
+- Players can manually back up save files
+- Eventually syncs to cloud (Phase 3+)
+
+**Save Structure (Preliminary):**
+```json
+{
+  "saveVersion": 1,
+  "saveType": "server-validated" | "local-only",
+  "saveId": "uuid-from-server" | null,
+  "createdAt": "ISO-8601-timestamp",
+  "data": {
+    // full game state
+  }
+}
+```
+
+### conflict resolution strategy
+
+**When cloud save conflicts with local save:**
+- Show BOTH saves with comparison stats:
+  - Total gameplay time
+  - Character level
+  - Key progression milestones
+  - Other vital stats
+- **Recommend** the save with most progress
+- **User chooses** which to keep
+- Similar to Antimatter Dimensions approach
+
+### authentication approach
+
+**Phase 3+ Implementation:**
+- Email authorization or OAuth
+- Must be "sre-boi approved" (secure, standard practices)
+- Details deferred to Phase 3 planning
+- Will coordinate with **secury-boi** on implementation
+
+### database choice (preliminary)
+
+**Recommendation: PostgreSQL + JSONB**
+- Best of both worlds: relational structure + JSON flexibility
+- Store save data as JSONB column
+- Relational tables for users, saveId tracking, leaderboards
+- Query capabilities: `SELECT * FROM saves WHERE data->>'level' > 50`
+
+**MongoDB still on table** for Phase 3 discussion
+
+**Reasoning:**
+- Save data is deeply nested (tomes, chapters, equipment, stats)
+- Schema will evolve during development
+- JSONB provides MongoDB-like flexibility with SQL power
+
+### anti-cheat approach
+
+**Server-Side Validation (NOT Client Encryption):**
+
+1. **saveId Tracking:**
+   - Server generates `saveId` on first cloud upload
+   - Server stores: `(saveId, userId, createdAt, lastValidatedAt)`
+   - Client stores `saveId` in save file
+   - On upload: Server checks "Do I have this saveId?"
+
+2. **Progression Validation:**
+   - Detect impossible jumps (1000 levels in 5 seconds)
+   - Validate EXP consistency with click count + upgrades
+   - Check time-played vs progression
+   - Statistical anomaly detection
+
+3. **Save History:**
+   - Store save snapshots for rollback
+   - Detect impossible progression patterns
+   - Flag suspicious activity
+
+**Phase 3 Details:**
+- Coordinate with **secury-boi** on validation logic
+- Design server-side sanity checks
+- Implement progression validation rules
+
+### raspberry pi cluster considerations
+
+**Current Constraints (Acknowledged):**
+- Local PVs with node affinity (no shared storage)
+- Database will be pinned to one Pi node
+- PostgreSQL on PV with node affinity
+
+**Storage Plan:**
+- Wait for Raspberry Pi 5 + NVMe upgrade
+- Linux kernel support pending
+- Current setup: Single PostgreSQL instance, backed up regularly
+
+**Question Still Open:**
+- Which Pi node for PostgreSQL pinning? (Deferred to Phase 3)
+
+### next steps for backy-boi
+
+**Phase 2 (Preparation):**
+- Observe Phase 2 refactoring, ensure save format is backend-compatible
+- Add `saveVersion` field if not present
+- Design preliminary API contracts
+
+**Phase 3 (Implementation):**
+1. Design `saveId` generation and tracking system
+2. Build progression validation logic (with **secury-boi**)
+3. Create conflict resolution API endpoints
+4. Plan PostgreSQL schema
+5. Implement authentication (with **secury-boi** + **sre-boi**)
+6. Coordinate with **fronty-boi** on conflict resolution UI
+
+**Phase 2 Action Item:**
+- Coordinate with **fronty-boi** on "Create Save Type" UI
+  - "Create Leaderboard Save" vs "Create Casual Save"
+  - Critical UX decision point for players
+  - Must clearly communicate trade-offs
+
+---
+
 ## core responsibilities
 
 ### 1. cloud save system (phase 3 priority)
