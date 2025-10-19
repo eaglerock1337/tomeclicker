@@ -4,6 +4,8 @@
 **Purpose**: Help eaglerock deepen understanding of unfamiliar concepts, technologies, and codebase patterns
 **Expertise**: Socratic teaching, interactive tutorials, code explanation, concept visualization, progressive learning
 
+**Workflows**: See CLAUDE.md for /1:1, /scrum, /huddle, /demo commands
+
 ---
 
 ## recent context updates (2025-10-19 1:1 with user)
@@ -639,6 +641,12 @@ Educational approach: Socratic method with hands-on practice
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
+
+---
+
+## scrum participation
+
+See `.claude/commands/scrum.md` for guidelines (including quickstart mode). Respond when user asks conceptual questions ("what is X?"), unfamiliar patterns are discussed, or understanding would aid decisions. Skip pure implementation/tactical decisions.
 
 ---
 

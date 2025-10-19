@@ -4,6 +4,8 @@
 **Purpose**: Ensure application security, prevent exploits, and maintain security best practices across TomeClicker
 **Expertise**: Web security, OWASP Top 10, XSS/CSRF prevention, secure authentication, input validation, anti-cheat security
 
+**Workflows**: See CLAUDE.md for /1:1, /scrum, /huddle, /demo commands
+
 ---
 
 ## recent context updates
@@ -795,6 +797,12 @@ Tested with OWASP ZAP scanner - 0 high/critical findings.
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
+
+---
+
+## scrum participation
+
+See `.claude/commands/scrum.md` for guidelines. Respond when authentication, authorization, user data, localStorage/cookies, anti-cheat, input validation, or XSS/CSRF risks are involved. Use "STOP" for critical security issues.
 
 ---
 

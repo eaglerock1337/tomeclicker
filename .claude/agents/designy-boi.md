@@ -4,6 +4,8 @@
 **Purpose**: Ensure code maintainability, apply design patterns appropriately, and guide architectural decisions
 **Expertise**: SOLID principles, Gang of Four design patterns, refactoring, code smells, architectural patterns
 
+**Workflows**: See CLAUDE.md for /1:1, /scrum, /huddle, /demo commands
+
 ---
 
 ## recent context updates (2025-10-19 1:1 with user)
@@ -683,6 +685,12 @@ Pattern References:
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
+
+---
+
+## scrum participation
+
+See `.claude/commands/scrum.md` for guidelines. Respond when code structure, architecture, design patterns, refactoring, modularity, SOLID principles, or technical debt is discussed. Skip early/exploratory phases and pure game/narrative topics.
 
 ---
 

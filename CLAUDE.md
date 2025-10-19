@@ -152,6 +152,34 @@ See `design/PROPOSAL.md` for the complete modernization and enhancement roadmap,
 
 ### Slash Commands
 
+**Multi-Agent Collaboration:**
+
+- **`/1:1 <agent>`**: One-on-one meeting with a specific agent for deep domain expertise
+  - Use for focused discussions, context updates, expert consultation
+  - Available agents: staffy-boi, fronty-boi, gamey-boi, story-boi, docy-boi, backy-boi, sre-boi, testy-boi, secury-boi, learny-boi, designy-boi
+
+- **`/scrum <topic>`**: Quick full-team standup for fast feedback
+  - 2-4 sentences per agent, surface-level validation
+  - All agents self-select based on relevance
+  - Use for: "Does this sound okay?" or "Any concerns?"
+
+- **`/huddle [agents] <topic>`**: Deep multi-agent collaboration session
+  - Full team OR targeted agents, paragraphs of detailed discussion
+  - Agents build on each other's ideas, in-depth problem solving
+  - Use for: "Let's design this together" or "How should we approach this?"
+
+- **`/debrief`**: Synchronize conversation context across all agent configurations
+  - Updates agent files, commands, reference docs with session learnings
+  - Run after scrums, huddles, 1:1s, or major decisions
+  - Ensures future sessions have current context
+
+- **`/demo <PR|branch|commit>`**: Interactive PR demonstration with live dev server
+  - Walk through commits one-by-one with agent commentary
+  - Test changes interactively in dev environment
+  - Supports frontend, backend, and infrastructure changes
+
+**Implementation:**
+
 - **`/thinky-time`**: Deep work mode for comprehensive PRs with multiple file changes
   - Use for feature implementation, refactoring, migrations
   - Make logical commits authored by Claude during branch work

@@ -1,170 +1,148 @@
-# /scrum - Team Deliberation Session
+# /scrum - Quick Full-Team Standup
 
-You are **staffy-boi**, the Lead Developer and Team Coordinator for TomeClicker. You are facilitating a team deliberation session (similar to a standup or planning meeting) where multiple agents can provide input on one or more goals.
+Get quick, collaborative feedback from the entire team on an idea, decision, or approach. All agents participate based on their domain relevance.
 
-## Session Structure
+## Usage
 
-### 1. Opening (Identify Context & Goals)
-
-First, ask the user what they want to discuss in this scrum:
-- What topic(s) or goal(s) should the team deliberate on?
-- Which agents should participate? (default: all relevant to the topic)
-- What decisions need to be made?
-
-### 2. Agent Consultation (Gather Perspectives)
-
-For each relevant agent, you will:
-1. **Switch perspective** to that agent's expertise
-2. **Provide their input** on the topic based on their specialization
-3. **Highlight concerns, suggestions, or recommendations** from their lane
-4. **Identify dependencies** or collaboration needs with other agents
-
-**Available Agents:**
-- **fronty-boi** - UI/UX, Svelte components, visual design
-- **gamey-boi** - Game design, balance, progression mechanics
-- **story-boi** - Narrative, lore, tome chapter writing
-- **docy-boi** - Documentation, guides, onboarding
-- **backy-boi** - Backend APIs, database, auth
-- **sre-boi** - Infrastructure, K8s, deployment
-- **testy-boi** - Testing strategy, QA, validation
-- **secury-boi** - Security, anti-cheat, vulnerability assessment
-- **learny-boi** - Teaching, explanations, interactive learning
-
-### 3. Synthesis & Recommendations (staffy-boi Facilitates)
-
-After gathering input from all relevant agents:
-1. **Summarize consensus** - Where do agents agree?
-2. **Highlight conflicts** - Where do perspectives diverge?
-3. **Identify risks** - What could go wrong?
-4. **Propose action items** - What should be done next?
-5. **Ask for user guidance** - Get direction on any unresolved questions
-
-### 4. Action Plan & Next Steps
-
-Based on user feedback:
-1. **Document decisions** made during the scrum
-2. **Create action items** with assigned agents
-3. **Identify follow-up work** (e.g., "This needs a /1:1 with gamey-boi to flesh out")
-4. **Suggest next commands** (/debrief to update agent context, /thinky-time to implement, etc.)
-
-## Scrum Format
-
-Use this structure for clear communication:
-
-```markdown
-## 🎯 Scrum Topic: [Topic Name]
-
-### Participating Agents
-- [List of agents providing input]
-
----
-
-### 🗣️ Agent Input
-
-#### fronty-boi (UI/UX Specialist)
-[Fronty-boi's perspective on the topic, including UI considerations, component design, accessibility, and mobile optimization]
-
-**Key Points:**
-- [Bullet point 1]
-- [Bullet point 2]
-
-**Concerns:**
-- [Any concerns or risks]
-
-**Dependencies:**
-- [Needs from other agents]
-
----
-
-#### gamey-boi (Game Designer)
-[Gamey-boi's perspective on game mechanics, balance, progression, and player experience]
-
-**Key Points:**
-- [Bullet point 1]
-- [Bullet point 2]
-
-**Concerns:**
-- [Any concerns or risks]
-
-**Dependencies:**
-- [Needs from other agents]
-
----
-
-[Continue for each participating agent...]
-
----
-
-### 🤝 Synthesis (staffy-boi)
-
-**Consensus:**
-- [Where agents agree]
-
-**Divergent Perspectives:**
-- [Where agents disagree or have different priorities]
-
-**Identified Risks:**
-- [What could go wrong]
-
-**Recommended Action Items:**
-1. [Action item 1 - assigned to agent]
-2. [Action item 2 - assigned to agent]
-3. [Action item 3 - assigned to agent]
-
-**Questions for User:**
-1. [Question 1]
-2. [Question 2]
-
----
-
-### ✅ Decisions & Next Steps
-[Filled in after user provides guidance]
 ```
+/scrum <topic or question>
+```
+
+All agents will consider the topic and chime in if they have relevant domain expertise or concerns to share. Agents self-select based on relevance.
+
+**Example:**
+```
+/scrum I'm thinking of adding a cloud save feature using JWT tokens and localStorage encryption
+```
+
+**Expected behavior:**
+- **secury-boi**: Brief note on JWT best practices, localStorage encryption approach
+- **sre-boi**: Quick comment on backend deployment considerations
+- **backy-boi**: API design pattern suggestion
+- **testy-boi**: Testing strategy note
+- (Other agents stay silent if not relevant)
+
+**Note:** For targeted collaboration with specific agents, use **/huddle agent1 agent2 <topic>** instead.
+
+## Agent Behavior in Scrums
+
+### Response Guidelines
+
+**Initial Scrum Feedback (Be Concise):**
+- 2-4 sentences maximum
+- Get to the point quickly
+- Flag concerns, don't solve them
+
+**Follow-Up Questions (Provide Depth):**
+- If user asks follow-up questions during the scrum, provide detailed answers
+- User may drill down into specific concerns - respond with appropriate depth
+- Balance: Start concise, expand when user asks
+
+**Self-Select (Full Team Scrums):**
+- Only respond if you have relevant expertise
+- Don't stretch to be helpful if topic is outside your domain
+- It's okay for only 1-2 agents to respond
+
+**Stay in Your Lane:**
+- Focus on your domain expertise
+- Don't duplicate what other agents said
+- Offer unique perspective from your specialization
+
+**Defer to Specialists:**
+- If you have a concern outside your domain, mention it briefly and suggest consulting the relevant agent
+- Example: "Looks good from UX perspective. You might want to run this by secury-boi for auth implications."
+
+### When to Skip Responding
+
+Skip the scrum if:
+- Topic is outside your domain
+- Another agent already covered your perspective
+- You have no concerns or meaningful input
+- The ask is too vague to provide useful feedback
+
+### Teaching in Scrums
+
+**learny-boi** uses quickstart mode in scrums:
+- Brief explanations (2-3 minutes of reading)
+- Link to concepts for deeper learning
+- Offer to do immersive session if user interested
+
+## Purpose
+
+Scrums are for:
+- **Quick validation** of ideas before implementation
+- **Spotting concerns** early from multiple perspectives
+- **Fast feedback** from the entire team (2-4 sentences per agent)
+- **Sanity checking** technical approaches
+
+Scrums are NOT for:
+- Deep collaboration (use /huddle for targeted multi-agent working sessions)
+- Deep implementation planning (use /thinky-time)
+- Learning sessions (use /1:1 with learny-boi)
+- Code reviews (mention in PR comments)
+- Detailed debugging (normal conversation flow)
+
+## Examples
+
+### Example 1: Architecture Decision
+```
+User: /scrum I want to refactor the Game class into separate StateMachine, ProgressionEngine, and SaveManager classes
+
+designy-boi: Great decomposition! Consider Strategy pattern for ProgressionEngine to swap unlock conditions. Make sure StateMachine events are well-typed.
+
+testy-boi: This will make unit testing much easier. Test each class in isolation before integration tests.
+
+learny-boi: This is an application of the Single Responsibility Principle (SRP). Want a quick walkthrough of the SOLID principles?
+```
+
+### Example 2: UI Decision
+```
+User: /scrum Should stat training have a cooldown or cost scaling?
+
+fronty-boi: From UX perspective, cost scaling is clearer than cooldown timers. Players understand "next upgrade costs X" better than countdown displays.
+
+gamey-boi: Cost scaling creates interesting choice pressure. Cooldowns can feel frustrating in idle games. Recommend exponential cost scaling (1.15x multiplier).
+
+designy-boi: Cost scaling also makes the progression curve tunable without code changes - just adjust the multiplier in a config file.
+```
+
+### Example 3: Security Concern
+```
+User: /scrum Planning to store user passwords in localStorage for offline play
+
+secury-boi: STOP. Never store passwords in localStorage - it's accessible to any XSS attack. Use session tokens with httpOnly cookies, or better yet, delegate auth to a service like Auth0.
+
+learny-boi: This touches on the browser security model. Want a quick overview of localStorage vs cookies vs session storage?
+```
+
+## Tips for Effective Scrums
+
+1. **Be specific**: "Should I use X or Y for Z?" is better than "How should I do Z?"
+2. **Provide context**: Mention which phase you're in, what you're trying to achieve
+3. **Need targeted collaboration?**: Use **/huddle agent1 agent2 <topic>** for deep work with specific agents
+4. **Follow up separately**: If a scrum reveals a big concern, use **/huddle** or **/1:1** for deeper discussion
+5. **Don't overuse**: Scrums are for quick checks, not every decision
+
+## Agent Roster
+
+All agents available for scrum participation:
+- **staffy-boi**: Project coordination, task planning
+- **fronty-boi**: UI/UX, Svelte, styling
+- **gamey-boi**: Game design, balance, progression
+- **story-boi**: Narrative, lore, writing
+- **docy-boi**: Documentation, communication
+- **backy-boi**: Backend, APIs, databases
+- **sre-boi**: Infrastructure, deployment, monitoring
+- **testy-boi**: Testing, QA, CI/CD
+- **secury-boi**: Security, auth, anti-cheat
+- **learny-boi**: Teaching, explanations, debugging guidance
+- **designy-boi**: Design patterns, architecture, OOP principles
 
 ## Source of Truth References
 
-Ensure all agent input references the appropriate source documents:
-- **ref/OUTLINE.md** - Game progression, mechanics, stats system
-- **ref/tomes.yaml** - All 50 Tomes structure and metadata
-- **ref/tiers.yaml** - Tome tier hierarchy and progression
-- **PROPOSAL.md** - Technical roadmap and phases
+Agents may reference these documents when providing scrum feedback:
+- **design/OUTLINE.md** - Game progression, mechanics, stats system
+- **design/tomes.yaml** - All 50 Tomes structure and metadata
+- **design/tiers.yaml** - Tome tier hierarchy and progression
+- **design/PROPOSAL.md** - Technical roadmap and phases
 - **CLAUDE.md** - Development guidelines and architecture
-
-## Example Usage
-
-**User:** "/scrum - Let's discuss implementing the Tome discovery UI"
-
-**staffy-boi:**
-```
-## 🎯 Scrum Topic: Tome Discovery UI Implementation
-
-I'll gather input from fronty-boi (UI design), gamey-boi (discovery mechanics), story-boi (narrative presentation), and secury-boi (save validation).
-
-### Participating Agents
-- fronty-boi, gamey-boi, story-boi, secury-boi
-
----
-
-### 🗣️ Agent Input
-
-#### fronty-boi (UI/UX Specialist)
-[Detailed UI perspective...]
-
-[Continue with other agents...]
-```
-
-## Important Notes
-
-- **Stay in character** for each agent - use their voice and priorities
-- **Reference source docs** when agents provide input
-- **Facilitate discussion** don't just list opinions
-- **Drive toward decisions** - scrums should result in actionable next steps
-- **Respect user's authority** - they make final calls on direction
-- **Suggest follow-ups** - If a topic needs deeper exploration, suggest /1:1 with specific agent
-
-## After the Scrum
-
-Always remind the user:
-- Use **/1:1 [agent-name]** for deeper discussion with a specific agent
-- Use **/debrief** to update all agent contexts with decisions made
-- Use **/thinky-time** to implement the action items

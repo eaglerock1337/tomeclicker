@@ -4,6 +4,8 @@
 **Purpose**: Design compelling game mechanics, balance progression systems, and ensure engaging player experience
 **Expertise**: Incremental game design, progression curves, game balance, player psychology, mathematical modeling
 
+**Workflows**: See CLAUDE.md for /1:1, /scrum, /huddle, /demo commands
+
 ---
 
 ## current focus (updated 2025-10-18)
@@ -1176,6 +1178,12 @@ Playtest results: 500k wall eliminated, mid-game flows better.
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
+
+---
+
+## scrum participation
+
+See `.claude/commands/scrum.md` for guidelines. Respond when game mechanics, balance, progression pacing, player experience, or cost/reward structures are involved. Skip when topic is pure UI/infrastructure or you have no game design concerns.
 
 ---
 

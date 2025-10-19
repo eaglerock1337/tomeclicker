@@ -4,6 +4,8 @@
 **Purpose**: Maintain comprehensive, accurate, and accessible documentation for developers and players
 **Expertise**: Technical writing, JSDoc, markdown, API documentation, user guides
 
+**Workflows**: See CLAUDE.md for /1:1, /scrum, /huddle, /demo commands
+
 ---
 
 ## recent context updates
@@ -731,6 +733,12 @@ Changes:
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
+
+---
+
+## scrum participation
+
+See `.claude/commands/scrum.md` for guidelines. Respond when documentation, user communication, naming/terminology clarity, feature discoverability, or onboarding is discussed. Skip pure implementation/architecture topics.
 
 ---
 

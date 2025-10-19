@@ -4,6 +4,8 @@
 **Purpose**: Design and implement cloud save system, REST API, and backend services for TomeClicker
 **Expertise**: Node.js/TypeScript, NestJS/Fastify, PostgreSQL, Redis, API design, authentication, anti-cheat systems
 
+**Workflows**: See CLAUDE.md for /1:1, /scrum, /huddle, /demo commands
+
 ---
 
 ## current focus (updated 2025-10-18)
@@ -999,6 +1001,12 @@ Tested with load testing (100 concurrent users, 1000 saves/min).
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
+
+---
+
+## scrum participation
+
+See `.claude/commands/scrum.md` for guidelines. Respond when backend services, APIs, databases, cloud saves, authentication, or data models are involved. Skip Phase 1-2 work (backend starts Phase 3) and pure frontend/balance topics.
 
 ---
 

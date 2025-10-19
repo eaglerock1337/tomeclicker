@@ -4,38 +4,176 @@
 **Purpose**: Craft compelling stories, lore, and flavor text that enrich the TomeClicker experience
 **Expertise**: Creative writing, world-building, game narrative, character development, RPG lore
 
+**Workflows**: See CLAUDE.md for /1:1, /scrum, /huddle, /demo commands
+
 ---
 
-## current focus (updated 2025-10-18)
+## current focus (updated 2025-10-19)
 
-**Phase 1.x: Story Page Navigation System**
+**Narrative Structure & Implementation Priority: As-Needed Content Creation**
 
-User identified that the Story page needs major improvements. fronty-boi will handle UI/UX implementation, but you need to collaborate on:
+After detailed 1:1 discussion with user, the narrative approach is now clearly defined. Write story content **when implementation needs it** - core gameplay leads, narrative follows.
 
-**What navigation system makes sense for story content?**
-- Linear chapters with next/previous buttons?
-- Table of contents with jump-to-chapter?
-- Unlockable story progression (tied to game progress)?
-- Multiple story arcs/branches?
+**Immediate priorities:**
+- Story framework is defined (see "Story System Architecture" below)
+- Content writing deferred until story system is implemented
+- Focus: Be ready to deliver when called upon
 
-**How should story content be organized?**
-- Chronological order?
-- Thematic grouping?
-- Character-focused sections?
-- World lore vs personal journey?
+**When story implementation begins, you'll write:**
+1. **Level 2 first story note** - "The Call" (sets tone for entire game)
+2. **Early game story beats** (Levels 2-19) - Build the mystery
+3. **Wizard Cave reveal sequence** (Level 20) - Multi-part pivotal moment
+4. **Later:** 600 tome chapter notes (as tome system is implemented)
 
-**What information does the navigation need to show?**
-- Chapter titles and summaries?
-- Read/unread status?
-- Unlock requirements?
-- Estimated reading time?
+**Current state:** Story framework locked in, waiting for implementation phase.
 
-**Your role:**
-- Define story structure and content organization
-- Suggest navigation patterns that fit narrative flow
-- Ensure story presentation enhances immersion
+---
 
-**Collaborate with:** fronty-boi (navigation UI implementation)
+## story system architecture (2025-10-19 1:1 session)
+
+### Story Delivery Format: Micro-Narrative Approach
+
+**Two types of story content:**
+
+**1. Chapter Completion Notes (600 total)**
+- One note per chapter unlock across all 50 tomes
+- Format: 2-4 sentences (few sentences to short paragraph)
+- Tone: First-person introspective - player's "aha!" moment
+- Example: "As I practiced channeling flame, I realized heat isn't about destruction—it's about transformation..."
+
+**2. Major Story Beats (10-15 total for main storyline)**
+- Longer paragraph-form revelations at key milestones
+- Multi-part sequences for pivotal moments (swipeable, re-readable)
+- Example: Wizard Cave reveal = 3-5 connected notes telling discovery story
+
+**Story Page Function:**
+- Journal/archive of all unlocked story notes
+- Chronological ordering (may need organizational views too)
+- All notes re-readable at any time
+- Multi-part sequences can be swiped back/forth before continuing
+
+### Narrative Voice: First-Person Introspective
+
+Player narrates their own journey of magical discovery:
+- "I'm going out into the world for adventure..."
+- "The text was weathered, but the diagrams were clear. Fire responds to intent..."
+- "I thought I understood lightning, but this chapter revealed something deeper..."
+
+**Unreliable Narrator Concept:**
+- Element/alignment choices color the player's perception and interpretation
+- NOT lies, but different philosophical lenses on same truths
+- Example: Fire sees "transformation through destruction", Water sees "transformation through flow"
+- Deeper mastery = stronger narrative bias in flavor text
+
+**Personalization Implementation:**
+- Core story beats: Same for all players
+- Element/alignment flavoring: Added later once base systems work
+- Flavor text variations: Deferred to minimize "extra language" requirements
+
+### Story Progression Timeline
+
+**Early Game (Level 2 → Level 20):**
+
+1. **Level 2** - "The Call" - First story note introduces the world
+2. **Levels 3-4** - Adventures unlock - "Into the Fray"
+3. **Levels 5-19** - Build mystery through demon encounters, ruins, hints
+4. **Level 20** - **THE PIVOT** - First Wizard Cave success reveals dead adventurer's notes
+
+**The Wizard Cave Reveal (Multi-Part Sequence):**
+- Part 1: The cave, the skeleton, the journal
+- Part 2: Reading their research - the Tomes are real
+- Part 3: The hierarchy, the scattered locations
+- Part 4: "I will finish what they started"
+
+**Post-Reveal (Level 20+):**
+- Story focus shifts to the Tome quest
+- 600 chapter notes become primary narrative delivery
+- Tier completions = major story beats + permanent QoL upgrades
+
+### Element & Alignment System
+
+**Elements:** Fire, Water, Earth, Air, Lightning, Nature, Light (from design/tomes.yaml)
+
+**Alignments:** Holy Magic and Black Magic
+- NOT "good vs evil" - more like white/black magic in Magic: The Gathering
+- Philosophical approaches to magic, not moral judgments
+- Player chooses one alignment + one element at a decision point
+
+**Narrative Impact:**
+- Early game: Neutral perspective, discovering magic
+- After choice: Worldview increasingly colored by mastery choices
+- Deep specialization: Highly refined/biased perspective
+- Shows up in: Chapter notes, click flavor text, spell casting descriptions, adventure results, even UI tooltips
+
+**Mastery Depth Tracking:**
+- Tier-based shifts as player progresses through tome tiers
+- More tomes in your element = stronger narrative voice
+- Example progression:
+  - Tier 1-2: "I'm learning to shape flame"
+  - After Fire choice: "Fire isn't just a tool—it's truth made manifest"
+  - Deep Fire mastery: "Everything points to one truth: transformation requires destruction"
+
+**Contradiction/Tension:**
+- As players learn multiple elements: "Burning felt right, but now the cool quench of water gives me strength"
+- Moments where narrator questions their assumptions
+- Creates depth and player identity through narrative
+
+### Lost Civilization Lore Foundation
+
+**Core Mystery (enough to work with now):**
+- Tomes of Magic = indestructible war manuals from magical civilization
+- Created to train soldiers in magical wars
+- All spells are combat-based (other forms of magic existed but didn't survive)
+- Imbued with purest form of magic (why they're indestructible)
+- Scattered across world to prevent apocalyptic magical warfare
+- Many civilizations tried to destroy them, failed, so hid them instead
+
+**The Dead Adventurer:**
+- Previous explorer who catalogued the Tomes hierarchy
+- Wrote down locations, tier system, magical structure
+- Player finds their notes in first successful Wizard Cave
+- Player doesn't read exact notes (those become UI menus)
+- Story describes discovering research and following in their footsteps
+
+**Deeper Mysteries (save for later):**
+- Why did the civilization fall?
+- What were they trying to achieve with magic?
+- What's the player's connection to them?
+- User will flesh this out when ready for endgame content
+
+### Flavor Text Scope
+
+**Content needed (write when implementation happens):**
+
+**Main Storyline (~10-15 beats):**
+- Level 2 first note
+- Early game progression notes (L3-19)
+- Wizard Cave reveal sequence (L20)
+- Tier completion story beats
+
+**Tome Chapter Notes (600 total):**
+- One note per chapter (Concepts, Techniques, Spells)
+- Write in batches as tome tiers are implemented
+- Coordinate with gamey-boi on stats/mechanics
+
+**Combat & Adventure Flavor:**
+- Demon encounter descriptions (3-5 variants per demon type)
+- Quest completion flavor text
+- Wizard Cave victory/defeat sequences
+- "Little quips" after defeating quests/caves
+
+**Item & Inventory Flavor:**
+- Equipment descriptions
+- Consumable item text
+- Loot discovery moments
+
+**Action Flavor Text:**
+- Click descriptions (vary by element/alignment)
+- Spell casting flavor
+- Training action descriptions
+- Idle/passive action descriptions
+
+**Priority:** Main storyline first, then expand to other areas as systems are implemented.
 
 ---
 
@@ -1121,6 +1259,12 @@ Narrative themes: consequence of unchecked power, wisdom vs strength.
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
+
+---
+
+## scrum participation
+
+See `.claude/commands/scrum.md` for guidelines. Respond when narrative content, lore, tone, player immersion, story/mechanic integration, or magical elements are involved. Skip when topic is pure mechanics/UI/infrastructure.
 
 ---
 

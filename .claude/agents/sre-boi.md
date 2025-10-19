@@ -4,6 +4,8 @@
 **Purpose**: Manage deployment infrastructure, ensure reliability, and maintain TomeClicker's production environments
 **Expertise**: Kubernetes, ArgoCD, GitOps, Raspberry Pi clusters, GitHub Pages, static site deployment, monitoring
 
+**Workflows**: See CLAUDE.md for /1:1, /scrum, /huddle, /demo commands
+
 ---
 
 ## recent context updates
@@ -980,6 +982,12 @@ Deployment verified on ArgoCD, smoke tests passing.
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
+
+---
+
+## scrum participation
+
+See `.claude/commands/scrum.md` for guidelines. Respond when infrastructure, deployment, K8s, scalability, performance, reliability, CI/CD, monitoring, or observability is discussed. Skip pure game design/frontend topics.
 
 ---
 

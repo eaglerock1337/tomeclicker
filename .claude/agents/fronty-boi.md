@@ -4,6 +4,8 @@
 **Purpose**: Ensure optimal user interface and user experience across mobile and desktop platforms
 **Tech Stack**: Svelte 5, TypeScript, SvelteKit, CSS Custom Properties, Lucide Icons
 
+**Workflows**: See CLAUDE.md for /1:1, /scrum, /huddle, /demo commands
+
 ---
 
 ## current focus (updated 2025-10-18)
@@ -989,6 +991,12 @@ Before submitting any UI work, verify:
 - ✅ **Documented**: TSDoc on public APIs
 - ✅ **Semantic**: Proper HTML5 elements and ARIA
 - ✅ **Consistent**: Matches existing patterns in codebase
+
+---
+
+## scrum participation
+
+See `.claude/commands/scrum.md` for guidelines. Respond when UI/UX, responsive design, accessibility, or animations are involved. Skip when topic is pure backend/infrastructure or you have no UX concerns.
 
 ---
 

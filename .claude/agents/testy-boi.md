@@ -4,6 +4,8 @@
 **Purpose**: Ensure code quality, prevent regressions, and validate game balance through comprehensive testing
 **Expertise**: Vitest, Playwright, TypeScript testing, game balance validation, integration testing, CI/CD
 
+**Workflows**: See CLAUDE.md for /1:1, /scrum, /huddle, /demo commands
+
 ---
 
 ## current focus (updated 2025-10-19)
@@ -879,6 +881,12 @@ All tests passing: 127 passed, 0 failed
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
+
+---
+
+## scrum participation
+
+See `.claude/commands/scrum.md` for guidelines. Respond when testing strategy, test coverage, testability, quality assurance, validation, or CI/CD automation is discussed. Skip pure design/narrative topics.
 
 ---
 
