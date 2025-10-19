@@ -6,38 +6,59 @@
 
 ---
 
-## current focus (updated 2025-10-18)
+## current focus (updated 2025-10-19)
 
-**Phase Timing: When You Get Involved**
+### phase 1.5 timing confirmed (2025-10-19 1:1 with user)
 
-User has clarified the development sequence:
-- **Phase 1.x (NOW)**: QoL improvements (Settings, Upgrades, Story page fixes)
-  - Your role: Minimal - these are small UI fixes
-  - Just verify builds don't break, no new tests needed yet
+**Start Phase 1.5 AFTER Phase 1.x completes:**
+- User wants visible UI improvements shipped first
+- Then build quality foundation before Phase 2 refactoring
+- Signal from user: "Phase 1.x is done, let's start testing"
 
-- **Phase 1.5 (NEXT)**: Test Infrastructure Setup - **THIS IS YOUR TIME TO SHINE**
-  - Set up ESLint + TypeScript ESLint
-  - Configure Vitest testing framework
-  - Write first unit tests for Game class methods
+**Phase Sequence:**
+- **Phase 1.x (CURRENT)**: QoL improvements (Upgrades, Story, Settings, Practice page fixes)
+  - Your role: Stay out of the way, verify builds pass
+  - No new tests needed yet
+
+- **Phase 1.5 (NEXT - After Phase 1.x)**: Test Infrastructure Setup - **YOUR TIME TO SHINE**
+  - Set up ESLint + TypeScript strict mode + Vitest configuration
+  - Write first 5-10 unit tests for Game class (calculateLevel, upgrade costs, click multiplier)
   - Set up pre-commit hooks (Husky + lint-staged)
   - Create GitHub Actions CI pipeline
-  - Establish E2E testing setup (Playwright)
+  - Basic Playwright E2E smoke tests
 
-- **Phase 2 (LATER)**: Major refactors with test safety net
-  - Your role: Critical - tests ensure refactors don't break behavior
+- **Phase 2 (LATER)**: Major refactoring with test safety net
+  - Tests catch breaking changes immediately
+  - Refactor fearlessly with green test suite
   - Test-driven development approach
-  - Comprehensive coverage before big changes
 
-**Your Immediate Prep Work:**
-- Review current codebase to identify what needs testing
-- Plan testing strategy for Phase 1.5
-- Research best practices for Svelte 5 + Vitest setup
-- Draft test structure and CI/CD pipeline design
+**Test Coverage Targets (Proposed):**
+- **Core game logic** (Game class, calculations): 80-90% coverage
+- **UI components**: 40-60% coverage
+- **Utils/helpers**: 80%+ coverage
+
+**E2E Test Scope:**
+- **Phase 1.5**: Minimal (page loads, click works, navigation, save/load smoke test)
+- **Phase 2+**: Comprehensive (full user journeys, cross-browser, mobile viewports)
+
+**CI/CD Strictness (Proposed):**
+- Block merge if: Tests fail, type errors exist
+- Warn but allow if: Linting fails (can fix later)
+- Coverage threshold: Warn if drops below 75% (configurable)
+
+**Prep Work During Phase 1.x:**
+- Review current Game class to identify critical test targets
+- Draft test strategy document
+- Research Vitest + Svelte 5 compatibility and best practices
+- Design CI/CD pipeline structure
+- Be ready to start immediately when Phase 1.x completes
 
 **User's Philosophy:**
 - "Ship functional code BUT make architecture decisions that scale"
 - Test-driven development once infrastructure is ready
 - Tests act as safety net for confident refactoring
+- Time investment: ~3-5 days initial setup, ~20% extra per feature ongoing
+- Value: Catch bugs early, confident refactoring, faster debugging
 
 ---
 

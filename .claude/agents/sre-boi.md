@@ -6,11 +6,115 @@
 
 ---
 
-## recent context updates (2025-10-18)
+## recent context updates
 
-**Phase 3 Backend Deployment Planning:**
+### happy little cloud infrastructure (2025-10-19 1:1 with user)
 
-backy-boi had a 1:1 with the user about cloud save system architecture. You'll be responsible for deploying the backend to the Raspberry Pi K8s cluster in Phase 3.
+**User Background:**
+- Professional SRE with 15+ years Linux production experience
+- Strong DevOps background: ArgoCD, DataDog, Splunk, Firehydrant, PagerDuty
+- Philosophy: "Everything as code", "Automate all the things", Documentation-focused
+- **Already has production K8s cluster running** - Happy Little Cloud Mark 2
+
+**Happy Little Cloud Mark 2 (Production Cluster):**
+
+**Hardware:**
+- **Control Plane**: 4x Raspberry Pi 4 (4GB RAM each)
+  - `hlc-401`: control + NFS share
+  - `hlc-402`, `hlc-403`, `hlc-404`: control + etcd
+- **Workers**: 8x Raspberry Pi 3 (1GB RAM each)
+  - `hlc-301` through `hlc-308`
+- **Network**: Ubiquiti Dream Machine SE + Pro 48 Layer 3 Switch
+- **Storage**:
+  - 32GB SD cards for root filesystem (all nodes)
+  - 64GB USB3 drives for cluster filesystem (RPi 4s)
+  - 240GB SSD on hlc-401 as NFS share
+  - **Future**: Raspberry Pi 5 + NVMe upgrade planned
+
+**GitOps Architecture:**
+- **Repository**: `happy-little-cloud` (GitHub: eaglerock1337/happy-little-cloud)
+- **App-of-Apps Pattern**: `hlc/` Helm chart with ArgoCD Application manifests
+- **Per-App Helm Charts**: Each application has own chart with `values.yaml` + `values-hlc.yaml`
+- **ArgoCD**: Auto-sync + self-heal enabled on all applications
+
+**Current Applications Running:**
+- `marks.dev` - Personal homepage (4-12 replica autoscaling)
+- `hlc-site` - Happy Little Cloud documentation site
+- `bind` - DNS services
+- `mr-poopybutthole` - GitHub bot
+- `pq-web` - Web application
+- `prometheus` - Monitoring
+- `grafana` - Dashboards
+
+**Networking Stack:**
+- **Ingress Controller**: Traefik (NOT Nginx)
+- **TLS Automation**: cert-manager with Let's Encrypt (letsencrypt-prod cluster issuer)
+- **HTTPS Redirect**: Traefik middleware configured
+- **DNS**: Self-hosted BIND
+
+**Deployment Pattern Example (marks.dev):**
+```yaml
+image: eaglerock/marks.dev
+ingress:
+  className: "traefik"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
+  hosts:
+    - host: marks.dev
+    - host: www.marks.dev
+  tls:
+    - secretName: marks-dev-tls
+autoscaling:
+  minReplicas: 4
+  maxReplicas: 12
+  targetCPUUtilizationPercentage: 40
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+```
+
+**happy-little-cloud Repo Structure:**
+```
+happy-little-cloud/
+├── hlc/                          # App-of-Apps Helm chart
+│   ├── Chart.yaml
+│   ├── values.yaml
+│   └── templates/
+│       ├── marks.dev.yaml        # ArgoCD Application
+│       ├── hlc-site.yaml
+│       ├── bind.yaml
+│       ├── prometheus.yaml
+│       ├── grafana.yaml
+│       └── [future: tomeclicker.yaml]
+├── marks.dev/                    # Per-app Helm chart
+│   ├── Chart.yaml
+│   ├── values.yaml               # Base values
+│   ├── values-hlc.yaml           # HLC prod overrides
+│   └── templates/
+│       ├── deployment.yaml
+│       ├── service.yaml
+│       ├── ingress.yaml
+│       ├── hpa.yaml
+│       └── serviceaccount.yaml
+├── hlc-site/
+├── bind/
+├── mr-poopybutthole/
+├── pq-web/
+└── [future: tomeclicker/]        # To be added in Phase 3
+```
+
+**Phase 3 TomeClicker Backend Deployment (Future):**
+- Deferred until Raspberry Pi 5 + NVMe upgrade (shared storage needed)
+- Will follow same pattern as existing apps
+- Add `tomeclicker.yaml` to `hlc/templates/`
+- Create `tomeclicker/` Helm chart with API + PostgreSQL + Redis
+- Use Traefik ingress for `tomeclicker.marks.dev`
+- Coordinate with backy-boi on Docker image build/push
+- Coordinate with secury-boi on Sealed Secrets for sensitive config
+
+### phase 3 backend deployment planning (2025-10-18)
 
 ### database deployment strategy
 
@@ -42,8 +146,8 @@ backy-boi had a 1:1 with the user about cloud save system architecture. You'll b
 - Node.js/TypeScript API (NestJS or Fastify)
 - PostgreSQL for save data
 - Redis for caching/sessions
-- Nginx Ingress for load balancing
-- Let's Encrypt TLS certificates
+- **Traefik Ingress** for load balancing (already deployed on HLC)
+- Let's Encrypt TLS certificates (cert-manager already configured)
 
 **GitOps Deployment:**
 - Manifests in `happy-little-cloud` repo
