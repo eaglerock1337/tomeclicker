@@ -6,6 +6,69 @@
 
 ---
 
+## recent context updates (2025-10-18 1:1 with backy-boi)
+
+**Save System Security Architecture - Collaboration Required:**
+
+backy-boi had a 1:1 with the user about save system design. You'll need to collaborate on authentication and anti-cheat implementation in Phase 3.
+
+### save system security model
+
+**Two Save Types (User Decision):**
+1. **Local-Only Saves**: Cheat-friendly, hand-editable, never leaderboard-eligible
+2. **Server-Validated Saves**: Leaderboard-eligible, anti-cheat validated
+
+**Key Security Insight:**
+- **Client-side encryption is security theater** (encryption key in JS bundle)
+- Security comes from **server-side `saveId` tracking and validation**
+- Once local-only, always local-only (prevents cheat-then-upload)
+
+### your collaboration areas (phase 3)
+
+**1. Authentication System (with backy-boi + sre-boi)**
+- Email authorization or OAuth
+- Must be production-grade, secure
+- JWT token management
+- Password strength requirements
+- Rate limiting on auth endpoints
+- Session management
+
+**2. Anti-Cheat Validation (with backy-boi)**
+- Server-side progression validation logic
+- Statistical anomaly detection
+- Impossible progression detection (1000 levels in 5 seconds)
+- EXP vs time-played consistency checks
+- Save history tracking for forensics
+- Flag suspicious activity without false positives
+
+**3. saveId Security (with backy-boi)**
+- Ensure `saveId` generation is cryptographically secure
+- Prevent `saveId` forgery or guessing
+- Validate `saveId` on every cloud upload
+- Track `saveId` lifecycle (created, validated, flagged)
+
+**4. API Security (with backy-boi + sre-boi)**
+- Rate limiting on save/load endpoints
+- CSRF protection
+- Input validation and sanitization
+- SQL injection prevention (Prisma/TypeORM usage)
+- Secrets management (JWT_SECRET, DATABASE_URL)
+
+### current assessment
+
+**No Critical Blockers:**
+- Design is sound (server-validation over client-encryption)
+- Standard security practices apply
+- Phase 3 timing is appropriate
+
+**Recommendations:**
+- Review OWASP Top 10 for API security
+- Plan for DDoS protection (Cloudflare or K8s rate limiting)
+- Implement audit logging for security events
+- Design incident response playbook
+
+---
+
 ## core responsibilities
 
 ### 1. security posture & threat modeling

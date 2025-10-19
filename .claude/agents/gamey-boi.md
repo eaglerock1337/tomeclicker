@@ -12,6 +12,15 @@
 
 User identified that the Upgrades menu needs major improvements. fronty-boi will handle UI/UX implementation, but you need to collaborate on:
 
+**NOTE (2025-10-18):** backy-boi's 1:1 with user clarified save system design. This affects progression validation in Phase 3 - you'll help define "impossible progression" rules for anti-cheat.
+
+**Phase 3 Collaboration (Future):**
+- Define progression validation rules with backy-boi
+- What EXP gains are "impossible" in given timeframes?
+- What level/retreat combinations are invalid?
+- Statistical ranges for legitimate vs suspicious progression
+- Design server-side validation logic
+
 **What information do players need to see?**
 - Current upgrade target and why it matters
 - Cost vs benefit analysis at a glance

@@ -282,6 +282,8 @@ This phase brings the codebase up to modern standards and sets the foundation fo
 
 This phase implements the save system improvements outlined in the TODOs.
 
+**UPDATED 2025-10-18:** Save system architecture finalized based on user direction during backy-boi 1:1 session.
+
 #### 3.1 Enhanced Local Save System
 
 **Current State:**
@@ -295,13 +297,25 @@ This phase implements the save system improvements outlined in the TODOs.
    - Create migration system for upgrading old saves
    - Add deprecation warnings for old save formats
 
-2. **Multiple Save Slots**
-   - Support 3 local save slots
-   - Add save slot management UI
-   - Implement save comparison/selection interface
-   - Add import/export for individual slots
+2. **Save Type System (NEW - 2025-10-18)**
+   - **Two Save Types:**
+     - **Local-Only Saves:** Hand-editable, cheat-friendly, never leaderboard-eligible
+     - **Server-Validated Saves:** Leaderboard-eligible, validated by server
+   - **UI for Save Type Selection:**
+     - Clear communication of trade-offs
+     - Warning: Local-only saves can NEVER become server-validated
+     - Visual distinction between save types
+   - **Implementation:**
+     - Add `saveType` field to save format
+     - Add `saveId` field (null for local-only, UUID for server-validated)
+     - Add `saveVersion` field for migration support
 
-3. **Auto-Save Improvements**
+3. **JSON Blob Format (Cookie Clicker/Antimatter Dimensions Style)**
+   - File-based saves, exportable/importable
+   - Players can manually back up save files
+   - Compatible with future cloud sync
+
+4. **Auto-Save Improvements**
    - Configurable auto-save intervals
    - Visual feedback when auto-save occurs
    - Recovery from corrupted auto-saves
@@ -309,74 +323,114 @@ This phase implements the save system improvements outlined in the TODOs.
 
 #### 3.2 Cloud Save System
 
+**UPDATED ARCHITECTURE (2025-10-18):**
+
+**Key Design Principles:**
+- Security via **server-side `saveId` tracking**, NOT client-side encryption
+- Two save types: Server-validated (leaderboard) vs Local-only (cheat-friendly)
+- JSON blob format (like Cookie Clicker/Antimatter Dimensions)
+- Conflict resolution: Show both saves, recommend most progressed, user chooses
+
 **Architecture:**
-- Simple REST API backend (Node.js/Express or similar)
-- Database (PostgreSQL or MongoDB)
-- User authentication (OAuth or simple email/password)
-- Anti-cheat validation
+- REST API backend (NestJS or Fastify)
+- **Database: PostgreSQL + JSONB** (MongoDB on table for Phase 3 discussion)
+- User authentication (Email/OAuth - "sre-boi approved")
+- Anti-cheat validation via server-side progression checks
 
 **Implementation Phases:**
 
 **Phase 3.2.1: Backend Infrastructure**
 1. **API Design**
    - RESTful endpoints for save management
-   - Authentication/authorization
-   - Rate limiting
-   - Save validation
+   - Authentication/authorization (coordinate with **secury-boi**)
+   - Rate limiting (1 save per 5 seconds to prevent spam)
+   - **saveId tracking and validation**
 
-2. **Database Schema**
+2. **Database Schema (PostgreSQL + JSONB)**
    ```sql
    users (
-     id, email, password_hash, created_at, last_login
+     id UUID PRIMARY KEY,
+     email VARCHAR UNIQUE,
+     password_hash VARCHAR,
+     created_at TIMESTAMP,
+     last_login TIMESTAMP
    )
 
    saves (
-     id, user_id, save_data, encrypted_hash,
-     validation_score, last_modified, version
+     id UUID PRIMARY KEY,
+     user_id UUID REFERENCES users(id),
+     save_id UUID UNIQUE, -- Generated on first upload
+     save_data JSONB,     -- Full game state as JSON blob
+     save_version INTEGER,
+     created_at TIMESTAMP,
+     updated_at TIMESTAMP,
+     verified BOOLEAN DEFAULT FALSE,
+     validation_errors JSONB
    )
 
-   leaderboard_eligibility (
-     user_id, save_id, eligible, validation_notes
+   save_history (
+     id UUID PRIMARY KEY,
+     save_id UUID REFERENCES saves(id),
+     save_data JSONB,
+     created_at TIMESTAMP
+   )
+
+   leaderboard (
+     -- Materialized view or separate table
+     user_id UUID,
+     highest_level INTEGER,
+     total_exp BIGINT,
+     verified BOOLEAN
    )
    ```
 
-3. **Security**
-   - Server-side save validation
-   - Encryption at rest
-   - HTTPS only
-   - Input sanitization
+3. **Security (Coordinate with secury-boi)**
+   - **saveId validation** (server tracks all valid saveIds)
+   - Server-side progression validation (detect impossible jumps)
+   - Encryption at rest (save_data stored encrypted)
+   - HTTPS only (enforced by K8s Ingress)
+   - Input sanitization (Prisma/TypeORM prevents SQL injection)
+   - JWT token management
+   - Rate limiting on auth and save endpoints
 
 **Phase 3.2.2: Client Integration**
-1. **Save Sync UI**
+1. **Save Sync UI (Coordinate with fronty-boi)**
    - Login/registration interface
    - Cloud save management panel
    - Sync status indicators
-   - Conflict resolution interface
+   - **Conflict resolution interface:**
+     - Show BOTH saves with comparison stats
+     - Display: Total gameplay time, level, key milestones
+     - **Recommend** save with most progress
+     - **User chooses** which to keep (like Antimatter Dimensions)
 
 2. **Sync Logic**
    - Compare local vs cloud timestamps
-   - Merge strategies for conflicts
-   - Offline mode support
-   - Automatic background sync
+   - **No automatic merge** - user chooses on conflict
+   - Offline mode support (local saves always available)
+   - Automatic background sync when online
 
-**Phase 3.2.3: Anti-Cheat System**
-1. **Validation Metrics**
-   - Time-based progression checks
-   - Statistical anomaly detection
-   - Expected EXP curves
-   - Upgrade purchase patterns
+**Phase 3.2.3: Anti-Cheat System (Coordinate with secury-boi + gamey-boi)**
+1. **saveId Tracking (Primary Security Mechanism)**
+   - Server generates `saveId` on first cloud upload
+   - Server stores: `(saveId, userId, createdAt, lastValidatedAt)`
+   - Client stores `saveId` in save file
+   - On upload: Server validates "Do I have this saveId?"
+   - **Local-only saves never get saveId** (permanent ineligibility)
 
-2. **Cheat Mode**
-   - Development/testing mode flag
-   - Disable cloud saves when enabled
-   - Visual indicator of cheat mode
-   - Clear separation from legitimate play
+2. **Progression Validation (with gamey-boi)**
+   - Time-based progression checks (EXP vs time-played)
+   - Statistical anomaly detection (1000 levels in 5 seconds = impossible)
+   - Expected EXP curves based on game mechanics
+   - Validate level vs retreat count (gamey-boi defines rules)
+   - Save history tracking for forensics
 
 3. **Leaderboard System**
-   - Public leaderboard for legitimate saves
+   - Only **verified saves** appear on leaderboard
    - Filter by progression milestones
    - Display player stats
    - Achievement showcase
+   - **Local-only saves excluded** (permanent)
 
 ---
 

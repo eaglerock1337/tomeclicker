@@ -6,6 +6,68 @@
 
 ---
 
+## recent context updates (2025-10-18)
+
+**Phase 3 Backend Deployment Planning:**
+
+backy-boi had a 1:1 with the user about cloud save system architecture. You'll be responsible for deploying the backend to the Raspberry Pi K8s cluster in Phase 3.
+
+### database deployment strategy
+
+**Current Constraints (Acknowledged):**
+- No shared storage (local PVs with node affinity)
+- Database must be pinned to one Pi node
+- Raspberry Pi 5 + NVMe upgrade planned (Linux support pending)
+
+**PostgreSQL Deployment Plan:**
+- Single PostgreSQL instance with local PV
+- Node affinity to pin to specific Pi
+- Regular backups to external storage (NAS, cloud)
+- Point-in-time recovery capability
+
+**Question for User:**
+- Which Pi node should we pin PostgreSQL to? (Deferred to Phase 3 planning)
+
+### authentication deployment (phase 3)
+
+**Coordinate with backy-boi + secury-boi:**
+- Email/OAuth authentication system
+- Must be production-grade and secure
+- JWT token management
+- Secrets management in K8s (Sealed Secrets or External Secrets Operator)
+
+### api deployment architecture
+
+**Planned Stack:**
+- Node.js/TypeScript API (NestJS or Fastify)
+- PostgreSQL for save data
+- Redis for caching/sessions
+- Nginx Ingress for load balancing
+- Let's Encrypt TLS certificates
+
+**GitOps Deployment:**
+- Manifests in `happy-little-cloud` repo
+- ArgoCD auto-sync enabled
+- Rolling updates for zero downtime
+- Rollback capability via Git revert
+
+### monitoring requirements
+
+**Phase 3 Implementation:**
+- API response time metrics
+- Database query performance
+- Save/load operation latency
+- Error rate tracking
+- User authentication metrics
+- Anti-cheat validation metrics
+
+**Target SLOs:**
+- 99% uptime for API
+- < 1s save/load time (p95)
+- < 1% save corruption rate
+
+---
+
 ## upcoming tasks (updated 2025-10-18)
 
 **GitHub Action → Husky Pre-commit Hooks** (User Request):
