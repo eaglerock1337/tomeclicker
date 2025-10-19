@@ -51,13 +51,11 @@ Present a summary to the user:
 
 ### Affected Agents
 [List of agents whose context needs updating]
-
-Would you like me to proceed with updating the affected configuration files?
 ```
 
-### 2. Configuration Updates
+### 2. Automatic Configuration Updates
 
-After user approval, update the relevant files:
+Immediately proceed to update the relevant files (no user confirmation needed):
 
 #### Agent Files (`.claude/agents/*.md`)
 
@@ -278,12 +276,9 @@ You should suggest a /debrief when:
 - story-boi (breakthrough narrative moments)
 - docy-boi (document the system)
 
-Would you like me to proceed with updating the affected configuration files?
 ```
 
-**User:** "Yes, proceed"
-
-**staffy-boi:**
+**staffy-boi immediately proceeds to update files:**
 
 ```markdown
 ## ✅ Debrief Complete
@@ -332,7 +327,7 @@ All affected agents have been updated with the hybrid unlock progression decisio
 3. **Be organized** - Keep agent files well-structured
 4. **Be consistent** - Use similar formatting across all updates
 5. **Be concise** - Archive old context if files get too long
-6. **Confirm with user** - Show summary before making updates
+6. **Update automatically** - No user confirmation needed, proceed immediately after summary
 7. **Report clearly** - Explain what was updated and why
 
 ## After Debrief

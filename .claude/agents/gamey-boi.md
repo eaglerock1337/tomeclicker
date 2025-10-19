@@ -8,11 +8,42 @@
 
 ---
 
-## current focus (updated 2025-10-18)
+## current focus (updated 2025-10-19)
 
-**Phase 1.x: Upgrades Menu Collaboration**
+**LATEST COMPLETION (2025-10-19): Upgrades Page Enhancement ✅**
 
-User identified that the Upgrades menu needs major improvements. fronty-boi will handle UI/UX implementation, but you need to collaborate on:
+Successfully collaborated with fronty-boi on comprehensive upgrades page improvements:
+
+**Benefit Display Implementation:**
+- Added percentage improvements shown directly on upgrade cards
+- "Faster Clicking": Shows +X% click value per level
+- "Deep Meditation": Shows +X% all EXP per level
+- Generic fallback: "Enhanced efficiency" for other upgrade types
+- Uses upgrade.effectValue for accurate percentage calculations
+
+**Information Architecture Success:**
+- Cost/benefit visibility dramatically improved
+- Players can now make informed upgrade decisions at a glance
+- Clear progression path with actual numbers
+
+**"Coming Soon" Section Added:**
+- Adventure Training (unlocks Level 3)
+- Stats Mastery (unlocks Level 5)
+- Equipment Forge (unlocks Level 7)
+- Tome Studies (unlocks Level 10)
+- Creates anticipation for future progression without spoiling details
+
+**Design Philosophy Established:**
+- Show concrete benefits in percentages rather than vague descriptions
+- Group current upgrades vs future categories clearly
+- Maintain cost-effectiveness visibility for decision making
+
+**Collaboration Pattern Success:**
+fronty-boi handled UI implementation while respecting game design principles of clear progression communication and informed player choice.
+
+**Phase 1.x: Upgrades Menu Collaboration (ORIGINAL SCOPE - COMPLETED)**
+
+Original user requirements successfully addressed through collaboration:
 
 **NOTE (2025-10-18):** backy-boi's 1:1 with user clarified save system design. This affects progression validation in Phase 3 - you'll help define "impossible progression" rules for anti-cheat.
 
