@@ -3,7 +3,6 @@
 
     import type { Config } from '$lib/config';
     import type { Game } from '$lib/game';
-    import UnlockHint from '$lib/components/UnlockHint.svelte';
 
     export let config: Config;
     export let game: Game;
@@ -21,8 +20,6 @@
 </script>
 
 <div class="practice-container">
-    <UnlockHint {game} />
-
     <div class="thebutton">
         <button on:click={clickMe}>
             <div class="item">
@@ -38,7 +35,7 @@
         width: 100%;
         display: flex;
         flex-direction: column;
-        padding: 1rem;
+        padding: 0;
         box-sizing: border-box;
     }
 
@@ -52,12 +49,14 @@
     .thebutton button {
         color: var(--text);
         background-color: var(--bg);
-        border: 0px;
-        padding: 25px 50px 25px;
+        border: none;
+        margin: 0;
+        padding: 0;
         font-family: JetBrains Mono, monospace;
         font-weight: 400;
         width: 100%;
         height: 100%;
+        display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
@@ -72,6 +71,8 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        outline: none;
+        border-radius: 0;
     }
 
     .item {

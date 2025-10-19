@@ -3,7 +3,7 @@
     import type { Config } from '$lib/config';
 
     export let game: Game;
-    export let config: Config;
+    export const config: Config = {} as Config; // Required by parent component but unused here
 
     let selectedUpgrade: Upgrade | null = null;
 
@@ -82,8 +82,42 @@
                 <div class="upgrade-name">{upgrade.name}</div>
                 <div class="upgrade-level">Level {upgrade.currentLevel}/{upgrade.maxLevel}</div>
                 <div class="upgrade-cost">{formatCost(game.getUpgradeCost(upgrade.id))} EXP</div>
+                <div class="upgrade-benefit">
+                    {#if upgrade.id === 'faster-clicking'}
+                        +{(upgrade.effectValue * 100).toFixed(0)}% click value per level
+                    {:else if upgrade.id === 'deep-meditation'}
+                        +{(upgrade.effectValue * 100).toFixed(0)}% all EXP per level
+                    {:else if upgrade.effectType === 'clickMultiplier'}
+                        +{(upgrade.effectValue * 100).toFixed(0)}% click value per level
+                    {:else}
+                        Enhanced efficiency
+                    {/if}
+                </div>
             </button>
         {/each}
+
+        <!-- Coming Soon Section -->
+        <div class="coming-soon-section">
+            <h3>Coming Soon</h3>
+            <div class="coming-soon-grid">
+                <div class="coming-soon-item">
+                    <div class="upgrade-name">Adventure Training</div>
+                    <div class="upgrade-description">Unlock at Level 3</div>
+                </div>
+                <div class="coming-soon-item">
+                    <div class="upgrade-name">Stats Mastery</div>
+                    <div class="upgrade-description">Unlock at Level 5</div>
+                </div>
+                <div class="coming-soon-item">
+                    <div class="upgrade-name">Equipment Forge</div>
+                    <div class="upgrade-description">Unlock at Level 7</div>
+                </div>
+                <div class="coming-soon-item">
+                    <div class="upgrade-name">Tome Studies</div>
+                    <div class="upgrade-description">Unlock at Level 10</div>
+                </div>
+            </div>
+        </div>
         </div>
 
         <div class="upgrade-details">
@@ -121,10 +155,11 @@
         font-size: 1em;
         font-family: JetBrains Mono, monospace;
         font-weight: 300;
-        padding: 1rem;
+        padding: 2rem 1rem;
         text-align: center;
         height: 100%;
         overflow-y: auto;
+        box-sizing: border-box;
         transition: color 1s cubic-bezier(0,.5,0,1),
                     background-color 1s cubic-bezier(0,.5,0,1);
     }
@@ -313,6 +348,64 @@
     .upgrade-cost {
         font-size: 1em;
         font-weight: 400;
+    }
+
+    .upgrade-benefit {
+        font-size: 0.8em;
+        opacity: 0.7;
+        color: var(--green);
+        font-weight: 400;
+        margin-top: 0.25rem;
+    }
+
+    /* Coming Soon Section */
+    .coming-soon-section {
+        grid-column: 1 / -1;
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background-color: var(--alt-bg);
+        border: 2px dashed var(--text);
+        border-radius: 10px;
+        opacity: 0.7;
+    }
+
+    .coming-soon-section h3 {
+        font-family: Lato, sans-serif;
+        font-weight: 300;
+        margin-bottom: 1rem;
+        opacity: 0.8;
+    }
+
+    .coming-soon-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .coming-soon-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .coming-soon-item {
+        padding: 1rem;
+        background-color: var(--bg);
+        border: 1px solid var(--text);
+        border-radius: 8px;
+        opacity: 0.6;
+    }
+
+    .coming-soon-item .upgrade-name {
+        font-size: 1em;
+        font-weight: 400;
+        margin-bottom: 0.5rem;
+    }
+
+    .coming-soon-item .upgrade-description {
+        font-size: 0.8em;
+        opacity: 0.8;
+        font-style: italic;
     }
 
     .upgrade-details {

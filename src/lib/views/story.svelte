@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { Game } from '$lib/game';
-	import UnlockHint from '$lib/components/UnlockHint.svelte';
 
 	interface Props {
 		game: Game;
@@ -40,8 +39,6 @@
 
 <div class="story-page">
 	<div class="story-container">
-		<UnlockHint {game} />
-
 		<div class="story-content">
 			<h2 class="chapter-title">Chapter {currentChapter}</h2>
 
@@ -76,12 +73,14 @@
 		background-color: var(--bg);
 		font-size: 1em;
 		font-family: Tangerine, cursive;
-		min-height: 100%;
+		height: 100%;
 		padding: 2rem 1rem;
 		display: flex;
 		justify-content: center;
 		transition: color 1s cubic-bezier(0, 0.5, 0, 1),
 			background-color 1s cubic-bezier(0, 0.5, 0, 1);
+		box-sizing: border-box;
+		overflow-y: auto;
 	}
 
 	.story-container {
