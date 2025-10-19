@@ -155,6 +155,14 @@
         gap: 1rem;
     }
 
+    /* Mobile-specific improvements */
+    @media (max-width: 768px) {
+        .upgrade-grid {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+    }
+
     /* Desktop layout */
     @media (min-width: 1024px) {
         .upgrades-layout {
@@ -191,6 +199,16 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        /* Ensure touch targets are large enough (44px minimum) */
+        min-height: 100px;
+        touch-action: manipulation;
+    }
+
+    @media (max-width: 768px) {
+        .upgrade-btn {
+            min-height: 110px;
+            padding: 1rem 0.75rem;
+        }
     }
 
     .upgrade-btn:hover {
@@ -204,6 +222,13 @@
         gap: 1rem;
         margin-bottom: 1rem;
         grid-column: 1 / -1; /* Span full width */
+    }
+
+    @media (max-width: 768px) {
+        .special-buttons {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
     }
 
     .special-upgrade-btn {
@@ -221,6 +246,14 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        touch-action: manipulation;
+    }
+
+    @media (max-width: 768px) {
+        .special-upgrade-btn {
+            min-height: 110px;
+            padding: 1rem 0.75rem;
+        }
     }
 
     .special-upgrade-btn:hover:not(:disabled):not(.maxed) {
