@@ -3,6 +3,7 @@
 
     import type { Config } from '$lib/config';
     import type { Game } from '$lib/game';
+    import UnlockHint from '$lib/components/UnlockHint.svelte';
 
     export let config: Config;
     export let game: Game;
@@ -19,19 +20,32 @@
     config = config;
 </script>
 
-<div class="thebutton">
-    <button on:click={clickMe}>
-        <div class="item">
-            <MousePointer size={48}/><br>{game ? game.updateClickText() : 'Loading...'}
-        </div>
-    </button>
+<div class="practice-container">
+    <UnlockHint {game} />
+
+    <div class="thebutton">
+        <button on:click={clickMe}>
+            <div class="item">
+                <MousePointer size={48}/><br>{game ? game.updateClickText() : 'Loading...'}
+            </div>
+        </button>
+    </div>
 </div>
 
 <style>
+    .practice-container {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        box-sizing: border-box;
+    }
+
     /* The Button */
 
     .thebutton {
-        height: 100%;
+        flex: 1;
         width: 100%;
     }
 
