@@ -27,6 +27,11 @@
         <Story bind:game/>
     {:else if game && game.menu === "settings"}
         <Settings bind:config bind:game/>
+    {:else if game && game.menu === "help"}
+        <div class="placeholder">
+            <h1>Help page coming soon...</h1>
+            <p>This will contain guides and tutorials.</p>
+        </div>
     {:else if game && game.menu === "about"}
         <div class="placeholder">
             <h1>About page coming soon...</h1>
