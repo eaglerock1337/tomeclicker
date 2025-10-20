@@ -104,7 +104,7 @@ export const THEMES: Record<string, Theme> = {
 		},
 		dark: {
 			bg: '#3a3d41',
-			altBg: '#2d3035',
+			altBg: '#4a4f54',
 			text: '#f8f9fa',
 			blue: '#5ca3ff',
 			green: '#3dff3d',
@@ -141,7 +141,7 @@ export const THEMES: Record<string, Theme> = {
 		displayName: 'Midnight Black',
 		light: {
 			bg: '#c5cbd5',
-			altBg: '#adb5c2',
+			altBg: '#9ca5b3',
 			text: '#0a0e14',
 			blue: '#2d6b8f',
 			red: '#d93d3d',
