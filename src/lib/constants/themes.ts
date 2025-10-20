@@ -29,18 +29,18 @@ export const THEMES: Record<string, Theme> = {
 			altBg: '#a4b1cbff',
 			text: '#0c4f83ff',
 			blue: '#0c4f83ff',
-			green: '#08725dff',
-			red: '#cc6300ff',
-			yellow: '#b8860bff'
+			green: '#047a5d',
+			red: '#d94e00',
+			yellow: '#d4a000'
 		},
 		dark: {
 			bg: '#2d384eff',
 			altBg: '#1e2534ff',
 			text: '#57adefff',
 			blue: '#57adefff',
-			green: '#1aefc4ff',
-			red: '#ffa047ff',
-			yellow: '#ffd700ff'
+			green: '#00ff9f',
+			red: '#ff8c3a',
+			yellow: '#ffea00'
 		}
 	},
 
@@ -52,18 +52,18 @@ export const THEMES: Record<string, Theme> = {
 			altBg: '#e8b8b8',
 			text: '#4a1212',
 			blue: '#6b4266',
-			green: '#4d6b4d',
-			red: '#b8302f',
-			yellow: '#d6a82e'
+			green: '#2d7a2d',
+			red: '#d92f2e',
+			yellow: '#e6b500'
 		},
 		dark: {
 			bg: '#3d1e1e',
 			altBg: '#2a1414',
 			text: '#e8c5c5',
 			blue: '#9d7a98',
-			green: '#7d9d7d',
-			red: '#e27777',
-			yellow: '#f7dc6f'
+			green: '#5dd85d',
+			red: '#ff6b6b',
+			yellow: '#ffd93d'
 		}
 	},
 
@@ -75,18 +75,18 @@ export const THEMES: Record<string, Theme> = {
 			altBg: '#c5d9b8',
 			text: '#1e3d1e',
 			blue: '#4d7c8a',
-			green: '#5b8c5b',
-			red: '#a84d3d',
-			yellow: '#c9a843'
+			green: '#3d8a3d',
+			red: '#c74a2e',
+			yellow: '#d4a800'
 		},
 		dark: {
 			bg: '#1e3d1e',
 			altBg: '#142814',
 			text: '#d5e8d5',
 			blue: '#7db3c4',
-			green: '#8cc58c',
-			red: '#d77a6a',
-			yellow: '#f5d66e'
+			green: '#5cff5c',
+			red: '#ff7556',
+			yellow: '#ffe03d'
 		}
 	},
 
@@ -97,19 +97,19 @@ export const THEMES: Record<string, Theme> = {
 			bg: '#f8f9fa',
 			altBg: '#e9ecef',
 			text: '#212529',
-			blue: '#4a90e2',
-			green: '#52c41a',
-			red: '#f5222d',
-			yellow: '#faad14'
+			blue: '#2b7fd6',
+			green: '#27b300',
+			red: '#e6222d',
+			yellow: '#f09900'
 		},
 		dark: {
-			bg: '#1a1d21',
-			altBg: '#0d0f12',
+			bg: '#3a3d41',
+			altBg: '#2d3035',
 			text: '#f8f9fa',
-			blue: '#74b3ff',
-			green: '#73d13d',
-			red: '#ff5566',
-			yellow: '#ffc53d'
+			blue: '#5ca3ff',
+			green: '#3dff3d',
+			red: '#ff4757',
+			yellow: '#ffd43d'
 		}
 	},
 
@@ -121,18 +121,18 @@ export const THEMES: Record<string, Theme> = {
 			altBg: '#d4c4b0',
 			text: '#3d2817',
 			blue: '#6d5d4f',
-			green: '#6b7d5a',
-			red: '#a85a3d',
-			yellow: '#d6a843'
+			green: '#4d7a3d',
+			red: '#c74a2e',
+			yellow: '#d4a800'
 		},
 		dark: {
 			bg: '#3d2817',
 			altBg: '#2a1a0f',
 			text: '#e8ddd0',
 			blue: '#9d8d7f',
-			green: '#9bb083',
-			red: '#d8876a',
-			yellow: '#f5d66e'
+			green: '#7dd85d',
+			red: '#ff8c5c',
+			yellow: '#ffe03d'
 		}
 	},
 
@@ -140,22 +140,22 @@ export const THEMES: Record<string, Theme> = {
 		name: 'midnight-black',
 		displayName: 'Midnight Black',
 		light: {
-			bg: '#e0e6ed',
-			altBg: '#c7d1dd',
+			bg: '#c5cbd5',
+			altBg: '#adb5c2',
 			text: '#0a0e14',
-			blue: '#3b7ea1',
-			green: '#4d9b4d',
-			red: '#c14b4b',
-			yellow: '#d69e2e'
+			blue: '#2d6b8f',
+			red: '#d93d3d',
+			green: '#2d9b2d',
+			yellow: '#d99800'
 		},
 		dark: {
 			bg: '#0a0e14',
 			altBg: '#000000',
 			text: '#e0e6ed',
-			blue: '#6bb4d1',
-			green: '#7dd17d',
-			red: '#e27777',
-			yellow: '#f7dc6f'
+			blue: '#5ca3ff',
+			green: '#3dff3d',
+			red: '#ff4757',
+			yellow: '#ffd43d'
 		}
 	}
 } as const;
