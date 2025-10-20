@@ -11,12 +11,30 @@
     import '$lib/styles/themes.css';
 
     // Config values
-    let config = new Config("prussian-blue", true);
+    let config = new Config("prussian-blue", "system");
 
     // Game values
     let game: Game;
 
     onMount(() => {
+        // Listen for system preference changes
+        if (window.matchMedia) {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            const handleChange = () => {
+                // Force reactivity when system preference changes
+                if (config.displayMode === 'system') {
+                    config = config; // Trigger Svelte reactivity
+                }
+            };
+
+            // Modern browsers
+            if (mediaQuery.addEventListener) {
+                mediaQuery.addEventListener('change', handleChange);
+            } else {
+                // Older browsers
+                mediaQuery.addListener(handleChange);
+            }
+        }
         game = new Game();
 
         // Load saved data

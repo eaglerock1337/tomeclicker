@@ -88,11 +88,12 @@
 		align-items: center;
 		gap: 1rem;
 		padding: 1rem;
-		background: var(--hint-bg, rgba(66, 135, 245, 0.1));
-		border: 1px solid var(--hint-border, rgba(66, 135, 245, 0.3));
+		background: var(--alt-bg);
+		border: 2px solid var(--text);
 		border-radius: 8px;
 		margin-bottom: 1.5rem;
 		transition: all 0.3s ease;
+		opacity: 0.9;
 	}
 
 	.hint-icon {
@@ -107,24 +108,26 @@
 	.hint-text {
 		margin: 0 0 0.5rem 0;
 		font-size: 0.95rem;
-		color: var(--hint-text, inherit);
+		color: var(--text);
 	}
 
 	.hint-text strong {
 		font-weight: 500;
+		color: var(--blue);
 	}
 
 	.hint-progress {
-		height: 6px;
-		background: var(--progress-bg, rgba(0, 0, 0, 0.1));
-		border-radius: 3px;
+		height: 8px;
+		background: var(--bg);
+		border-radius: 4px;
 		overflow: hidden;
 		margin-bottom: 0.25rem;
+		border: 1px solid var(--text);
 	}
 
 	.progress-bar {
 		height: 100%;
-		background: var(--progress-fill, #4287f5);
+		background: var(--blue);
 		transition: width 0.3s ease;
 	}
 

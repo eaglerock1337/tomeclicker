@@ -42,36 +42,33 @@
 
     <div class="upgrades-layout">
         <div class="upgrade-grid">
-        <!-- Special Top Row Buttons -->
-        <div class="special-buttons">
-            <!-- Level Up Special Button -->
-            <button
-                class="special-upgrade-btn"
-                class:affordable={game.canLevelUp()}
-                on:click={levelUp}
-                disabled={!game.canLevelUp()}
-                aria-label="Level up from {game.level} to {game.level + 1}. Cost: {formatCost(game.getLevelUpCost())} EXP"
-            >
-                <div class="upgrade-name">Level Up</div>
-                <div class="upgrade-level">Level {game.level} → {game.level + 1}</div>
-                <div class="upgrade-cost">{formatCost(game.getLevelUpCost())} EXP</div>
-            </button>
+        <!-- Level Up Button -->
+        <button
+            class="upgrade-btn special-btn"
+            class:affordable={game.canLevelUp()}
+            on:click={levelUp}
+            disabled={!game.canLevelUp()}
+            aria-label="Level up from {game.level} to {game.level + 1}. Cost: {formatCost(game.getLevelUpCost())} EXP"
+        >
+            <div class="upgrade-name">Level Up</div>
+            <div class="upgrade-level">Level {game.level} → {game.level + 1}</div>
+            <div class="upgrade-cost">{formatCost(game.getLevelUpCost())} EXP</div>
+        </button>
 
-            <!-- Transcendent Focus Special Button -->
-            <button
-                class="special-upgrade-btn"
-                class:selected={selectedUpgrade?.id === transcendentFocus.id}
-                class:affordable={game.canAffordUpgrade(transcendentFocus.id)}
-                class:maxed={transcendentFocus.currentLevel >= transcendentFocus.maxLevel}
-                disabled={transcendentFocus.currentLevel >= transcendentFocus.maxLevel}
-                on:click={() => selectUpgrade(transcendentFocus)}
-                aria-label="Select {transcendentFocus.name} upgrade. Level {transcendentFocus.currentLevel} of {transcendentFocus.maxLevel}. Cost: {formatCost(game.getUpgradeCost(transcendentFocus.id))} EXP"
-            >
-                <div class="upgrade-name">{transcendentFocus.name}</div>
-                <div class="upgrade-level">Level {transcendentFocus.currentLevel}/{transcendentFocus.maxLevel}</div>
-                <div class="upgrade-cost">{formatCost(game.getUpgradeCost(transcendentFocus.id))} EXP</div>
-            </button>
-        </div>
+        <!-- Transcendent Focus Button -->
+        <button
+            class="upgrade-btn special-btn"
+            class:selected={selectedUpgrade?.id === transcendentFocus.id}
+            class:affordable={game.canAffordUpgrade(transcendentFocus.id)}
+            class:maxed={transcendentFocus.currentLevel >= transcendentFocus.maxLevel}
+            disabled={transcendentFocus.currentLevel >= transcendentFocus.maxLevel}
+            on:click={() => selectUpgrade(transcendentFocus)}
+            aria-label="Select {transcendentFocus.name} upgrade. Level {transcendentFocus.currentLevel} of {transcendentFocus.maxLevel}. Cost: {formatCost(game.getUpgradeCost(transcendentFocus.id))} EXP"
+        >
+            <div class="upgrade-name">{transcendentFocus.name}</div>
+            <div class="upgrade-level">Level {transcendentFocus.currentLevel}/{transcendentFocus.maxLevel}</div>
+            <div class="upgrade-cost">{formatCost(game.getUpgradeCost(transcendentFocus.id))} EXP</div>
+        </button>
 
         {#each availableUpgrades as upgrade (upgrade.id)}
             <button
@@ -199,15 +196,14 @@
 
     .upgrade-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
         gap: 1rem;
     }
 
-    /* Mobile-specific improvements */
-    @media (max-width: 768px) {
+    /* Tablet layout */
+    @media (min-width: 768px) {
         .upgrade-grid {
-            grid-template-columns: 1fr 1fr; /* Keep two columns on mobile */
-            gap: 0.75rem;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns on tablet */
         }
     }
 
@@ -219,16 +215,15 @@
         }
 
         .upgrade-grid {
-            flex: 2;
-            max-width: none;
+            flex: 1;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
         }
 
         .upgrade-details {
-            flex: 1;
+            flex: 0 0 300px; /* Fixed width sidebar */
             position: sticky;
             top: 1rem;
-            min-width: 300px;
-            max-width: 400px;
+            margin-left: 1rem;
         }
     }
 
@@ -264,60 +259,25 @@
         color: var(--bg);
     }
 
-    .special-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-bottom: 1rem;
-        grid-column: 1 / -1; /* Span full width */
+    /* Special buttons (Level Up, Transcendent Focus) styling */
+    .upgrade-btn.special-btn {
+        font-weight: 500;
     }
 
-    @media (max-width: 768px) {
-        .special-buttons {
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
-        }
-    }
-
-    .special-upgrade-btn {
-        color: var(--text);
-        background-color: var(--alt-bg);
-        font-family: JetBrains Mono, monospace;
-        font-weight: 400;
-        padding: 1rem;
-        text-align: center;
-        border: 2px solid var(--text);
-        border-radius: 10px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        min-height: 120px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        touch-action: manipulation;
-    }
-
-    @media (max-width: 768px) {
-        .special-upgrade-btn {
-            min-height: 110px;
-            padding: 1rem 0.75rem;
-        }
-    }
-
-    .special-upgrade-btn:hover:not(:disabled):not(.maxed) {
+    .upgrade-btn.special-btn.affordable {
         background-color: var(--green);
         border-color: var(--green);
         color: var(--alt-bg);
     }
 
-    .special-upgrade-btn.affordable {
+    .upgrade-btn.special-btn:hover:not(:disabled):not(.maxed) {
         background-color: var(--green);
         border-color: var(--green);
         color: var(--alt-bg);
     }
 
-    .special-upgrade-btn:disabled,
-    .special-upgrade-btn.maxed {
+    .upgrade-btn.special-btn:disabled,
+    .upgrade-btn.special-btn.maxed {
         opacity: 0.5;
         cursor: not-allowed;
         background-color: var(--alt-bg);
@@ -325,7 +285,7 @@
         color: var(--text);
     }
 
-    .special-upgrade-btn.selected {
+    .upgrade-btn.special-btn.selected {
         background-color: var(--blue);
         color: var(--alt-bg);
         border-color: var(--blue);

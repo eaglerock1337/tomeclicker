@@ -82,6 +82,7 @@
 		padding: 2rem 1rem;
 		display: flex;
 		justify-content: center;
+		align-items: center;
 		transition: color 1s cubic-bezier(0, 0.5, 0, 1),
 			background-color 1s cubic-bezier(0, 0.5, 0, 1);
 		box-sizing: border-box;
@@ -91,6 +92,9 @@
 	.story-container {
 		max-width: 700px;
 		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.story-content {
@@ -99,6 +103,9 @@
 		border: 3px var(--text) solid;
 		padding: 0;
 		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		flex: 1;
 	}
 
 	/* Navigation Header */
@@ -171,7 +178,9 @@
 		line-height: 1.6;
 		font-size: 2em;
 		padding: 2rem;
-		min-height: 300px;
+		flex: 1;
+		overflow-y: auto;
+		min-height: 0;
 	}
 
 	.story-text p {
@@ -180,7 +189,12 @@
 
 	@media (max-width: 768px) {
 		.story-page {
-			padding: 1rem 0.5rem;
+			padding: 0.5rem;
+			align-items: stretch;
+		}
+
+		.story-container {
+			max-height: 100%;
 		}
 
 		.chapter-header {

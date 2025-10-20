@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { ToggleLeft, ToggleRight } from 'lucide-svelte';
-
-	import type { Config } from '$lib/config';
+	import type { Config, DisplayMode } from '$lib/config';
 	import type { Game } from '$lib/game';
 	import { getThemeNames, getThemeDisplayName } from '$lib/constants/themes';
 
@@ -62,23 +60,44 @@
 				</select>
 			</div>
 
-			<!-- Dark Mode Toggle -->
+			<!-- Display Mode Selector -->
 			<div class="setting-row">
-				<label for="darkmode-toggle">Dark Mode</label>
-				<button
-					id="darkmode-toggle"
-					class="toggle-button"
-					onclick={() => {
-						config.darkmode = !config.darkmode;
-					}}
-				>
-					{#if config.darkmode}
-						<ToggleRight size={32} />
-					{:else}
-						<ToggleLeft size={32} />
-					{/if}
-					<span class="toggle-label">{config.darkmode ? 'On' : 'Off'}</span>
-				</button>
+				<label for="display-mode">Display Mode</label>
+				<div class="mode-selector">
+					<button
+						class="mode-btn"
+						class:active={config.displayMode === 'light'}
+						onclick={() => {
+							config.setDisplayMode('light');
+							config = config; // Force Svelte reactivity
+						}}
+						aria-label="Light mode"
+					>
+						Light
+					</button>
+					<button
+						class="mode-btn"
+						class:active={config.displayMode === 'system'}
+						onclick={() => {
+							config.setDisplayMode('system');
+							config = config; // Force Svelte reactivity
+						}}
+						aria-label="System preference"
+					>
+						System
+					</button>
+					<button
+						class="mode-btn"
+						class:active={config.displayMode === 'dark'}
+						onclick={() => {
+							config.setDisplayMode('dark');
+							config = config; // Force Svelte reactivity
+						}}
+						aria-label="Dark mode"
+					>
+						Dark
+					</button>
+				</div>
 			</div>
 		</section>
 	</div>
@@ -158,6 +177,11 @@
 		justify-content: space-between;
 		align-items: center;
 		gap: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.setting-row:last-child {
+		margin-bottom: 0;
 	}
 
 	.setting-row label {
@@ -188,29 +212,38 @@
 		outline-offset: 2px;
 	}
 
-	/* Dark Mode Toggle */
-	.toggle-button {
+	/* Display Mode Selector */
+	.mode-selector {
 		display: flex;
-		align-items: center;
 		gap: 0.5rem;
-		color: var(--text);
-		background-color: var(--bg);
-		font-family: JetBrains Mono, monospace;
-		font-weight: 400;
-		padding: 0.5rem 1rem;
 		border: 2px solid var(--text);
 		border-radius: 10px;
+		padding: 0.25rem;
+		background-color: var(--bg);
+	}
+
+	.mode-btn {
+		color: var(--text);
+		background-color: transparent;
+		font-family: JetBrains Mono, monospace;
+		font-weight: 400;
+		font-size: 0.9rem;
+		padding: 0.5rem 1rem;
+		border: none;
+		border-radius: 8px;
 		cursor: pointer;
 		transition: all 0.3s ease;
+		min-width: 70px;
 	}
 
-	.toggle-button:hover {
+	.mode-btn:hover {
+		background-color: var(--alt-bg);
+	}
+
+	.mode-btn.active {
 		background-color: var(--text);
 		color: var(--bg);
-	}
-
-	.toggle-label {
-		min-width: 3rem;
+		font-weight: 500;
 	}
 
 
@@ -244,9 +277,15 @@
 			font-size: 0.9rem;
 		}
 
-		.toggle-button {
-			/* Toggle stays on the side */
-			padding: 0.4rem 0.8rem;
+		.mode-selector {
+			gap: 0.25rem;
+			padding: 0.2rem;
+		}
+
+		.mode-btn {
+			font-size: 0.85rem;
+			padding: 0.4rem 0.6rem;
+			min-width: 60px;
 		}
 	}
 </style>

@@ -1,11 +1,13 @@
 import { THEMES, type ThemeName, isValidTheme } from './constants/themes';
 
+export type DisplayMode = 'light' | 'dark' | 'system';
+
 export class Config {
-	public darkmode: boolean;
+	public displayMode: DisplayMode;
 	public theme: ThemeName;
 
-	constructor(theme: string = 'prussian-blue', darkmode: boolean = true) {
-		this.darkmode = darkmode;
+	constructor(theme: string = 'prussian-blue', displayMode: DisplayMode = 'system') {
+		this.displayMode = displayMode;
 		this.theme = isValidTheme(theme) ? theme : 'prussian-blue';
 	}
 
@@ -14,8 +16,23 @@ export class Config {
 	 * @returns Theme class string (e.g., "prussian-blue-dark")
 	 */
 	getTheme(): string {
-		const shade = this.darkmode ? 'dark' : 'light';
+		const shade = this.getEffectiveShade();
 		return `${this.theme}-${shade}`;
+	}
+
+	/**
+	 * Determines the effective light/dark shade based on displayMode
+	 * @returns 'light' or 'dark'
+	 */
+	private getEffectiveShade(): 'light' | 'dark' {
+		if (this.displayMode === 'system') {
+			// Check system preference
+			if (typeof window !== 'undefined' && window.matchMedia) {
+				return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			}
+			return 'light'; // Fallback for SSR or browsers without matchMedia
+		}
+		return this.displayMode;
 	}
 
 	/**
@@ -32,10 +49,11 @@ export class Config {
 	}
 
 	/**
-	 * Toggles between light and dark mode
+	 * Sets the display mode (light, dark, or system)
+	 * @param mode - Display mode to set
 	 */
-	toggleDarkMode(): void {
-		this.darkmode = !this.darkmode;
+	setDisplayMode(mode: DisplayMode): void {
+		this.displayMode = mode;
 	}
 
 	/**
@@ -43,5 +61,29 @@ export class Config {
 	 */
 	getAvailableThemes(): ThemeName[] {
 		return Object.keys(THEMES) as ThemeName[];
+	}
+
+	/**
+	 * Legacy method for backward compatibility
+	 * @deprecated Use displayMode property instead
+	 */
+	get darkmode(): boolean {
+		return this.getEffectiveShade() === 'dark';
+	}
+
+	/**
+	 * Legacy method for backward compatibility
+	 * @deprecated Use setDisplayMode() instead
+	 */
+	set darkmode(value: boolean) {
+		this.displayMode = value ? 'dark' : 'light';
+	}
+
+	/**
+	 * Legacy method for backward compatibility
+	 * @deprecated Use setDisplayMode() instead
+	 */
+	toggleDarkMode(): void {
+		this.displayMode = this.getEffectiveShade() === 'dark' ? 'light' : 'dark';
 	}
 }
