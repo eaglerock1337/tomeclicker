@@ -69,9 +69,8 @@
         };
     });
 
-    // Color theme
-    let theme = "";
-    $: theme = config.getTheme();
+    // Color theme - reactive to config changes
+    $: theme = config ? config.getTheme() : "";
 
 </script>
 

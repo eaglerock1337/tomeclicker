@@ -25,6 +25,12 @@
     import type { Game } from '$lib/game';
 
     export let game: Game;
+
+    // Check if any upgrades are affordable or level up is available
+    $: hasAvailableUpgrades = game && (
+        game.canLevelUp() ||
+        Object.values(game.upgrades).some(upgrade => game.canAffordUpgrade(upgrade.id))
+    );
 </script>
 
 <div class="navbar">
@@ -37,7 +43,12 @@
         </button>
         {#if game.showUpgrades()}
             <button on:click="{() => game.menu = 'upgrades'}">
-                <p class:red="{game.menu === 'upgrades'}"><TrendingUp size={24}/></p>
+                <p
+                    class:red="{game.menu === 'upgrades'}"
+                    class:green="{game.menu !== 'upgrades' && hasAvailableUpgrades}"
+                >
+                    <TrendingUp size={24}/>
+                </p>
             </button>
         {/if}
         <button on:click="{() => game.menu = 'story'}">
@@ -121,15 +132,15 @@
         margin: 4px 2px;
     }
 
-    .green {
-        color: var(--green);
+    .red {
+        color: var(--red);
         font-weight: 700;
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
-    .red {
-        color: var(--red);
-        font-weight: 700; 
+    .green {
+        color: var(--green);
+        font-weight: 700;
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 

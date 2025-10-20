@@ -3,9 +3,16 @@
 
 	import type { Config } from '$lib/config';
 	import type { Game } from '$lib/game';
+	import { getThemeNames, getThemeDisplayName } from '$lib/constants/themes';
 
-	export let config: Config;
-	export let game: Game;
+	interface Props {
+		game: Game;
+		config: Config;
+	}
+
+	let { game = $bindable(), config = $bindable() }: Props = $props();
+
+	const availableThemes = getThemeNames();
 </script>
 
 <div class="settings">
@@ -38,12 +45,30 @@
 		<!-- Appearance Settings -->
 		<section class="settings-section">
 			<h2>appearance</h2>
+
+			<!-- Theme Selector -->
+			<div class="setting-row">
+				<label for="theme-select">Color Theme</label>
+				<select
+					id="theme-select"
+					class="theme-select"
+					bind:value={config.theme}
+				>
+					{#each availableThemes as themeName}
+						<option value={themeName}>
+							{getThemeDisplayName(themeName)}
+						</option>
+					{/each}
+				</select>
+			</div>
+
+			<!-- Dark Mode Toggle -->
 			<div class="setting-row">
 				<label for="darkmode-toggle">Dark Mode</label>
 				<button
 					id="darkmode-toggle"
 					class="toggle-button"
-					on:click={() => {
+					onclick={() => {
 						config.darkmode = !config.darkmode;
 					}}
 				>
@@ -139,6 +164,31 @@
 		font-size: 1.1rem;
 	}
 
+	/* Theme Selector */
+	.theme-select {
+		color: var(--text);
+		background-color: var(--bg);
+		font-family: JetBrains Mono, monospace;
+		font-weight: 400;
+		font-size: 1rem;
+		padding: 0.5rem 1rem;
+		border: 2px solid var(--text);
+		border-radius: 10px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		min-width: 200px;
+	}
+
+	.theme-select:hover {
+		background-color: var(--alt-bg);
+	}
+
+	.theme-select:focus {
+		outline: 2px solid var(--blue);
+		outline-offset: 2px;
+	}
+
+	/* Dark Mode Toggle */
 	.toggle-button {
 		display: flex;
 		align-items: center;
@@ -179,12 +229,24 @@
 		}
 
 		.setting-row {
-			flex-direction: column;
-			align-items: flex-start;
+			/* Keep horizontal layout on mobile for better use of space */
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.setting-row label {
+			font-size: 1rem;
+		}
+
+		.theme-select {
+			min-width: 150px;
+			font-size: 0.9rem;
 		}
 
 		.toggle-button {
-			align-self: flex-end;
+			/* Toggle stays on the side */
+			padding: 0.4rem 0.8rem;
 		}
 	}
 </style>

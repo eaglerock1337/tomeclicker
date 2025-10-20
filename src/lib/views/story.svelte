@@ -40,28 +40,33 @@
 <div class="story-page">
 	<div class="story-container">
 		<div class="story-content">
-			<h2 class="chapter-title">Chapter {currentChapter}</h2>
-
-			<div class="story-text">
-				<p>{chapters[currentChapter - 1]}</p>
-			</div>
-
-			<div class="chapter-nav">
+			<!-- Navigation Header at Top -->
+			<div class="chapter-header">
 				<button
-					class="nav-btn"
+					class="nav-btn nav-prev"
 					disabled={currentChapter === 1}
 					onclick={prevChapter}
+					aria-label="Previous chapter"
 				>
-					← Previous
+					←
 				</button>
-				<span class="chapter-indicator">{currentChapter} / {totalChapters}</span>
+				<div class="chapter-title">
+					<h2>Chapter {currentChapter}</h2>
+					<span class="chapter-indicator">({currentChapter}/{totalChapters})</span>
+				</div>
 				<button
-					class="nav-btn"
+					class="nav-btn nav-next"
 					disabled={currentChapter === totalChapters}
 					onclick={nextChapter}
+					aria-label="Next chapter"
 				>
-					Next →
+					→
 				</button>
+			</div>
+
+			<!-- Story Content -->
+			<div class="story-text">
+				<p>{chapters[currentChapter - 1]}</p>
 			</div>
 		</div>
 	</div>
@@ -92,68 +97,85 @@
 		background-color: var(--alt-bg);
 		border-radius: 10px;
 		border: 3px var(--text) solid;
-		padding: 2rem;
-		margin-top: 1rem;
+		padding: 0;
+		overflow: hidden;
 	}
 
-	.chapter-title {
-		font-family: Lato, sans-serif;
-		font-weight: 300;
-		font-size: 2rem;
-		margin: 0 0 1.5rem 0;
-		text-align: center;
-	}
-
-	.story-text {
-		line-height: 1.6;
-		font-size: 2em;
-		margin: 2rem 0;
-		min-height: 200px;
-	}
-
-	.story-text p {
-		margin: 1rem 0;
-	}
-
-	.chapter-nav {
+	/* Navigation Header */
+	.chapter-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-top: 3rem;
-		padding-top: 2rem;
-		border-top: 2px solid var(--text);
+		padding: 1rem 1.5rem;
+		background-color: var(--bg);
+		border-bottom: 2px solid var(--text);
 		gap: 1rem;
 	}
 
+	.chapter-title {
+		flex: 1;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
+	.chapter-title h2 {
+		font-family: Lato, sans-serif;
+		font-weight: 300;
+		font-size: 1.5rem;
+		margin: 0;
+	}
+
+	.chapter-indicator {
+		font-family: JetBrains Mono, monospace;
+		font-size: 0.8rem;
+		opacity: 0.7;
+		white-space: nowrap;
+	}
+
+	/* Navigation Buttons */
 	.nav-btn {
 		color: var(--text);
-		background-color: var(--bg);
+		background-color: var(--alt-bg);
 		font-family: JetBrains Mono, monospace;
-		font-weight: 400;
-		font-size: 1rem;
-		padding: 0.75rem 1.5rem;
+		font-weight: 700;
+		font-size: 1.5rem;
+		padding: 0.75rem;
 		border: 2px solid var(--text);
 		border-radius: 8px;
 		cursor: pointer;
 		transition: all 0.3s ease;
-		min-width: 120px;
+		width: 50px;
+		height: 50px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
 	}
 
 	.nav-btn:hover:not(:disabled) {
 		background-color: var(--text);
 		color: var(--bg);
+		transform: scale(1.05);
 	}
 
 	.nav-btn:disabled {
-		opacity: 0.3;
+		opacity: 0.2;
 		cursor: not-allowed;
 	}
 
-	.chapter-indicator {
-		font-family: JetBrains Mono, monospace;
-		font-size: 0.9rem;
-		opacity: 0.8;
-		white-space: nowrap;
+	/* Story Content */
+	.story-text {
+		line-height: 1.6;
+		font-size: 2em;
+		padding: 2rem;
+		min-height: 300px;
+	}
+
+	.story-text p {
+		margin: 1rem 0;
 	}
 
 	@media (max-width: 768px) {
@@ -161,31 +183,29 @@
 			padding: 1rem 0.5rem;
 		}
 
-		.story-content {
-			padding: 1.5rem;
+		.chapter-header {
+			padding: 0.75rem 1rem;
 		}
 
-		.chapter-title {
-			font-size: 1.5rem;
+		.chapter-title h2 {
+			font-size: 1.2rem;
+		}
+
+		.chapter-indicator {
+			font-size: 0.7rem;
+		}
+
+		.nav-btn {
+			width: 44px;
+			height: 44px;
+			font-size: 1.2rem;
+			padding: 0.5rem;
 		}
 
 		.story-text {
 			font-size: 1.5em;
-			min-height: 150px;
-		}
-
-		.chapter-nav {
-			flex-direction: column;
-			gap: 0.75rem;
-		}
-
-		.nav-btn {
-			width: 100%;
-			min-width: auto;
-		}
-
-		.chapter-indicator {
-			order: -1;
+			padding: 1.5rem;
+			min-height: 200px;
 		}
 	}
 </style>

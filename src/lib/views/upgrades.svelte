@@ -3,7 +3,7 @@
     import type { Config } from '$lib/config';
 
     export let game: Game;
-    export const config: Config = {} as Config; // Required by parent component but unused here
+    export let config: Config;
 
     let selectedUpgrade: Upgrade | null = null;
 
@@ -15,8 +15,6 @@
         if (selectedUpgrade && game.purchaseUpgrade(selectedUpgrade.id)) {
             // Refresh the selected upgrade data
             selectedUpgrade = game.upgrades[selectedUpgrade.id];
-            // Force reactivity update
-            game = game;
             // Save progress
             game.autoSave();
         }
@@ -31,10 +29,12 @@
 
     function levelUp() {
         if (game.levelUp()) {
-            game = game; // Force reactivity
             game.autoSave(); // Save progress
         }
     }
+
+    // Silence unused variable warning
+    config;
 </script>
 
 <div class="upgrades">
@@ -50,6 +50,7 @@
                 class:affordable={game.canLevelUp()}
                 on:click={levelUp}
                 disabled={!game.canLevelUp()}
+                aria-label="Level up from {game.level} to {game.level + 1}. Cost: {formatCost(game.getLevelUpCost())} EXP"
             >
                 <div class="upgrade-name">Level Up</div>
                 <div class="upgrade-level">Level {game.level} → {game.level + 1}</div>
@@ -64,6 +65,7 @@
                 class:maxed={transcendentFocus.currentLevel >= transcendentFocus.maxLevel}
                 disabled={transcendentFocus.currentLevel >= transcendentFocus.maxLevel}
                 on:click={() => selectUpgrade(transcendentFocus)}
+                aria-label="Select {transcendentFocus.name} upgrade. Level {transcendentFocus.currentLevel} of {transcendentFocus.maxLevel}. Cost: {formatCost(game.getUpgradeCost(transcendentFocus.id))} EXP"
             >
                 <div class="upgrade-name">{transcendentFocus.name}</div>
                 <div class="upgrade-level">Level {transcendentFocus.currentLevel}/{transcendentFocus.maxLevel}</div>
@@ -78,6 +80,7 @@
                 class:affordable={game.canAffordUpgrade(upgrade.id)}
                 class:maxed={upgrade.currentLevel >= upgrade.maxLevel}
                 on:click={() => selectUpgrade(upgrade)}
+                aria-label="Select {upgrade.name} upgrade. Level {upgrade.currentLevel} of {upgrade.maxLevel}. Cost: {formatCost(game.getUpgradeCost(upgrade.id))} EXP"
             >
                 <div class="upgrade-name">{upgrade.name}</div>
                 <div class="upgrade-level">Level {upgrade.currentLevel}/{upgrade.maxLevel}</div>
@@ -105,15 +108,15 @@
                     <div class="upgrade-description">Unlock at Level 3</div>
                 </div>
                 <div class="coming-soon-item">
-                    <div class="upgrade-name">Stats Mastery</div>
+                    <div class="upgrade-name">Advanced Techniques</div>
                     <div class="upgrade-description">Unlock at Level 5</div>
                 </div>
                 <div class="coming-soon-item">
-                    <div class="upgrade-name">Equipment Forge</div>
+                    <div class="upgrade-name">Specialized Tools</div>
                     <div class="upgrade-description">Unlock at Level 7</div>
                 </div>
                 <div class="coming-soon-item">
-                    <div class="upgrade-name">Tome Studies</div>
+                    <div class="upgrade-name">???</div>
                     <div class="upgrade-description">Unlock at Level 10</div>
                 </div>
             </div>
@@ -122,25 +125,35 @@
 
         <div class="upgrade-details">
             {#if selectedUpgrade}
-                <h2>{selectedUpgrade.name}</h2>
-                <p class="description">{selectedUpgrade.description}</p>
-                <p class="effect"><strong>Effect:</strong> {selectedUpgrade.effect}</p>
-                <p class="cost"><strong>Cost:</strong> {formatCost(game.getUpgradeCost(selectedUpgrade.id))} EXP</p>
-                <p class="level"><strong>Level:</strong> {selectedUpgrade.currentLevel}/{selectedUpgrade.maxLevel}</p>
+                <div class="details-header">
+                    <h2>{selectedUpgrade.name}</h2>
+                    <button class="close-btn" on:click={() => selectedUpgrade = null} aria-label="Close">×</button>
+                </div>
 
-                <button
-                    class="purchase-btn"
-                    disabled={!game.canPurchaseUpgrade(selectedUpgrade.id)}
-                    on:click={purchaseSelected}
-                >
-                    {#if selectedUpgrade.currentLevel >= selectedUpgrade.maxLevel}
-                        MAX LEVEL
-                    {:else if !game.canAffordUpgrade(selectedUpgrade.id)}
-                        CANNOT AFFORD
-                    {:else}
-                        PURCHASE
-                    {/if}
-                </button>
+                <div class="details-body">
+                    <div class="details-content">
+                        <p class="description">{selectedUpgrade.description}</p>
+                        <p class="effect"><strong>Effect:</strong> {selectedUpgrade.effect}</p>
+                        <p class="cost"><strong>Cost:</strong> {formatCost(game.getUpgradeCost(selectedUpgrade.id))} EXP</p>
+                        <p class="level"><strong>Level:</strong> {selectedUpgrade.currentLevel}/{selectedUpgrade.maxLevel}</p>
+                    </div>
+
+                    <div class="details-actions">
+                        <button
+                            class="purchase-btn"
+                            disabled={!game.canPurchaseUpgrade(selectedUpgrade.id)}
+                            on:click={purchaseSelected}
+                        >
+                            {#if selectedUpgrade.currentLevel >= selectedUpgrade.maxLevel}
+                                MAX LEVEL
+                            {:else if !game.canAffordUpgrade(selectedUpgrade.id)}
+                                CANNOT AFFORD
+                            {:else}
+                                PURCHASE
+                            {/if}
+                        </button>
+                    </div>
+                </div>
             {:else}
                 <p class="select-prompt">Select an upgrade to view details</p>
             {/if}
@@ -193,7 +206,7 @@
     /* Mobile-specific improvements */
     @media (max-width: 768px) {
         .upgrade-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr; /* Keep two columns on mobile */
             gap: 0.75rem;
         }
     }
@@ -414,6 +427,203 @@
         border-radius: 10px;
         padding: 1.5rem;
         text-align: left;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .details-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .close-btn {
+        display: none; /* Hidden by default on desktop */
+    }
+
+    .details-body {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .details-content {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .details-actions {
+        flex-shrink: 0;
+        padding-top: 1rem;
+        border-top: 2px solid var(--text);
+        background-color: var(--alt-bg);
+    }
+
+    /* Mobile: Make details panel sticky at bottom ABOVE navbar */
+    @media (max-width: 1023px) {
+        .upgrade-details {
+            position: fixed;
+            bottom: 115px; /* Position well above navbar */
+            left: 0.5rem;
+            right: 0.5rem;
+            height: auto;
+            max-height: none;
+            border-radius: 10px;
+            border: 2px solid var(--text);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 50;
+            margin: 0;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* Hide panel on mobile when nothing is selected */
+        .upgrade-details:has(.select-prompt) {
+            display: none;
+        }
+
+        .details-header {
+            margin-bottom: 0;
+        }
+
+        .close-btn {
+            display: flex;
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background-color: transparent;
+            color: var(--text);
+            border: none;
+            border-radius: 5px;
+            font-size: 1.6rem;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background-color: var(--text);
+            color: var(--bg);
+        }
+
+        .close-btn:active {
+            transform: scale(0.95);
+        }
+
+        .details-body {
+            display: flex;
+            flex-direction: row;
+            gap: 0.75rem;
+            align-items: stretch;
+        }
+
+        .details-content {
+            flex: 1;
+            overflow-y: visible;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .details-actions {
+            flex: 0 0 auto;
+            width: 120px;
+            padding: 0;
+            border-top: none;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+        }
+
+        .details-actions .purchase-btn {
+            width: 100%;
+            margin-top: 0;
+            padding: 1rem 0.5rem;
+            font-size: 0.9rem;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .upgrade-grid {
+            padding-bottom: 200px; /* Space for panel + navbar */
+        }
+
+        .details-header h2 {
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 400;
+            flex: 1;
+        }
+
+        .details-content .description {
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+            opacity: 0.8;
+        }
+
+        .details-content .effect,
+        .details-content .cost,
+        .details-content .level {
+            font-size: 0.75rem;
+            margin-bottom: 0.15rem;
+            line-height: 1.3;
+        }
+
+        .details-content p {
+            margin: 0;
+        }
+    }
+
+    /* Extra small screens - even more compact */
+    @media (max-width: 480px) {
+        .upgrade-details {
+            padding: 0.6rem;
+            gap: 0.4rem;
+        }
+
+        .details-actions {
+            width: 100px;
+        }
+
+        .details-actions .purchase-btn {
+            padding: 0.75rem 0.4rem;
+            font-size: 0.8rem;
+        }
+
+        .details-header h2 {
+            font-size: 0.9rem;
+        }
+
+        .details-content .description {
+            font-size: 0.75rem;
+        }
+
+        .details-content .effect,
+        .details-content .cost,
+        .details-content .level {
+            font-size: 0.7rem;
+        }
+
+        .upgrade-grid {
+            padding-bottom: 180px;
+        }
+    }
+
+    /* Very narrow screens - single column for upgrades */
+    @media (max-width: 380px) {
+        .upgrade-grid {
+            grid-template-columns: 1fr !important; /* Single column only on very small screens */
+        }
     }
 
     .description {

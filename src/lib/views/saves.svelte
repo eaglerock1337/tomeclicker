@@ -3,14 +3,18 @@
     import type { Game } from '$lib/game';
     import type { Config } from '$lib/config';
 
-    export let game: Game;
-    export let config: Config;
+    interface Props {
+        game: Game;
+        config: Config;
+    }
 
-    let importText = '';
-    let message = '';
-    let messageType: 'success' | 'warning' | 'error' = 'success';
-    let showMessage = false;
-    let showResetConfirm = false;
+    let { game = $bindable(), config = $bindable() }: Props = $props();
+
+    let importText = $state('');
+    let message = $state('');
+    let messageType = $state<'success' | 'warning' | 'error'>('success');
+    let showMessage = $state(false);
+    let showResetConfirm = $state(false);
 
     function showMessageFor(msg: string, type: 'success' | 'warning' | 'error', duration = 3000) {
         message = msg;
@@ -147,9 +151,6 @@
     setInterval(() => {
         game.autoSave();
     }, 30000);
-
-    /** temporary hack for svelte errors since it's not used yet */
-    config = config;
 </script>
 
 <div class="saves">
@@ -173,10 +174,10 @@
             <h2>Browser Storage</h2>
             <p>Your game automatically saves to browser storage every 30 seconds.</p>
             <div class="button-group">
-                <button class="save-btn" on:click={saveToFile}>
+                <button class="save-btn" onclick={saveToFile}>
                     <Save size={20}/> Save Now
                 </button>
-                <button class="load-btn" on:click={loadFromFile}>
+                <button class="load-btn" onclick={loadFromFile}>
                     <Upload size={20}/> Load Game
                 </button>
             </div>
@@ -186,10 +187,10 @@
             <h2>Export Save File</h2>
             <p>Download your save file to backup or transfer between devices.</p>
             <div class="button-group">
-                <button class="export-btn encrypted" on:click={exportEncrypted}>
+                <button class="export-btn encrypted" onclick={exportEncrypted}>
                     <Download size={20}/> Export (Encrypted)
                 </button>
-                <button class="export-btn unencrypted" on:click={exportUnencrypted}>
+                <button class="export-btn unencrypted" onclick={exportUnencrypted}>
                     <Download size={20}/> Export (Unencrypted)
                 </button>
             </div>
@@ -207,7 +208,7 @@
                 placeholder="Paste your save data here..."
                 rows="8"
             ></textarea>
-            <button class="import-btn" on:click={importSave} disabled={!importText.trim()}>
+            <button class="import-btn" onclick={importSave} disabled={!importText.trim()}>
                 <Upload size={20}/> Import Save
             </button>
         </div>
@@ -225,7 +226,7 @@
         <div class="save-section danger-section">
             <h2>Danger Zone</h2>
             <p>Permanently delete all progress and start over from the beginning.</p>
-            <button class="danger-btn" on:click={confirmHardReset}>
+            <button class="danger-btn" onclick={confirmHardReset}>
                 <AlertTriangle size={20}/> Hard Reset
             </button>
         </div>
@@ -244,8 +245,8 @@
                 </ul>
                 <p><strong>This action cannot be undone!</strong></p>
                 <div class="modal-buttons">
-                    <button class="cancel-btn" on:click={cancelReset}>Cancel</button>
-                    <button class="confirm-reset-btn" on:click={performHardReset}>
+                    <button class="cancel-btn" onclick={cancelReset}>Cancel</button>
+                    <button class="confirm-reset-btn" onclick={performHardReset}>
                         <AlertTriangle size={20}/> Confirm Reset
                     </button>
                 </div>

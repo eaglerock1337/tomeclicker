@@ -4,8 +4,14 @@
     import type { Config } from '$lib/config';
     import type { Game } from '$lib/game';
 
-    export let config: Config;
-    export let game: Game;
+    interface Props {
+        game: Game;
+        config: Config;
+    }
+
+    let { game = $bindable(), config = $bindable() }: Props = $props();
+
+    let clickText = $derived(game ? game.updateClickText() : 'Loading...');
 
     function clickMe() {
         if (!game) return;
@@ -14,16 +20,13 @@
         game.addExp(clickValue);
         game = game;
     }
-
-    /** temporary hack for svelte errors since it's not used yet */
-    config = config;
 </script>
 
 <div class="practice-container">
     <div class="thebutton">
-        <button on:click={clickMe}>
+        <button onclick={clickMe} aria-label="Practice to gain experience points">
             <div class="item">
-                <MousePointer size={48}/><br>{game ? game.updateClickText() : 'Loading...'}
+                <MousePointer size={48}/><br>{clickText}
             </div>
         </button>
     </div>
