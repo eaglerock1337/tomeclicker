@@ -24,7 +24,11 @@
 
 <div class="practice-container">
     <div class="thebutton">
-        <button onclick={clickMe} aria-label="Practice to gain experience points">
+        <button
+            onclick={clickMe}
+            ontouchstart={clickMe}
+            aria-label="Practice to gain experience points"
+        >
             <div class="item">
                 <MousePointer size={48}/><br>{clickText}
             </div>
@@ -76,6 +80,10 @@
         user-select: none;
         outline: none;
         border-radius: 0;
+        /* Prevent iOS flash on tap */
+        -webkit-tap-highlight-color: transparent;
+        /* Prevent accidental highlighting */
+        -webkit-highlight: none;
     }
 
     .item {

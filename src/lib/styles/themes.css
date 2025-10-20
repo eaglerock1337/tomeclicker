@@ -24,27 +24,6 @@
 	--yellow: #b8860bff;
 }
 
-/* Graphite - Neutral, minimal aesthetic */
-.graphite-light {
-	--bg: #d5d3d9ff;
-	--alt-bg: #b6b3bdff;
-	--text: #1e1c21ff;
-	--blue: #4a5568ff;
-	--red: #c14b1fff;
-	--green: #406354ff;
-	--yellow: #d69e2eff;
-}
-
-.graphite-dark {
-	--bg: #28262cff;
-	--alt-bg: #1e1c21ff;
-	--text: #cbc8d0ff;
-	--blue: #8bb5e8ff;
-	--red: #e27750ff;
-	--green: #6b9e88ff;
-	--yellow: #f7dc6fff;
-}
-
 /* Alizarin Crimson - Warm, passionate aesthetic */
 .alizarin-crimson-light {
 	--bg: #f4d9d9;

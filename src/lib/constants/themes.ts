@@ -44,29 +44,6 @@ export const THEMES: Record<string, Theme> = {
 		}
 	},
 
-	graphite: {
-		name: 'graphite',
-		displayName: 'Graphite',
-		light: {
-			bg: '#d5d3d9ff',
-			altBg: '#b6b3bdff',
-			text: '#1e1c21ff',
-			blue: '#4a5568ff',
-			red: '#c14b1fff',
-			green: '#406354ff',
-			yellow: '#d69e2eff'
-		},
-		dark: {
-			bg: '#28262cff',
-			altBg: '#1e1c21ff',
-			text: '#cbc8d0ff',
-			blue: '#8bb5e8ff',
-			red: '#e27750ff',
-			green: '#6b9e88ff',
-			yellow: '#f7dc6fff'
-		}
-	},
-
 	'alizarin-crimson': {
 		name: 'alizarin-crimson',
 		displayName: 'Alizarin Crimson',
