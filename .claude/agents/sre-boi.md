@@ -10,6 +10,50 @@
 
 ## recent context updates
 
+### LATEST COMPLETION (2025-10-19): Production Deployment Infrastructure ✅
+
+Successfully created complete Kubernetes deployment infrastructure for tomeclicker.marks.dev:
+
+**Docker Infrastructure:**
+- Multi-stage Dockerfile with optimized nginx serving static files
+- Security hardening: non-root user (UID 1001), minimal attack surface
+- Production-optimized nginx config with compression, caching, security headers
+- Health check endpoint for Kubernetes readiness/liveness probes
+
+**CI/CD Pipeline:**
+- GitHub Actions workflow for Docker build/push to Docker Hub
+- Multi-architecture support (amd64/arm64) for Raspberry Pi compatibility
+- Automatic tagging strategy: latest, branch-based, SHA-based, semver
+
+**Helm Chart (Following marks.dev Patterns):**
+- Production-ready values with resource limits appropriate for Pi cluster
+- Ingress configuration with Let's Encrypt SSL automation via cert-manager
+- **IMPORTANT CORRECTION**: Uses **Traefik ingress** (not nginx) to match existing HLC setup
+- Rolling update strategy with zero downtime deployment
+- HPA configuration ready for future scaling needs
+- Security context with non-root user and read-only filesystem where possible
+
+**ArgoCD GitOps Configuration:**
+- Application manifest for tomeclicker namespace deployment
+- Automated sync with prune and self-heal enabled
+- Namespace creation with proper labeling and sync wave ordering
+
+**Environment Management:**
+- Smart SvelteKit configuration detecting deployment environment
+- Production: tomeclicker.marks.dev with no base path (root domain)
+- Staging: GitHub Pages with /tomeclicker base path (existing setup preserved)
+- GITHUB_PAGES environment variable controls base path selection
+
+**Architecture Alignment:**
+- Follows exact same patterns as existing marks.dev deployment
+- Resource limits suitable for Raspberry Pi cluster constraints
+- Uses Traefik ingress class (className: "traefik") not nginx
+- cert-manager integration with letsencrypt-prod cluster issuer
+- Traefik middleware for HTTPS redirect
+
+**Ready for Deployment:**
+User has extracted what they need and is ready to deploy when desired. Future build-and-release pipeline copying from other repos noted for later implementation.
+
 ### happy little cloud infrastructure (2025-10-19 1:1 with user)
 
 **User Background:**

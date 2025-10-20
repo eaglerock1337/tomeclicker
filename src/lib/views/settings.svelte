@@ -1,294 +1,252 @@
 <script lang="ts">
-    import { ToggleLeft, ToggleRight, Trash2, AlertTriangle } from 'lucide-svelte';
+	import { ToggleLeft, ToggleRight } from 'lucide-svelte';
 
-    import type { Config } from '$lib/config';
-    import type { Game } from '$lib/game';
+	import type { Config } from '$lib/config';
+	import type { Game } from '$lib/game';
+	import { getThemeNames, getThemeDisplayName } from '$lib/constants/themes';
 
-    export let config: Config;
-    export let game: Game;
+	interface Props {
+		game: Game;
+		config: Config;
+	}
 
-    let showResetConfirm = false;
-    let preserveName = true;
-    let confirmationStep = 0;
+	let { game = $bindable(), config = $bindable() }: Props = $props();
 
-    function initiateHardReset() {
-        showResetConfirm = true;
-        confirmationStep = 1;
-    }
-
-    function confirmHardReset() {
-        if (confirmationStep === 1) {
-            confirmationStep = 2;
-        } else if (confirmationStep === 2) {
-            // Execute the hard reset
-            game.hardReset(preserveName);
-            showResetConfirm = false;
-            confirmationStep = 0;
-            // Force a page reload to ensure clean state
-            if (typeof window !== 'undefined') {
-                window.location.reload();
-            }
-        }
-    }
-
-    function cancelHardReset() {
-        showResetConfirm = false;
-        confirmationStep = 0;
-        preserveName = true;
-    }
+	const availableThemes = getThemeNames();
 </script>
 
 <div class="settings">
-    <h1>settings</h1>
-    <p>EXP: {game.exp} Tick: {game.tick} Level: {game.level}</p>
-    <h2>test buttons</h2>
-    <div class="container">
-        <button on:click={() => {game.exp++;}}>EXP</button>
-        <button on:click={() => {game.tick++;}}>Tick</button>
-        <button on:click={() => {game.exp += 100;}}>100EXP</button>    
-    </div>
-    <h2>game settings</h2>
-    <div class="container">
-        <button on:click={() => {config.darkmode = !config.darkmode;}}>Dark Mode</button>
-        {#if config.darkmode}
-            <ToggleRight size={48}/>
-        {:else}
-            <ToggleLeft size={48}/>
-        {/if}
-    </div>
+	<h1>settings</h1>
 
-    <h2>danger zone</h2>
-    <div class="container">
-        <button class="danger-button" on:click={initiateHardReset}>
-            <Trash2 size={20} style="vertical-align: middle; margin-right: 5px;" />
-            Hard Reset
-        </button>
-    </div>
+	<div class="settings-content">
+		<!-- Game Info Section -->
+		<section class="settings-section">
+			<h2>game information</h2>
+			<div class="info-grid">
+				<div class="info-item">
+					<span class="info-label">Player:</span>
+					<span class="info-value">{game.name}</span>
+				</div>
+				<div class="info-item">
+					<span class="info-label">Level:</span>
+					<span class="info-value">{game.level}</span>
+				</div>
+				<div class="info-item">
+					<span class="info-label">Experience:</span>
+					<span class="info-value">{Math.floor(game.exp).toLocaleString()}</span>
+				</div>
+				<div class="info-item">
+					<span class="info-label">Lifetime EXP:</span>
+					<span class="info-value">{Math.floor(game.lifetimeExp).toLocaleString()}</span>
+				</div>
+			</div>
+		</section>
 
-    {#if showResetConfirm}
-        <div class="modal-overlay" on:click={cancelHardReset} role="button" tabindex="0" on:keydown={(e) => e.key === 'Escape' && cancelHardReset()}>
-            <div class="modal" on:click|stopPropagation role="dialog" aria-modal="true" tabindex="-1">
-                <div class="modal-header">
-                    <AlertTriangle size={32} color="#ff6b6b" />
-                    <h2>Hard Reset Confirmation</h2>
-                </div>
+		<!-- Appearance Settings -->
+		<section class="settings-section">
+			<h2>appearance</h2>
 
-                {#if confirmationStep === 1}
-                    <div class="modal-body">
-                        <p><strong>WARNING:</strong> This will permanently delete all progress!</p>
-                        <p>You will lose:</p>
-                        <ul>
-                            <li>All EXP ({game.lifetimeExp.toFixed(2)} lifetime EXP)</li>
-                            <li>Your current level ({game.level})</li>
-                            <li>All purchased upgrades</li>
-                            <li>All saved games</li>
-                        </ul>
-                        <div class="checkbox-container">
-                            <label>
-                                <input type="checkbox" bind:checked={preserveName} />
-                                Keep player name ({game.name})
-                            </label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="cancel-button" on:click={cancelHardReset}>Cancel</button>
-                        <button class="danger-button" on:click={confirmHardReset}>
-                            Continue to Confirmation
-                        </button>
-                    </div>
-                {:else if confirmationStep === 2}
-                    <div class="modal-body">
-                        <p><strong>FINAL CONFIRMATION</strong></p>
-                        <p>Are you absolutely sure you want to reset everything?</p>
-                        <p class="final-warning">This action cannot be undone!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="cancel-button" on:click={cancelHardReset}>Cancel</button>
-                        <button class="danger-button-final" on:click={confirmHardReset}>
-                            Yes, Delete Everything
-                        </button>
-                    </div>
-                {/if}
-            </div>
-        </div>
-    {/if}
+			<!-- Theme Selector -->
+			<div class="setting-row">
+				<label for="theme-select">Color Theme</label>
+				<select
+					id="theme-select"
+					class="theme-select"
+					bind:value={config.theme}
+				>
+					{#each availableThemes as themeName}
+						<option value={themeName}>
+							{getThemeDisplayName(themeName)}
+						</option>
+					{/each}
+				</select>
+			</div>
+
+			<!-- Dark Mode Toggle -->
+			<div class="setting-row">
+				<label for="darkmode-toggle">Dark Mode</label>
+				<button
+					id="darkmode-toggle"
+					class="toggle-button"
+					onclick={() => {
+						config.darkmode = !config.darkmode;
+					}}
+				>
+					{#if config.darkmode}
+						<ToggleRight size={32} />
+					{:else}
+						<ToggleLeft size={32} />
+					{/if}
+					<span class="toggle-label">{config.darkmode ? 'On' : 'Off'}</span>
+				</button>
+			</div>
+		</section>
+	</div>
+
 </div>
 
 <style>
-    .settings {
-        color: var(--text);
-        background-color: var(--bg);
-        font-size: 1em;
-        font-family: JetBrains Mono, monospace;
-        font-weight: 300;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        transition: color 1s cubic-bezier(0,.5,0,1),
-                    background-color 1s cubic-bezier(0,.5,0,1);
-    }
+	.settings {
+		color: var(--text);
+		background-color: var(--bg);
+		font-size: 1em;
+		font-family: JetBrains Mono, monospace;
+		font-weight: 300;
+		height: 100%;
+		padding: 2rem 1rem;
+		transition: color 1s cubic-bezier(0, 0.5, 0, 1),
+			background-color 1s cubic-bezier(0, 0.5, 0, 1);
+		box-sizing: border-box;
+		overflow-y: auto;
+	}
 
-    h1 {
-        font-family: Lato, sans-serif;
-        font-weight: 300;
-    }
+	.settings-content {
+		max-width: 800px;
+		margin: 0 auto;
+	}
 
-    h2 {
-        font-family: Lato, sans-serif;
-        font-weight: 300;
-    }
+	h1 {
+		font-family: Lato, sans-serif;
+		font-weight: 300;
+		text-align: center;
+		margin-bottom: 2rem;
+	}
 
-    .container {
-        height: 3.5rem;
-        display: flex;
-        flex-flow: row;
-        justify-content: center;
-        align-items: flex-start;
-    }
+	h2 {
+		font-family: Lato, sans-serif;
+		font-weight: 300;
+		margin-bottom: 1rem;
+		font-size: 1.2rem;
+	}
 
-    .container button {
-        color: var(--text);
-        background-color: var(--alt-bg);
-        font-size: 1.2em;
-        font-family: JetBrains Mono, monospace;
-        font-weight: 300;
-        margin: 2px 2px 10px;
-        padding: 5px 10px;
-        text-align: center;
-        transition: color 1s cubic-bezier(0,.5,0,1),
-                    background-color 1s cubic-bezier(0,.5,0,1);
-        border: 2px solid var(--text);
-        border-radius: 10px;
-    }
+	.settings-section {
+		background-color: var(--alt-bg);
+		border: 2px solid var(--text);
+		border-radius: 10px;
+		padding: 1.5rem;
+		margin-bottom: 1.5rem;
+	}
 
-    .danger-button {
-        background-color: #ff6b6b !important;
-        color: white !important;
-        border-color: #ff5252 !important;
-        font-weight: 500 !important;
-    }
+	/* Game Info Section */
+	.info-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 1rem;
+	}
 
-    .danger-button:hover {
-        background-color: #ff5252 !important;
-    }
+	.info-item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.5rem;
+		background-color: var(--bg);
+		border-radius: 5px;
+	}
 
-    .danger-button-final {
-        background-color: #d32f2f !important;
-        color: white !important;
-        border-color: #b71c1c !important;
-        font-weight: 700 !important;
-        animation: pulse 1.5s infinite;
-    }
+	.info-label {
+		font-weight: 400;
+		opacity: 0.8;
+	}
 
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
-    }
+	.info-value {
+		font-weight: 500;
+	}
 
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
+	/* Appearance Settings */
+	.setting-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+	}
 
-    .modal {
-        background-color: var(--bg);
-        border: 3px solid var(--text);
-        border-radius: 15px;
-        padding: 20px;
-        max-width: 500px;
-        width: 90%;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    }
+	.setting-row label {
+		font-size: 1.1rem;
+	}
 
-    .modal-header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
+	/* Theme Selector */
+	.theme-select {
+		color: var(--text);
+		background-color: var(--bg);
+		font-family: JetBrains Mono, monospace;
+		font-weight: 400;
+		font-size: 1rem;
+		padding: 0.5rem 1rem;
+		border: 2px solid var(--text);
+		border-radius: 10px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		min-width: 200px;
+	}
 
-    .modal-header h2 {
-        margin: 0;
-        color: #ff6b6b;
-    }
+	.theme-select:hover {
+		background-color: var(--alt-bg);
+	}
 
-    .modal-body {
-        margin-bottom: 20px;
-        text-align: left;
-    }
+	.theme-select:focus {
+		outline: 2px solid var(--blue);
+		outline-offset: 2px;
+	}
 
-    .modal-body p {
-        margin: 10px 0;
-    }
+	/* Dark Mode Toggle */
+	.toggle-button {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: var(--text);
+		background-color: var(--bg);
+		font-family: JetBrains Mono, monospace;
+		font-weight: 400;
+		padding: 0.5rem 1rem;
+		border: 2px solid var(--text);
+		border-radius: 10px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
 
-    .modal-body ul {
-        margin: 10px 0;
-        padding-left: 30px;
-    }
+	.toggle-button:hover {
+		background-color: var(--text);
+		color: var(--bg);
+	}
 
-    .modal-body li {
-        margin: 5px 0;
-    }
+	.toggle-label {
+		min-width: 3rem;
+	}
 
-    .checkbox-container {
-        margin-top: 15px;
-        padding: 10px;
-        background-color: var(--alt-bg);
-        border-radius: 8px;
-    }
 
-    .checkbox-container label {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        cursor: pointer;
-    }
+	/* Mobile Responsiveness */
+	@media (max-width: 768px) {
+		.settings {
+			padding: 1rem 0.5rem;
+		}
 
-    .checkbox-container input[type="checkbox"] {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-    }
+		.settings-section {
+			padding: 1rem;
+		}
 
-    .final-warning {
-        color: #ff6b6b;
-        font-weight: 700;
-        font-size: 1.2em;
-        text-align: center;
-        margin-top: 20px;
-    }
+		.info-grid {
+			grid-template-columns: 1fr;
+		}
 
-    .modal-footer {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-    }
+		.setting-row {
+			/* Keep horizontal layout on mobile for better use of space */
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+		}
 
-    .modal-footer button {
-        flex: 1;
-        padding: 10px 20px;
-        font-size: 1em;
-        border-radius: 8px;
-        cursor: pointer;
-        font-family: JetBrains Mono, monospace;
-    }
+		.setting-row label {
+			font-size: 1rem;
+		}
 
-    .cancel-button {
-        background-color: var(--alt-bg);
-        color: var(--text);
-        border: 2px solid var(--text);
-    }
+		.theme-select {
+			min-width: 150px;
+			font-size: 0.9rem;
+		}
 
-    .cancel-button:hover {
-        background-color: var(--bg);
-    }
+		.toggle-button {
+			/* Toggle stays on the side */
+			padding: 0.4rem 0.8rem;
+		}
+	}
 </style>

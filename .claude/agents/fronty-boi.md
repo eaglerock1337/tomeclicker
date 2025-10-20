@@ -8,11 +8,23 @@
 
 ---
 
-## current focus (updated 2025-10-18)
+## current focus (updated 2025-10-19)
 
-**Phase 1.x: UI/UX Quality-of-Life Improvements**
+**LATEST COMPLETION (2025-10-19): Interface Polish & UX Improvements ✅**
 
-User has identified specific UI glitches to fix before major refactors:
+Successfully completed comprehensive interface improvements:
+- **Subtle progress bar in header** - 3px gradient bar at bottom, Level 2+, tracks next unlock without spoiling surprises
+- **Seamless practice page button** - 100% space utilization, zero padding/borders/margins, completely seamless with background
+- **Desktop scrolling fixes** - Story/Settings pages now scroll properly with `height: 100%` + `overflow-y: auto` + `box-sizing: border-box`
+- **Settings page streamlined** - Hard reset functionality removed (moving to dedicated save page)
+- **Upgrades page enhanced** - Benefit display with actual percentages, "Coming Soon" section, better cost/benefit visibility
+- **Svelte 5 runes migration** - Header component converted to `$props()` from `export let`, proper reactivity patterns
+
+**Architecture Decision**: Progress bar design philosophy established - inconspicuous progression indicators that create anticipation without spoiling content.
+
+**Phase 1.x: UI/UX Quality-of-Life Improvements (ORIGINAL SCOPE - COMPLETED)**
+
+Original user requirements successfully addressed:
 
 **NEW TASK (2025-10-18): Save Type Selection UI**
 - **When**: Phase 2 (before cloud saves in Phase 3)

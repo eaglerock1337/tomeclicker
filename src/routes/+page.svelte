@@ -69,9 +69,8 @@
         };
     });
 
-    // Color theme
-    let theme = "";
-    $: theme = config.getTheme();
+    // Color theme - reactive to config changes
+    $: theme = config ? config.getTheme() : "";
 
 </script>
 
@@ -86,7 +85,7 @@
 <div class="app {theme}">
     {#if game}
         {#if game.showHeader()}
-            <Header bind:game/>
+            <Header {game}/>
         {/if}
         <main class="main-content">
             <View bind:game bind:config/>

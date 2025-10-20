@@ -4,8 +4,14 @@
     import type { Config } from '$lib/config';
     import type { Game } from '$lib/game';
 
-    export let config: Config;
-    export let game: Game;
+    interface Props {
+        game: Game;
+        config: Config;
+    }
+
+    let { game = $bindable(), config = $bindable() }: Props = $props();
+
+    let clickText = $derived(game ? game.updateClickText() : 'Loading...');
 
     function clickMe() {
         if (!game) return;
@@ -14,36 +20,46 @@
         game.addExp(clickValue);
         game = game;
     }
-
-    /** temporary hack for svelte errors since it's not used yet */
-    config = config;
 </script>
 
-<div class="thebutton">
-    <button on:click={clickMe}>
-        <div class="item">
-            <MousePointer size={48}/><br>{game ? game.updateClickText() : 'Loading...'}
-        </div>
-    </button>
+<div class="practice-container">
+    <div class="thebutton">
+        <button onclick={clickMe} aria-label="Practice to gain experience points">
+            <div class="item">
+                <MousePointer size={48}/><br>{clickText}
+            </div>
+        </button>
+    </div>
 </div>
 
 <style>
+    .practice-container {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     /* The Button */
 
     .thebutton {
-        height: 100%;
+        flex: 1;
         width: 100%;
     }
 
     .thebutton button {
         color: var(--text);
         background-color: var(--bg);
-        border: 0px;
-        padding: 25px 50px 25px;
+        border: none;
+        margin: 0;
+        padding: 0;
         font-family: JetBrains Mono, monospace;
         font-weight: 400;
         width: 100%;
         height: 100%;
+        display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
@@ -58,6 +74,8 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        outline: none;
+        border-radius: 0;
     }
 
     .item {

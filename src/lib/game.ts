@@ -363,10 +363,20 @@ export class Game {
         return this.clickMultiplier;
     }
 
-    /** Conditionals */
+    /**
+     * Progression Conditionals
+     *
+     * These methods control when UI features unlock based on player progression.
+     * Progression thresholds:
+     * - 10 lifetime EXP: Header appears
+     * - 50 lifetime EXP: Menu navigation and upgrades unlock
+     * - Level 3: Adventures unlock (future feature)
+     * - Level 5: Stats training unlocks (future feature)
+     */
 
     /**
      * Determines if the header should be displayed
+     * Unlock threshold: 10 lifetime EXP
      * @returns True if player has earned at least 10 lifetime EXP
      */
     showHeader(): boolean {
@@ -375,6 +385,7 @@ export class Game {
 
     /**
      * Determines if the navigation menu should be displayed
+     * Unlock threshold: 50 lifetime EXP
      * @returns True if player has earned at least 50 lifetime EXP
      */
     showMenu(): boolean {
@@ -383,6 +394,7 @@ export class Game {
 
     /**
      * Determines if the upgrades page should be accessible
+     * Unlock threshold: 50 lifetime EXP (same as menu)
      * @returns True if player has earned at least 50 lifetime EXP
      */
     showUpgrades(): boolean {
