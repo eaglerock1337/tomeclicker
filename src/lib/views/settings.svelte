@@ -67,7 +67,10 @@
 					<button
 						class="mode-btn"
 						class:active={config.displayMode === 'light'}
-						onclick={() => config.setDisplayMode('light')}
+						onclick={() => {
+							config.setDisplayMode('light');
+							config = config; // Force Svelte reactivity
+						}}
 						aria-label="Light mode"
 					>
 						Light
@@ -75,7 +78,10 @@
 					<button
 						class="mode-btn"
 						class:active={config.displayMode === 'system'}
-						onclick={() => config.setDisplayMode('system')}
+						onclick={() => {
+							config.setDisplayMode('system');
+							config = config; // Force Svelte reactivity
+						}}
 						aria-label="System preference"
 					>
 						System
@@ -83,7 +89,10 @@
 					<button
 						class="mode-btn"
 						class:active={config.displayMode === 'dark'}
-						onclick={() => config.setDisplayMode('dark')}
+						onclick={() => {
+							config.setDisplayMode('dark');
+							config = config; // Force Svelte reactivity
+						}}
 						aria-label="Dark mode"
 					>
 						Dark
