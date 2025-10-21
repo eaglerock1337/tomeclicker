@@ -85,6 +85,16 @@
                 <div class="upgrade-benefit">
                     {#if upgrade.effectType === 'clickMultiplier'}
                         +{(upgrade.effectValue * 100).toFixed(0)}% click EXP per level
+                    {:else if upgrade.effectType === 'critChance'}
+                        +{(upgrade.effectValue * 100).toFixed(1)}% crit chance per level
+                    {:else if upgrade.effectType === 'critDamage'}
+                        +{(upgrade.effectValue * 100).toFixed(0)}% crit damage per level
+                    {:else if upgrade.effectType === 'osmosisExp'}
+                        +{upgrade.effectValue} rumination EXP per level
+                    {:else if upgrade.effectType === 'osmosisSpeed'}
+                        +{(upgrade.effectValue * 100).toFixed(0)}% rumination speed per level
+                    {:else if upgrade.effectType === 'globalIdleSpeed'}
+                        +{(upgrade.effectValue * 100).toFixed(0)}% all idle speed per level
                     {:else if upgrade.effectType === 'idleExp'}
                         +{upgrade.effectValue} idle EXP/s per level
                     {:else if upgrade.effectType === 'trainingSpeed'}
