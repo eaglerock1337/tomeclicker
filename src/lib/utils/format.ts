@@ -25,7 +25,7 @@ export function formatCompact(value: number, decimals: number = 1): string {
 
 	if (tier === 0) return Math.floor(value).toString();
 
-	const suffix = suffixes[tier] || 'e' + (tier * 3);
+	const suffix = suffixes[tier] || 'e' + tier * 3;
 	const scale = Math.pow(10, tier * 3);
 	const scaled = value / scale;
 

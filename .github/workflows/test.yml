@@ -34,7 +34,7 @@ jobs:
 
       - name: Run tests with coverage
         run: npm run test:coverage
-        continue-on-error: true  # Don't fail build on coverage threshold (yet)
+        continue-on-error: true # Don't fail build on coverage threshold (yet)
 
       - name: Build production bundle
         run: npm run build

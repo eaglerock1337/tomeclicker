@@ -17,7 +17,7 @@ export default {
 		paths: {
 			// No base path for production cluster deployment
 			// Use /tomeclicker for GitHub Pages staging
-			base: dev ? '' : (isGitHubPages ? '/tomeclicker' : '')
+			base: dev ? '' : isGitHubPages ? '/tomeclicker' : ''
 		}
 	}
 };

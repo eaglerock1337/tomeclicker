@@ -15,17 +15,20 @@ These changes address current TODOs and polish the existing experience without r
 #### 1.1 UI/UX Polish
 
 **Upgrades Page Formatting**
+
 - Fix grid layout responsiveness on mobile devices
 - Ensure proper spacing and alignment of upgrade cards
 - Improve special button styling consistency
 - Add visual feedback for level-up availability
 
 **Practice Page Cleanup**
+
 - Remove debug EXP/Click display (currently visible in production)
 - Clean up development artifacts
 - Ensure proper text sizing and alignment
 
 **Enhanced Click Feedback**
+
 - Implement contextual help messages in click text
   - "level up available" → Already implemented
   - "upgrade available" → Already implemented
@@ -36,6 +39,7 @@ These changes address current TODOs and polish the existing experience without r
 #### 1.2 Safety Features
 
 **Hard Reset Functionality**
+
 - Implement hard reset button in settings
 - Add multi-step confirmation dialog with warning
 - Preserve player name option during reset
@@ -54,6 +58,7 @@ This phase sets up testing and code quality infrastructure to enable confident r
 #### 1.5.1 Linting & Code Quality
 
 **ESLint Setup**:
+
 - Install and configure ESLint
 - Add TypeScript ESLint plugin
 - Add Svelte ESLint plugin
@@ -61,23 +66,27 @@ This phase sets up testing and code quality infrastructure to enable confident r
 - Add `.eslintrc.js` with project-specific rules
 
 **TypeScript Strict Mode**:
+
 - Enable stricter compiler options
 - Add `noImplicitAny`, `strictNullChecks`, etc.
 - Fix any type errors that surface
 
 **Prettier Integration**:
+
 - Ensure ESLint and Prettier work together
 - Configure auto-format on save
 
 #### 1.5.2 Testing Framework Setup
 
 **Vitest Configuration**:
+
 1. Install Vitest and testing dependencies
 2. Configure `vite.config.ts` for testing
 3. Set up test file structure (`src/**/*.spec.ts`)
 4. Configure code coverage reporting (target: 80%+)
 
 **First Unit Tests**:
+
 - Write tests for `Game` class core methods:
   - `calculateLevel(exp)` with edge cases
   - `getUpgradeCost()` with various tiers
@@ -86,6 +95,7 @@ This phase sets up testing and code quality infrastructure to enable confident r
 - Establish testing patterns for future tests
 
 **Component Testing** (optional for Phase 1.5):
+
 - Set up Svelte Testing Library
 - Write basic component tests
 - Can be deferred to Phase 2 if time-constrained
@@ -93,6 +103,7 @@ This phase sets up testing and code quality infrastructure to enable confident r
 #### 1.5.3 Pre-Commit Hooks
 
 **Husky + lint-staged Setup**:
+
 - Install Husky for Git hooks
 - Configure lint-staged for pre-commit
 - Run linting on staged files
@@ -100,6 +111,7 @@ This phase sets up testing and code quality infrastructure to enable confident r
 - Prevent commits with lint errors
 
 **Pre-Push Hooks**:
+
 - Run `npm run check` (type checking)
 - Run `npm run test` (unit tests)
 - Ensure builds succeed before push
@@ -107,6 +119,7 @@ This phase sets up testing and code quality infrastructure to enable confident r
 #### 1.5.4 CI/CD Pipeline
 
 **GitHub Actions Workflow**:
+
 ```yaml
 # .github/workflows/ci.yml
 name: CI
@@ -128,6 +141,7 @@ jobs:
 ```
 
 **Branch Protection**:
+
 - Require CI checks to pass before merge
 - Require code review (optional)
 - Enable auto-merge when checks pass
@@ -135,6 +149,7 @@ jobs:
 #### 1.5.5 E2E Testing Setup (Basic)
 
 **Playwright Configuration**:
+
 - Install Playwright
 - Configure for Chromium, Firefox, Webkit
 - Set up basic smoke tests:
@@ -144,6 +159,7 @@ jobs:
 - Full E2E suite can grow in Phase 2
 
 **Benefits of Phase 1.5**:
+
 - Catch bugs before they reach production
 - Enable confident refactoring in Phase 2
 - Establish quality baseline
@@ -163,10 +179,12 @@ This phase brings the codebase up to modern standards and sets the foundation fo
 #### 2.1 Svelte 5 Migration
 
 **Current State:**
+
 - Using Svelte 5.39.6 but with Svelte 4 patterns
 - Missing Svelte 5 features: runes, snippets, improved reactivity
 
 **Migration Tasks:**
+
 1. **Adopt Svelte 5 Runes**
    - Replace `let` with `$state` for reactive variables
    - Replace `$:` with `$derived` for computed values
@@ -184,6 +202,7 @@ This phase brings the codebase up to modern standards and sets the foundation fo
    - Test save/load functionality thoroughly
 
 **Benefits:**
+
 - Better performance (Svelte 5 is significantly faster)
 - Improved developer experience with clearer reactivity
 - Better TypeScript integration
@@ -192,11 +211,13 @@ This phase brings the codebase up to modern standards and sets the foundation fo
 #### 2.2 Full TypeScript Migration
 
 **Current State:**
+
 - game.ts and config.ts already in TypeScript
 - Most Svelte components still use JSDoc-style typing
 - Mixed .js and .ts files
 
 **Migration Tasks:**
+
 1. **Convert Remaining JavaScript Files**
    - Migrate all `.js` files to `.ts`
    - Add proper type definitions for all functions and variables
@@ -220,6 +241,7 @@ This phase brings the codebase up to modern standards and sets the foundation fo
    - Set up pre-commit hooks for type checking
 
 **Benefits:**
+
 - Catch bugs at compile time instead of runtime
 - Better IDE autocomplete and refactoring support
 - Easier onboarding for new developers
@@ -228,12 +250,15 @@ This phase brings the codebase up to modern standards and sets the foundation fo
 #### 2.3 Architecture Refactoring
 
 **Current State:**
+
 - Game logic concentrated in single `Game` class (500+ lines)
 - Upgrades hardcoded in initialization method
 - No separation of concerns for different game systems
 
 **Refactoring Tasks:**
+
 1. **Modular Class Structure**
+
    ```
    src/lib/
    ├── game.ts (main orchestrator, reduced size)
@@ -268,6 +293,7 @@ This phase brings the codebase up to modern standards and sets the foundation fo
    - Support modding potential in the future
 
 **Benefits:**
+
 - Easier to find and modify specific game systems
 - Better testability (can unit test individual systems)
 - Reduced merge conflicts when working on different features
@@ -287,11 +313,13 @@ This phase implements the save system improvements outlined in the TODOs.
 #### 3.1 Enhanced Local Save System
 
 **Current State:**
+
 - Basic localStorage and cookie support
 - Simple encryption/validation
 - No versioning or migration system
 
 **Enhancements:**
+
 1. **Save Versioning**
    - Implement semantic versioning for save files
    - Create migration system for upgrading old saves
@@ -326,12 +354,14 @@ This phase implements the save system improvements outlined in the TODOs.
 **UPDATED ARCHITECTURE (2025-10-18):**
 
 **Key Design Principles:**
+
 - Security via **server-side `saveId` tracking**, NOT client-side encryption
 - Two save types: Server-validated (leaderboard) vs Local-only (cheat-friendly)
 - JSON blob format (like Cookie Clicker/Antimatter Dimensions)
 - Conflict resolution: Show both saves, recommend most progressed, user chooses
 
 **Architecture:**
+
 - REST API backend (NestJS or Fastify)
 - **Database: PostgreSQL + JSONB** (MongoDB on table for Phase 3 discussion)
 - User authentication (Email/OAuth - "sre-boi approved")
@@ -340,6 +370,7 @@ This phase implements the save system improvements outlined in the TODOs.
 **Implementation Phases:**
 
 **Phase 3.2.1: Backend Infrastructure**
+
 1. **API Design**
    - RESTful endpoints for save management
    - Authentication/authorization (coordinate with **secury-boi**)
@@ -347,6 +378,7 @@ This phase implements the save system improvements outlined in the TODOs.
    - **saveId tracking and validation**
 
 2. **Database Schema (PostgreSQL + JSONB)**
+
    ```sql
    users (
      id UUID PRIMARY KEY,
@@ -394,6 +426,7 @@ This phase implements the save system improvements outlined in the TODOs.
    - Rate limiting on auth and save endpoints
 
 **Phase 3.2.2: Client Integration**
+
 1. **Save Sync UI (Coordinate with fronty-boi)**
    - Login/registration interface
    - Cloud save management panel
@@ -411,6 +444,7 @@ This phase implements the save system improvements outlined in the TODOs.
    - Automatic background sync when online
 
 **Phase 3.2.3: Anti-Cheat System (Coordinate with secury-boi + gamey-boi)**
+
 1. **saveId Tracking (Primary Security Mechanism)**
    - Server generates `saveId` on first cloud upload
    - Server stores: `(saveId, userId, createdAt, lastValidatedAt)`
@@ -439,6 +473,7 @@ This phase implements the save system improvements outlined in the TODOs.
 ### Raspberry Pi Kubernetes Cluster
 
 **Current Infrastructure:**
+
 - Home-hosted Raspberry Pi Kubernetes cluster serving `marks.dev` ✅
 - ArgoCD installed for GitOps deployments
 - No shared storage (planned for future implementation)
@@ -450,6 +485,7 @@ This phase implements the save system improvements outlined in the TODOs.
 #### Static Frontend - Dual Environment
 
 **Preview/Staging Environment (GitHub Pages)**
+
 - Continue using GitHub Pages for preview builds
 - Path: `/tomeclicker` (configured in `svelte.config.js`)
 - Automatic deployment via GitHub Actions on push to main
@@ -457,6 +493,7 @@ This phase implements the save system improvements outlined in the TODOs.
 - Zero hosting cost
 
 **Production Environment (tomeclicker.marks.dev)**
+
 - Primary production site at `tomeclicker.marks.dev` subdomain
 - Deployed via ArgoCD GitOps pipeline
 - Static files served from Kubernetes (Nginx or Caddy)
@@ -464,6 +501,7 @@ This phase implements the save system improvements outlined in the TODOs.
 - Let's Encrypt SSL/TLS certificates
 
 **Deployment Pipeline:**
+
 ```
 GitHub Actions (on release/tag)
   ↓
@@ -518,56 +556,60 @@ This project spans multiple repositories:
    - ArgoCD Application manifests
    - Kubernetes resource definitions
    - Kustomize overlays for environments
-   ```
-   happy-little-cloud/
-   ├── argocd/
-   │   └── applications/
-   │       └── tomeclicker.yaml
-   └── manifests/
-       └── tomeclicker/
-           ├── base/
-           │   ├── namespace.yaml
-           │   ├── deployment.yaml (frontend)
-           │   ├── service.yaml
-           │   └── ingress.yaml (tomeclicker.marks.dev)
-           ├── api/ (future)
-           │   ├── deployment.yaml
-           │   ├── service.yaml
-           │   └── configmap.yaml
-           └── database/ (future)
-               ├── statefulset.yaml
-               ├── service.yaml
-               └── pv.yaml (local storage)
-   ```
+```
+
+happy-little-cloud/
+├── argocd/
+│ └── applications/
+│ └── tomeclicker.yaml
+└── manifests/
+└── tomeclicker/
+├── base/
+│ ├── namespace.yaml
+│ ├── deployment.yaml (frontend)
+│ ├── service.yaml
+│ └── ingress.yaml (tomeclicker.marks.dev)
+├── api/ (future)
+│ ├── deployment.yaml
+│ ├── service.yaml
+│ └── configmap.yaml
+└── database/ (future)
+├── statefulset.yaml
+├── service.yaml
+└── pv.yaml (local storage)
+
+```
 
 3. **nix-config** (system configuration)
-   - NixOS configurations for Raspberry Pi nodes
-   - Hardware configurations for Pi 5 + NVMe
-   - System-level dependencies and services
+- NixOS configurations for Raspberry Pi nodes
+- Hardware configurations for Pi 5 + NVMe
+- System-level dependencies and services
 
 **Phase 2: With Shared Storage (Future)**
 
 Once shared storage is implemented (NFS, Ceph, Longhorn, etc.):
 
 1. **Database High Availability**
-   - Multi-replica database clusters
-   - Automatic failover
-   - Shared persistent volumes
-   - Better data redundancy
+- Multi-replica database clusters
+- Automatic failover
+- Shared persistent volumes
+- Better data redundancy
 
 2. **Session Storage**
-   - Redis cluster for session management
-   - Shared cache across API replicas
-   - Improved performance
+- Redis cluster for session management
+- Shared cache across API replicas
+- Improved performance
 
 3. **File Uploads** (if needed)
-   - Shared volume for user-uploaded content
-   - Profile pictures, custom themes, etc.
+- Shared volume for user-uploaded content
+- Profile pictures, custom themes, etc.
 
 **GitOps Workflow with ArgoCD:**
 
 ```
+
 Developer Workflow:
+
 1. Make changes in tomeclicker repo
 2. Commit and push to GitHub
 3. GitHub Actions triggered:
@@ -593,6 +635,7 @@ Developer Workflow:
    a. Revert commit in happy-little-cloud
    b. ArgoCD syncs to previous version
    c. Or use ArgoCD UI/CLI for instant rollback
+
 ```
 
 **Benefits of ArgoCD Approach:**
@@ -813,3 +856,4 @@ The Raspberry Pi Kubernetes deployment provides a cost-effective, self-hosted so
 - What's the timeline for implementing shared storage on the K8s cluster?
 - Should we set up a beta testing program?
 - What domain will be used for the API endpoints?
+```

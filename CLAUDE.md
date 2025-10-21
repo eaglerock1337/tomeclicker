@@ -149,6 +149,7 @@ The `design/OUTLINE.md` file contains the complete game design document with det
 ### Roadmap
 
 See `design/PROPOSAL.md` for the complete modernization and enhancement roadmap, including:
+
 - **Phase 1.x (Current)**: Immediate QoL improvements
   - Upgrades menu: Fix mobile navigation issues
   - Story page: Center layout, add navigation system
@@ -207,11 +208,13 @@ See `design/PROPOSAL.md` for the complete modernization and enhancement roadmap,
 
 - Feature branches for all work
 - Commits on branches are authored by Claude with signature:
+
   ```
   🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
   Co-Authored-By: Claude <noreply@anthropic.com>
   ```
+
 - PRs maintained for session history and review
 - Squash merge to main branch (final commit authored by user)
 - This keeps main branch clean while preserving work history in PRs
@@ -219,6 +222,7 @@ See `design/PROPOSAL.md` for the complete modernization and enhancement roadmap,
 ### Code Quality Standards
 
 When making changes, ensure:
+
 - **TypeScript**: Strict typing, no `any` types
 - **Svelte 5**: Use runes ($state, $derived, $effect) when refactoring
 - **Build**: `npm run build` succeeds without errors
@@ -231,6 +235,7 @@ When making changes, ensure:
 ### Recent Major Implementations (2025-10-19)
 
 **Interface Polish & UX Improvements:** ✅ **COMPLETED**
+
 - Subtle progress bar in header (Level 2+, tracks next unlock)
 - Seamless practice page button (100% space utilization)
 - Desktop scrolling fixes (Story/Settings pages)
@@ -238,6 +243,7 @@ When making changes, ensure:
 - Hard reset removal from Settings (moving to dedicated save page)
 
 **Production Deployment Infrastructure:** ✅ **COMPLETED**
+
 - Complete Docker containerization with security hardening
 - GitHub Actions CI/CD pipeline for multi-arch builds
 - Helm chart following marks.dev patterns (Traefik ingress)

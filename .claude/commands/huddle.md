@@ -5,6 +5,7 @@ Pull together specific team members for an in-depth working session to collabora
 ## Usage
 
 ### Full Team Huddle (All Agents)
+
 ```
 /huddle <topic or problem>
 ```
@@ -12,11 +13,13 @@ Pull together specific team members for an in-depth working session to collabora
 All agents will consider the topic and participate if they have relevant expertise. Agents self-select based on domain relevance.
 
 **Example:**
+
 ```
 /huddle I want to design the tome unlock system with animations, progression feel, and lore integration
 ```
 
 **Expected behavior:**
+
 - **gamey-boi**: Detailed progression pacing, unlock frequency, reward psychology
 - **fronty-boi**: Animation design, UI components, visual feedback systems
 - **story-boi**: Lore integration, narrative moments, flavor text approach
@@ -24,6 +27,7 @@ All agents will consider the topic and participate if they have relevant experti
 - Agents collaborate and build on each other's ideas
 
 ### Targeted Huddle (Specific Agents)
+
 ```
 /huddle agent1 agent2 agent3 <topic or problem>
 ```
@@ -31,11 +35,13 @@ All agents will consider the topic and participate if they have relevant experti
 Only specified agents participate. Use when you know exactly which domains need to collaborate.
 
 **Example:**
+
 ```
 /huddle fronty-boi gamey-boi story-boi How should tier completion feel as a major milestone?
 ```
 
 **Expected behavior:**
+
 - **gamey-boi**: Progression impact, reward timing, dopamine hit design
 - **fronty-boi**: Visual celebration, animation sequences, UI state changes
 - **story-boi**: Narrative weight, revelation pacing, lore delivery
@@ -43,18 +49,19 @@ Only specified agents participate. Use when you know exactly which domains need 
 
 ## Difference from /scrum
 
-| Aspect | /scrum | /huddle |
-|--------|--------|---------|
-| **Team** | Full team (agents self-select) | Full team OR targeted agents |
-| **Purpose** | Quick feedback, flag concerns | Deep collaboration, work through solutions |
-| **Length** | 2-4 sentences per agent | Paragraphs, detailed discussion |
-| **Depth** | Surface-level validation | In-depth problem solving |
-| **Collaboration** | Parallel independent feedback | Build on each other's ideas |
-| **Context** | Minimal | Rich, detailed |
-| **Follow-up** | Often leads to /1:1 or /huddle | Self-contained working session |
-| **Duration** | 1-2 minutes to read | 5-10 minutes to read |
+| Aspect            | /scrum                         | /huddle                                    |
+| ----------------- | ------------------------------ | ------------------------------------------ |
+| **Team**          | Full team (agents self-select) | Full team OR targeted agents               |
+| **Purpose**       | Quick feedback, flag concerns  | Deep collaboration, work through solutions |
+| **Length**        | 2-4 sentences per agent        | Paragraphs, detailed discussion            |
+| **Depth**         | Surface-level validation       | In-depth problem solving                   |
+| **Collaboration** | Parallel independent feedback  | Build on each other's ideas                |
+| **Context**       | Minimal                        | Rich, detailed                             |
+| **Follow-up**     | Often leads to /1:1 or /huddle | Self-contained working session             |
+| **Duration**      | 1-2 minutes to read            | 5-10 minutes to read                       |
 
 **Rule of thumb:**
+
 - Use **/scrum** for: "Does this sound okay?" or "Any concerns?"
 - Use **/huddle** for: "Let's design this together" or "How should we approach this?"
 - Use **/1:1** for: "I need deep expertise in one domain"
@@ -64,23 +71,27 @@ Only specified agents participate. Use when you know exactly which domains need 
 ### Response Guidelines
 
 **Provide Depth:**
+
 - Multiple paragraphs are encouraged
 - Explain reasoning, not just conclusions
 - Provide examples and alternative approaches
 - Reference relevant patterns, systems, or prior art
 
 **Collaborate Actively:**
+
 - Build on what other agents said
 - Identify synergies between domains
 - Highlight potential conflicts that need resolution
 - Propose integrated solutions
 
 **Ask Clarifying Questions:**
+
 - If the problem is ambiguous, ask before proposing solutions
 - Surface assumptions that need user validation
 - Identify missing requirements or edge cases
 
 **Provide Concrete Recommendations:**
+
 - Don't just identify problems, propose solutions
 - Offer specific implementations or patterns
 - Include trade-offs and alternatives
@@ -89,6 +100,7 @@ Only specified agents participate. Use when you know exactly which domains need 
 ### When to Skip Responding
 
 Skip the huddle if:
+
 - Topic is completely outside your domain
 - You have literally nothing meaningful to contribute
 - (Don't skip just because another agent covered similar ground—add your unique perspective!)
@@ -96,17 +108,20 @@ Skip the huddle if:
 ### Cross-Domain Awareness
 
 **Reference other agents' input:**
+
 - "Building on what fronty-boi said about animations..."
 - "I agree with gamey-boi's pacing concern, and from a backend perspective..."
 - "secury-boi raised a good point about validation—we should also consider..."
 
 **Identify integration points:**
+
 - "My API design needs to support fronty-boi's UI state transitions"
 - "The narrative beats story-boi suggested align well with the tier unlocks I'm recommending"
 
 ### Teaching in Huddles
 
 **learny-boi** uses enhanced teaching mode:
+
 - Explain concepts as they arise (5-7 minute depth)
 - Provide context for why patterns/approaches work
 - Offer to do deeper dive after huddle if needed
@@ -114,6 +129,7 @@ Skip the huddle if:
 ## Purpose
 
 Huddles are for:
+
 - **Feature design** - Collaborating on complex features that span multiple domains
 - **Architecture decisions** - Working through system design with multiple perspectives
 - **Problem solving** - Tackling tricky issues that need cross-functional thinking
@@ -121,6 +137,7 @@ Huddles are for:
 - **Design reviews** - In-depth analysis of proposed approaches
 
 Huddles are NOT for:
+
 - Quick validation (use /scrum)
 - Deep single-domain work (use /1:1)
 - Implementation execution (use /thinky-time after huddle)
@@ -130,7 +147,7 @@ Huddles are NOT for:
 
 ### Example 1: Complex Feature Design
 
-```
+````
 User: /huddle fronty-boi gamey-boi story-boi designy-boi I want to design the Adventure system with quest chains, demon encounters, and loot drops
 
 gamey-boi: Great question! Let me break down the progression psychology here. Adventure systems in incremental games need to balance:
@@ -208,37 +225,38 @@ class QuestManager {
   // Tracks quest progress, unlocks, completion
   // Event-driven: emits "questComplete" for UI/story integration
 }
-```
+````
 
 **Key patterns:**
+
 - **Strategy Pattern** for combat resolution (allows different demon types to have different mechanics)
 - **Observer Pattern** for quest events (story-boi's blurbs subscribe to quest completion)
 - **Factory Pattern** for encounter generation (creates demons with appropriate stats/loot)
 
 **Svelte 5 Integration:**
+
 ```typescript
 // Reactive state
 const adventureState = $state({
-  currentEncounter: null,
-  activeQuests: [],
-  recentLoot: []
-})
+	currentEncounter: null,
+	activeQuests: [],
+	recentLoot: []
+});
 
 // Derived computations
-const canAdventure = $derived(
-  player.level >= 3 && !adventureState.currentEncounter
-)
+const canAdventure = $derived(player.level >= 3 && !adventureState.currentEncounter);
 
 // Effects for side effects
 $effect(() => {
-  if (adventureState.currentEncounter?.isComplete) {
-    handleLootDrop()
-    checkQuestProgress()
-  }
-})
+	if (adventureState.currentEncounter?.isComplete) {
+		handleLootDrop();
+		checkQuestProgress();
+	}
+});
 ```
 
 This separation means:
+
 - gamey-boi can tune LootTable and EncounterGenerator without touching UI
 - fronty-boi can redesign adventure screen without touching game logic
 - story-boi can update quest descriptions in data files
@@ -249,6 +267,7 @@ User: How should auto-adventure work when it unlocks?
 gamey-boi: Auto-adventure should unlock around level 10-12, after players understand the manual adventure flow. Here's the design:
 
 **Auto-Adventure Mechanics:**
+
 - **Toggle state**: On/Off switch, persists in save
 - **Interval**: One adventure every 30-60 seconds (tunable)
 - **Smart targeting**: Prioritizes active quest objectives if available
@@ -260,6 +279,7 @@ gamey-boi: Auto-adventure should unlock around level 10-12, after players unders
 fronty-boi: For the auto-adventure UI:
 
 **Visual State:**
+
 - **Disabled state** (pre-unlock): Greyed out with lock icon, tooltip explains unlock level
 - **Idle state** (unlocked, off): Toggle button, neutral color
 - **Active state** (running): Pulsing animation, shows countdown to next adventure
@@ -267,6 +287,7 @@ fronty-boi: For the auto-adventure UI:
 
 **Loot Review Modal:**
 When user clicks the badge, show a modal summarizing what was gained during idle time:
+
 - "While you were away: 15 adventures completed"
 - Grouped loot summary (3x common helm, 2x uncommon scroll, etc.)
 - XP/gold totals
@@ -277,25 +298,30 @@ This gives the satisfying "I came back to rewards" feeling that makes idle games
 story-boi: Auto-adventure narrative approach:
 
 Instead of individual encounter text, use summary blurbs:
+
 - "You venture forth repeatedly, growing stronger with each battle..."
 - "The demons fall before you, one after another. You're becoming formidable."
 
 But when rare events happen during auto-adventure, still deliver the story:
+
 - Quest completion during idle: Full story note still appears
 - Rare loot during idle: Discovery blurb still triggers
 - Tier unlock during idle: Milestone story moment preserved
 
 Never let automation steal narrative moments—just compress the mundane encounters.
+
 ```
 
 ### Example 2: Architecture Planning
 
 ```
+
 User: /huddle designy-boi backy-boi secury-boi I want to design the cloud save system architecture
 
 designy-boi: Let's start with the system architecture overview, then drill into specifics.
 
 **High-Level Design:**
+
 1. **Frontend**: SvelteKit static site (already in place)
 2. **Backend**: Node.js API on K8s cluster (to build)
 3. **Storage**: PostgreSQL for user data, Redis for sessions
@@ -305,30 +331,33 @@ designy-boi: Let's start with the system architecture overview, then drill into 
 **Key Architectural Decisions:**
 
 **Decision 1: Local-First Architecture**
+
 - Game state always stored in localStorage (offline-capable)
 - Cloud saves are backups + sync, not primary storage
 - Benefits: Fast, works offline, no server dependency for gameplay
 - Trade-off: Need robust conflict resolution
 
 **Decision 2: Save State Schema**
+
 ```typescript
 interface CloudSave {
-  saveId: string          // UUID for this save
-  userId: string          // Owner
-  version: number         // Schema version for migrations
-  lastModified: Date      // Sync conflict resolution
-  checksum: string        // Anti-cheat validation
-  gameState: {
-    // All game data (exp, level, stats, tomes, etc)
-  }
-  metadata: {
-    deviceId: string      // Which device created this
-    clientVersion: string // Game version
-  }
+	saveId: string; // UUID for this save
+	userId: string; // Owner
+	version: number; // Schema version for migrations
+	lastModified: Date; // Sync conflict resolution
+	checksum: string; // Anti-cheat validation
+	gameState: {
+		// All game data (exp, level, stats, tomes, etc)
+	};
+	metadata: {
+		deviceId: string; // Which device created this
+		clientVersion: string; // Game version
+	};
 }
 ```
 
 **Decision 3: Sync Triggers**
+
 - Manual: "Save to Cloud" button
 - Auto: Every 5 minutes if changes detected
 - Event-based: On tier unlock, tome discovery (milestone moments)
@@ -391,6 +420,7 @@ CREATE TABLE sync_log (
 **Conflict Resolution Strategy:**
 
 When PUT /api/saves/:id receives an update:
+
 1. Compare `lastModified` timestamps
 2. If server newer than client: CONFLICT
    - Return 409 Conflict with server state
@@ -399,6 +429,7 @@ When PUT /api/saves/:id receives an update:
 4. If timestamps identical but checksum differs: SUSPICIOUS (possible cheat)
 
 **Performance Considerations:**
+
 - JSONB for game_state allows indexing specific fields if needed
 - Sync log useful for debugging sync issues
 - Could add save slots (max 3 saves per user) to limit storage
@@ -430,24 +461,24 @@ The checksum field needs to validate game state integrity:
 
 ```typescript
 function generateChecksum(gameState: GameState): string {
-  // Server-side validation rules
-  const validations = {
-    // Exp should match level calculation
-    expMatchesLevel: Math.floor(Math.log10(gameState.exp) / 3) + 1 === gameState.level,
+	// Server-side validation rules
+	const validations = {
+		// Exp should match level calculation
+		expMatchesLevel: Math.floor(Math.log10(gameState.exp) / 3) + 1 === gameState.level,
 
-    // Stats can't exceed possible training given exp earned
-    statsPlausible: calculateMaxPossibleStats(gameState.exp) >= gameState.stats.total,
+		// Stats can't exceed possible training given exp earned
+		statsPlausible: calculateMaxPossibleStats(gameState.exp) >= gameState.stats.total,
 
-    // Tome unlocks must match progression requirements
-    tomesValid: validateTomeUnlocks(gameState.tomes, gameState.level),
+		// Tome unlocks must match progression requirements
+		tomesValid: validateTomeUnlocks(gameState.tomes, gameState.level),
 
-    // Timestamps must be chronologically valid
-    timelineValid: gameState.created <= gameState.lastPlayed
-  }
+		// Timestamps must be chronologically valid
+		timelineValid: gameState.created <= gameState.lastPlayed
+	};
 
-  // If any validation fails, checksum won't match
-  const stateString = JSON.stringify({ gameState, validations })
-  return crypto.createHash('sha256').update(stateString).digest('hex')
+	// If any validation fails, checksum won't match
+	const stateString = JSON.stringify({ gameState, validations });
+	return crypto.createHash('sha256').update(stateString).digest('hex');
 }
 ```
 
@@ -467,6 +498,7 @@ function generateChecksum(gameState: GameState): string {
 - **SQL injection**: Parameterized queries only (use an ORM)
 
 **Incident Response:**
+
 - Log all auth failures to detect brute force
 - Monitor sync_log for unusual patterns (rapid saves = botting?)
 - Alerting on checksum validation failures (cheating attempts)
@@ -476,6 +508,7 @@ Recommend implementing secury-boi's validation rules BEFORE launching cloud save
 designy-boi: Bringing it together, here's the implementation roadmap:
 
 **Phase 1: Backend Foundation**
+
 1. Set up Node.js + Express on K8s
 2. Implement auth endpoints (register, login, refresh, logout)
 3. Database migrations for users table
@@ -483,30 +516,35 @@ designy-boi: Bringing it together, here's the implementation roadmap:
 5. Basic rate limiting and security headers
 
 **Phase 2: Save API**
+
 1. Implement saves endpoints (CRUD)
 2. Database migrations for saves + sync_log tables
 3. Checksum validation logic
 4. Conflict detection (timestamp comparison)
 
 **Phase 3: Frontend Integration**
+
 1. Auth UI (register, login, account management)
 2. Cloud save UI (list, create, load, delete)
 3. Sync button + auto-sync logic
 4. Conflict resolution UI
 
 **Phase 4: Security Hardening**
+
 1. Implement all secury-boi's recommendations
 2. Security audit
 3. Penetration testing
 4. Rate limiting tuning
 
 **Phase 5: Launch**
+
 1. Beta testing with small group
 2. Monitor sync_log for issues
 3. Gather feedback on conflict resolution UX
 4. Full launch
 
 This aligns with PROPOSAL.md Phase 3. Should take 3-4 weeks of focused work.
+
 ```
 
 ## Tips for Effective Huddles
@@ -550,3 +588,4 @@ Agents reference these documents during huddles:
 - **design/PROPOSAL.md** - Technical roadmap, modernization phases, infrastructure plans
 - **CLAUDE.md** - Development guidelines, architecture decisions, workflow standards
 - **README.md** - Project overview, setup instructions, current state
+```

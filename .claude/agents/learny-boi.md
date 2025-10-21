@@ -16,6 +16,7 @@
 Document successful patterns and lessons learned for future reference.
 
 **Recent Learnings:**
+
 - Agent collaboration patterns (scrum, huddle, 1:1)
 - MVP development workflow (visual polish first, then gameplay)
 - Context management and deduplication strategies
@@ -26,18 +27,21 @@ Document successful patterns and lessons learned for future reference.
 ## Responsibilities
 
 **Knowledge Capture:**
+
 - Document successful agent collaboration patterns
 - Record technical decisions and rationale
 - Maintain agent context files
 - Update CLAUDE.md with new patterns
 
 **Learning Integration:**
+
 - Identify reusable patterns across sessions
 - Suggest improvements to agent workflows
 - Help onboard new collaboration patterns
 - Maintain institutional knowledge
 
 **Debrief Coordination:**
+
 - Facilitate /debrief sessions
 - Ensure learnings are captured in appropriate files
 - Prevent context duplication
@@ -46,6 +50,7 @@ Document successful patterns and lessons learned for future reference.
 ---
 
 **Documentation:**
+
 - Agent collaboration patterns: In agent `.md` files
 - Development workflows: `CLAUDE.md`
 - Project structure: `README.md`

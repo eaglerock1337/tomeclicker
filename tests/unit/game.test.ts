@@ -127,17 +127,13 @@ describe('Game', () => {
 
 		describe('canLevelUp', () => {
 			it('should return true when exp >= cost', () => {
-				const game = new GameBuilder()
-					.withExp(10000)
-					.build();
+				const game = new GameBuilder().withExp(10000).build();
 
 				expect(game.canLevelUp()).toBe(true);
 			});
 
 			it('should return false when exp < cost', () => {
-				const game = new GameBuilder()
-					.withExp(9999)
-					.build();
+				const game = new GameBuilder().withExp(9999).build();
 
 				expect(game.canLevelUp()).toBe(false);
 			});
@@ -145,36 +141,28 @@ describe('Game', () => {
 
 		describe('levelUp', () => {
 			it('should increase level by 1', () => {
-				const game = new GameBuilder()
-					.withExp(10000)
-					.build();
+				const game = new GameBuilder().withExp(10000).build();
 
 				game.levelUp();
 				expect(game.level).toBe(2);
 			});
 
 			it('should deduct level up cost from exp', () => {
-				const game = new GameBuilder()
-					.withExp(15000)
-					.build();
+				const game = new GameBuilder().withExp(15000).build();
 
 				game.levelUp();
 				expect(game.exp).toBe(5000); // 15000 - 10000
 			});
 
 			it('should not deduct from lifetime exp', () => {
-				const game = new GameBuilder()
-					.withExp(15000)
-					.build();
+				const game = new GameBuilder().withExp(15000).build();
 
 				game.levelUp();
 				expect(game.lifetimeExp).toBe(15000);
 			});
 
 			it('should update level which affects future multiplier calculations', () => {
-				const game = new GameBuilder()
-					.withExp(10000)
-					.build();
+				const game = new GameBuilder().withExp(10000).build();
 
 				expect(game.level).toBe(1);
 				game.levelUp();
@@ -187,9 +175,7 @@ describe('Game', () => {
 			});
 
 			it('should fail if insufficient exp', () => {
-				const game = new GameBuilder()
-					.withExp(5000)
-					.build();
+				const game = new GameBuilder().withExp(5000).build();
 
 				const result = game.levelUp();
 
@@ -199,9 +185,7 @@ describe('Game', () => {
 			});
 
 			it('should return true on success', () => {
-				const game = new GameBuilder()
-					.withExp(10000)
-					.build();
+				const game = new GameBuilder().withExp(10000).build();
 
 				const result = game.levelUp();
 				expect(result).toBe(true);
@@ -220,24 +204,16 @@ describe('Game', () => {
 			});
 
 			it('should scale cost for purchased upgrades', () => {
-				const game = new GameBuilder()
-					.withUpgrade('focused-practice', 1)
-					.build();
+				const game = new GameBuilder().withUpgrade('focused-practice', 1).build();
 
 				const upgrade = game.upgrades['focused-practice'];
-				const expectedCost = getExpectedUpgradeCost(
-					upgrade.baseCost,
-					upgrade.costMultiplier,
-					1
-				);
+				const expectedCost = getExpectedUpgradeCost(upgrade.baseCost, upgrade.costMultiplier, 1);
 
 				expect(game.getUpgradeCost('focused-practice')).toBe(expectedCost);
 			});
 
 			it('should use exponential scaling for Discipline', () => {
-				const game = new GameBuilder()
-					.withUpgrade('discipline', 0)
-					.build();
+				const game = new GameBuilder().withUpgrade('discipline', 0).build();
 
 				const baseCost = game.upgrades['discipline'].baseCost;
 				expect(game.getUpgradeCost('discipline')).toBe(baseCost);
@@ -250,17 +226,13 @@ describe('Game', () => {
 
 		describe('canAffordUpgrade', () => {
 			it('should return true when exp >= cost', () => {
-				const game = new GameBuilder()
-					.withExp(100)
-					.build();
+				const game = new GameBuilder().withExp(100).build();
 
 				expect(game.canAffordUpgrade('focused-practice')).toBe(true);
 			});
 
 			it('should return false when exp < cost', () => {
-				const game = new GameBuilder()
-					.withExp(49)
-					.build();
+				const game = new GameBuilder().withExp(49).build();
 
 				expect(game.canAffordUpgrade('focused-practice')).toBe(false);
 			});
@@ -268,9 +240,7 @@ describe('Game', () => {
 
 		describe('canPurchaseUpgrade', () => {
 			it('should return true when affordable and not maxed', () => {
-				const game = new GameBuilder()
-					.withExp(100)
-					.build();
+				const game = new GameBuilder().withExp(100).build();
 
 				expect(game.canPurchaseUpgrade('focused-practice')).toBe(true);
 			});
@@ -285,9 +255,7 @@ describe('Game', () => {
 			});
 
 			it('should return false when not affordable', () => {
-				const game = new GameBuilder()
-					.withExp(10)
-					.build();
+				const game = new GameBuilder().withExp(10).build();
 
 				expect(game.canPurchaseUpgrade('focused-practice')).toBe(false);
 			});
@@ -302,9 +270,7 @@ describe('Game', () => {
 			});
 
 			it('should deduct cost from exp', () => {
-				const game = new GameBuilder()
-					.withExp(100)
-					.build();
+				const game = new GameBuilder().withExp(100).build();
 
 				const cost = game.getUpgradeCost('focused-practice');
 				game.purchaseUpgrade('focused-practice');
@@ -313,9 +279,7 @@ describe('Game', () => {
 			});
 
 			it('should not deduct from lifetime exp', () => {
-				const game = new GameBuilder()
-					.withExp(100)
-					.build();
+				const game = new GameBuilder().withExp(100).build();
 
 				game.purchaseUpgrade('focused-practice');
 				expect(game.lifetimeExp).toBe(100);
@@ -332,9 +296,7 @@ describe('Game', () => {
 			});
 
 			it('should fail if insufficient exp', () => {
-				const game = new GameBuilder()
-					.withExp(10)
-					.build();
+				const game = new GameBuilder().withExp(10).build();
 
 				const result = game.purchaseUpgrade('focused-practice');
 
@@ -343,10 +305,7 @@ describe('Game', () => {
 			});
 
 			it('should fail if upgrade is maxed', () => {
-				const game = new GameBuilder()
-					.withRichState()
-					.withUpgrade('focused-practice', 100)
-					.build();
+				const game = new GameBuilder().withRichState().withUpgrade('focused-practice', 100).build();
 
 				const result = game.purchaseUpgrade('focused-practice');
 
@@ -369,9 +328,7 @@ describe('Game', () => {
 		});
 
 		it('should add additive upgrades', () => {
-			const game = new GameBuilder()
-				.withUpgrade('focused-practice', 3)
-				.build();
+			const game = new GameBuilder().withUpgrade('focused-practice', 3).build();
 
 			// Focused Practice: +1.0 per level, additive
 			expect(game.clickMultiplier).toBe(1.0 + 3.0);
@@ -385,9 +342,7 @@ describe('Game', () => {
 		});
 
 		it('should apply Discipline multiplier (5x per level)', () => {
-			const game = new GameBuilder()
-				.withUpgrade('discipline', 1)
-				.build();
+			const game = new GameBuilder().withUpgrade('discipline', 1).build();
 
 			// 1.0 * 5^1 = 5.0
 			expect(game.clickMultiplier).toBe(5.0);
@@ -417,18 +372,14 @@ describe('Game', () => {
 		});
 
 		it('should increase crit chance with upgrade', () => {
-			const game = new GameBuilder()
-				.withUpgrade('critical-insight', 10)
-				.build();
+			const game = new GameBuilder().withUpgrade('critical-insight', 10).build();
 
 			// Base 5% + (10 * 0.5%) = 10%
-			expect(game.critChance).toBeCloseTo(0.10, 2);
+			expect(game.critChance).toBeCloseTo(0.1, 2);
 		});
 
 		it('should increase crit damage with upgrade', () => {
-			const game = new GameBuilder()
-				.withUpgrade('devastating-critique', 10)
-				.build();
+			const game = new GameBuilder().withUpgrade('devastating-critique', 10).build();
 
 			// Base 50% + (10 * 0.5%) = 55%
 			expect(game.critDamage).toBeCloseTo(0.55, 2);
@@ -443,9 +394,7 @@ describe('Game', () => {
 			});
 
 			it('should scale with upgrades', () => {
-				const game = new GameBuilder()
-					.withUpgrade('focused-practice', 5)
-					.build();
+				const game = new GameBuilder().withUpgrade('focused-practice', 5).build();
 
 				const value = game.getClickValue();
 				expect(value).toBe(game.clickMultiplier);
@@ -472,11 +421,7 @@ describe('Game', () => {
 			});
 
 			it('should include all critical game state', () => {
-				const game = new GameBuilder()
-					.withExp(1000)
-					.withLifetimeExp(5000)
-					.withLevel(3)
-					.build();
+				const game = new GameBuilder().withExp(1000).withLifetimeExp(5000).withLevel(3).build();
 
 				// Export unencrypted for testing
 				const saveData = game.exportSave(false);
@@ -628,9 +573,7 @@ describe('Game', () => {
 			});
 
 			it('should scale with stat level', () => {
-				const game = new GameBuilder()
-					.withStats({ strength: 5 })
-					.build();
+				const game = new GameBuilder().withStats({ strength: 5 }).build();
 
 				const cost = game.getStatLevelCost('strength');
 
