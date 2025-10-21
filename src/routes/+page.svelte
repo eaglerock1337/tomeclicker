@@ -12,11 +12,17 @@
 
     // Config values
     let config = new Config("prussian-blue", "system");
+    let configLoaded = false; // Track if config has been loaded from storage
 
     // Game values
     let game: Game;
 
     onMount(() => {
+        // Load saved config
+        config.loadFromLocalStorage();
+        configLoaded = true; // Mark as loaded
+        config = config; // Force reactivity
+
         // Listen for system preference changes
         if (window.matchMedia) {
             const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -55,9 +61,22 @@
             }
         }, 15000);
 
+        // Set up idle action updates every 100ms
+        const idleUpdateInterval = setInterval(() => {
+            if (game) {
+                game.updateIdleActions();
+                // Add idle EXP (idleExpRate is per second, so divide by 10 for 100ms intervals)
+                if (game.idleExpRate > 0) {
+                    game.addExp(game.idleExpRate / 10);
+                }
+                game = game; // Force Svelte reactivity
+            }
+        }, 100);
+
         // Cleanup on component destroy
         return () => {
             clearInterval(autosaveInterval);
+            clearInterval(idleUpdateInterval);
         };
 
         // Setup touch event handling for iOS double-tap prevention
@@ -89,6 +108,14 @@
 
     // Color theme - reactive to config changes
     $: theme = config ? config.getTheme() : "";
+
+    // Auto-save config whenever theme or displayMode changes (but only after initial load)
+    $: if (config && configLoaded && typeof localStorage !== 'undefined') {
+        // Reference the properties to make this reactive to their changes
+        config.theme;
+        config.displayMode;
+        config.saveToLocalStorage();
+    }
 
 </script>
 

@@ -24,8 +24,8 @@
         return cost.toLocaleString();
     }
 
-    $: availableUpgrades = Object.values(game.upgrades).filter(u => u.id !== 'transcendent-focus');
-    $: transcendentFocus = game.upgrades['transcendent-focus'];
+    $: availableUpgrades = Object.values(game.upgrades).filter(u => !u.minLevel || u.minLevel <= game.level).filter(u => u.id !== 'discipline');
+    $: discipline = game.upgrades['discipline'];
 
     function levelUp() {
         if (game.levelUp()) {
@@ -55,19 +55,19 @@
             <div class="upgrade-cost">{formatCost(game.getLevelUpCost())} EXP</div>
         </button>
 
-        <!-- Transcendent Focus Button -->
+        <!-- Discipline Button -->
         <button
             class="upgrade-btn special-btn"
-            class:selected={selectedUpgrade?.id === transcendentFocus.id}
-            class:affordable={game.canAffordUpgrade(transcendentFocus.id)}
-            class:maxed={transcendentFocus.currentLevel >= transcendentFocus.maxLevel}
-            disabled={transcendentFocus.currentLevel >= transcendentFocus.maxLevel}
-            on:click={() => selectUpgrade(transcendentFocus)}
-            aria-label="Select {transcendentFocus.name} upgrade. Level {transcendentFocus.currentLevel} of {transcendentFocus.maxLevel}. Cost: {formatCost(game.getUpgradeCost(transcendentFocus.id))} EXP"
+            class:selected={selectedUpgrade?.id === discipline.id}
+            class:affordable={game.canAffordUpgrade(discipline.id)}
+            class:maxed={discipline.currentLevel >= discipline.maxLevel}
+            disabled={discipline.currentLevel >= discipline.maxLevel}
+            on:click={() => selectUpgrade(discipline)}
+            aria-label="Select {discipline.name} upgrade. Level {discipline.currentLevel} of {discipline.maxLevel}. Cost: {formatCost(game.getUpgradeCost(discipline.id))} EXP"
         >
-            <div class="upgrade-name">{transcendentFocus.name}</div>
-            <div class="upgrade-level">Level {transcendentFocus.currentLevel}/{transcendentFocus.maxLevel}</div>
-            <div class="upgrade-cost">{formatCost(game.getUpgradeCost(transcendentFocus.id))} EXP</div>
+            <div class="upgrade-name">{discipline.name}</div>
+            <div class="upgrade-level">Level {discipline.currentLevel}/{discipline.maxLevel}</div>
+            <div class="upgrade-cost">{formatCost(game.getUpgradeCost(discipline.id))} EXP</div>
         </button>
 
         {#each availableUpgrades as upgrade (upgrade.id)}
@@ -83,12 +83,14 @@
                 <div class="upgrade-level">Level {upgrade.currentLevel}/{upgrade.maxLevel}</div>
                 <div class="upgrade-cost">{formatCost(game.getUpgradeCost(upgrade.id))} EXP</div>
                 <div class="upgrade-benefit">
-                    {#if upgrade.id === 'faster-clicking'}
-                        +{(upgrade.effectValue * 100).toFixed(0)}% click value per level
-                    {:else if upgrade.id === 'deep-meditation'}
-                        +{(upgrade.effectValue * 100).toFixed(0)}% all EXP per level
-                    {:else if upgrade.effectType === 'clickMultiplier'}
-                        +{(upgrade.effectValue * 100).toFixed(0)}% click value per level
+                    {#if upgrade.effectType === 'clickMultiplier'}
+                        +{(upgrade.effectValue * 100).toFixed(0)}% click EXP per level
+                    {:else if upgrade.effectType === 'idleExp'}
+                        +{upgrade.effectValue} idle EXP/s per level
+                    {:else if upgrade.effectType === 'trainingSpeed'}
+                        -{(upgrade.effectValue * 100).toFixed(0)}% training time per level
+                    {:else if upgrade.effectType === 'trainingCost'}
+                        -{(upgrade.effectValue * 100).toFixed(0)}% training cost per level
                     {:else}
                         Enhanced efficiency
                     {/if}

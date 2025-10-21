@@ -19,9 +19,48 @@ export interface Upgrade {
     /** Current level/times purchased */
     currentLevel: number;
     /** Type of effect this upgrade provides */
-    effectType: 'clickMultiplier' | 'levelUp';
+    effectType: 'clickMultiplier' | 'idleExp' | 'trainingSpeed' | 'trainingCost' | 'levelUp';
     /** Numeric value of the effect per level */
     effectValue: number;
+    /** Minimum level required to see this upgrade */
+    minLevel?: number;
+}
+
+/**
+ * Represents RPG-style player stats
+ */
+export interface Stats {
+    strength: number;
+    dexterity: number;
+    intelligence: number;
+    wisdom: number;
+}
+
+/**
+ * Represents a training or meditation action
+ */
+export interface IdleAction {
+    id: string;
+    name: string;
+    description: string;
+    /** Progress from 0 to 1 */
+    progress: number;
+    /** Base duration in milliseconds */
+    baseDuration: number;
+    /** Current duration after upgrades */
+    duration: number;
+    /** EXP cost to start/continue this action */
+    expCost: number;
+    /** Whether this action is currently active */
+    isActive: boolean;
+    /** Last time progress was updated */
+    lastUpdate: number;
+    /** What stat this trains (if any) */
+    trainsStat?: keyof Stats;
+    /** Whether this is a one-time action */
+    oneTime?: boolean;
+    /** Whether this one-time action is completed */
+    completed?: boolean;
 }
 
 /**
@@ -42,6 +81,14 @@ export class Game {
     public lastValidation: number;
     private _validationKey: string;
 
+    // New RPG and idle systems
+    public stats: Stats;
+    public trainingActions: { [key: string]: IdleAction };
+    public meditationActions: { [key: string]: IdleAction };
+    public idleExpRate: number;
+    public adventureModeUnlocked: boolean;
+    public meditationUnlocked: boolean;
+
     /**
      * Creates a new game instance with default values
      * @param name - Player name, defaults to 'A Stranger' if not provided
@@ -59,6 +106,15 @@ export class Game {
         this.saveIntegrity = 'valid';
         this.lastValidation = Date.now();
         this._validationKey = this.generateValidationKey();
+
+        // Initialize new systems
+        this.stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
+        this.trainingActions = this.initializeTrainingActions();
+        this.meditationActions = this.initializeMeditationActions();
+        this.idleExpRate = 0;
+        this.adventureModeUnlocked = false;
+        this.meditationUnlocked = false;
+
         this.startIntegrityMonitoring();
         this.recalculateClickMultiplier();
     }
@@ -68,14 +124,14 @@ export class Game {
      * Uses a hybrid additive+multiplicative system:
      * - Most upgrades add to base multiplier (additive)
      * - Level bonuses multiply by 2^(level-1)
-     * - Transcendent Focus multiplies by 5^level
+     * - Discipline multiplies by 2^level
      */
     recalculateClickMultiplier(): void {
         this.clickMultiplier = 1.0;
 
         // Add additive upgrades first
         for (const upgrade of Object.values(this.upgrades)) {
-            if (upgrade.effectType === 'clickMultiplier' && upgrade.id !== 'transcendent-focus') {
+            if (upgrade.effectType === 'clickMultiplier' && upgrade.id !== 'discipline') {
                 this.clickMultiplier += upgrade.effectValue * upgrade.currentLevel;
             }
         }
@@ -85,11 +141,66 @@ export class Game {
             this.clickMultiplier *= Math.pow(2, this.level - 1);
         }
 
-        // Apply multiplicative Transcendent Focus (5x per level)
-        const transcendentFocus = this.upgrades['transcendent-focus'];
-        if (transcendentFocus && transcendentFocus.currentLevel > 0) {
-            this.clickMultiplier *= Math.pow(5, transcendentFocus.currentLevel);
+        // Apply multiplicative Discipline (2x per level)
+        const discipline = this.upgrades['discipline'];
+        if (discipline && discipline.currentLevel > 0) {
+            this.clickMultiplier *= Math.pow(2, discipline.currentLevel);
         }
+
+        // Recalculate idle EXP rate
+        this.recalculateIdleExpRate();
+    }
+
+    /**
+     * Recalculates the idle EXP rate based on current upgrades
+     */
+    recalculateIdleExpRate(): void {
+        this.idleExpRate = 0;
+
+        // Add idle EXP upgrades
+        for (const upgrade of Object.values(this.upgrades)) {
+            if (upgrade.effectType === 'idleExp') {
+                this.idleExpRate += upgrade.effectValue * upgrade.currentLevel;
+            }
+        }
+
+        // Apply Discipline multiplier
+        const discipline = this.upgrades['discipline'];
+        if (discipline && discipline.currentLevel > 0) {
+            this.idleExpRate *= Math.pow(2, discipline.currentLevel);
+        }
+    }
+
+    /**
+     * Gets the training speed multiplier from upgrades
+     * @returns Multiplier for training duration (lower is faster)
+     */
+    getTrainingSpeedMultiplier(): number {
+        let multiplier = 1.0;
+
+        for (const upgrade of Object.values(this.upgrades)) {
+            if (upgrade.effectType === 'trainingSpeed') {
+                multiplier *= Math.pow(1 - upgrade.effectValue, upgrade.currentLevel);
+            }
+        }
+
+        return multiplier;
+    }
+
+    /**
+     * Gets the training cost multiplier from upgrades
+     * @returns Multiplier for training EXP cost (lower is cheaper)
+     */
+    getTrainingCostMultiplier(): number {
+        let multiplier = 1.0;
+
+        for (const upgrade of Object.values(this.upgrades)) {
+            if (upgrade.effectType === 'trainingCost') {
+                multiplier *= Math.pow(1 - upgrade.effectValue, upgrade.currentLevel);
+            }
+        }
+
+        return multiplier;
     }
 
     /**
@@ -145,6 +256,7 @@ export class Game {
      */
     initializeUpgrades(): { [key: string]: Upgrade } {
         return {
+            // Level 1+ Click upgrades
             'basic-training': {
                 id: 'basic-training',
                 name: 'Basic Training',
@@ -155,69 +267,348 @@ export class Game {
                 maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 0.5
+                effectValue: 0.5,
+                minLevel: 1
             },
             'focused-practice': {
                 id: 'focused-practice',
                 name: 'Focused Practice',
                 description: 'Deep concentration yields greater rewards',
                 effect: '+100% EXP per click',
-                baseCost: 16000,  // Approx cost of 90th Basic Training
+                baseCost: 16000,
                 costMultiplier: 1.15,
                 maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 1.0
+                effectValue: 1.0,
+                minLevel: 1
             },
-            'mental-discipline': {
-                id: 'mental-discipline',
-                name: 'Mental Discipline',
-                description: 'Master your mind to unlock greater potential',
-                effect: '+150% EXP per click',
-                baseCost: 5200000,  // Approx cost of 90th Focused Practice
-                costMultiplier: 1.15,
-                maxLevel: 100,
+
+            // Level 2+ Idle EXP upgrades
+            'passive-learning': {
+                id: 'passive-learning',
+                name: 'Passive Learning',
+                description: 'Gain insight even when not practicing',
+                effect: '+1 EXP per second',
+                baseCost: 5000,
+                costMultiplier: 1.2,
+                maxLevel: 50,
                 currentLevel: 0,
-                effectType: 'clickMultiplier',
-                effectValue: 1.5
+                effectType: 'idleExp',
+                effectValue: 1.0,
+                minLevel: 2
             },
-            'advanced-techniques': {
-                id: 'advanced-techniques',
-                name: 'Advanced Techniques',
-                description: 'Complex methods for exponential growth',
-                effect: '+200% EXP per click',
-                baseCost: 1700000000,  // Approx cost of 90th Mental Discipline
-                costMultiplier: 1.15,
-                maxLevel: 100,
+            'ambient-wisdom': {
+                id: 'ambient-wisdom',
+                name: 'Ambient Wisdom',
+                description: 'Experience accumulates naturally over time',
+                effect: '+5 EXP per second',
+                baseCost: 100000,
+                costMultiplier: 1.25,
+                maxLevel: 50,
                 currentLevel: 0,
-                effectType: 'clickMultiplier',
-                effectValue: 2.0
+                effectType: 'idleExp',
+                effectValue: 5.0,
+                minLevel: 2
             },
-            'mastery-training': {
-                id: 'mastery-training',
-                name: 'Mastery Training',
-                description: 'Achieve perfect form and technique',
-                effect: '+250% EXP per click',
-                baseCost: 555000000000,  // Approx cost of 90th Advanced Techniques
-                costMultiplier: 1.15,
-                maxLevel: 100,
+
+            // Level 3+ Training upgrades
+            'efficient-training': {
+                id: 'efficient-training',
+                name: 'Efficient Training',
+                description: 'Complete training exercises faster',
+                effect: '-10% training time',
+                baseCost: 10000,
+                costMultiplier: 1.3,
+                maxLevel: 10,
                 currentLevel: 0,
-                effectType: 'clickMultiplier',
-                effectValue: 2.5
+                effectType: 'trainingSpeed',
+                effectValue: 0.1,
+                minLevel: 3
             },
-            'transcendent-focus': {
-                id: 'transcendent-focus',
-                name: 'Transcendent Focus',
-                description: 'Reach beyond normal limitations',
-                effect: '5x total EXP per click',
+            'cost-reduction': {
+                id: 'cost-reduction',
+                name: 'Cost Reduction',
+                description: 'Training requires less EXP to start',
+                effect: '-20% training cost',
+                baseCost: 15000,
+                costMultiplier: 1.35,
+                maxLevel: 5,
+                currentLevel: 0,
+                effectType: 'trainingCost',
+                effectValue: 0.2,
+                minLevel: 3
+            },
+
+            // Special: Discipline upgrade (available early, expensive)
+            'discipline': {
+                id: 'discipline',
+                name: 'Discipline',
+                description: 'Unified focus accelerates all progress',
+                effect: '2x all EXP gain',
                 baseCost: 1000,
-                costMultiplier: 1.1,  // Lower multiplier, additive cost
-                maxLevel: 25,
+                costMultiplier: 100,  // Expensive scaling like level-ups
+                maxLevel: 10,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 5.0  // This value is not used for transcendent focus anymore
+                effectValue: 2.0,
+                minLevel: 1
             }
         };
+    }
+
+    /**
+     * Initializes training actions for stat development
+     */
+    initializeTrainingActions(): { [key: string]: IdleAction } {
+        return {
+            'train-strength': {
+                id: 'train-strength',
+                name: 'Lift Heavy Objects',
+                description: 'Build raw physical power',
+                progress: 0,
+                baseDuration: 15000, // 15 seconds
+                duration: 15000,
+                expCost: 10,
+                isActive: false,
+                lastUpdate: Date.now(),
+                trainsStat: 'strength'
+            },
+            'train-dexterity': {
+                id: 'train-dexterity',
+                name: 'Practice Quick Movements',
+                description: 'Improve agility and reflexes',
+                progress: 0,
+                baseDuration: 15000,
+                duration: 15000,
+                expCost: 10,
+                isActive: false,
+                lastUpdate: Date.now(),
+                trainsStat: 'dexterity'
+            },
+            'train-intelligence': {
+                id: 'train-intelligence',
+                name: 'Study Ancient Texts',
+                description: 'Expand knowledge and understanding',
+                progress: 0,
+                baseDuration: 15000,
+                duration: 15000,
+                expCost: 10,
+                isActive: false,
+                lastUpdate: Date.now(),
+                trainsStat: 'intelligence'
+            },
+            'train-wisdom': {
+                id: 'train-wisdom',
+                name: 'Meditate on Meaning',
+                description: 'Deepen insight and awareness',
+                progress: 0,
+                baseDuration: 15000,
+                duration: 15000,
+                expCost: 10,
+                isActive: false,
+                lastUpdate: Date.now(),
+                trainsStat: 'wisdom'
+            }
+        };
+    }
+
+    /**
+     * Initializes meditation actions
+     */
+    initializeMeditationActions(): { [key: string]: IdleAction } {
+        return {
+            'meditate-future': {
+                id: 'meditate-future',
+                name: 'Meditate on Your Future',
+                description: 'Unlock the path to adventure',
+                progress: 0,
+                baseDuration: 60000, // 1 minute
+                duration: 60000,
+                expCost: 50,
+                isActive: false,
+                lastUpdate: Date.now(),
+                oneTime: true,
+                completed: false
+            },
+            'disassociate': {
+                id: 'disassociate',
+                name: 'Disassociate',
+                description: 'Take a mental health day. Increases offline progress time.',
+                progress: 0,
+                baseDuration: 30000, // 30 seconds per level
+                duration: 30000,
+                expCost: 100,
+                isActive: false,
+                lastUpdate: Date.now(),
+                oneTime: false
+            }
+        };
+    }
+
+    /** Idle Action Management */
+
+    /**
+     * Starts an idle action if player can afford the EXP cost
+     * @param actionMap - The action map (trainingActions or meditationActions)
+     * @param actionId - ID of the action to start
+     * @returns True if action started successfully
+     */
+    startIdleAction(actionMap: { [key: string]: IdleAction }, actionId: string): boolean {
+        const action = actionMap[actionId];
+        if (!action) return false;
+
+        // Check if already completed (for one-time actions)
+        if (action.oneTime && action.completed) return false;
+
+        // Calculate effective EXP cost (apply training cost multiplier for training actions)
+        let effectiveCost = action.expCost;
+        if (action.trainsStat) {
+            effectiveCost = Math.floor(action.expCost * this.getTrainingCostMultiplier());
+        }
+
+        // Check if player can afford the EXP cost
+        if (this.exp < effectiveCost) return false;
+
+        // Deduct EXP and start the action
+        this.exp -= effectiveCost;
+        action.isActive = true;
+        action.progress = 0;
+        action.lastUpdate = Date.now();
+
+        // Apply training speed multiplier to duration
+        if (action.trainsStat) {
+            action.duration = Math.floor(action.baseDuration * this.getTrainingSpeedMultiplier());
+        }
+
+        return true;
+    }
+
+    /**
+     * Updates progress for all active idle actions
+     * Should be called regularly (e.g., from game loop)
+     */
+    updateIdleActions(): void {
+        const now = Date.now();
+
+        // Update training actions
+        for (const action of Object.values(this.trainingActions)) {
+            if (action.isActive) {
+                const elapsed = now - action.lastUpdate;
+                action.progress += elapsed / action.duration;
+                action.lastUpdate = now;
+
+                if (action.progress >= 1.0) {
+                    this.completeTrainingAction(action.id);
+                }
+            }
+        }
+
+        // Update meditation actions
+        for (const action of Object.values(this.meditationActions)) {
+            if (action.isActive) {
+                const elapsed = now - action.lastUpdate;
+                action.progress += elapsed / action.duration;
+                action.lastUpdate = now;
+
+                if (action.progress >= 1.0) {
+                    this.completeMeditationAction(action.id);
+                }
+            }
+        }
+    }
+
+    /**
+     * Completes a training action and awards stat points
+     * @param actionId - ID of the training action to complete
+     */
+    completeTrainingAction(actionId: string): void {
+        const action = this.trainingActions[actionId];
+        if (!action || !action.isActive) return;
+
+        // Award stat point
+        if (action.trainsStat) {
+            this.stats[action.trainsStat]++;
+        }
+
+        // Reset action
+        action.isActive = false;
+        action.progress = 0;
+        action.lastUpdate = Date.now();
+    }
+
+    /**
+     * Completes a meditation action and awards appropriate rewards
+     * @param actionId - ID of the meditation action to complete
+     */
+    completeMeditationAction(actionId: string): void {
+        const action = this.meditationActions[actionId];
+        if (!action || !action.isActive) return;
+
+        // Handle specific meditation rewards
+        if (actionId === 'meditate-future') {
+            this.adventureModeUnlocked = true;
+            action.completed = true;
+        }
+        // Disassociate increases offline progress time (handled elsewhere)
+
+        // Reset action
+        action.isActive = false;
+        action.progress = 0;
+        action.lastUpdate = Date.now();
+    }
+
+    /**
+     * Stops an active idle action without completion
+     * @param actionMap - The action map (trainingActions or meditationActions)
+     * @param actionId - ID of the action to stop
+     */
+    stopIdleAction(actionMap: { [key: string]: IdleAction }, actionId: string): void {
+        const action = actionMap[actionId];
+        if (!action) return;
+
+        action.isActive = false;
+        action.progress = 0;
+        action.lastUpdate = Date.now();
+    }
+
+    /** Progression Unlock Conditions */
+
+    /**
+     * Determines if Training page should be accessible
+     * @returns True if player is Level 3+
+     */
+    showTraining(): boolean {
+        return this.level >= 3;
+    }
+
+    /**
+     * Determines if Stats page should be accessible
+     * @returns True if player is Level 3+
+     */
+    showStats(): boolean {
+        return this.level >= 3;
+    }
+
+    /**
+     * Determines if Meditation page should be accessible
+     * @returns True if all stats are at least 5
+     */
+    showMeditation(): boolean {
+        return (
+            this.stats.strength >= 5 &&
+            this.stats.dexterity >= 5 &&
+            this.stats.intelligence >= 5 &&
+            this.stats.wisdom >= 5
+        );
+    }
+
+    /**
+     * Determines if Adventure page should be accessible
+     * @returns True if Adventure Mode has been unlocked
+     */
+    showAdventure(): boolean {
+        return this.adventureModeUnlocked;
     }
 
     /** Integrity Monitoring */
@@ -304,9 +695,9 @@ export class Game {
         const upgrade = this.upgrades[upgradeId];
         if (!upgrade) return 0;
 
-        // Special handling for Transcendent Focus (multiplicative cost like level ups)
-        if (upgradeId === 'transcendent-focus') {
-            return upgrade.baseCost * Math.pow(100, upgrade.currentLevel);
+        // Special handling for Discipline (multiplicative cost like level ups)
+        if (upgradeId === 'discipline') {
+            return upgrade.baseCost * Math.pow(upgrade.costMultiplier, upgrade.currentLevel);
         }
 
         return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMultiplier, upgrade.currentLevel));
@@ -463,6 +854,12 @@ export class Game {
             level: this.level,
             clickMultiplier: this.clickMultiplier,
             upgrades: this.upgrades,
+            stats: this.stats,
+            trainingActions: this.trainingActions,
+            meditationActions: this.meditationActions,
+            idleExpRate: this.idleExpRate,
+            adventureModeUnlocked: this.adventureModeUnlocked,
+            meditationUnlocked: this.meditationUnlocked,
             saveIntegrity: this.saveIntegrity,
             lastValidation: this.lastValidation,
             version: '0.1.0',
@@ -528,6 +925,14 @@ export class Game {
             // Migrate upgrades: preserve levels but update definitions
             this.migrateUpgrades(saveData.upgrades);
 
+            // Load new game systems (with defaults for old saves)
+            this.stats = saveData.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
+            this.trainingActions = saveData.trainingActions || this.initializeTrainingActions();
+            this.meditationActions = saveData.meditationActions || this.initializeMeditationActions();
+            this.idleExpRate = saveData.idleExpRate || 0;
+            this.adventureModeUnlocked = saveData.adventureModeUnlocked || false;
+            this.meditationUnlocked = saveData.meditationUnlocked || false;
+
             this.saveIntegrity = saveData.saveIntegrity || this.saveIntegrity;
             this.lastValidation = Date.now();
 
@@ -554,6 +959,8 @@ export class Game {
 
     /**
      * Saves current game state to browser cookies
+     * @deprecated Cookies have a 4KB limit and save data now exceeds this.
+     * Use saveToLocalStorage() instead. This method is kept for backward compatibility.
      * Cookie expires in 365 days
      */
     saveToCookies(): void {
@@ -632,13 +1039,13 @@ export class Game {
     }
 
     /**
-     * Automatically saves to both localStorage and cookies for redundancy
+     * Automatically saves to localStorage
      * Called periodically by the game loop
+     * Note: Cookies are no longer used due to 4KB size limit
      */
     autoSave(): void {
-        // Try both localStorage and cookies for redundancy
+        // Only use localStorage (cookies have 4KB limit, save data exceeds this)
         this.saveToLocalStorage();
-        this.saveToCookies();
     }
 
     /**
@@ -666,6 +1073,12 @@ export class Game {
         this.menu = 'practice';
         this.clickMultiplier = 1.0;
         this.upgrades = this.initializeUpgrades();
+        this.stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
+        this.trainingActions = this.initializeTrainingActions();
+        this.meditationActions = this.initializeMeditationActions();
+        this.idleExpRate = 0;
+        this.adventureModeUnlocked = false;
+        this.meditationUnlocked = false;
         this.saveIntegrity = 'valid';
         this.lastValidation = Date.now();
         this._validationKey = this.generateValidationKey();

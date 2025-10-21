@@ -19,7 +19,10 @@
         Workflow,
         Trophy,
         TrendingUp,
-        Save
+        Save,
+        Dumbbell,
+        Brain,
+        Compass
     } from 'lucide-svelte';
 
     import type { Game } from '$lib/game';
@@ -49,6 +52,26 @@
                 >
                     <TrendingUp size={24}/>
                 </p>
+            </button>
+        {/if}
+        {#if game.showTraining()}
+            <button on:click="{() => game.menu = 'training'}">
+                <p class:red="{game.menu === 'training'}"><Dumbbell size={24}/></p>
+            </button>
+        {/if}
+        {#if game.showStats()}
+            <button on:click="{() => game.menu = 'stats'}">
+                <p class:red="{game.menu === 'stats'}"><BarChart3 size={24}/></p>
+            </button>
+        {/if}
+        {#if game.showMeditation()}
+            <button on:click="{() => game.menu = 'meditation'}">
+                <p class:red="{game.menu === 'meditation'}"><Brain size={24}/></p>
+            </button>
+        {/if}
+        {#if game.showAdventure()}
+            <button on:click="{() => game.menu = 'adventure'}">
+                <p class:red="{game.menu === 'adventure'}"><Compass size={24}/></p>
             </button>
         {/if}
         <button on:click="{() => game.menu = 'story'}">
