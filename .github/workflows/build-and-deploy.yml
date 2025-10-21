@@ -45,7 +45,7 @@ jobs:
     outputs:
       new_sha: ${{ steps.new_sha.outputs.sha_short }}
 
-  Publish-HLC-Site:
+  Publish-Tomeclicker-Site:
     runs-on: ubuntu-latest
     needs: Build-Site-Image
     steps:
@@ -57,7 +57,7 @@ jobs:
 
       - name: Get Old Version from Chart yaml
         id: old_sha
-        run: echo "sha_short=$(grep appVersion tomeclicker.marks.dev/Chart.yaml | cut -f2 -d'\"')" >> $GITHUB_OUTPUT
+        run: echo "sha_short=$(grep appVersion tomeclicker/Chart.yaml | cut -f2 -d'\"')" >> $GITHUB_OUTPUT
 
       - name: Check old sha hash
         run: echo ${{ steps.old_sha.outputs.sha_short }}
@@ -69,7 +69,7 @@ jobs:
         run: git config --global user.email "bob@marks.dev"
 
       - name: Swap Git Tag in Chart.yaml
-        run: sed -i /appVersion/s/${{ steps.old_sha.outputs.sha_short }}/${{ needs.Build-Site-Image.outputs.new_sha }}/ tomeclicker.marks.dev/Chart.yaml
+        run: sed -i /appVersion/s/${{ steps.old_sha.outputs.sha_short }}/${{ needs.Build-Site-Image.outputs.new_sha }}/ tomeclicker/Chart.yaml
 
       - name: Commit New Version to GitHub
-        run: git commit -am "Update tomeclicker.marks.dev site to use ${{ needs.Build-Site-Image.outputs.new_sha }} tag" && git push
+        run: git commit -am "Update Tomeclicker site to use ${{ needs.Build-Site-Image.outputs.new_sha }} tag" && git push

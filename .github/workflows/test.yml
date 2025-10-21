@@ -40,8 +40,8 @@ jobs:
         run: |
           echo "🔍 Validating that docs/ matches current build..."
 
-          # Build with GitHub Pages base path
-          GITHUB_PAGES=true npm run build
+          # Build into build/ directory
+          GITHUB_PAGES=false npm run build
 
           # Check if docs/ directory exists
           if [ ! -d "docs" ]; then
