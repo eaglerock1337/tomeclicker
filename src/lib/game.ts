@@ -19,7 +19,7 @@ export interface Upgrade {
     /** Current level/times purchased */
     currentLevel: number;
     /** Type of effect this upgrade provides */
-    effectType: 'clickMultiplier' | 'idleExp' | 'trainingSpeed' | 'trainingCost' | 'levelUp';
+    effectType: 'clickMultiplier' | 'idleExp' | 'trainingSpeed' | 'trainingCost' | 'levelUp' | 'critChance' | 'critDamage' | 'osmosisExp' | 'osmosisSpeed' | 'globalIdleSpeed';
     /** Numeric value of the effect per level */
     effectValue: number;
     /** Minimum level required to see this upgrade */
@@ -76,6 +76,8 @@ export class Game {
     public tick: number;
     public menu: string;
     public clickMultiplier: number;
+    public critChance: number;
+    public critDamage: number;
     public upgrades: { [key: string]: Upgrade };
     public saveIntegrity: string;
     public lastValidation: number;
@@ -102,6 +104,8 @@ export class Game {
         this.tick = 0;
         this.menu = 'practice';
         this.clickMultiplier = 1.0;
+        this.critChance = 0.01; // Start with 1% crit chance
+        this.critDamage = 0.5; // Crits do +50% damage (1.5x total)
         this.upgrades = this.initializeUpgrades();
         this.saveIntegrity = 'valid';
         this.lastValidation = Date.now();
@@ -169,6 +173,25 @@ export class Game {
         if (discipline && discipline.currentLevel > 0) {
             this.idleExpRate *= Math.pow(2, discipline.currentLevel);
         }
+
+        // Recalculate crit stats
+        this.recalculateCritStats();
+    }
+
+    /**
+     * Recalculates crit chance and crit damage based on upgrades
+     */
+    recalculateCritStats(): void {
+        this.critChance = 0.01; // Base 1%
+        this.critDamage = 0.5; // Base +50%
+
+        for (const upgrade of Object.values(this.upgrades)) {
+            if (upgrade.effectType === 'critChance') {
+                this.critChance += upgrade.effectValue * upgrade.currentLevel;
+            } else if (upgrade.effectType === 'critDamage') {
+                this.critDamage += upgrade.effectValue * upgrade.currentLevel;
+            }
+        }
     }
 
     /**
@@ -197,6 +220,54 @@ export class Game {
         for (const upgrade of Object.values(this.upgrades)) {
             if (upgrade.effectType === 'trainingCost') {
                 multiplier *= Math.pow(1 - upgrade.effectValue, upgrade.currentLevel);
+            }
+        }
+
+        return multiplier;
+    }
+
+    /**
+     * Gets the osmosis EXP bonus from upgrades
+     * @returns Additional EXP gained per osmosis completion
+     */
+    getOsmosisExpBonus(): number {
+        let bonus = 0;
+
+        for (const upgrade of Object.values(this.upgrades)) {
+            if (upgrade.effectType === 'osmosisExp') {
+                bonus += upgrade.effectValue * upgrade.currentLevel;
+            }
+        }
+
+        return bonus;
+    }
+
+    /**
+     * Gets the global idle speed multiplier from upgrades
+     * @returns Speed multiplier (higher is faster)
+     */
+    getGlobalIdleSpeedMultiplier(): number {
+        let multiplier = 1.0;
+
+        for (const upgrade of Object.values(this.upgrades)) {
+            if (upgrade.effectType === 'globalIdleSpeed') {
+                multiplier += upgrade.effectValue * upgrade.currentLevel;
+            }
+        }
+
+        return multiplier;
+    }
+
+    /**
+     * Gets the osmosis-specific speed multiplier
+     * @returns Speed multiplier for osmosis actions (higher is faster)
+     */
+    getOsmosisSpeedMultiplier(): number {
+        let multiplier = 1.0;
+
+        for (const upgrade of Object.values(this.upgrades)) {
+            if (upgrade.effectType === 'osmosisSpeed') {
+                multiplier += upgrade.effectValue * upgrade.currentLevel;
             }
         }
 
@@ -256,59 +327,85 @@ export class Game {
      */
     initializeUpgrades(): { [key: string]: Upgrade } {
         return {
-            // Level 1+ Click upgrades
-            'basic-training': {
-                id: 'basic-training',
-                name: 'Basic Training',
-                description: 'Learn fundamental practice techniques',
-                effect: '+50% EXP per click',
-                baseCost: 50,
-                costMultiplier: 1.15,
-                maxLevel: 100,
-                currentLevel: 0,
-                effectType: 'clickMultiplier',
-                effectValue: 0.5,
-                minLevel: 1
-            },
+            // Level 1 Click upgrades
             'focused-practice': {
                 id: 'focused-practice',
                 name: 'Focused Practice',
-                description: 'Deep concentration yields greater rewards',
-                effect: '+100% EXP per click',
-                baseCost: 16000,
+                description: 'Deep concentration yields exponentially greater rewards',
+                effect: '+100% EXP per click per level',
+                baseCost: 50,
                 costMultiplier: 1.15,
-                maxLevel: 100,
+                maxLevel: 20,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
                 effectValue: 1.0,
                 minLevel: 1
             },
-
-            // Level 2+ Idle EXP upgrades
-            'passive-learning': {
-                id: 'passive-learning',
-                name: 'Passive Learning',
-                description: 'Gain insight even when not practicing',
-                effect: '+1 EXP per second',
-                baseCost: 5000,
-                costMultiplier: 1.2,
-                maxLevel: 50,
+            'critical-insight': {
+                id: 'critical-insight',
+                name: 'Critical Insight',
+                description: 'Moments of clarity grant bursts of understanding',
+                effect: '+1% crit chance per level',
+                baseCost: 200,
+                costMultiplier: 1.18,
+                maxLevel: 20,
                 currentLevel: 0,
-                effectType: 'idleExp',
-                effectValue: 1.0,
+                effectType: 'critChance',
+                effectValue: 0.01,
+                minLevel: 1
+            },
+            'devastating-critique': {
+                id: 'devastating-critique',
+                name: 'Devastating Critique',
+                description: 'Critical insights become increasingly profound',
+                effect: '+1% crit damage per level',
+                baseCost: 500,
+                costMultiplier: 1.2,
+                maxLevel: 20,
+                currentLevel: 0,
+                effectType: 'critDamage',
+                effectValue: 0.01,
+                minLevel: 1
+            },
+
+            // Level 2 Idle/Osmosis upgrades
+            'osmotic-absorption': {
+                id: 'osmotic-absorption',
+                name: 'Osmotic Absorption',
+                description: 'Learning by observation becomes more rewarding',
+                effect: '+10 EXP per osmosis level',
+                baseCost: 5000,
+                costMultiplier: 1.18,
+                maxLevel: 20,
+                currentLevel: 0,
+                effectType: 'osmosisExp',
+                effectValue: 10,
                 minLevel: 2
             },
-            'ambient-wisdom': {
-                id: 'ambient-wisdom',
-                name: 'Ambient Wisdom',
-                description: 'Experience accumulates naturally over time',
-                effect: '+5 EXP per second',
-                baseCost: 100000,
-                costMultiplier: 1.25,
-                maxLevel: 50,
+            'flow-state': {
+                id: 'flow-state',
+                name: 'Flow State',
+                description: 'Enter a state of effortless focus',
+                effect: '+5% osmosis speed per level',
+                baseCost: 8000,
+                costMultiplier: 1.2,
+                maxLevel: 20,
                 currentLevel: 0,
-                effectType: 'idleExp',
-                effectValue: 5.0,
+                effectType: 'osmosisSpeed',
+                effectValue: 0.05,
+                minLevel: 2
+            },
+            'temporal-mastery': {
+                id: 'temporal-mastery',
+                name: 'Temporal Mastery',
+                description: 'Bend time itself to your will (affects ALL idle actions)',
+                effect: '+5% global idle speed per level',
+                baseCost: 15000,
+                costMultiplier: 1.25,
+                maxLevel: 20,
+                currentLevel: 0,
+                effectType: 'globalIdleSpeed',
+                effectValue: 0.05,
                 minLevel: 2
             },
 
@@ -317,7 +414,7 @@ export class Game {
                 id: 'efficient-training',
                 name: 'Efficient Training',
                 description: 'Complete training exercises faster',
-                effect: '-10% training time',
+                effect: '-10% training time per level',
                 baseCost: 10000,
                 costMultiplier: 1.3,
                 maxLevel: 10,
@@ -330,7 +427,7 @@ export class Game {
                 id: 'cost-reduction',
                 name: 'Cost Reduction',
                 description: 'Training requires less EXP to start',
-                effect: '-20% training cost',
+                effect: '-20% training cost per level',
                 baseCost: 15000,
                 costMultiplier: 1.35,
                 maxLevel: 5,
@@ -345,7 +442,7 @@ export class Game {
                 id: 'discipline',
                 name: 'Discipline',
                 description: 'Unified focus accelerates all progress',
-                effect: '2x all EXP gain',
+                effect: '2x all EXP gain per level',
                 baseCost: 1000,
                 costMultiplier: 100,  // Expensive scaling like level-ups
                 maxLevel: 10,
@@ -362,6 +459,17 @@ export class Game {
      */
     initializeTrainingActions(): { [key: string]: IdleAction } {
         return {
+            'practice-osmosis': {
+                id: 'practice-osmosis',
+                name: 'Practice by Osmosis',
+                description: 'Learn through observation and reflection',
+                progress: 0,
+                baseDuration: 15000, // 15 seconds
+                duration: 15000,
+                expCost: 0, // Free to use!
+                isActive: false,
+                lastUpdate: Date.now()
+            },
             'train-strength': {
                 id: 'train-strength',
                 name: 'Lift Heavy Objects',
@@ -476,9 +584,22 @@ export class Game {
         action.progress = 0;
         action.lastUpdate = Date.now();
 
-        // Apply training speed multiplier to duration
-        if (action.trainsStat) {
-            action.duration = Math.floor(action.baseDuration * this.getTrainingSpeedMultiplier());
+        // Apply speed multipliers based on action type
+        if (actionId === 'practice-osmosis') {
+            // Osmosis gets both osmosis-specific and global idle speed bonuses
+            const osmosisSpeed = this.getOsmosisSpeedMultiplier();
+            const globalSpeed = this.getGlobalIdleSpeedMultiplier();
+            const combinedSpeed = osmosisSpeed * globalSpeed;
+            action.duration = Math.floor(action.baseDuration / combinedSpeed);
+        } else if (action.trainsStat) {
+            // Stat training gets training speed and global idle speed
+            const trainingSpeed = this.getTrainingSpeedMultiplier();
+            const globalSpeed = this.getGlobalIdleSpeedMultiplier();
+            action.duration = Math.floor(action.baseDuration * trainingSpeed / globalSpeed);
+        } else {
+            // Other idle actions just get global speed
+            const globalSpeed = this.getGlobalIdleSpeedMultiplier();
+            action.duration = Math.floor(action.baseDuration / globalSpeed);
         }
 
         return true;
@@ -519,15 +640,21 @@ export class Game {
     }
 
     /**
-     * Completes a training action and awards stat points
+     * Completes a training action and awards stat points or EXP
      * @param actionId - ID of the training action to complete
      */
     completeTrainingAction(actionId: string): void {
         const action = this.trainingActions[actionId];
         if (!action || !action.isActive) return;
 
-        // Award stat point
-        if (action.trainsStat) {
+        // Handle osmosis completion
+        if (actionId === 'practice-osmosis') {
+            const baseExp = 10;
+            const bonus = this.getOsmosisExpBonus();
+            this.addExp(baseExp + bonus);
+        }
+        // Award stat point for stat training
+        else if (action.trainsStat) {
             this.stats[action.trainsStat]++;
         }
 
@@ -576,10 +703,10 @@ export class Game {
 
     /**
      * Determines if Training page should be accessible
-     * @returns True if player is Level 3+
+     * @returns True if player is Level 2+ (for osmosis and stat training)
      */
     showTraining(): boolean {
-        return this.level >= 3;
+        return this.level >= 2;
     }
 
     /**
@@ -853,6 +980,8 @@ export class Game {
             lifetimeExp: this.lifetimeExp,
             level: this.level,
             clickMultiplier: this.clickMultiplier,
+            critChance: this.critChance,
+            critDamage: this.critDamage,
             upgrades: this.upgrades,
             stats: this.stats,
             trainingActions: this.trainingActions,
@@ -926,6 +1055,8 @@ export class Game {
             this.migrateUpgrades(saveData.upgrades);
 
             // Load new game systems (with defaults for old saves)
+            this.critChance = saveData.critChance || 0.01;
+            this.critDamage = saveData.critDamage || 0.5;
             this.stats = saveData.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
             this.trainingActions = saveData.trainingActions || this.initializeTrainingActions();
             this.meditationActions = saveData.meditationActions || this.initializeMeditationActions();
@@ -936,7 +1067,7 @@ export class Game {
             this.saveIntegrity = saveData.saveIntegrity || this.saveIntegrity;
             this.lastValidation = Date.now();
 
-            // Recalculate click multiplier from upgrades
+            // Recalculate click multiplier and crit stats from upgrades
             this.recalculateClickMultiplier();
 
             return { success: true, warning };
@@ -1072,6 +1203,8 @@ export class Game {
         this.tick = 0;
         this.menu = 'practice';
         this.clickMultiplier = 1.0;
+        this.critChance = 0.01;
+        this.critDamage = 0.5;
         this.upgrades = this.initializeUpgrades();
         this.stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
         this.trainingActions = this.initializeTrainingActions();

@@ -27,11 +27,29 @@
     $: isActive = currentAction?.isActive || false;
     $: progress = currentAction?.progress || 0;
     $: canAfford = game.exp >= getEffectiveCost(selectedAction);
+
+    // Filter actions by level
+    $: availableActions = Object.values(game.trainingActions).filter(action => {
+        if (action.id === 'practice-osmosis') return game.level >= 2;
+        if (action.trainsStat) return game.level >= 3;
+        return false;
+    });
+
+    // Auto-select first available action if current is not available
+    $: if (!availableActions.find(a => a.id === selectedAction) && availableActions.length > 0) {
+        selectedAction = availableActions[0].id;
+    }
 </script>
 
 <div class="training-container">
     <h2>Training</h2>
-    <p class="description">Train your stats to prepare for adventure</p>
+    <p class="description">
+        {#if game.level >= 3}
+            Train your stats to prepare for adventure
+        {:else}
+            Practice by osmosis to gain passive experience
+        {/if}
+    </p>
 
     <div class="training-area">
         <!-- Stat Display -->
@@ -58,7 +76,7 @@
         <div class="training-selector">
             <label for="training-select">Choose Training:</label>
             <select id="training-select" bind:value={selectedAction} disabled={isActive}>
-                {#each Object.values(game.trainingActions) as action}
+                {#each availableActions as action}
                     <option value={action.id}>{action.name}</option>
                 {/each}
             </select>

@@ -12,11 +12,21 @@
     let { game = $bindable(), config = $bindable() }: Props = $props();
 
     let clickText = $derived(game ? game.updateClickText() : 'Loading...');
+    let showCrit = $state(false);
 
     function clickMe() {
         if (!game) return;
 
-        const clickValue = game.getClickValue();
+        let clickValue = game.getClickValue();
+
+        // Roll for crit
+        const isCrit = Math.random() < game.critChance;
+        if (isCrit) {
+            clickValue *= (1 + game.critDamage);
+            showCrit = true;
+            setTimeout(() => showCrit = false, 300);
+        }
+
         game.addExp(clickValue);
         game = game;
     }
@@ -27,10 +37,14 @@
         <button
             onclick={clickMe}
             ontouchstart={clickMe}
+            class:crit={showCrit}
             aria-label="Practice to gain experience points"
         >
             <div class="item">
                 <MousePointer size={48}/><br>{clickText}
+                {#if showCrit}
+                    <div class="crit-text">CRITICAL!</div>
+                {/if}
             </div>
         </button>
     </div>
@@ -103,5 +117,39 @@
 
     .thebutton button:active .item {
         scale: 0.95;
+    }
+
+    /* Crit effect */
+    .thebutton button.crit {
+        background-color: var(--yellow) !important;
+        color: var(--bg) !important;
+    }
+
+    .crit-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2em;
+        font-weight: 700;
+        color: var(--yellow);
+        text-shadow: 0 0 10px var(--yellow);
+        animation: critPulse 0.3s ease-out;
+        pointer-events: none;
+    }
+
+    @keyframes critPulse {
+        0% {
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+        }
+        50% {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0;
+        }
     }
 </style>
