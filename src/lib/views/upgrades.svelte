@@ -90,9 +90,9 @@
                     {:else if upgrade.effectType === 'critDamage'}
                         +{(upgrade.effectValue * 100).toFixed(0)}% crit damage per level
                     {:else if upgrade.effectType === 'osmosisExp'}
-                        +{upgrade.effectValue} osmosis EXP per level
+                        +{upgrade.effectValue} rumination EXP per level
                     {:else if upgrade.effectType === 'osmosisSpeed'}
-                        +{(upgrade.effectValue * 100).toFixed(0)}% osmosis speed per level
+                        +{(upgrade.effectValue * 100).toFixed(0)}% rumination speed per level
                     {:else if upgrade.effectType === 'globalIdleSpeed'}
                         +{(upgrade.effectValue * 100).toFixed(0)}% all idle speed per level
                     {:else if upgrade.effectType === 'idleExp'}

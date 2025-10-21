@@ -8,7 +8,7 @@
     let { game }: Props = $props();
 
     /**
-     * Calculates progress toward next meaningful unlock
+     * Calculates progress toward next major upgrade (Level Up or Discipline)
      * Only shown at Level 2+ to avoid cluttering early game
      */
     const progressInfo = $derived.by(() => {
@@ -16,46 +16,35 @@
         if (game.level < 2) return null;
 
         const exp = game.exp;
-        const lifetimeExp = game.lifetimeExp;
-        const level = game.level;
 
-        // Menu navigation unlocks at 50 lifetime exp
-        if (lifetimeExp < 50) {
-            return {
-                progress: lifetimeExp / 50
-            };
+        // Find the cheapest next major purchase (Level Up or Discipline)
+        let nextCost = Infinity;
+        let canAfford = false;
+
+        // Check level up cost
+        const levelUpCost = game.getLevelUpCost();
+        if (levelUpCost < nextCost) {
+            nextCost = levelUpCost;
+            canAfford = exp >= levelUpCost;
         }
 
-        // Adventures unlock at level 3 (placeholder for future feature)
-        if (level < 3) {
-            return {
-                progress: level / 3
-            };
+        // Check Discipline upgrade
+        const discipline = game.upgrades['discipline'];
+        if (discipline && discipline.currentLevel < discipline.maxLevel) {
+            const disciplineCost = game.getUpgradeCost('discipline');
+            if (disciplineCost < nextCost) {
+                nextCost = disciplineCost;
+                canAfford = exp >= disciplineCost;
+            }
         }
 
-        // Stats training unlocks at level 5 (placeholder for future feature)
-        if (level < 5) {
-            return {
-                progress: level / 5
-            };
-        }
+        // If nothing found, hide bar
+        if (nextCost === Infinity) return null;
 
-        // Equipment unlocks at level 7 (placeholder for future feature)
-        if (level < 7) {
-            return {
-                progress: level / 7
-            };
-        }
-
-        // Tomes unlock at level 10 (placeholder for future feature)
-        if (level < 10) {
-            return {
-                progress: level / 10
-            };
-        }
-
-        // No more tracked unlocks
-        return null;
+        return {
+            progress: Math.min(exp / nextCost, 1),
+            canAfford
+        };
     });
 </script>
 
@@ -66,7 +55,7 @@
     </div>
     {#if progressInfo}
         <div class="progress-container">
-            <div class="progress-bar" style="width: {progressInfo.progress * 100}%"></div>
+            <div class="progress-bar" class:full={progressInfo.canAfford} style="width: {progressInfo.progress * 100}%"></div>
         </div>
     {/if}
 </header>
@@ -114,11 +103,25 @@
 
     .progress-bar {
         height: 100%;
-        background: linear-gradient(90deg,
-            var(--text) 0%,
-            rgba(66, 135, 245, 0.8) 50%,
-            var(--text) 100%);
-        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 0 8px rgba(66, 135, 245, 0.3);
+        background-color: var(--text);
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    box-shadow 0.3s ease;
+        box-shadow: 0 0 4px var(--text);
+    }
+
+    .progress-bar.full {
+        animation: glow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+        0%, 100% {
+            box-shadow: 0 0 8px var(--text),
+                        0 0 16px var(--text);
+        }
+        50% {
+            box-shadow: 0 0 16px var(--text),
+                        0 0 24px var(--text),
+                        0 0 32px var(--text);
+        }
     }
 </style>

@@ -128,7 +128,7 @@ export class Game {
      * Uses a hybrid additive+multiplicative system:
      * - Most upgrades add to base multiplier (additive)
      * - Level bonuses multiply by 2^(level-1)
-     * - Discipline multiplies by 2^level
+     * - Discipline multiplies by 5^level
      */
     recalculateClickMultiplier(): void {
         this.clickMultiplier = 1.0;
@@ -145,10 +145,10 @@ export class Game {
             this.clickMultiplier *= Math.pow(2, this.level - 1);
         }
 
-        // Apply multiplicative Discipline (2x per level)
+        // Apply multiplicative Discipline (5x per level)
         const discipline = this.upgrades['discipline'];
         if (discipline && discipline.currentLevel > 0) {
-            this.clickMultiplier *= Math.pow(2, discipline.currentLevel);
+            this.clickMultiplier *= Math.pow(5, discipline.currentLevel);
         }
 
         // Recalculate idle EXP rate
@@ -168,10 +168,10 @@ export class Game {
             }
         }
 
-        // Apply Discipline multiplier
+        // Apply Discipline multiplier (5x per level)
         const discipline = this.upgrades['discipline'];
         if (discipline && discipline.currentLevel > 0) {
-            this.idleExpRate *= Math.pow(2, discipline.currentLevel);
+            this.idleExpRate *= Math.pow(5, discipline.currentLevel);
         }
 
         // Recalculate crit stats
@@ -428,31 +428,31 @@ export class Game {
                 minLevel: 1
             },
 
-            // Level 2 Idle/Osmosis upgrades
+            // Level 2 Idle/Rumination upgrades
             'osmotic-absorption': {
                 id: 'osmotic-absorption',
-                name: 'Osmotic Absorption',
-                description: 'Learning by observation becomes more rewarding',
-                effect: '+10 EXP per osmosis level',
-                baseCost: 1000,
+                name: 'Deep Contemplation',
+                description: 'Thoughtful reflection yields greater insights',
+                effect: '+1 EXP per rumination level',
+                baseCost: 100,
                 costMultiplier: 1.18,
-                maxLevel: 50,
+                maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'osmosisExp',
-                effectValue: 10,
+                effectValue: 1,
                 minLevel: 2
             },
             'flow-state': {
                 id: 'flow-state',
                 name: 'Flow State',
                 description: 'Enter a state of effortless focus',
-                effect: '+5% osmosis speed per level',
-                baseCost: 2000,
+                effect: '+2% rumination speed per level',
+                baseCost: 300,
                 costMultiplier: 1.2,
                 maxLevel: 50,
                 currentLevel: 0,
                 effectType: 'osmosisSpeed',
-                effectValue: 0.05,
+                effectValue: 0.02,
                 minLevel: 2
             },
             'temporal-mastery': {
@@ -460,7 +460,7 @@ export class Game {
                 name: 'Temporal Mastery',
                 description: 'Bend time itself to your will (affects ALL idle actions)',
                 effect: '+5% global idle speed per level',
-                baseCost: 5000,
+                baseCost: 500,
                 costMultiplier: 1.25,
                 maxLevel: 100,
                 currentLevel: 0,
@@ -502,13 +502,13 @@ export class Game {
                 id: 'discipline',
                 name: 'Discipline',
                 description: 'Unified focus accelerates all progress',
-                effect: '2x all EXP gain per level',
+                effect: '5x all EXP gain per level',
                 baseCost: 1000,
                 costMultiplier: 100,  // Expensive scaling like level-ups
                 maxLevel: 10,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
-                effectValue: 2.0,
+                effectValue: 5.0,
                 minLevel: 1
             }
         };
@@ -521,7 +521,7 @@ export class Game {
         return {
             'practice-osmosis': {
                 id: 'practice-osmosis',
-                name: 'Practice by Osmosis',
+                name: 'Ruminate',
                 description: 'Learn through observation and reflection',
                 progress: 0,
                 baseDuration: 15000, // 15 seconds
