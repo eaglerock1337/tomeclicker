@@ -272,7 +272,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--bg);
+        color: var(--text);
         font-family: 'JetBrains Mono', monospace;
         font-weight: 700;
         font-size: 0.8rem;
