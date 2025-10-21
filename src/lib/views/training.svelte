@@ -277,7 +277,11 @@
         font-weight: 700;
         font-size: 0.8rem;
         z-index: 1;
-        text-shadow: 0 0 3px var(--bg), 0 0 3px var(--bg);
+        text-shadow:
+            0 0 4px var(--bg), 0 0 4px var(--bg),
+            0 0 8px var(--bg), 0 0 8px var(--bg),
+            1px 1px 2px var(--bg), -1px -1px 2px var(--bg),
+            1px -1px 2px var(--bg), -1px 1px 2px var(--bg);
     }
 
     /* Mobile optimizations */
