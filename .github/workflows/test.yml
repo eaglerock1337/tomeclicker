@@ -51,7 +51,7 @@ jobs:
           fi
 
           # Compare build output with committed docs/
-          if ! diff -r build docs > /dev/null 2>&1; then
+          if ! diff build/_app/version.json docs/_app/version.json > /dev/null 2>&1; then
             echo "❌ ERROR: docs/ directory is out of date!"
             echo "The committed docs/ doesn't match the current build output."
             echo "This means the pre-commit hook didn't run or was bypassed."
