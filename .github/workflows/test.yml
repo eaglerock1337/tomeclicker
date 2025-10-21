@@ -50,6 +50,9 @@ jobs:
             exit 1
           fi
 
+          echo "build version.json: $(cat build/_app/version.json)"
+          echo "docs version.json: $(cat docs/_app/version.json)"
+
           # Compare build output with committed docs/
           if ! diff build/_app/version.json docs/_app/version.json > /dev/null 2>&1; then
             echo "❌ ERROR: docs/ directory is out of date!"
