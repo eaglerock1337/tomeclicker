@@ -53,6 +53,12 @@ npm run format
 
 # Prepare project (sync SvelteKit)
 npm run prepare
+
+# Run tests
+npm test                # Run tests in watch mode
+npm run test:run        # Run tests once
+npm run test:ui         # Run tests with UI
+npm run test:coverage   # Run tests with coverage report
 ```
 
 ## Architecture
@@ -82,9 +88,10 @@ The game uses a tiered unlock system based on experience points:
 ### Build Configuration
 
 - Uses `@sveltejs/adapter-static` for static site generation
-- Outputs to `docs/` directory for GitHub Pages deployment
-- Base path configured as `/tomeclicker` for GitHub Pages
+- **GitHub Pages**: Builds to `docs/` with `/tomeclicker` base path when `GITHUB_PAGES=true`
+- **Production**: Builds to `build/` with no base path for tomeclicker.marks.dev deployment
 - Prerendering enabled for all routes
+- Pre-commit hooks automatically build and commit docs/ for GitHub Pages
 
 ### Theme System
 
@@ -105,8 +112,9 @@ The `design/OUTLINE.md` file contains the complete game design document with det
   - `tomes.yaml` - All 50 Tomes structure and metadata
   - `tiers.yaml` - Tome tier hierarchy
   - `design-analysis-doc.md` - Design philosophy and architectural notes
-- **docs/** (future) - Public-facing documentation
-  - Player guides, API documentation, architecture docs
+- **docs/** - GitHub Pages build output (auto-generated, do not edit manually)
+  - Built by pre-commit hooks with `GITHUB_PAGES=true`
+  - Served at https://eagle-rock.github.io/tomeclicker
 - **CLAUDE.md** - Development guidelines for Claude Code agents
 - **README.md** - Project overview and quick start
 
@@ -114,9 +122,20 @@ The `design/OUTLINE.md` file contains the complete game design document with det
 
 - The project uses TypeScript (game.ts, config.ts fully migrated; components partially migrated)
 - Mobile-optimized with touch event handling to prevent zoom
-- No test framework currently configured
+- Test framework: Vitest with happy-dom
 - Uses Vite as build tool with SvelteKit
 - Svelte 5.39.6 installed but using Svelte 4 patterns (migration planned)
+
+### Testing
+
+- **Framework**: Vitest 3.x with happy-dom environment
+- **Coverage**: Target 80%+ for core game logic (game.ts)
+- **Test Structure**:
+  - `tests/unit/` - Unit tests for core classes
+  - `tests/integration/` - Integration tests for game flows
+  - `tests/helpers/` - Test utilities and factories
+- **Continuous Integration**: GitHub Actions runs tests on all pushes and PRs
+- **Writing Tests**: Use the `GameBuilder` helper for creating test fixtures
 
 ### Current Project State
 
@@ -132,6 +151,7 @@ The `design/OUTLINE.md` file contains the complete game design document with det
 ### Roadmap
 
 See `design/PROPOSAL.md` for the complete modernization and enhancement roadmap, including:
+
 - **Phase 1.x (Current)**: Immediate QoL improvements
   - Upgrades menu: Fix mobile navigation issues
   - Story page: Center layout, add navigation system
@@ -190,11 +210,13 @@ See `design/PROPOSAL.md` for the complete modernization and enhancement roadmap,
 
 - Feature branches for all work
 - Commits on branches are authored by Claude with signature:
+
   ```
   🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
   Co-Authored-By: Claude <noreply@anthropic.com>
   ```
+
 - PRs maintained for session history and review
 - Squash merge to main branch (final commit authored by user)
 - This keeps main branch clean while preserving work history in PRs
@@ -202,16 +224,49 @@ See `design/PROPOSAL.md` for the complete modernization and enhancement roadmap,
 ### Code Quality Standards
 
 When making changes, ensure:
+
 - **TypeScript**: Strict typing, no `any` types
 - **Svelte 5**: Use runes ($state, $derived, $effect) when refactoring
 - **Build**: `npm run build` succeeds without errors
 - **Type Check**: `npm run check` passes
+- **Tests**: `npm run test:run` passes with all tests green
+- **Coverage**: Maintain or improve test coverage for modified files
 - **Performance**: Keep bundle sizes small (< 100KB gzipped target)
 - **Mobile**: Test on mobile viewports
+
+### Pre-commit Hooks & CI/CD
+
+**Pre-commit Hooks** (using Husky):
+
+The repository uses pre-commit hooks to enforce quality standards locally before code is committed:
+
+1. Type checking (`npm run check`)
+2. Linting (`npm run lint`)
+3. Tests (`npm run test:run`)
+4. GitHub Pages build (`GITHUB_PAGES=true npm run build`)
+5. Auto-stage docs/ directory
+
+This ensures that all commits include an up-to-date GitHub Pages build in the `docs/` directory.
+
+**To bypass hooks** (not recommended): `git commit --no-verify`
+
+**GitHub Actions CI/CD**:
+
+- **Test & Validate** (`.github/workflows/test.yml`): Runs on all pushes and PRs
+  - Runs type check, lint, tests, and coverage
+  - Validates that docs/ is up-to-date with current build
+  - Fails if pre-commit hook was bypassed and docs/ is stale
+  - Uploads coverage reports to Codecov on PRs
+
+- **Build & Deploy** (`.github/workflows/build-and-deploy.yml.disabled`): Future production workflow
+  - Multi-arch Docker builds (arm/v7, arm64)
+  - Updates happy-little-cloud K8s manifests for ArgoCD
+  - Currently disabled, ready for tomeclicker.marks.dev production deployment
 
 ### Recent Major Implementations (2025-10-19)
 
 **Interface Polish & UX Improvements:** ✅ **COMPLETED**
+
 - Subtle progress bar in header (Level 2+, tracks next unlock)
 - Seamless practice page button (100% space utilization)
 - Desktop scrolling fixes (Story/Settings pages)
@@ -219,8 +274,18 @@ When making changes, ensure:
 - Hard reset removal from Settings (moving to dedicated save page)
 
 **Production Deployment Infrastructure:** ✅ **COMPLETED**
+
 - Complete Docker containerization with security hardening
 - GitHub Actions CI/CD pipeline for multi-arch builds
 - Helm chart following marks.dev patterns (Traefik ingress)
 - ArgoCD GitOps configuration for tomeclicker.marks.dev
 - Environment-aware SvelteKit configuration
+
+**Test Infrastructure & Pre-commit Hooks:** ✅ **COMPLETED** (2025-10-21)
+
+- Vitest test framework with happy-dom environment
+- 59 comprehensive tests for Game class (60.82% coverage)
+- GameBuilder test helper with fluent API
+- Pre-commit hooks for quality enforcement (type check, lint, test, build)
+- GitHub Actions validation pipeline (ensures hooks ran properly)
+- Build output configured to go directly to docs/ for GitHub Pages

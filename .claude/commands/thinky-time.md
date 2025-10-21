@@ -9,6 +9,7 @@ You are now in **Thinky Time Mode**, designed for comprehensive, multi-file PR d
 ## Project Context
 
 **TomeClicker** is an open-source incremental RPG game built with SvelteKit, deployed as:
+
 - **Frontend**: Static site on GitHub Pages
 - **Backend** (future): Self-hosted Raspberry Pi Kubernetes cluster (no shared storage currently)
 
@@ -28,6 +29,7 @@ Work autonomously on complex, multi-file changes that form a complete, reviewabl
 ### 1. Planning Phase
 
 **Initial Assessment:**
+
 - Use TodoWrite extensively to break down the task
 - Identify all files that need changes
 - Plan the logical sequence of modifications
@@ -65,6 +67,7 @@ Before diving into implementation, consult with relevant agents to gather expert
 ### Agent Consultation
 
 #### fronty-boi (UI/UX)
+
 - Use Svelte 5 runes for reactive tome state
 - Modal overlay with backdrop for discovery moments
 - Mobile-first: ensure touch targets are 44px minimum
@@ -73,6 +76,7 @@ Before diving into implementation, consult with relevant agents to gather expert
 - Component structure: TomeDiscovery.svelte with props for tome data
 
 #### gamey-boi (Game Design)
+
 - Discovery should feel rewarding - 2-3 second animation minimum
 - Show tome tier, element type, and first chapter teaser
 - Consider sound effects (future enhancement)
@@ -81,24 +85,28 @@ Before diving into implementation, consult with relevant agents to gather expert
 - Track "new" state for each tome until player views it
 
 #### story-boi (Narrative)
+
 - Each discovery shows tome title, element flavor, and opening lore snippet
 - Breakthrough discoveries include additional "Lost Civilization" hint
 - Text should build mystery and anticipation for chapters within
 - Reference ref/tomes.yaml for canonical tome names and descriptions
 
 #### docy-boi (Documentation)
+
 - Update README with Tome Discovery feature
 - Add component documentation to TomeDiscovery.svelte JSDoc
 - Document props interface and usage examples
 - Update OUTLINE.md if discovery mechanics differ from original design
 
 #### secury-boi (Security)
+
 - Validate tome unlock conditions on both client and (future) server
 - Don't expose undiscovered tome data in client bundle
 - Sanitize any user-generated content if names become customizable
 - Rate limiting not needed for discovery (single-player, client-side)
 
 ### Synthesized Plan (staffy-boi)
+
 Based on agent input, here's the implementation approach:
 
 1. Create TomeDiscovery.svelte component with Svelte 5 runes
@@ -111,6 +119,7 @@ Based on agent input, here's the implementation approach:
 8. Update README with feature description
 
 Agents to involve during implementation:
+
 - fronty-boi: Component development
 - gamey-boi: Unlock logic and feel
 - story-boi: Lore text integration
@@ -124,6 +133,7 @@ Let's proceed with implementation!
 For straightforward tasks that don't require cross-domain coordination (simple bug fixes, typo corrections, minor refactors), you can skip the formal agent consultation and proceed directly to implementation.
 
 ### 2. Implementation Phase
+
 - Make atomic, logical commits when appropriate
 - Keep related changes together
 - Test incrementally as you build
@@ -131,6 +141,7 @@ For straightforward tasks that don't require cross-domain coordination (simple b
 - Maintain code consistency with existing patterns
 
 ### 3. Quality Standards
+
 - **TypeScript**: Use strict typing, no `any` types
 - **Svelte 5**: Use runes ($state, $derived, $effect) where applicable
 - **Architecture**: Follow modular system separation from PROPOSAL.md
@@ -138,6 +149,7 @@ For straightforward tasks that don't require cross-domain coordination (simple b
 - **Type Safety**: Ensure `npm run check` passes
 
 ### 4. Deployment Awareness
+
 - Static builds deploy to GitHub Pages (`docs/` directory)
 - Future backend will run on Raspberry Pi K8s (resource-constrained)
 - Keep bundle sizes small (< 100KB gzipped target)
@@ -146,12 +158,14 @@ For straightforward tasks that don't require cross-domain coordination (simple b
 ### 5. Git Workflow & Commit Strategy
 
 **Branch Commits (Your Work):**
+
 - Commits on feature branches should be authored by Claude
 - Use clear, descriptive commit messages for the PR history
 - Make logical, atomic commits that tell the story of the implementation
 - Each commit should represent a meaningful unit of work
 
 **Commit Message Format:**
+
 ```
 <type>: <concise description>
 
@@ -163,19 +177,23 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 **Merge Strategy:**
+
 - PRs will be reviewed with full commit history visible
 - Upon approval, commits will be **squashed** into a single commit
 - The final squashed commit will be authored by the user
 - This maintains session history in PRs while keeping main branch clean
 
 **What This Means:**
+
 - Don't worry about perfect commit granularity for main branch
 - DO make logical commits that help reviewers understand the progression
 - PR description should summarize the complete changeset
 - Individual commits document the implementation journey
 
 ### 6. PR Preparation
+
 Your PR should be ready for human review:
+
 - All changes are intentional and documented
 - No debug code or console.logs left behind
 - TypeScript types are complete
@@ -207,6 +225,7 @@ Your PR should be ready for human review:
 ## Work Autonomously
 
 You have permission to:
+
 - Create new files and directories as needed
 - Refactor existing code extensively
 - Update configuration files

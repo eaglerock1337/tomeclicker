@@ -15,12 +15,14 @@ TomeClicker is deployed using a GitOps workflow with ArgoCD managing Kubernetes 
 ### Production (tomeclicker.marks.dev)
 
 **Infrastructure:**
+
 - Raspberry Pi Kubernetes cluster
 - ArgoCD for GitOps deployment
 - Nginx Ingress with Let's Encrypt SSL
 - Docker Hub for container images
 
 **Deployment Process:**
+
 1. Code pushed to `main` branch
 2. GitHub Actions builds Docker image → Docker Hub
 3. ArgoCD detects changes and syncs cluster
@@ -29,6 +31,7 @@ TomeClicker is deployed using a GitOps workflow with ArgoCD managing Kubernetes 
 ### Staging (GitHub Pages)
 
 **Infrastructure:**
+
 - GitHub Pages static hosting
 - Path: `/tomeclicker`
 - Automatic deployment from `main` branch
@@ -38,6 +41,7 @@ TomeClicker is deployed using a GitOps workflow with ArgoCD managing Kubernetes 
 ### 1. Docker Hub Setup
 
 Create Docker Hub repository:
+
 ```bash
 # Repository: eaglerock1337/tomeclicker
 # Set up GitHub secrets:
@@ -60,6 +64,7 @@ kubectl apply -f argocd/application.yaml
 ### 3. DNS Configuration
 
 Point your domain to the cluster:
+
 ```bash
 # Add A record for tomeclicker.marks.dev
 # Point to your cluster's external IP
@@ -72,12 +77,14 @@ Let's Encrypt will automatically provision SSL certificates via cert-manager.
 ## Development Workflow
 
 ### Local Development
+
 ```bash
 npm run dev
 # Serves at http://localhost:5173
 ```
 
 ### Production Build Test
+
 ```bash
 npm run build
 npm run preview
@@ -85,6 +92,7 @@ npm run preview
 ```
 
 ### Container Build Test
+
 ```bash
 docker build -t tomeclicker-test .
 docker run -p 8080:8080 tomeclicker-test
@@ -94,10 +102,12 @@ docker run -p 8080:8080 tomeclicker-test
 ## Monitoring & Troubleshooting
 
 ### ArgoCD Dashboard
+
 - Access ArgoCD UI to monitor deployment status
 - View sync status and application health
 
 ### Kubernetes Commands
+
 ```bash
 # Check deployment status
 kubectl get pods -n tomeclicker
@@ -115,16 +125,19 @@ kubectl get certificates -n tomeclicker
 ### Common Issues
 
 **Container won't start:**
+
 - Check Docker image build logs in GitHub Actions
 - Verify image exists in Docker Hub
 - Check pod logs for startup errors
 
 **SSL certificate issues:**
+
 - Verify cert-manager is running
 - Check certificate resource status
 - Ensure DNS is pointing to cluster
 
 **Application not accessible:**
+
 - Verify ingress configuration
 - Check service endpoints
 - Confirm nginx-ingress is running
@@ -134,10 +147,12 @@ kubectl get certificates -n tomeclicker
 ### Environment Variables
 
 **Production (Kubernetes):**
+
 - `NODE_ENV=production` (set in deployment)
 - No base path (serves from root domain)
 
 **Staging (GitHub Pages):**
+
 - `GITHUB_PAGES=true` (set in workflow)
 - `NODE_ENV=production`
 - Base path: `/tomeclicker`
@@ -145,6 +160,7 @@ kubectl get certificates -n tomeclicker
 ### Resource Limits
 
 Production deployment configured with:
+
 - CPU: 100m request, 200m limit
 - Memory: 128Mi request, 256Mi limit
 - Suitable for Raspberry Pi cluster constraints

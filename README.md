@@ -23,6 +23,7 @@ TomeClicker is an incremental game with RPG progression mechanics where players 
 See [PROPOSAL.md](PROPOSAL.md) for the complete modernization and enhancement roadmap, and [ref/OUTLINE.md](ref/OUTLINE.md) for the full game design document.
 
 ### current (v0.1.0 mvp)
+
 - ✅ Basic clicking and upgrade mechanics
 - ✅ Level system with exponential scaling
 - ✅ Local save/load system
@@ -30,22 +31,26 @@ See [PROPOSAL.md](PROPOSAL.md) for the complete modernization and enhancement ro
 - ✅ Hard reset functionality
 
 ### phase 1: polish & qol
+
 - Enhanced UI feedback and visual polish
 - Comprehensive documentation
 - Production-ready code cleanup
 
 ### phase 2: technical modernization
+
 - Full TypeScript migration
 - Svelte 5 runes adoption
 - Modular architecture refactoring
 
 ### phase 3: cloud saves & backend
+
 - Backend API on Raspberry Pi K8s cluster
 - Cloud save synchronization
 - Anti-cheat system
 - Leaderboards
 
 ### future: full game features
+
 - Stats system (Strength, Agility, Willpower, etc.)
 - Adventure zones with combat
 - Equipment and loot system
@@ -112,6 +117,7 @@ tomeclicker/
 ### frontend (github pages)
 
 The game is deployed as a static site to GitHub Pages at:
+
 - **Preview**: https://eaglerock1337.github.io/tomeclicker/
 
 Production deployment to `tomeclicker.marks.dev` is managed via ArgoCD on a Raspberry Pi Kubernetes cluster.
@@ -129,11 +135,13 @@ ls docs/
 ## contributing
 
 Contributions are welcome! This project uses:
+
 - **TypeScript** for type safety
 - **Svelte/SvelteKit** for the UI framework
 - **Prettier** and **ESLint** for code formatting and linting
 
 Please ensure your code:
+
 - Passes type checking (`npm run check`)
 - Follows formatting rules (`npm run lint`)
 - Builds successfully (`npm run build`)

@@ -5,6 +5,7 @@ Showcase changes from a Pull Request with live interactive demonstrations. Agent
 ## Usage
 
 ### Demo a PR
+
 ```
 /demo <PR number or branch name>
 ```
@@ -12,12 +13,14 @@ Showcase changes from a Pull Request with live interactive demonstrations. Agent
 Demonstrates all commits in the specified PR or branch, one at a time.
 
 **Example:**
+
 ```
 /demo 42
 /demo feature/tome-ui-redesign
 ```
 
 ### Demo Specific Commits
+
 ```
 /demo <commit1>..<commit2>
 ```
@@ -25,11 +28,13 @@ Demonstrates all commits in the specified PR or branch, one at a time.
 Demonstrates a range of commits.
 
 **Example:**
+
 ```
 /demo a451b38..054a4ee
 ```
 
 ### Demo Single Commit
+
 ```
 /demo <commit-hash>
 ```
@@ -37,6 +42,7 @@ Demonstrates a range of commits.
 Demonstrates just one commit in detail.
 
 **Example:**
+
 ```
 /demo a451b38
 ```
@@ -56,7 +62,9 @@ Demonstrates just one commit in detail.
 ## 🎬 Demo Setup: PR #42 "Tome UI Redesign"
 
 ### Branch: feature/tome-ui-redesign
+
 ### Base: main (commit 400ecca)
+
 ### Commits to demonstrate: 5
 
 1. `a1b2c3d` - Add TomeCard component with animation
@@ -66,6 +74,7 @@ Demonstrates just one commit in detail.
 5. `p3q4r5s` - Add mobile responsive breakpoints
 
 ### Dev Server
+
 Starting at http://localhost:5173
 
 **Currently viewing:** main branch (baseline before changes)
@@ -78,6 +87,7 @@ Ready to start the demo? I'll walk through each commit, explain the changes, and
 For each commit:
 
 **Step 1: Checkout the commit**
+
 ```bash
 git checkout <commit-hash>
 ```
@@ -85,6 +95,7 @@ git checkout <commit-hash>
 **Step 2: Relevant agents provide commentary**
 
 Agents self-select based on the commit content:
+
 - **fronty-boi**: UI/UX changes, component additions, styling updates
 - **gamey-boi**: Game mechanics, progression changes, balance adjustments
 - **story-boi**: Narrative content, flavor text, lore additions
@@ -95,6 +106,7 @@ Agents self-select based on the commit content:
 - **testy-boi**: Test additions, quality improvements
 
 **Step 3: Show file changes**
+
 ```bash
 git show <commit-hash> --stat
 ```
@@ -113,6 +125,7 @@ Give user time to interact with the live dev server and see the changes
 **Commit:** a1b2c3d
 **Author:** Claude <noreply@anthropic.com>
 **Message:**
+
 > feat: add TomeCard component with hover animation
 >
 > Create reusable TomeCard component for displaying individual tomes
@@ -120,10 +133,12 @@ Give user time to interact with the live dev server and see the changes
 
 ### Files Changed
 ```
-src/lib/components/TomeCard.svelte  | 87 ++++++++++++++++++++
-src/lib/styles/tome-colors.css      | 23 ++++++
-src/lib/types/tome.ts               | 12 +++
+
+src/lib/components/TomeCard.svelte | 87 ++++++++++++++++++++
+src/lib/styles/tome-colors.css | 23 ++++++
+src/lib/types/tome.ts | 12 +++
 3 files changed, 122 insertions(+)
+
 ```
 
 ### 💬 Agent Commentary
@@ -167,6 +182,7 @@ The dev server has reloaded with the new TomeCard component.
 ### 3. Navigation Controls
 
 **User commands during demo:**
+
 - `"next"` or `"continue"` - Advance to next commit
 - `"previous"` or `"back"` - Go back to previous commit
 - `"skip to <number>"` - Jump to specific commit in sequence
@@ -181,11 +197,13 @@ The dev server has reloaded with the new TomeCard component.
 When commits include backend changes (API, database, infrastructure):
 
 **backy-boi** provides:
+
 - API endpoint demonstrations using `curl` or example requests
 - Database migration explanations
 - Data model changes and implications
 
 **sre-boi** provides:
+
 - Infrastructure updates (K8s configs, CI/CD changes)
 - Deployment impact analysis
 - Build/performance improvements
@@ -197,16 +215,19 @@ When commits include backend changes (API, database, infrastructure):
 
 **Commit:** x7y8z9a
 **Message:**
+
 > feat: implement POST /api/saves endpoint with validation
 
 ### Files Changed
 ```
-src/api/routes/saves.ts        | 45 ++++++++++++++
+
+src/api/routes/saves.ts | 45 ++++++++++++++
 src/api/middleware/validate.ts | 23 ++++++++
-src/db/models/save.ts          | 18 ++++++
-tests/api/saves.test.ts        | 67 ++++++++++++++++++++
+src/db/models/save.ts | 18 ++++++
+tests/api/saves.test.ts | 67 ++++++++++++++++++++
 4 files changed, 153 insertions(+)
-```
+
+````
 
 ### 💬 Agent Commentary
 
@@ -230,9 +251,10 @@ Response: 201 Created
   "saveId": "uuid",
   "lastModified": "2025-10-19T12:34:56Z"
 }
-```
+````
 
 **Validation middleware:**
+
 - Validates JWT token
 - Checks game state schema
 - Verifies checksum matches
@@ -240,6 +262,7 @@ Response: 201 Created
 
 **secury-boi:**
 Security improvements in this commit:
+
 - Checksum validation prevents tampered save states
 - Rate limiting prevents save spam attacks
 - User can only create saves for their own account (JWT sub claim)
@@ -247,6 +270,7 @@ Security improvements in this commit:
 
 **testy-boi:**
 Great test coverage! The test suite covers:
+
 - ✅ Successful save creation
 - ✅ Invalid JWT rejection
 - ✅ Checksum mismatch rejection
@@ -265,7 +289,8 @@ I can demonstrate the endpoint if you want:
 4. **Show database record created**
 
 Would you like me to run a live API demonstration?
-```
+
+````
 
 ### 5. Demo Completion
 
@@ -318,7 +343,7 @@ Before merging, verify:
 ```bash
 # I can merge this PR for you
 gh pr merge 42 --squash
-```
+````
 
 **Option 2: Request changes**
 Tell me what needs adjustment and I'll update the PR.
@@ -327,6 +352,7 @@ Tell me what needs adjustment and I'll update the PR.
 We can add more commits to this branch.
 
 What would you like to do?
+
 ```
 
 ## Demo Types
@@ -418,28 +444,31 @@ What would you like to do?
 After a /thinky-time session created a PR:
 
 ```
+
 User: /demo feature/tome-ui-redesign
 
-staffy-boi: *Sets up demo with 5 commits*
+staffy-boi: _Sets up demo with 5 commits_
 
-fronty-boi: *Walks through each UI commit with commentary*
+fronty-boi: _Walks through each UI commit with commentary_
 
 User: "The hover animation feels a bit slow on commit 2"
 
-fronty-boi: Let me check that. *analyzes animation timing* You're right, 300ms is too slow. Should be 200ms for snappier feel.
+fronty-boi: Let me check that. _analyzes animation timing_ You're right, 300ms is too slow. Should be 200ms for snappier feel.
 
 User: "Can you fix it?"
 
-fronty-boi: *Updates the code, commits the fix, adds to PR*
+fronty-boi: _Updates the code, commits the fix, adds to PR_
 
 User: "Great! Let's continue the demo"
 
-*Demo continues with updated code*
+_Demo continues with updated code_
+
 ```
 
 ### Scenario 2: Reviewing Someone Else's Contribution
 
 ```
+
 User: /demo 156
 
 staffy-boi: Demonstrating PR #156 from contributor @external-dev...
@@ -448,32 +477,36 @@ gamey-boi: This PR adds a new prestige system. Let me walk through the balance c
 
 User: "How does this affect early game progression?"
 
-gamey-boi: Good question. Let me test that... *loads early game save state, tests progression*
+gamey-boi: Good question. Let me test that... _loads early game save state, tests progression_
 
 gamey-boi: Actually, this creates a grinding issue for new players. We should adjust the unlock threshold from level 20 to level 30.
 
 User: "Can we request that change?"
 
 staffy-boi: I'll add a review comment to the PR with that suggestion. Want to continue the demo or pause here?
+
 ```
 
 ### Scenario 3: Showcasing for Documentation
 
 ```
+
 User: /demo feature/cloud-saves
 
-backy-boi: *Demonstrates backend commits*
-fronty-boi: *Demonstrates frontend integration*
-secury-boi: *Explains security measures*
+backy-boi: _Demonstrates backend commits_
+fronty-boi: _Demonstrates frontend integration_
+secury-boi: _Explains security measures_
 
 User: "This demo was great, can you write docs based on this?"
 
 docy-boi: Absolutely! I'll create:
+
 - User guide: "How to use cloud saves"
 - Developer guide: "Cloud save API documentation"
 - Architecture doc: "Cloud save system design"
 
 Based on what we just walked through. Should I start with the user guide?
+
 ```
 
 ## Technical Implementation
@@ -514,3 +547,4 @@ Common next steps:
 ---
 
 The /demo command turns PR review into an interactive, educational experience where you can see, touch, and understand every change before merging!
+```

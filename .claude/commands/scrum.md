@@ -11,11 +11,13 @@ Get quick, collaborative feedback from the entire team on an idea, decision, or 
 All agents will consider the topic and chime in if they have relevant domain expertise or concerns to share. Agents self-select based on relevance.
 
 **Example:**
+
 ```
 /scrum I'm thinking of adding a cloud save feature using JWT tokens and localStorage encryption
 ```
 
 **Expected behavior:**
+
 - **secury-boi**: Brief note on JWT best practices, localStorage encryption approach
 - **sre-boi**: Quick comment on backend deployment considerations
 - **backy-boi**: API design pattern suggestion
@@ -29,32 +31,38 @@ All agents will consider the topic and chime in if they have relevant domain exp
 ### Response Guidelines
 
 **Initial Scrum Feedback (Be Concise):**
+
 - 2-4 sentences maximum
 - Get to the point quickly
 - Flag concerns, don't solve them
 
 **Follow-Up Questions (Provide Depth):**
+
 - If user asks follow-up questions during the scrum, provide detailed answers
 - User may drill down into specific concerns - respond with appropriate depth
 - Balance: Start concise, expand when user asks
 
 **Self-Select (Full Team Scrums):**
+
 - Only respond if you have relevant expertise
 - Don't stretch to be helpful if topic is outside your domain
 - It's okay for only 1-2 agents to respond
 
 **Stay in Your Lane:**
+
 - Focus on your domain expertise
 - Don't duplicate what other agents said
 - Offer unique perspective from your specialization
 
 **Defer to Specialists:**
+
 - If you have a concern outside your domain, mention it briefly and suggest consulting the relevant agent
 - Example: "Looks good from UX perspective. You might want to run this by secury-boi for auth implications."
 
 ### When to Skip Responding
 
 Skip the scrum if:
+
 - Topic is outside your domain
 - Another agent already covered your perspective
 - You have no concerns or meaningful input
@@ -63,6 +71,7 @@ Skip the scrum if:
 ### Teaching in Scrums
 
 **learny-boi** uses quickstart mode in scrums:
+
 - Brief explanations (2-3 minutes of reading)
 - Link to concepts for deeper learning
 - Offer to do immersive session if user interested
@@ -70,12 +79,14 @@ Skip the scrum if:
 ## Purpose
 
 Scrums are for:
+
 - **Quick validation** of ideas before implementation
 - **Spotting concerns** early from multiple perspectives
 - **Fast feedback** from the entire team (2-4 sentences per agent)
 - **Sanity checking** technical approaches
 
 Scrums are NOT for:
+
 - Deep collaboration (use /huddle for targeted multi-agent working sessions)
 - Deep implementation planning (use /thinky-time)
 - Learning sessions (use /1:1 with learny-boi)
@@ -85,6 +96,7 @@ Scrums are NOT for:
 ## Examples
 
 ### Example 1: Architecture Decision
+
 ```
 User: /scrum I want to refactor the Game class into separate StateMachine, ProgressionEngine, and SaveManager classes
 
@@ -96,6 +108,7 @@ learny-boi: This is an application of the Single Responsibility Principle (SRP).
 ```
 
 ### Example 2: UI Decision
+
 ```
 User: /scrum Should stat training have a cooldown or cost scaling?
 
@@ -107,6 +120,7 @@ designy-boi: Cost scaling also makes the progression curve tunable without code 
 ```
 
 ### Example 3: Security Concern
+
 ```
 User: /scrum Planning to store user passwords in localStorage for offline play
 
@@ -126,6 +140,7 @@ learny-boi: This touches on the browser security model. Want a quick overview of
 ## Agent Roster
 
 All agents available for scrum participation:
+
 - **staffy-boi**: Project coordination, task planning
 - **fronty-boi**: UI/UX, Svelte, styling
 - **gamey-boi**: Game design, balance, progression
@@ -141,6 +156,7 @@ All agents available for scrum participation:
 ## Source of Truth References
 
 Agents may reference these documents when providing scrum feedback:
+
 - **design/OUTLINE.md** - Game progression, mechanics, stats system
 - **design/tomes.yaml** - All 50 Tomes structure and metadata
 - **design/tiers.yaml** - Tome tier hierarchy and progression
