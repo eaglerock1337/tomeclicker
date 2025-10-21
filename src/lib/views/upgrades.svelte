@@ -86,7 +86,7 @@
                     {#if upgrade.effectType === 'clickMultiplier'}
                         +{(upgrade.effectValue * 100).toFixed(0)}% click EXP per level
                     {:else if upgrade.effectType === 'critChance'}
-                        +{(upgrade.effectValue * 100).toFixed(0)}% crit chance per level
+                        +{(upgrade.effectValue * 100).toFixed(1)}% crit chance per level
                     {:else if upgrade.effectType === 'critDamage'}
                         +{(upgrade.effectValue * 100).toFixed(0)}% crit damage per level
                     {:else if upgrade.effectType === 'osmosisExp'}

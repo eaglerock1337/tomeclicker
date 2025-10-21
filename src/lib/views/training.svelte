@@ -3,30 +3,26 @@
 
     export let game: Game;
 
-    let selectedAction = 'train-strength';
-
-    function startTraining() {
-        if (game.startIdleAction(game.trainingActions, selectedAction)) {
-            game = game; // Force reactivity
-        }
-    }
-
-    function stopTraining() {
-        game.stopIdleAction(game.trainingActions, selectedAction);
+    function startAction(actionId: string) {
+        game.startIdleAction(game.trainingActions, actionId);
         game = game;
     }
 
-    function getEffectiveCost(actionId: string): number {
-        const action = game.trainingActions[actionId];
-        if (!action) return 0;
-        return Math.floor(action.expCost * game.getTrainingCostMultiplier());
+    function getActionCost(action: any): number {
+        if (action.id === 'practice-osmosis') return 0;
+        if (action.trainsStat) {
+            return game.getStatLevelCost(action.trainsStat);
+        }
+        return 0;
     }
 
-    // Reactive values
-    $: currentAction = game.trainingActions[selectedAction];
-    $: isActive = currentAction?.isActive || false;
-    $: progress = currentAction?.progress || 0;
-    $: canAfford = game.exp >= getEffectiveCost(selectedAction);
+    function canAffordAction(action: any): boolean {
+        if (action.id === 'practice-osmosis') return true;
+        if (action.trainsStat) {
+            return game.exp >= game.getStatLevelCost(action.trainsStat);
+        }
+        return true;
+    }
 
     // Filter actions by level
     $: availableActions = Object.values(game.trainingActions).filter(action => {
@@ -34,209 +30,229 @@
         if (action.trainsStat) return game.level >= 3;
         return false;
     });
-
-    // Auto-select first available action if current is not available
-    $: if (!availableActions.find(a => a.id === selectedAction) && availableActions.length > 0) {
-        selectedAction = availableActions[0].id;
-    }
 </script>
 
 <div class="training-container">
     <h2>Training</h2>
-    <p class="description">
-        {#if game.level >= 3}
-            Train your stats to prepare for adventure
-        {:else}
-            Practice by osmosis to gain passive experience
-        {/if}
-    </p>
 
-    <div class="training-area">
-        <!-- Stat Display -->
-        <div class="stats-display">
-            <div class="stat-item">
-                <span class="stat-label">Strength:</span>
-                <span class="stat-value">{game.stats.strength}</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Dexterity:</span>
-                <span class="stat-value">{game.stats.dexterity}</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Intelligence:</span>
-                <span class="stat-value">{game.stats.intelligence}</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Wisdom:</span>
-                <span class="stat-value">{game.stats.wisdom}</span>
-            </div>
-        </div>
+    <div class="actions-grid">
+        {#each availableActions as action (action.id)}
+            {@const isActive = action.isActive}
+            {@const canAfford = canAffordAction(action)}
+            {@const cost = getActionCost(action)}
+            {@const progress = isActive ? action.progress : 0}
 
-        <!-- Training Selection -->
-        <div class="training-selector">
-            <label for="training-select">Choose Training:</label>
-            <select id="training-select" bind:value={selectedAction} disabled={isActive}>
-                {#each availableActions as action}
-                    <option value={action.id}>{action.name}</option>
-                {/each}
-            </select>
-        </div>
-
-        <!-- Action Info -->
-        {#if currentAction}
-            <div class="action-info">
-                <h3>{currentAction.name}</h3>
-                <p>{currentAction.description}</p>
-                <p class="cost">
-                    Cost: <strong>{getEffectiveCost(selectedAction)} EXP</strong>
-                    {#if !canAfford}
-                        <span class="cannot-afford">(need {getEffectiveCost(selectedAction) - game.exp} more)</span>
+            <button
+                class="action-card"
+                class:active={isActive}
+                class:blocked={!canAfford && !isActive}
+                on:click={() => startAction(action.id)}
+                disabled={isActive}
+            >
+                <div class="action-header">
+                    <div class="action-name">{action.name}</div>
+                    {#if action.trainsStat}
+                        <div class="stat-level">
+                            {action.trainsStat.toUpperCase()}: {game.stats[action.trainsStat]}
+                        </div>
                     {/if}
-                </p>
-                <p>Duration: {(currentAction.duration / 1000).toFixed(1)}s</p>
-            </div>
-
-            <!-- Progress Bar -->
-            {#if isActive}
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: {Math.min(progress * 100, 100)}%"></div>
-                    <div class="progress-text">{Math.floor(Math.min(progress * 100, 100))}%</div>
                 </div>
-            {/if}
 
-            <!-- Action Button -->
-            <div class="action-buttons">
+                <div class="action-description">{action.description}</div>
+
+                <div class="action-info">
+                    {#if cost > 0}
+                        <div class="cost" class:cannot-afford={!canAfford}>
+                            Cost: {cost} EXP
+                        </div>
+                    {:else}
+                        <div class="cost free">Free</div>
+                    {/if}
+                    <div class="reward">+10 EXP</div>
+                </div>
+
                 {#if isActive}
-                    <button class="stop-button" on:click={stopTraining}>
-                        Stop Training
-                    </button>
-                {:else}
-                    <button
-                        class="start-button"
-                        on:click={startTraining}
-                        disabled={!canAfford}
-                    >
-                        Start Training
-                    </button>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: {Math.min(progress * 100, 100)}%"></div>
+                        <div class="progress-text">{Math.floor(Math.min(progress * 100, 100))}%</div>
+                    </div>
                 {/if}
-            </div>
-        {/if}
+            </button>
+        {/each}
     </div>
 </div>
 
 <style>
     .training-container {
+        color: var(--text);
+        background-color: var(--bg);
         padding: 2rem;
-        max-width: 800px;
+        max-width: 1200px;
         margin: 0 auto;
+        min-height: 100%;
+        box-sizing: border-box;
+        transition: color 1s cubic-bezier(0,.5,0,1),
+                    background-color 1s cubic-bezier(0,.5,0,1);
     }
 
     h2 {
         color: var(--text);
         font-family: Lato, sans-serif;
         font-weight: 300;
-        margin-bottom: 0.5rem;
-    }
-
-    .description {
-        color: var(--text);
-        font-family: Lato, sans-serif;
-        opacity: 0.8;
         margin-bottom: 2rem;
     }
 
-    .training-area {
-        background: var(--alt-bg);
-        border: 1px solid var(--text);
+    .actions-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    @media (min-width: 1024px) {
+        .actions-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    .action-card {
+        color: var(--text);
+        background-color: var(--alt-bg);
+        border: 2px solid var(--text);
         border-radius: 8px;
         padding: 1.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        min-height: 180px;
+        font-family: inherit;
     }
 
-    .stats-display {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        margin-bottom: 2rem;
+    .action-card:hover:not(:disabled):not(.active) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        background-color: var(--text);
     }
 
-    .stat-item {
+    .action-card:hover:not(:disabled):not(.active) .action-name,
+    .action-card:hover:not(:disabled):not(.active) .action-description,
+    .action-card:hover:not(:disabled):not(.active) .cost,
+    .action-card:hover:not(:disabled):not(.active) .reward,
+    .action-card:hover:not(:disabled):not(.active) .stat-level {
+        color: var(--bg);
+    }
+
+    .action-card.active {
+        background-color: var(--blue);
+        border-color: var(--blue);
+        cursor: default;
+    }
+
+    .action-card.active .action-name,
+    .action-card.active .action-description,
+    .action-card.active .cost,
+    .action-card.active .reward,
+    .action-card.active .stat-level {
+        color: var(--bg);
+    }
+
+    .action-card.blocked {
+        opacity: 0.5;
+        border-color: var(--red);
+    }
+
+    .action-card:disabled {
+        cursor: default;
+    }
+
+    .action-header {
         display: flex;
         justify-content: space-between;
-        padding: 0.75rem;
-        background: var(--bg);
-        border: 1px solid var(--text);
-        border-radius: 4px;
+        align-items: start;
+        gap: 1rem;
     }
 
-    .stat-label {
+    .action-name {
         color: var(--text);
         font-family: Lato, sans-serif;
         font-weight: 400;
+        font-size: 1.1rem;
+        transition: color 0.2s;
     }
 
-    .stat-value {
+    .stat-level {
         color: var(--blue);
         font-family: 'JetBrains Mono', monospace;
         font-weight: 700;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        transition: color 0.2s;
     }
 
-    .training-selector {
-        margin-bottom: 1.5rem;
+    .action-card.active .stat-level {
+        color: var(--bg);
     }
 
-    .training-selector label {
-        display: block;
+    .action-description {
         color: var(--text);
         font-family: Lato, sans-serif;
-        margin-bottom: 0.5rem;
-    }
-
-    .training-selector select {
-        width: 100%;
-        padding: 0.75rem;
-        background: var(--bg);
-        border: 1px solid var(--text);
-        border-radius: 4px;
-        color: var(--text);
-        font-family: Lato, sans-serif;
-        font-size: 1rem;
+        font-size: 0.9rem;
+        opacity: 0.8;
+        transition: color 0.2s;
     }
 
     .action-info {
-        margin-bottom: 1.5rem;
-    }
-
-    .action-info h3 {
-        color: var(--blue);
-        font-family: Lato, sans-serif;
-        font-weight: 400;
-        margin-bottom: 0.5rem;
-    }
-
-    .action-info p {
-        color: var(--text);
-        font-family: Lato, sans-serif;
-        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-top: auto;
     }
 
     .cost {
+        color: var(--text);
+        font-family: 'JetBrains Mono', monospace;
         font-weight: 700;
+        font-size: 0.9rem;
+        transition: color 0.2s;
     }
 
-    .cannot-afford {
+    .cost.free {
+        color: var(--green);
+    }
+
+    .cost.cannot-afford {
         color: var(--red);
-        font-weight: 400;
+    }
+
+    .action-card.active .cost.cannot-afford {
+        color: var(--red);
+        opacity: 0.9;
+    }
+
+    .reward {
+        color: var(--green);
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: color 0.2s;
+    }
+
+    .action-card.active .reward {
+        color: var(--bg);
+        opacity: 0.9;
     }
 
     .progress-container {
         position: relative;
         width: 100%;
-        height: 32px;
-        background: var(--bg);
-        border: 2px solid var(--text);
+        height: 24px;
+        background-color: rgba(0, 0, 0, 0.2);
         border-radius: 4px;
         overflow: hidden;
-        margin-bottom: 1.5rem;
+        margin-top: 0.5rem;
     }
 
     .progress-bar {
@@ -244,7 +260,7 @@
         top: 0;
         left: 0;
         height: 100%;
-        background: var(--blue);
+        background-color: var(--bg);
         transition: width 0.1s linear;
     }
 
@@ -257,55 +273,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--text);
+        color: var(--bg);
         font-family: 'JetBrains Mono', monospace;
         font-weight: 700;
+        font-size: 0.8rem;
         z-index: 1;
-    }
-
-    .action-buttons {
-        display: flex;
-        justify-content: center;
-    }
-
-    button {
-        padding: 1rem 2rem;
-        font-family: Lato, sans-serif;
-        font-size: 1rem;
-        font-weight: 700;
-        border: 2px solid var(--text);
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.2s;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    .start-button {
-        background: var(--green);
-        color: var(--bg);
-    }
-
-    .start-button:hover:not(:disabled) {
-        transform: scale(1.05);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .start-button:disabled {
-        background: var(--alt-bg);
-        color: var(--text);
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    .stop-button {
-        background: var(--red);
-        color: var(--bg);
-    }
-
-    .stop-button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
     }
 
     /* Mobile optimizations */
@@ -314,13 +287,17 @@
             padding: 1rem;
         }
 
-        .stats-display {
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
+        .action-card {
+            padding: 1rem;
+            min-height: 160px;
         }
 
-        button {
-            width: 100%;
+        .action-name {
+            font-size: 1rem;
+        }
+
+        .stat-level {
+            font-size: 0.8rem;
         }
     }
 </style>

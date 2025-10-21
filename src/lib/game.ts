@@ -104,7 +104,7 @@ export class Game {
         this.tick = 0;
         this.menu = 'practice';
         this.clickMultiplier = 1.0;
-        this.critChance = 0.01; // Start with 1% crit chance
+        this.critChance = 0.05; // Start with 5% crit chance
         this.critDamage = 0.5; // Crits do +50% damage (1.5x total)
         this.upgrades = this.initializeUpgrades();
         this.saveIntegrity = 'valid';
@@ -182,7 +182,7 @@ export class Game {
      * Recalculates crit chance and crit damage based on upgrades
      */
     recalculateCritStats(): void {
-        this.critChance = 0.01; // Base 1%
+        this.critChance = 0.05; // Base 5%
         this.critDamage = 0.5; // Base +50%
 
         for (const upgrade of Object.values(this.upgrades)) {
@@ -275,6 +275,18 @@ export class Game {
     }
 
     /**
+     * Gets the EXP cost to level up a specific stat
+     * @param stat - The stat to check
+     * @returns EXP cost for next level
+     */
+    getStatLevelCost(stat: keyof Stats): number {
+        const currentLevel = this.stats[stat];
+        const baseCost = 100;
+        const multiplier = 1.5;
+        return Math.floor(baseCost * Math.pow(multiplier, currentLevel - 1));
+    }
+
+    /**
      * Generates contextual help text for the practice page click button
      * @returns Text hint for the player based on current game state
      */
@@ -335,7 +347,7 @@ export class Game {
                 effect: '+100% EXP per click per level',
                 baseCost: 50,
                 costMultiplier: 1.15,
-                maxLevel: 20,
+                maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'clickMultiplier',
                 effectValue: 1.0,
@@ -345,26 +357,26 @@ export class Game {
                 id: 'critical-insight',
                 name: 'Critical Insight',
                 description: 'Moments of clarity grant bursts of understanding',
-                effect: '+1% crit chance per level',
+                effect: '+0.5% crit chance per level',
                 baseCost: 200,
                 costMultiplier: 1.18,
-                maxLevel: 20,
+                maxLevel: 50,
                 currentLevel: 0,
                 effectType: 'critChance',
-                effectValue: 0.01,
+                effectValue: 0.005,
                 minLevel: 1
             },
             'devastating-critique': {
                 id: 'devastating-critique',
                 name: 'Devastating Critique',
                 description: 'Critical insights become increasingly profound',
-                effect: '+1% crit damage per level',
+                effect: '+0.5% crit damage per level',
                 baseCost: 500,
                 costMultiplier: 1.2,
-                maxLevel: 20,
+                maxLevel: 50,
                 currentLevel: 0,
                 effectType: 'critDamage',
-                effectValue: 0.01,
+                effectValue: 0.005,
                 minLevel: 1
             },
 
@@ -376,7 +388,7 @@ export class Game {
                 effect: '+10 EXP per osmosis level',
                 baseCost: 5000,
                 costMultiplier: 1.18,
-                maxLevel: 20,
+                maxLevel: 50,
                 currentLevel: 0,
                 effectType: 'osmosisExp',
                 effectValue: 10,
@@ -389,7 +401,7 @@ export class Game {
                 effect: '+5% osmosis speed per level',
                 baseCost: 8000,
                 costMultiplier: 1.2,
-                maxLevel: 20,
+                maxLevel: 50,
                 currentLevel: 0,
                 effectType: 'osmosisSpeed',
                 effectValue: 0.05,
@@ -402,7 +414,7 @@ export class Game {
                 effect: '+5% global idle speed per level',
                 baseCost: 15000,
                 costMultiplier: 1.25,
-                maxLevel: 20,
+                maxLevel: 100,
                 currentLevel: 0,
                 effectType: 'globalIdleSpeed',
                 effectValue: 0.05,
@@ -557,7 +569,7 @@ export class Game {
     /** Idle Action Management */
 
     /**
-     * Starts an idle action if player can afford the EXP cost
+     * Starts an idle action (Progress Knight style - keeps running until switched)
      * @param actionMap - The action map (trainingActions or meditationActions)
      * @param actionId - ID of the action to start
      * @returns True if action started successfully
@@ -569,17 +581,15 @@ export class Game {
         // Check if already completed (for one-time actions)
         if (action.oneTime && action.completed) return false;
 
-        // Calculate effective EXP cost (apply training cost multiplier for training actions)
-        let effectiveCost = action.expCost;
-        if (action.trainsStat) {
-            effectiveCost = Math.floor(action.expCost * this.getTrainingCostMultiplier());
+        // Stop any currently active actions in this map
+        for (const a of Object.values(actionMap)) {
+            if (a.isActive) {
+                a.isActive = false;
+                a.progress = 0;
+            }
         }
 
-        // Check if player can afford the EXP cost
-        if (this.exp < effectiveCost) return false;
-
-        // Deduct EXP and start the action
-        this.exp -= effectiveCost;
+        // Start the action (no EXP cost upfront)
         action.isActive = true;
         action.progress = 0;
         action.lastUpdate = Date.now();
@@ -652,16 +662,41 @@ export class Game {
             const baseExp = 10;
             const bonus = this.getOsmosisExpBonus();
             this.addExp(baseExp + bonus);
-        }
-        // Award stat point for stat training
-        else if (action.trainsStat) {
-            this.stats[action.trainsStat]++;
+
+            // Osmosis always restarts
+            action.progress = 0;
+            action.lastUpdate = Date.now();
+            return;
         }
 
-        // Reset action
-        action.isActive = false;
-        action.progress = 0;
-        action.lastUpdate = Date.now();
+        // Handle stat training completion
+        if (action.trainsStat) {
+            const stat = action.trainsStat;
+            const cost = this.getStatLevelCost(stat);
+
+            // Give back some EXP (10 base, with crit chance for 50% bonus)
+            let expReward = 10;
+            const isCrit = Math.random() < this.critChance;
+            if (isCrit) {
+                expReward = Math.floor(expReward * 1.5); // 15 EXP on crit
+            }
+            this.addExp(expReward);
+
+            // Check if we can afford to level up the stat
+            if (this.exp >= cost) {
+                this.exp -= cost;
+                this.stats[stat]++;
+
+                // Restart the action
+                action.progress = 0;
+                action.lastUpdate = Date.now();
+            } else {
+                // Can't afford, stop the action
+                action.isActive = false;
+                action.progress = 0;
+                action.lastUpdate = Date.now();
+            }
+        }
     }
 
     /**
@@ -1055,7 +1090,7 @@ export class Game {
             this.migrateUpgrades(saveData.upgrades);
 
             // Load new game systems (with defaults for old saves)
-            this.critChance = saveData.critChance || 0.01;
+            this.critChance = saveData.critChance || 0.05;
             this.critDamage = saveData.critDamage || 0.5;
             this.stats = saveData.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
             this.trainingActions = saveData.trainingActions || this.initializeTrainingActions();
@@ -1203,7 +1238,7 @@ export class Game {
         this.tick = 0;
         this.menu = 'practice';
         this.clickMultiplier = 1.0;
-        this.critChance = 0.01;
+        this.critChance = 0.05;
         this.critDamage = 0.5;
         this.upgrades = this.initializeUpgrades();
         this.stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
