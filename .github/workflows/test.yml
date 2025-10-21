@@ -1,4 +1,4 @@
-name: Test & Build
+name: Test & Validate
 
 on:
   push:
@@ -36,8 +36,32 @@ jobs:
         run: npm run test:coverage
         continue-on-error: true # Don't fail build on coverage threshold (yet)
 
-      - name: Build production bundle
-        run: npm run build
+      - name: Validate GitHub Pages build is up-to-date
+        run: |
+          echo "🔍 Validating that docs/ matches current build..."
+
+          # Build with GitHub Pages base path
+          GITHUB_PAGES=true npm run build
+
+          # Check if docs/ directory exists
+          if [ ! -d "docs" ]; then
+            echo "❌ ERROR: docs/ directory doesn't exist!"
+            echo "The pre-commit hook should have created it."
+            exit 1
+          fi
+
+          # Compare build output with committed docs/
+          if ! diff -r build docs > /dev/null 2>&1; then
+            echo "❌ ERROR: docs/ directory is out of date!"
+            echo "The committed docs/ doesn't match the current build output."
+            echo "This means the pre-commit hook didn't run or was bypassed."
+            echo ""
+            echo "To fix this, run: git commit --amend --no-verify"
+            echo "Then let the pre-commit hook run properly."
+            exit 1
+          fi
+
+          echo "✅ docs/ is up-to-date with current build"
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3

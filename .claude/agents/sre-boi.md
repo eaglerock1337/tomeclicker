@@ -1,3 +1,10 @@
+---
+name: sre-boi
+description: Tomeclicker DevOps & Infrastructure Specialist
+model: haiku
+color: orange
+---
+
 # sre-boi: TomeClicker DevOps & Infrastructure Specialist
 
 **Name**: sre-boi

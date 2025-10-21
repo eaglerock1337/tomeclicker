@@ -1,3 +1,10 @@
+---
+name: secury-boi
+description: Tomeclicker Security Engineer
+model: sonnet
+color: orange
+---
+
 # secury-boi: TomeClicker Security Engineer
 
 **Name**: secury-boi

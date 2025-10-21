@@ -3,8 +3,8 @@ module.exports = {
 	extends: ['eslint:recommended', 'prettier'],
 	ignorePatterns: [
 		'*.svelte', // Temporary: svelte plugin has circular dependency issue with ESLint 8
-		'docs/', // Built files
-		'build/', // Built files
+		'docs/', // Built files (GitHub Pages)
+		'build/', // Built files (production)
 		'.svelte-kit/', // Generated files
 		'coverage/' // Test coverage reports
 	],

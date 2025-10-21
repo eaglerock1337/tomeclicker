@@ -10,8 +10,8 @@ export default {
 	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter({
-			pages: 'build',
-			assets: 'build',
+			pages: isGitHubPages ? 'docs' : 'build',
+			assets: isGitHubPages ? 'docs' : 'build',
 			fallback: null,
 			precompress: false
 		}),

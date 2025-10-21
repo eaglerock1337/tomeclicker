@@ -1,0 +1,22 @@
+echo "🔍 Running pre-commit checks..."
+
+# Run type check
+echo "📋 Type checking..."
+npm run check || exit 1
+
+# Run formatter
+echo "🧹 Formatting..."
+npm run format || exit 1
+
+# Run tests
+echo "🧪 Running tests..."
+npm run test:run || exit 1
+
+# Build for GitHub Pages deployment (builds directly to docs/)
+echo "🏗️  Building for GitHub Pages..."
+GITHUB_PAGES=true npm run build || exit 1
+
+# Stage the docs folder
+git add docs/
+
+echo "✅ All pre-commit checks passed! Build output committed to docs/"

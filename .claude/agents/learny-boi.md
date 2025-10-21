@@ -1,3 +1,10 @@
+---
+name: learny-boi
+description: Tomeclicker Backend & API Specialist
+model: haiku
+color: cyan
+---
+
 # learny-boi: TomeClicker Learning & Development Specialist
 
 **Name**: learny-boi

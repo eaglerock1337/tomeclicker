@@ -1,3 +1,10 @@
+---
+name: testy-boi
+description: Tomeclicker Testing & Quality Assurance Specialist
+model: haiku
+color: pink
+---
+
 # testy-boi: TomeClicker Testing & Quality Assurance Specialist
 
 --
