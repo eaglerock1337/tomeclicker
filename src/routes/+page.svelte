@@ -12,11 +12,17 @@
 
     // Config values
     let config = new Config("prussian-blue", "system");
+    let configLoaded = false; // Track if config has been loaded from storage
 
     // Game values
     let game: Game;
 
     onMount(() => {
+        // Load saved config
+        config.loadFromLocalStorage();
+        configLoaded = true; // Mark as loaded
+        config = config; // Force reactivity
+
         // Listen for system preference changes
         if (window.matchMedia) {
             const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -102,6 +108,14 @@
 
     // Color theme - reactive to config changes
     $: theme = config ? config.getTheme() : "";
+
+    // Auto-save config whenever theme or displayMode changes (but only after initial load)
+    $: if (config && configLoaded && typeof localStorage !== 'undefined') {
+        // Reference the properties to make this reactive to their changes
+        config.theme;
+        config.displayMode;
+        config.saveToLocalStorage();
+    }
 
 </script>
 

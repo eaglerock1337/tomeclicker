@@ -86,4 +86,45 @@ export class Config {
 	toggleDarkMode(): void {
 		this.displayMode = this.getEffectiveShade() === 'dark' ? 'light' : 'dark';
 	}
+
+	/**
+	 * Saves current config to browser localStorage
+	 */
+	saveToLocalStorage(): void {
+		if (typeof localStorage === 'undefined') return;
+		try {
+			const configData = {
+				theme: this.theme,
+				displayMode: this.displayMode
+			};
+			localStorage.setItem('tomeclicker_config', JSON.stringify(configData));
+		} catch (error) {
+			console.error('Failed to save config to localStorage:', error);
+		}
+	}
+
+	/**
+	 * Attempts to load config from browser localStorage
+	 * @returns True if load succeeded, false otherwise
+	 */
+	loadFromLocalStorage(): boolean {
+		if (typeof localStorage === 'undefined') return false;
+		try {
+			const savedConfig = localStorage.getItem('tomeclicker_config');
+			if (savedConfig) {
+				const configData = JSON.parse(savedConfig);
+				if (configData.theme && isValidTheme(configData.theme)) {
+					this.theme = configData.theme;
+				}
+				if (configData.displayMode) {
+					this.displayMode = configData.displayMode;
+				}
+				return true;
+			}
+			return false;
+		} catch (error) {
+			console.error('Error loading config from localStorage:', error);
+			return false;
+		}
+	}
 }
