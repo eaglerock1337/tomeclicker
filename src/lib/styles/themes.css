@@ -110,8 +110,8 @@
 
 /* Midnight Black - Bold, high-contrast aesthetic */
 .midnight-black-light {
-	--bg: #c5cbd5;
-	--alt-bg: #9ca5b3;
+	--bg: #9ca5b3;
+	--alt-bg: #c5cbd5;
 	--text: #0a0e14;
 	--blue: #2d6b8f;
 	--green: #2d9b2d;

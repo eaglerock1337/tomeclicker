@@ -55,9 +55,22 @@
             }
         }, 15000);
 
+        // Set up idle action updates every 100ms
+        const idleUpdateInterval = setInterval(() => {
+            if (game) {
+                game.updateIdleActions();
+                // Add idle EXP (idleExpRate is per second, so divide by 10 for 100ms intervals)
+                if (game.idleExpRate > 0) {
+                    game.addExp(game.idleExpRate / 10);
+                }
+                game = game; // Force Svelte reactivity
+            }
+        }, 100);
+
         // Cleanup on component destroy
         return () => {
             clearInterval(autosaveInterval);
+            clearInterval(idleUpdateInterval);
         };
 
         // Setup touch event handling for iOS double-tap prevention
