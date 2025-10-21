@@ -220,7 +220,7 @@ export class Game {
      * Recalculates crit chance and crit damage based on upgrades
      */
     recalculateCritStats(): void {
-        this.critChance = 0.01; // Base 1%
+        this.critChance = 0.05; // Base 5%
         this.critDamage = 0.5; // Base +50%
 
         for (const upgrade of Object.values(this.upgrades)) {
