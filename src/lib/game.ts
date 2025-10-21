@@ -192,6 +192,25 @@ export class Game {
                 this.critDamage += upgrade.effectValue * upgrade.currentLevel;
             }
         }
+
+        // Recalculate crit stats
+        this.recalculateCritStats();
+    }
+
+    /**
+     * Recalculates crit chance and crit damage based on upgrades
+     */
+    recalculateCritStats(): void {
+        this.critChance = 0.01; // Base 1%
+        this.critDamage = 0.5; // Base +50%
+
+        for (const upgrade of Object.values(this.upgrades)) {
+            if (upgrade.effectType === 'critChance') {
+                this.critChance += upgrade.effectValue * upgrade.currentLevel;
+            } else if (upgrade.effectType === 'critDamage') {
+                this.critDamage += upgrade.effectValue * upgrade.currentLevel;
+            }
+        }
     }
 
     /**
