@@ -86,10 +86,9 @@
     .training-container {
         color: var(--text);
         background-color: var(--bg);
+        height: 100%;
+        width: 100%;
         padding: 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-        min-height: 100%;
         box-sizing: border-box;
         transition: color 1s cubic-bezier(0,.5,0,1),
                     background-color 1s cubic-bezier(0,.5,0,1);
