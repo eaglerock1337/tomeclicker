@@ -272,12 +272,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--bg);
+        color: var(--text);
         font-family: 'JetBrains Mono', monospace;
         font-weight: 700;
         font-size: 0.8rem;
         z-index: 1;
-        text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+        text-shadow: 0 0 3px var(--bg), 0 0 3px var(--bg);
     }
 
     /* Mobile optimizations */
