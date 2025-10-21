@@ -9,4 +9,4 @@ node_modules
 .direnv
 
 # Test coverage
-coverage/
+/coverage
