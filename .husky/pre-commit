@@ -16,7 +16,7 @@ npm run test:run || exit 1
 echo "🏗️  Building for GitHub Pages..."
 GITHUB_PAGES=true npm run build || exit 1
 
-# Stage the docs folder
-git add docs/
+# Stage changed files
+git add .
 
 echo "✅ All pre-commit checks passed! Build output committed to docs/"
