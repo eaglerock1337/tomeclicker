@@ -53,6 +53,12 @@ npm run format
 
 # Prepare project (sync SvelteKit)
 npm run prepare
+
+# Run tests
+npm test                # Run tests in watch mode
+npm run test:run        # Run tests once
+npm run test:ui         # Run tests with UI
+npm run test:coverage   # Run tests with coverage report
 ```
 
 ## Architecture
@@ -114,9 +120,20 @@ The `design/OUTLINE.md` file contains the complete game design document with det
 
 - The project uses TypeScript (game.ts, config.ts fully migrated; components partially migrated)
 - Mobile-optimized with touch event handling to prevent zoom
-- No test framework currently configured
+- Test framework: Vitest with happy-dom
 - Uses Vite as build tool with SvelteKit
 - Svelte 5.39.6 installed but using Svelte 4 patterns (migration planned)
+
+### Testing
+
+- **Framework**: Vitest 3.x with happy-dom environment
+- **Coverage**: Target 80%+ for core game logic (game.ts)
+- **Test Structure**:
+  - `tests/unit/` - Unit tests for core classes
+  - `tests/integration/` - Integration tests for game flows
+  - `tests/helpers/` - Test utilities and factories
+- **Continuous Integration**: GitHub Actions runs tests on all pushes and PRs
+- **Writing Tests**: Use the `GameBuilder` helper for creating test fixtures
 
 ### Current Project State
 
@@ -206,6 +223,8 @@ When making changes, ensure:
 - **Svelte 5**: Use runes ($state, $derived, $effect) when refactoring
 - **Build**: `npm run build` succeeds without errors
 - **Type Check**: `npm run check` passes
+- **Tests**: `npm run test:run` passes with all tests green
+- **Coverage**: Maintain or improve test coverage for modified files
 - **Performance**: Keep bundle sizes small (< 100KB gzipped target)
 - **Mobile**: Test on mobile viewports
 
