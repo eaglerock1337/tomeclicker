@@ -334,6 +334,54 @@ export class Game {
     }
 
     /**
+     * Migrates saved training actions to the latest definitions
+     * Preserves progress and active state while adding new actions
+     * @param savedActions - Training action data from a saved game
+     */
+    migrateTrainingActions(savedActions: { [key: string]: IdleAction }): { [key: string]: IdleAction } {
+        // Get fresh action definitions
+        const freshActions = this.initializeTrainingActions();
+
+        // Preserve progress and state from saved actions
+        for (const actionId in freshActions) {
+            if (savedActions[actionId]) {
+                freshActions[actionId].progress = savedActions[actionId].progress;
+                freshActions[actionId].isActive = savedActions[actionId].isActive;
+                freshActions[actionId].lastUpdate = savedActions[actionId].lastUpdate;
+                if (savedActions[actionId].completed !== undefined) {
+                    freshActions[actionId].completed = savedActions[actionId].completed;
+                }
+            }
+        }
+
+        return freshActions;
+    }
+
+    /**
+     * Migrates saved meditation actions to the latest definitions
+     * Preserves progress and active state while adding new actions
+     * @param savedActions - Meditation action data from a saved game
+     */
+    migrateMeditationActions(savedActions: { [key: string]: IdleAction }): { [key: string]: IdleAction } {
+        // Get fresh action definitions
+        const freshActions = this.initializeMeditationActions();
+
+        // Preserve progress and state from saved actions
+        for (const actionId in freshActions) {
+            if (savedActions[actionId]) {
+                freshActions[actionId].progress = savedActions[actionId].progress;
+                freshActions[actionId].isActive = savedActions[actionId].isActive;
+                freshActions[actionId].lastUpdate = savedActions[actionId].lastUpdate;
+                if (savedActions[actionId].completed !== undefined) {
+                    freshActions[actionId].completed = savedActions[actionId].completed;
+                }
+            }
+        }
+
+        return freshActions;
+    }
+
+    /**
      * Initializes all available upgrades with default values
      * @returns Object map of upgrade ID to upgrade definition
      */
@@ -1093,8 +1141,15 @@ export class Game {
             this.critChance = saveData.critChance || 0.05;
             this.critDamage = saveData.critDamage || 0.5;
             this.stats = saveData.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
-            this.trainingActions = saveData.trainingActions || this.initializeTrainingActions();
-            this.meditationActions = saveData.meditationActions || this.initializeMeditationActions();
+
+            // Migrate training and meditation actions to add new actions while preserving progress
+            this.trainingActions = saveData.trainingActions
+                ? this.migrateTrainingActions(saveData.trainingActions)
+                : this.initializeTrainingActions();
+            this.meditationActions = saveData.meditationActions
+                ? this.migrateMeditationActions(saveData.meditationActions)
+                : this.initializeMeditationActions();
+
             this.idleExpRate = saveData.idleExpRate || 0;
             this.adventureModeUnlocked = saveData.adventureModeUnlocked || false;
             this.meditationUnlocked = saveData.meditationUnlocked || false;
