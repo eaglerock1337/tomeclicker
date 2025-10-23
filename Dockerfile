@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN HUSKY=0 npm ci
 
 # Copy source code
 COPY . .
