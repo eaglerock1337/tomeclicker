@@ -68,6 +68,9 @@ jobs:
       - name: Set Git Email
         run: git config --global user.email "bob@marks.dev"
 
+      - name: Git Pull
+        run: git pull --rebase
+
       - name: Swap Git Tag in Chart.yaml
         run: sed -i /appVersion/s/${{ steps.old_sha.outputs.sha_short }}/${{ needs.Build-Site-Image.outputs.new_sha }}/ tomeclicker/Chart.yaml
 
