@@ -19,7 +19,7 @@ describe('Game', () => {
 			expect(game.lifetimeExp).toBe(0);
 			expect(game.level).toBe(1);
 			expect(game.clickMultiplier).toBe(1);
-			expect(game.critChance).toBe(0.05); // 5% base crit
+			expect(game.critChance).toBe(0.0); // 0% base crit
 			expect(game.critDamage).toBe(0.5); // +50% base crit damage
 		});
 
@@ -361,9 +361,9 @@ describe('Game', () => {
 	});
 
 	describe('Crit System', () => {
-		it('should have 5% base crit chance', () => {
+		it('should have 0% base crit chance', () => {
 			const game = createTestGame();
-			expect(game.critChance).toBe(0.05);
+			expect(game.critChance).toBe(0.0);
 		});
 
 		it('should have 50% base crit damage', () => {
@@ -374,15 +374,15 @@ describe('Game', () => {
 		it('should increase crit chance with upgrade', () => {
 			const game = new GameBuilder().withUpgrade('critical-insight', 10).build();
 
-			// Base 5% + (10 * 0.5%) = 10%
-			expect(game.critChance).toBeCloseTo(0.1, 2);
+			// Base 0% + (10 * 0.5%) = 5%
+			expect(game.critChance).toBeCloseTo(0.05, 2);
 		});
 
 		it('should increase crit damage with upgrade', () => {
 			const game = new GameBuilder().withUpgrade('devastating-critique', 10).build();
 
-			// Base 50% + (10 * 0.5%) = 55%
-			expect(game.critDamage).toBeCloseTo(0.55, 2);
+			// Base 50% + (10 * 5.0%) = 100%
+			expect(game.critDamage).toBeCloseTo(1.0, 2);
 		});
 
 		describe('getClickValue', () => {

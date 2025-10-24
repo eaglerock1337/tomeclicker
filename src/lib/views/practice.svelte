@@ -37,14 +37,13 @@
         <button
             onclick={clickMe}
             ontouchstart={clickMe}
-            class:crit={showCrit}
             aria-label="Practice to gain experience points"
         >
+            {#if showCrit}
+                <div class="crit-text">CRIT!</div>
+            {/if}
             <div class="item">
                 <MousePointer size={48}/><br>{clickText}
-                {#if showCrit}
-                    <div class="crit-text">CRITICAL!</div>
-                {/if}
             </div>
         </button>
     </div>
@@ -119,15 +118,9 @@
         scale: 0.95;
     }
 
-    /* Crit effect */
-    .thebutton button.crit {
-        background-color: var(--yellow) !important;
-        color: var(--bg) !important;
-    }
-
     .crit-text {
         position: absolute;
-        top: 50%;
+        top: 35%;
         left: 50%;
         transform: translate(-50%, -50%);
         font-size: 2em;

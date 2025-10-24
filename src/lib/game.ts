@@ -114,7 +114,7 @@ export class Game {
 		this.tick = 0;
 		this.menu = 'practice';
 		this.clickMultiplier = 1.0;
-		this.critChance = 0.05; // Start with 5% crit chance
+		this.critChance = 0.0; // Start with 0% crit chance
 		this.critDamage = 0.5; // Crits do +50% damage (1.5x total)
 		this.upgrades = this.initializeUpgrades();
 		this.saveIntegrity = 'valid';
@@ -192,7 +192,7 @@ export class Game {
 	 * Recalculates crit chance and crit damage based on upgrades
 	 */
 	recalculateCritStats(): void {
-		this.critChance = 0.05; // Base 5%
+		this.critChance = 0.0; // Base 0%
 		this.critDamage = 0.5; // Base +50%
 
 		for (const upgrade of Object.values(this.upgrades)) {
@@ -420,8 +420,8 @@ export class Game {
 				name: 'Critical Insight',
 				description: 'Moments of clarity grant bursts of understanding',
 				effect: '+0.5% crit chance per level',
-				baseCost: 200,
-				costMultiplier: 1.18,
+				baseCost: 250,
+				costMultiplier: 1.75,
 				maxLevel: 50,
 				currentLevel: 0,
 				effectType: 'critChance',
@@ -432,13 +432,13 @@ export class Game {
 				id: 'devastating-critique',
 				name: 'Devastating Critique',
 				description: 'Critical insights become increasingly profound',
-				effect: '+0.5% crit damage per level',
+				effect: '+5% crit damage per level',
 				baseCost: 500,
-				costMultiplier: 1.2,
+				costMultiplier: 2.0,
 				maxLevel: 50,
 				currentLevel: 0,
 				effectType: 'critDamage',
-				effectValue: 0.005,
+				effectValue: 0.05,
 				minLevel: 1
 			},
 
@@ -1152,7 +1152,7 @@ export class Game {
 			this.migrateUpgrades(saveData.upgrades);
 
 			// Load new game systems (with defaults for old saves)
-			this.critChance = saveData.critChance || 0.05;
+			this.critChance = saveData.critChance || 0.0;
 			this.critDamage = saveData.critDamage || 0.5;
 			this.stats = saveData.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
 
@@ -1307,7 +1307,7 @@ export class Game {
 		this.tick = 0;
 		this.menu = 'practice';
 		this.clickMultiplier = 1.0;
-		this.critChance = 0.05;
+		this.critChance = 0.0;
 		this.critDamage = 0.5;
 		this.upgrades = this.initializeUpgrades();
 		this.stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
