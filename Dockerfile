@@ -10,9 +10,4 @@ RUN npm run build
 
 # ---------- Runtime ----------
 FROM nginxinc/nginx-unprivileged:alpine
-
 COPY --from=builder /app/build /usr/share/nginx/html
-
-EXPOSE 8080
-
-CMD ["nginx", "-c", "/etc/nginx/nginx.conf", "-g", "pid /tmp/nginx.pid; daemon off;"]
