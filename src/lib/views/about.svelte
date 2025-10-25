@@ -109,7 +109,9 @@
 			</div>
 			<div class="section-body">
 				<p class="credits-text">
-					Created by EagleRock with inspiration from <a
+					Created by EagleRock with inspiration from classic incremental games like Cookie Clicker, Antimatter Dimensions, NGU Idle, Idling to Rule the Gods, Grimoire, and countless others in the genre.					
+
+					Also inspired by <a
 						href="https://hlc.marks.dev/"
 						target="_blank"
 						rel="noopener noreferrer"

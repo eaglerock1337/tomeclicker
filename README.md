@@ -2,27 +2,28 @@
 
 An open-source web-based incremental RPG game built with SvelteKit.
 
-[![Play on GitHub Pages](https://img.shields.io/badge/play-github%20pages-blue)](https://eaglerock1337.github.io/tomeclicker/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Play on marks.dev](https://img.shields.io/badge/play-marks.dev-blue)](https://tomeclicker.marks.dev)
+[![Preview on GitHub Pages](https://img.shields.io/badge/preview-github%20pages-blue)](https://tomeclicker-dev.marks.dev)
+[![License](https://img.shields.io/badge/BSD%203-Clause-green)](LICENSE)
 
 ## about
 
-TomeClicker is an incremental game with RPG progression mechanics where players click to gain experience, level up, purchase upgrades, and eventually discover magical tomes. This is a passion project that combines classic incremental gameplay with a deep progression system and story elements.
+TomeClicker is an incremental game with RPG progression mechanics where players click to gain experience, level up, purchase upgrades, and prepare for adventure. This is a passion project that combines classic incremental gameplay with a deep progression system and story elements, and is my contribution to the genre.
 
 ## features
 
 - **Click-based progression** - Earn EXP through active clicking
 - **Upgrade system** - Purchase upgrades with diminishing returns for strategic progression
 - **Level system** - Exponential level scaling with powerful bonuses
-- **Save system** - Automatic saves to localStorage and cookies with encryption
-- **Theme support** - Multiple color themes with light/dark mode variants
+- **Idle progression** - Step away and let the game play for you
+- **Save system** - Automatic saves to localStorage and cookies with savefile export/import
+- **Theme support** - Multiple Bob Ross-inspired color themes with light/dark mode variants
 - **Mobile-optimized** - Touch-friendly interface with responsive design
+- **Desktop-optimized** - Desktop-friendly interface for more interactive gameplay
 
 ## roadmap
 
-See [PROPOSAL.md](PROPOSAL.md) for the complete modernization and enhancement roadmap, and [ref/OUTLINE.md](ref/OUTLINE.md) for the full game design document.
-
-### current (v0.1.0 mvp)
+### current status
 
 - ✅ Basic clicking and upgrade mechanics
 - ✅ Level system with exponential scaling
@@ -30,24 +31,16 @@ See [PROPOSAL.md](PROPOSAL.md) for the complete modernization and enhancement ro
 - ✅ Theme customization
 - ✅ Hard reset functionality
 
-### phase 1: polish & qol
+### phase 1: MVP (minimum viable product)
 
-- Enhanced UI feedback and visual polish
-- Comprehensive documentation
-- Production-ready code cleanup
-
-### phase 2: technical modernization
-
-- Full TypeScript migration
-- Svelte 5 runes adoption
-- Modular architecture refactoring
-
-### phase 3: cloud saves & backend
-
-- Backend API on Raspberry Pi K8s cluster
-- Cloud save synchronization
-- Anti-cheat system
-- Leaderboards
+- First sections of game complete
+- Basic clicking and upgrade mechanics
+- First idle actions and upgrades
+- RPG Stats and training
+- Storyline beginnings
+- 30+ minutes of active gameplay, 2+ hours of idle gameplay
+- Refactor project with proper design principles
+- Cleanup other technical debt
 
 ### future: full game features
 
@@ -55,13 +48,14 @@ See [PROPOSAL.md](PROPOSAL.md) for the complete modernization and enhancement ro
 - Adventure zones with combat
 - Equipment and loot system
 - Retreat/prestige mechanics
-- Tomes of Magic (endgame content)
+- Questing and higher-order prestige
+- Learn about the Tomes and unlock endgame content
 
 ## development
 
 ### prerequisites
 
-- Node.js 18+ and npm
+- Node.js 20+ and npm
 - Modern web browser
 
 ### setup
@@ -94,57 +88,30 @@ npm run format       # Format code with Prettier
 npm run prepare      # Sync SvelteKit (runs automatically)
 ```
 
-### project structure
-
-```
-tomeclicker/
-├── src/
-│   ├── lib/
-│   │   ├── game.ts          # Main game logic
-│   │   ├── config.ts        # Configuration/theme system
-│   │   ├── views/           # Game view components
-│   │   └── styles/          # CSS and theme definitions
-│   └── routes/
-│       └── +page.svelte     # Main application entry
-├── docs/                    # Built static site (GitHub Pages)
-├── PROPOSAL.md              # Detailed roadmap and architecture
-├── ref/OUTLINE.md           # Complete game design document
-└── CLAUDE.md                # Project guidelines for Claude Code
-```
-
 ## deployment
 
-### frontend (github pages)
+### frontend
 
-The game is deployed as a static site to GitHub Pages at:
+The game is hosted in multiple places:
 
-- **Preview**: https://eaglerock1337.github.io/tomeclicker/
+- **Production**: [tomeclicker.marks.dev](https://tomeclicker.marks.dev) (hosted on Happy Little Cloud)
+- **Staging**: tomeclicker-stage.marks.dev (planned)
+- **Development**: [tomeclicker-dev.marks.dev](https://tomeclicker-dev.marks.dev) (hosted on GitHub Pages)
 
-Production deployment to `tomeclicker.marks.dev` is managed via ArgoCD on a Raspberry Pi Kubernetes cluster.
+Production deployment is managed via GitHub Actions and ArgoCD and is hosted on my Raspberry Pi Kubernetes cluster.
+Development deployment is managed and hosted by GitHub Pages under my account at `eaglerock1337.github.io`.
 
 ### build for deployment
 
 ```bash
-# Build static site
+# Build static site for production
 npm run build
+ls build/ # Outputs in build/ directory
 
-# Output in docs/ directory for GitHub Pages
-ls docs/
+# Build static site for GitHub Pages
+GITHUB_PAGES=true npm run build
+ls docs/  # Output in docs/ directory
 ```
-
-## contributing
-
-Contributions are welcome! This project uses:
-
-- **TypeScript** for type safety
-- **Svelte/SvelteKit** for the UI framework
-- **Prettier** and **ESLint** for code formatting and linting
-
-Please ensure your code:
-
-- Passes type checking (`npm run check`)
-- Follows formatting rules (`npm run lint`)
-- Builds successfully (`npm run build`)
 
 ## technology stack
 
@@ -154,11 +121,15 @@ Please ensure your code:
 - **Deployment**: Static adapter for GitHub Pages
 - **Icons**: lucide-svelte
 - **Styling**: CSS with custom properties for theming
+- **CI/CD**: GitHub Actions and ArgoCD
+- **Infrastructure**: Docker on Kubernetes
 
 ## license
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source and available under the [BSD 3-Clause License](LICENSE).
 
 ## acknowledgments
 
-Inspired by classic incremental games like Cookie Clicker, Antimatter Dimensions, and countless others in the genre.
+Inspired by classic incremental games like Cookie Clicker, Antimatter Dimensions, NGU Idle, Idling to Rule the Gods, Grimoire, and countless others in the genre.
+
+Also inspired by Bob Ross and the joy of happy little accidents.
