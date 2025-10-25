@@ -4,19 +4,19 @@ echo "🔍 Running pre-commit checks..."
 echo "📋 Type checking..."
 npm run check || exit 1
 
-# Run formatter
-echo "🧹 Formatting..."
+# Run formatter (auto-fix)
+echo "🧹 Formatting with Prettier..."
 npm run format || exit 1
+
+# Run ESLint with auto-fix
+echo "🔍 Linting with ESLint (auto-fix)..."
+npx eslint . --fix || exit 1
 
 # Run tests
 echo "🧪 Running tests..."
 npm run test:run || exit 1
 
-# Build for GitHub Pages deployment (builds directly to docs/)
-echo "🏗️  Building for GitHub Pages..."
-GITHUB_PAGES=true npm run build || exit 1
-
-# Stage changed files
+# Stage changed files (including auto-fixed files)
 git add .
 
-echo "✅ All pre-commit checks passed! Build output committed to docs/"
+echo "✅ All pre-commit checks passed!"

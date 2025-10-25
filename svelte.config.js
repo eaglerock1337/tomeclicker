@@ -1,9 +1,7 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
-const dev = process.env.NODE_ENV === 'development';
 const isGitHubPages = process.env.GITHUB_PAGES === 'true';
-// const isProduction = process.env.NODE_ENV === 'production' && !isGitHubPages;
 
 export default {
 	preprocess: vitePreprocess(),
@@ -15,9 +13,11 @@ export default {
 			precompress: false
 		}),
 		paths: {
-			// No base path for production cluster deployment
-			// Use /tomeclicker for GitHub Pages staging
-			base: dev ? '' : isGitHubPages ? '/tomeclicker' : ''
+			base: ''
+		},
+		version: {
+			// Use APP_VERSION if set (git SHA for preview, package.json version for prod)
+			name: process.env.APP_VERSION || Date.now().toString()
 		}
 	}
 };
