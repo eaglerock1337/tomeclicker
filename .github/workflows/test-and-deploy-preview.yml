@@ -8,7 +8,9 @@ on:
     branches: ['**']
 
 permissions:
-  contents: write # Needed for deployment to gh-pages/preview branches
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   test:
@@ -70,14 +72,11 @@ jobs:
           ls -la docs/
           echo "Build completed, docs/ directory exists"
 
-      - name: Add .nojekyll to disable Jekyll
-        run: touch docs/.nojekyll
-
-      - name: Deploy to preview branch
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
-          publish_branch: preview
-          force_orphan: true # Keep branch clean (no history)
-          commit_message: 'Deploy preview from PR #${{ github.event.pull_request.number }}'
+          path: ./docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
