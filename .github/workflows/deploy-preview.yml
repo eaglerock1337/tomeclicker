@@ -1,11 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [labeled, synchronize, reopened]
+  workflow_run:
+    workflows: ['Test & Validate']
+    types: [completed]
 
 permissions:
   contents: write # Needed to push to gh-pages/preview branches
@@ -14,15 +12,19 @@ jobs:
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
-    # Run on: push to main OR PR with 'preview' label
-    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'preview')
+    # Only deploy if tests passed AND (push to main OR PR has 'preview' label)
+    if: |
+      github.event.workflow_run.conclusion == 'success' && (
+        github.event.workflow_run.event == 'push' ||
+        (github.event.workflow_run.event == 'pull_request' && contains(github.event.workflow_run.pull_requests[0].labels.*.name, 'preview'))
+      )
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # For PRs, checkout the PR branch. For main push, checkout main.
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || 'main' }}
+          # For PRs, checkout the PR head SHA. For main push, checkout the commit that triggered the workflow.
+          ref: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.pull_requests[0].head.sha || github.event.workflow_run.head_sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -43,7 +45,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
           # Deploy to 'gh-pages' for main, 'preview' for PRs
-          publish_branch: ${{ github.event_name == 'push' && 'gh-pages' || 'preview' }}
+          publish_branch: ${{ github.event.workflow_run.event == 'push' && 'gh-pages' || 'preview' }}
           force_orphan: true # Keep branches clean (no history)
           # Dynamic commit message based on trigger
-          commit_message: "${{ github.event_name == 'push' && 'Deploy dev from main branch' || format('Deploy preview from PR #{0}', github.event.pull_request.number) }}"
+          commit_message: "${{ github.event.workflow_run.event == 'push' && 'Deploy dev from main branch' || format('Deploy preview from PR #{0}', github.event.workflow_run.pull_requests[0].number) }}"
