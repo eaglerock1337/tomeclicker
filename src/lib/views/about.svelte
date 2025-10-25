@@ -2,6 +2,7 @@
 	import { Info, Github, Globe, ExternalLink } from 'lucide-svelte';
 	import type { Config } from '$lib/config';
 	import type { Game } from '$lib/game';
+	import { version } from '$app/environment';
 
 	interface Props {
 		game: Game;
@@ -9,9 +10,6 @@
 	}
 
 	let { game = $bindable(), config = $bindable() }: Props = $props();
-
-	// Version from package.json (hardcoded for now, can be dynamic later)
-	const version = '0.1.0';
 </script>
 
 <div class="about">
@@ -80,13 +78,13 @@
 					<ExternalLink size={16} class="external-icon" />
 				</a>
 				<a
-					href="https://eaglerock1337.github.io/tomeclicker"
+					href="https://tomeclicker-dev.marks.dev"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="link-item"
 				>
 					<Globe size={20} />
-					<span>Preview (GitHub Pages)</span>
+					<span>Preview Site (GitHub Pages)</span>
 					<ExternalLink size={16} class="external-icon" />
 				</a>
 				<a
