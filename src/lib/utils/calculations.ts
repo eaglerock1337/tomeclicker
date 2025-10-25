@@ -4,10 +4,16 @@
  */
 
 import type { Upgrade } from '$lib/game';
+import {
+	BASE_LEVEL_COST,
+	LEVEL_COST_MULTIPLIER,
+	STAT_BASE_COST,
+	STAT_COST_MULTIPLIER
+} from '$lib/constants/game';
 
 /**
  * Calculates the EXP cost to reach the next level
- * Uses exponential scaling: 10,000 * 100^(level-1)
+ * Uses exponential scaling: BASE_LEVEL_COST * LEVEL_COST_MULTIPLIER^(level-1)
  *
  * @param currentLevel - The player's current level
  * @returns EXP required for next level
@@ -18,7 +24,7 @@ import type { Upgrade } from '$lib/game';
  * calculateLevelUpCost(3) // 100,000,000
  */
 export function calculateLevelUpCost(currentLevel: number): number {
-	return 10000 * Math.pow(100, currentLevel - 1);
+	return BASE_LEVEL_COST * Math.pow(LEVEL_COST_MULTIPLIER, currentLevel - 1);
 }
 
 /**
@@ -49,7 +55,7 @@ export function calculateUpgradeCost(upgrade: Upgrade): number {
 
 /**
  * Calculates the EXP cost to level up a specific stat
- * Uses exponential scaling: 100 * 1.5^(level-1)
+ * Uses exponential scaling: STAT_BASE_COST * STAT_COST_MULTIPLIER^(level-1)
  *
  * @param currentStatLevel - The current level of the stat
  * @returns EXP cost for next stat level
@@ -60,9 +66,7 @@ export function calculateUpgradeCost(upgrade: Upgrade): number {
  * calculateStatLevelCost(5) // 506
  */
 export function calculateStatLevelCost(currentStatLevel: number): number {
-	const baseCost = 100;
-	const multiplier = 1.5;
-	return Math.floor(baseCost * Math.pow(multiplier, currentStatLevel - 1));
+	return Math.floor(STAT_BASE_COST * Math.pow(STAT_COST_MULTIPLIER, currentStatLevel - 1));
 }
 
 /**
