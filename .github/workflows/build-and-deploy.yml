@@ -6,6 +6,10 @@ name: Build and Deploy to tomeclicker.marks.dev
 on:
   push:
     branches: ['main']
+  workflow_run:
+    workflows: ['Release']
+    types:
+      - completed
 
 jobs:
   Build-Site-Image:
@@ -13,11 +17,26 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Get Git Short SHA
-        id: new_sha
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      - name: Check new sha hash
-        run: echo ${{ steps.new_sha.outputs.sha_short }}
+        with:
+          fetch-depth: 0 # Need full history to get tags
+
+      - name: Get version tag
+        id: version
+        run: |
+          # Get the latest tag (semantic version)
+          VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          VERSION_NO_V=${VERSION#v}  # Remove 'v' prefix
+          echo "version=$VERSION_NO_V" >> $GITHUB_OUTPUT
+          echo "version_tag=$VERSION" >> $GITHUB_OUTPUT
+          # Also get SHA for fallback
+          SHA_SHORT=$(git rev-parse --short HEAD)
+          echo "sha_short=$SHA_SHORT" >> $GITHUB_OUTPUT
+
+      - name: Check version and sha
+        run: |
+          echo "Version: ${{ steps.version.outputs.version }}"
+          echo "Version Tag: ${{ steps.version.outputs.version_tag }}"
+          echo "SHA: ${{ steps.version.outputs.sha_short }}"
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -33,11 +52,13 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/tomeclicker:latest
-            ${{ secrets.DOCKER_USERNAME }}/tomeclicker:${{ steps.new_sha.outputs.sha_short }}
+            ${{ secrets.DOCKER_USERNAME }}/tomeclicker:${{ steps.version.outputs.version }}
+            ${{ secrets.DOCKER_USERNAME }}/tomeclicker:${{ steps.version.outputs.sha_short }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
     outputs:
-      new_sha: ${{ steps.new_sha.outputs.sha_short }}
+      new_version: ${{ steps.version.outputs.version }}
+      new_sha: ${{ steps.version.outputs.sha_short }}
 
   Publish-HLC-Site:
     runs-on: ubuntu-latest
@@ -48,16 +69,25 @@ jobs:
         with:
           repository: eaglerock1337/happy-little-cloud
           token: ${{ secrets.HLC_GITHUB_TOKEN }}
+
       - name: Get Old Version from Chart yaml
-        id: old_sha
-        run: echo "sha_short=$(grep appVersion tomeclicker/Chart.yaml | cut -f2 -d'"')" >> $GITHUB_OUTPUT
-      - name: Check old sha hash
-        run: echo ${{ steps.old_sha.outputs.sha_short }}
-      - name: Set Git Name
-        run: git config --global user.name "Autobob"
-      - name: Set Git Email
-        run: git config --global user.email "bob@marks.dev"
-      - name: Swap Git Tag in Chart.yaml
-        run: sed -i /appVersion/s/${{ steps.old_sha.outputs.sha_short }}/${{ needs.Build-Site-Image.outputs.new_sha }}/ tomeclicker/Chart.yaml
-      - name: Commit New Version to GitHub
-        run: git commit -am "Update Tomeclicker site to use ${{ needs.Build-Site-Image.outputs.new_sha }} tag" && git push
+        id: old_version
+        run: echo "version=$(grep appVersion tomeclicker/Chart.yaml | cut -f2 -d'"')" >> $GITHUB_OUTPUT
+
+      - name: Check old and new versions
+        run: |
+          echo "Old Version: ${{ steps.old_version.outputs.version }}"
+          echo "New Version: ${{ needs.Build-Site-Image.outputs.new_version }}"
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "Autobob"
+          git config --global user.email "bob@marks.dev"
+
+      - name: Update Chart.yaml with new version
+        run: sed -i /appVersion/s/${{ steps.old_version.outputs.version }}/${{ needs.Build-Site-Image.outputs.new_version }}/ tomeclicker/Chart.yaml
+
+      - name: Commit and push new version
+        run: |
+          git commit -am "chore: update TomeClicker to v${{ needs.Build-Site-Image.outputs.new_version }}"
+          git push
