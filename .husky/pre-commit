@@ -12,11 +12,7 @@ npm run format || exit 1
 echo "🧪 Running tests..."
 npm run test:run || exit 1
 
-# Build for GitHub Pages deployment (builds directly to docs/)
-echo "🏗️  Building for GitHub Pages..."
-GITHUB_PAGES=true npm run build || exit 1
-
 # Stage changed files
 git add .
 
-echo "✅ All pre-commit checks passed! Build output committed to docs/"
+echo "✅ All pre-commit checks passed!"

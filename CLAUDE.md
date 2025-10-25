@@ -336,25 +336,39 @@ The repository uses pre-commit hooks to enforce quality standards locally before
 1. Type checking (`npm run check`)
 2. Linting (`npm run lint`)
 3. Tests (`npm run test:run`)
-4. GitHub Pages build (`GITHUB_PAGES=true npm run build`)
-5. Auto-stage docs/ directory
-
-This ensures that all commits include an up-to-date GitHub Pages build in the `docs/` directory.
 
 **To bypass hooks** (not recommended): `git commit --no-verify`
 
 **GitHub Actions CI/CD**:
 
-- **Test & Validate** (`.github/workflows/test.yml`): Runs on all pushes and PRs
+- **Test & Validate** (`.github/workflows/test.yml`): Runs on all PRs
   - Runs type check, lint, tests, and coverage
-  - Validates that docs/ is up-to-date with current build
-  - Fails if pre-commit hook was bypassed and docs/ is stale
   - Uploads coverage reports to Codecov on PRs
+
+- **Semantic Release** (`.github/workflows/release.yml`): Runs on push to main
+  - Analyzes conventional commits to determine version bump
+  - Updates package.json and CHANGELOG.md
+  - Creates Git tags and GitHub releases
+  - Uses PAT (`SEMANTIC_RELEASE_TOKEN`) to bypass branch protection
+
+- **Deploy to GitHub Pages** (`.github/workflows/deploy-preview.yml`): Deploys to GitHub Pages
+  - **Push to main**: Builds and deploys to `gh-pages` branch (dev environment)
+  - **PR labeled `preview`**: Builds and deploys to `preview` branch (testing environment)
+  - GitHub Pages serves from `gh-pages` branch by default (dev site)
+  - Manually switch to `preview` branch in repo settings to test PRs on mobile
+  - Access at: `https://eaglerock1337.github.io/tomeclicker/`
 
 - **Build & Deploy** (`.github/workflows/build-and-deploy.yml.disabled`): Future production workflow
   - Multi-arch Docker builds (arm/v7, arm64)
   - Updates happy-little-cloud K8s manifests for ArgoCD
   - Currently disabled, ready for tomeclicker.marks.dev production deployment
+
+**Deployment Architecture**:
+
+- **Source code**: Committed to `main` branch (no build artifacts)
+- **Dev site**: Auto-deployed to `gh-pages` branch on every push to main
+- **Preview site**: Deployed to `preview` branch when PR labeled with `preview`
+- **Production site**: tomeclicker.marks.dev (via ArgoCD, future)
 
 ### Recent Major Implementations (2025-10-19)
 
