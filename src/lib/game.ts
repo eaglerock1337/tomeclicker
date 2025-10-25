@@ -8,6 +8,36 @@ import {
 	calculateGlobalIdleSpeedMultiplier,
 	calculateOsmosisSpeedMultiplier
 } from './utils/calculations';
+import {
+	GAME_TICK_RATE,
+	BASE_CRIT_DAMAGE,
+	TRAINING_BASE_COST,
+	TRAINING_REWARD,
+	TRAINING_CRIT_MULTIPLIER,
+	OSMOSIS_BASE_REWARD,
+	OSMOSIS_BASE_DURATION,
+	TRAINING_BASE_DURATION,
+	MEDITATION_FUTURE_DURATION,
+	MEDITATION_FUTURE_COST,
+	MEDITATION_DISASSOCIATE_DURATION,
+	MEDITATION_DISASSOCIATE_COST,
+	UPGRADE_COST_TIER_1,
+	UPGRADE_COST_TIER_2,
+	UPGRADE_COST_TIER_3,
+	UPGRADE_COST_TIER_4,
+	UPGRADE_COST_TIER_5,
+	UPGRADE_DISCIPLINE_BASE_COST,
+	UPGRADE_TRAINING_SPEED_COST,
+	UPGRADE_TRAINING_COST_REDUCTION,
+	UPGRADE_MAX_STANDARD,
+	UPGRADE_MAX_CRIT,
+	UPGRADE_MAX_TRAINING,
+	UPGRADE_MAX_COST_REDUCTION,
+	UPGRADE_MAX_DISCIPLINE,
+	HEADER_UNLOCK_THRESHOLD,
+	MENU_UNLOCK_THRESHOLD,
+	UPGRADES_UNLOCK_THRESHOLD
+} from './constants/game';
 
 /**
  * Represents an upgrade that can be purchased with EXP
@@ -118,7 +148,7 @@ export class Game {
 	 */
 	constructor(name?: string) {
 		this.name = name || 'A Stranger';
-		this.tickrate = 1000;
+		this.tickrate = GAME_TICK_RATE;
 		this.exp = 0.0;
 		this.lifetimeExp = 0.0;
 		this.level = 1;
@@ -126,7 +156,7 @@ export class Game {
 		this.menu = 'practice';
 		this.clickMultiplier = 1.0;
 		this.critChance = 0.0; // Start with 0% crit chance
-		this.critDamage = 0.5; // Crits do +50% damage (1.5x total)
+		this.critDamage = BASE_CRIT_DAMAGE; // Crits do +50% damage (1.5x total)
 		this.upgrades = this.initializeUpgrades();
 		this.saveIntegrity = 'valid';
 		this.lastValidation = Date.now();
@@ -204,7 +234,7 @@ export class Game {
 	 */
 	recalculateCritStats(): void {
 		this.critChance = 0.0; // Base 0%
-		this.critDamage = 0.5; // Base +50%
+		this.critDamage = BASE_CRIT_DAMAGE; // Base +50%
 
 		for (const upgrade of Object.values(this.upgrades)) {
 			if (upgrade.effectType === 'critChance') {
@@ -375,9 +405,9 @@ export class Game {
 				name: 'Focused Practice',
 				description: 'Deep concentration yields exponentially greater rewards',
 				effect: '+100% EXP per click per level',
-				baseCost: 50,
+				baseCost: UPGRADE_COST_TIER_1,
 				costMultiplier: 1.15,
-				maxLevel: 100,
+				maxLevel: UPGRADE_MAX_STANDARD,
 				currentLevel: 0,
 				effectType: 'clickMultiplier',
 				effectValue: 1.0,
@@ -388,9 +418,9 @@ export class Game {
 				name: 'Critical Insight',
 				description: 'Moments of clarity grant bursts of understanding',
 				effect: '+0.5% crit chance per level',
-				baseCost: 250,
+				baseCost: UPGRADE_COST_TIER_3,
 				costMultiplier: 1.75,
-				maxLevel: 50,
+				maxLevel: UPGRADE_MAX_CRIT,
 				currentLevel: 0,
 				effectType: 'critChance',
 				effectValue: 0.005,
@@ -401,9 +431,9 @@ export class Game {
 				name: 'Devastating Critique',
 				description: 'Critical insights become increasingly profound',
 				effect: '+5% crit damage per level',
-				baseCost: 500,
+				baseCost: UPGRADE_COST_TIER_5,
 				costMultiplier: 2.0,
-				maxLevel: 50,
+				maxLevel: UPGRADE_MAX_CRIT,
 				currentLevel: 0,
 				effectType: 'critDamage',
 				effectValue: 0.05,
@@ -416,9 +446,9 @@ export class Game {
 				name: 'Deep Contemplation',
 				description: 'Thoughtful reflection yields greater insights',
 				effect: '+1 EXP per rumination level',
-				baseCost: 100,
+				baseCost: UPGRADE_COST_TIER_2,
 				costMultiplier: 1.18,
-				maxLevel: 100,
+				maxLevel: UPGRADE_MAX_STANDARD,
 				currentLevel: 0,
 				effectType: 'osmosisExp',
 				effectValue: 1,
@@ -429,9 +459,9 @@ export class Game {
 				name: 'Flow State',
 				description: 'Enter a state of effortless focus',
 				effect: '+2% rumination speed per level',
-				baseCost: 300,
+				baseCost: UPGRADE_COST_TIER_4,
 				costMultiplier: 1.2,
-				maxLevel: 50,
+				maxLevel: UPGRADE_MAX_CRIT,
 				currentLevel: 0,
 				effectType: 'osmosisSpeed',
 				effectValue: 0.02,
@@ -442,9 +472,9 @@ export class Game {
 				name: 'Temporal Mastery',
 				description: 'Bend time itself to your will (affects ALL idle actions)',
 				effect: '+5% global idle speed per level',
-				baseCost: 500,
+				baseCost: UPGRADE_COST_TIER_5,
 				costMultiplier: 1.25,
-				maxLevel: 100,
+				maxLevel: UPGRADE_MAX_STANDARD,
 				currentLevel: 0,
 				effectType: 'globalIdleSpeed',
 				effectValue: 0.05,
@@ -457,9 +487,9 @@ export class Game {
 				name: 'Efficient Training',
 				description: 'Complete training exercises faster',
 				effect: '-10% training time per level',
-				baseCost: 10000,
+				baseCost: UPGRADE_TRAINING_SPEED_COST,
 				costMultiplier: 1.3,
-				maxLevel: 10,
+				maxLevel: UPGRADE_MAX_TRAINING,
 				currentLevel: 0,
 				effectType: 'trainingSpeed',
 				effectValue: 0.1,
@@ -470,9 +500,9 @@ export class Game {
 				name: 'Cost Reduction',
 				description: 'Training requires less EXP to start',
 				effect: '-20% training cost per level',
-				baseCost: 15000,
+				baseCost: UPGRADE_TRAINING_COST_REDUCTION,
 				costMultiplier: 1.35,
-				maxLevel: 5,
+				maxLevel: UPGRADE_MAX_COST_REDUCTION,
 				currentLevel: 0,
 				effectType: 'trainingCost',
 				effectValue: 0.2,
@@ -485,9 +515,9 @@ export class Game {
 				name: 'Discipline',
 				description: 'Unified focus accelerates all progress',
 				effect: '5x all EXP gain per level',
-				baseCost: 1000,
+				baseCost: UPGRADE_DISCIPLINE_BASE_COST,
 				costMultiplier: 100, // Expensive scaling like level-ups
-				maxLevel: 10,
+				maxLevel: UPGRADE_MAX_DISCIPLINE,
 				currentLevel: 0,
 				effectType: 'clickMultiplier',
 				effectValue: 5.0,
@@ -506,8 +536,8 @@ export class Game {
 				name: 'Ruminate',
 				description: 'Learn through observation and reflection',
 				progress: 0,
-				baseDuration: 15000, // 15 seconds
-				duration: 15000,
+				baseDuration: OSMOSIS_BASE_DURATION,
+				duration: OSMOSIS_BASE_DURATION,
 				expCost: 0, // Free to use!
 				isActive: false,
 				lastUpdate: Date.now()
@@ -517,9 +547,9 @@ export class Game {
 				name: 'Lift Heavy Objects',
 				description: 'Build raw physical power',
 				progress: 0,
-				baseDuration: 15000, // 15 seconds
-				duration: 15000,
-				expCost: 10,
+				baseDuration: TRAINING_BASE_DURATION,
+				duration: TRAINING_BASE_DURATION,
+				expCost: TRAINING_BASE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
 				trainsStat: 'strength'
@@ -529,9 +559,9 @@ export class Game {
 				name: 'Practice Quick Movements',
 				description: 'Improve agility and reflexes',
 				progress: 0,
-				baseDuration: 15000,
-				duration: 15000,
-				expCost: 10,
+				baseDuration: TRAINING_BASE_DURATION,
+				duration: TRAINING_BASE_DURATION,
+				expCost: TRAINING_BASE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
 				trainsStat: 'dexterity'
@@ -541,9 +571,9 @@ export class Game {
 				name: 'Study Ancient Texts',
 				description: 'Expand knowledge and understanding',
 				progress: 0,
-				baseDuration: 15000,
-				duration: 15000,
-				expCost: 10,
+				baseDuration: TRAINING_BASE_DURATION,
+				duration: TRAINING_BASE_DURATION,
+				expCost: TRAINING_BASE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
 				trainsStat: 'intelligence'
@@ -553,9 +583,9 @@ export class Game {
 				name: 'Meditate on Meaning',
 				description: 'Deepen insight and awareness',
 				progress: 0,
-				baseDuration: 15000,
-				duration: 15000,
-				expCost: 10,
+				baseDuration: TRAINING_BASE_DURATION,
+				duration: TRAINING_BASE_DURATION,
+				expCost: TRAINING_BASE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
 				trainsStat: 'wisdom'
@@ -573,9 +603,9 @@ export class Game {
 				name: 'Meditate on Your Future',
 				description: 'Unlock the path to adventure',
 				progress: 0,
-				baseDuration: 60000, // 1 minute
-				duration: 60000,
-				expCost: 50,
+				baseDuration: MEDITATION_FUTURE_DURATION,
+				duration: MEDITATION_FUTURE_DURATION,
+				expCost: MEDITATION_FUTURE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
 				oneTime: true,
@@ -586,9 +616,9 @@ export class Game {
 				name: 'Disassociate',
 				description: 'Take a mental health day. Increases offline progress time.',
 				progress: 0,
-				baseDuration: 30000, // 30 seconds per level
-				duration: 30000,
-				expCost: 100,
+				baseDuration: MEDITATION_DISASSOCIATE_DURATION,
+				duration: MEDITATION_DISASSOCIATE_DURATION,
+				expCost: MEDITATION_DISASSOCIATE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
 				oneTime: false
@@ -689,9 +719,8 @@ export class Game {
 
 		// Handle osmosis completion
 		if (actionId === 'practice-osmosis') {
-			const baseExp = 10;
 			const bonus = this.getOsmosisExpBonus();
-			this.addExp(baseExp + bonus);
+			this.addExp(OSMOSIS_BASE_REWARD + bonus);
 
 			// Osmosis always restarts
 			action.progress = 0;
@@ -704,11 +733,11 @@ export class Game {
 			const stat = action.trainsStat;
 			const cost = this.getStatLevelCost(stat);
 
-			// Give back some EXP (10 base, with crit chance for 50% bonus)
-			let expReward = 10;
+			// Give back some EXP (TRAINING_REWARD base, with crit chance for bonus)
+			let expReward = TRAINING_REWARD;
 			const isCrit = Math.random() < this.critChance;
 			if (isCrit) {
-				expReward = Math.floor(expReward * 1.5); // 15 EXP on crit
+				expReward = Math.floor(expReward * TRAINING_CRIT_MULTIPLIER);
 			}
 			this.addExp(expReward);
 
@@ -946,37 +975,37 @@ export class Game {
 	 *
 	 * These methods control when UI features unlock based on player progression.
 	 * Progression thresholds:
-	 * - 10 lifetime EXP: Header appears
-	 * - 50 lifetime EXP: Menu navigation and upgrades unlock
-	 * - Level 3: Adventures unlock (future feature)
-	 * - Level 5: Stats training unlocks (future feature)
+	 * - HEADER_UNLOCK_THRESHOLD lifetime EXP: Header appears
+	 * - MENU_UNLOCK_THRESHOLD lifetime EXP: Menu navigation and upgrades unlock
+	 * - Level 2: Training page unlocks
+	 * - Level 3: Stats page unlocks
 	 */
 
 	/**
 	 * Determines if the header should be displayed
-	 * Unlock threshold: 10 lifetime EXP
-	 * @returns True if player has earned at least 10 lifetime EXP
+	 * Unlock threshold: HEADER_UNLOCK_THRESHOLD lifetime EXP
+	 * @returns True if player has earned enough lifetime EXP
 	 */
 	showHeader(): boolean {
-		return this.lifetimeExp >= 10;
+		return this.lifetimeExp >= HEADER_UNLOCK_THRESHOLD;
 	}
 
 	/**
 	 * Determines if the navigation menu should be displayed
-	 * Unlock threshold: 50 lifetime EXP
-	 * @returns True if player has earned at least 50 lifetime EXP
+	 * Unlock threshold: MENU_UNLOCK_THRESHOLD lifetime EXP
+	 * @returns True if player has earned enough lifetime EXP
 	 */
 	showMenu(): boolean {
-		return this.lifetimeExp >= 50;
+		return this.lifetimeExp >= MENU_UNLOCK_THRESHOLD;
 	}
 
 	/**
 	 * Determines if the upgrades page should be accessible
-	 * Unlock threshold: 50 lifetime EXP (same as menu)
-	 * @returns True if player has earned at least 50 lifetime EXP
+	 * Unlock threshold: UPGRADES_UNLOCK_THRESHOLD lifetime EXP (same as menu)
+	 * @returns True if player has earned enough lifetime EXP
 	 */
 	showUpgrades(): boolean {
-		return this.lifetimeExp >= 50;
+		return this.lifetimeExp >= UPGRADES_UNLOCK_THRESHOLD;
 	}
 
 	/** Save/Load System */
@@ -1271,7 +1300,7 @@ export class Game {
 		this.menu = 'practice';
 		this.clickMultiplier = 1.0;
 		this.critChance = 0.0;
-		this.critDamage = 0.5;
+		this.critDamage = BASE_CRIT_DAMAGE;
 		this.upgrades = this.initializeUpgrades();
 		this.stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
 		this.trainingActions = this.initializeTrainingActions();
