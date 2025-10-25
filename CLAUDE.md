@@ -281,41 +281,20 @@ BREAKING CHANGE: Save format changed, old saves cannot be loaded
 
 **Release Process:**
 
-**Option 1: Manual Release (Recommended for feature branches)**
+Releases are **fully automated** via GitHub Actions when you push to `main`:
 
-Run this command to manually bump version and create release commit:
-
-```bash
-npm run release
-```
-
-This will:
-
-1. Analyze conventional commits since last release
-2. Determine version bump type (MAJOR/MINOR/PATCH)
-3. Update `package.json` version
-4. Generate/update `CHANGELOG.md`
-5. Create git commit with message: `chore(release): X.Y.Z [skip ci]`
-6. Push to your current branch
-
-**Workflow:**
-
-1. Create feature branch
-2. Make commits following conventional format
-3. When ready, run `npm run release` to bump version
-4. Push branch and open PR
-5. PR includes version bump commit
-6. Merge to main (squash or regular merge)
-7. GitHub Actions workflow will create GitHub release and tag
-
-**Option 2: Automatic Release on Main**
-
-If you don't run `npm run release` manually, the GitHub Actions workflow will automatically:
-
-1. Trigger on pushes to `main` branch
-2. Analyze conventional commits since last release
-3. Bump version, update changelog, create tag and GitHub release
-4. Commit changes back to main with `[skip ci]`
+1. **During development**: Make commits following conventional format on feature branches
+2. **Open PR**: Create pull request to main
+3. **Merge to main**: Squash merge or regular merge (use conventional format for squash commit message)
+4. **Automated release**: GitHub Actions workflow triggers automatically:
+   - Analyzes conventional commits since last release
+   - Determines version bump type (MAJOR/MINOR/PATCH)
+   - Updates `package.json` version
+   - Generates/updates `CHANGELOG.md`
+   - Creates git commit authored by "Autobob <bob@marks.dev>" with message: `chore(release): X.Y.Z [skip ci]`
+   - Pushes release commit back to main
+   - Creates Git tag (e.g., `v0.2.0`)
+   - Creates GitHub release with changelog notes
 
 **Pre-release branches** (optional, for future use):
 
@@ -328,6 +307,12 @@ If you don't run `npm run release` manually, the GitHub Actions workflow will au
 - Every release creates a permanent Git tag (e.g., `v0.2.0`)
 - These tags serve as long-term stable build references
 - Use for Docker image tags, deployments, rollbacks
+
+**GitHub Token:**
+
+- Uses automatic `GITHUB_TOKEN` provided by GitHub Actions
+- No custom token setup required
+- Permissions configured in workflow file
 
 ### Code Quality Standards
 

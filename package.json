@@ -16,8 +16,7 @@
 		"test:ui": "vitest --ui",
 		"test:run": "vitest run",
 		"test:coverage": "vitest run --coverage",
-		"validate": "npm run check && npm run lint && npm run test:run && npm run build",
-		"release": "semantic-release --no-ci"
+		"validate": "npm run check && npm run lint && npm run test:run && npm run build"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^20.1.0",
