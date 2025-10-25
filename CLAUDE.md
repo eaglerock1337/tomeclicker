@@ -221,6 +221,99 @@ See `design/PROPOSAL.md` for the complete modernization and enhancement roadmap,
 - Squash merge to main branch (final commit authored by user)
 - This keeps main branch clean while preserving work history in PRs
 
+### Versioning & Conventional Commits
+
+**Semantic Versioning:**
+
+TomeClicker follows [Semantic Versioning](https://semver.org/) with automated releases via `semantic-release`:
+
+- **0.x.x** - Pre-v1, active development (current state)
+- **1.0.0** - Cloud saves launched, core game loop complete
+- **1.x.x** - Post-launch features (new tomes, adventure zones, etc.)
+- **2.0.0** - Major redesign or breaking save format changes
+
+**Conventional Commits:**
+
+All commits must follow the [Conventional Commits](https://www.conventionalcommits.org/) format. The pre-commit hook enforces this via `commitlint`.
+
+**Commit message format:**
+
+```
+<type>: <description>
+
+[optional body]
+
+[optional footer]
+```
+
+**Version bump rules:**
+
+```
+Commit type        → Version bump
+──────────────────────────────────────
+feat:              → MINOR (0.1.0 → 0.2.0)  - New significant feature
+fix:               → PATCH (0.1.0 → 0.1.1)  - Bug fix
+perf:              → PATCH (0.1.0 → 0.1.1)  - Performance improvement
+improvement:       → PATCH (0.1.0 → 0.1.1)  - Small enhancement to existing feature
+refactor:          → PATCH (0.1.0 → 0.1.1)  - Code quality improvement
+feat!:             → MAJOR (0.1.0 → 1.0.0)  - Breaking change
+BREAKING CHANGE:   → MAJOR (0.1.0 → 1.0.0)  - Breaking change
+
+docs:              → No release  - Documentation only
+chore:             → No release  - Maintenance tasks
+style:             → No release  - Code formatting
+test:              → No release  - Test changes
+ci:                → No release  - CI/CD changes
+```
+
+**Examples:**
+
+```
+feat: add auto-adventure system
+fix: resolve mobile scrolling on story page
+improvement: add tooltip to upgrade buttons
+perf: optimize game state serialization
+refactor: extract adventure logic to separate class
+feat!: redesign save system with cloud sync
+
+BREAKING CHANGE: Save format changed, old saves cannot be loaded
+```
+
+**Release Process:**
+
+Releases are **fully automated** via GitHub Actions when you push to `main`:
+
+1. **During development**: Make commits following conventional format on feature branches
+2. **Open PR**: Create pull request to main
+3. **Merge to main**: Squash merge or regular merge (use conventional format for squash commit message)
+4. **Automated release**: GitHub Actions workflow triggers automatically:
+   - Analyzes conventional commits since last release
+   - Determines version bump type (MAJOR/MINOR/PATCH)
+   - Updates `package.json` version
+   - Generates/updates `CHANGELOG.md`
+   - Creates git commit authored by "Autobob <bob@marks.dev>" with message: `chore(release): X.Y.Z [skip ci]`
+   - Pushes release commit back to main
+   - Creates Git tag (e.g., `v0.2.0`)
+   - Creates GitHub release with changelog notes
+
+**Pre-release branches** (optional, for future use):
+
+- `alpha` branch → versions like `0.2.0-alpha.1`
+- `beta` branch → versions like `0.2.0-beta.1`
+- `main` branch → stable versions like `0.2.0`
+
+**Git Tags:**
+
+- Every release creates a permanent Git tag (e.g., `v0.2.0`)
+- These tags serve as long-term stable build references
+- Use for Docker image tags, deployments, rollbacks
+
+**GitHub Token:**
+
+- Uses automatic `GITHUB_TOKEN` provided by GitHub Actions
+- No custom token setup required
+- Permissions configured in workflow file
+
 ### Code Quality Standards
 
 When making changes, ensure:

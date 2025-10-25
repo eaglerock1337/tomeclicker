@@ -8,6 +8,7 @@
     import Saves from '$lib/views/saves.svelte';
     import Settings from '$lib/views/settings.svelte';
     import Story from '$lib/views/story.svelte';
+    import About from '$lib/views/about.svelte';
 
     import type { Config } from '$lib/config';
     import type { Game } from '$lib/game';
@@ -45,10 +46,7 @@
             <p>This will contain guides and tutorials.</p>
         </div>
     {:else if game && game.menu === "about"}
-        <div class="placeholder">
-            <h1>About page coming soon...</h1>
-            <p>This will contain game facts and statistics.</p>
-        </div>
+        <About bind:config bind:game/>
     {:else if !game}
         <div class="placeholder">
             <h1>Loading...</h1>

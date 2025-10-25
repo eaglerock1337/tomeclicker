@@ -127,8 +127,8 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="TomeClicker" />
     <meta property="og:image" content="https://tomeclicker.marks.dev/og-image.png" />
-    <meta property="og:description" content="An incremental that grows on you." />
-    <meta name="description" content="An incremental that grows on you." />
+    <meta property="og:description" content="An incremental RPG clicker game that grows on you." />
+    <meta name="description" content="An incremental RPG clicker game that grows on you." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 </svelte:head>
 
@@ -162,9 +162,12 @@
         margin: 0;
         padding: 0;
         height: 100%;
-        overflow: hidden;
+        /* Allow scrolling on body for iOS compatibility */
+        overflow: visible;
         /* Prevent double-tap zoom while allowing pinch-zoom */
         touch-action: manipulation;
+        /* Enable momentum scrolling on iOS */
+        -webkit-overflow-scrolling: touch;
     }
 
     .app {
@@ -182,6 +185,8 @@
         overflow-x: hidden;
         /* Safe area padding for mobile devices */
         padding-bottom: env(safe-area-inset-bottom, 0);
+        /* Enable momentum scrolling on iOS */
+        -webkit-overflow-scrolling: touch;
     }
 
     .footer {
