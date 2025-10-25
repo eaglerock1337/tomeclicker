@@ -266,6 +266,14 @@ test:              → No release  - Test changes
 ci:                → No release  - CI/CD changes
 ```
 
+**Commit Message Style:**
+
+IMPORTANT: Keep commit messages **succinct** with **short synopses** only.
+
+- Do NOT use many lines of bullet points in commit bodies
+- Keep it brief and to the point
+- Short summary in the subject line only
+
 **Examples:**
 
 ```
@@ -274,9 +282,28 @@ fix: resolve mobile scrolling on story page
 improvement: add tooltip to upgrade buttons
 perf: optimize game state serialization
 refactor: extract adventure logic to separate class
+test: add format and config tests (100% coverage)
 feat!: redesign save system with cloud sync
 
 BREAKING CHANGE: Save format changed, old saves cannot be loaded
+```
+
+**Bad Example (too verbose):**
+
+```
+test: comprehensive test coverage improvements
+
+- Add 113 tests for format.ts utility functions
+- Add 62 tests for Config class with localStorage mocking
+- Achieve 100% coverage on calculations.ts
+- Achieve 100% coverage on format.ts
+- Achieve 97.36% coverage on config.ts
+```
+
+**Good Example (succinct):**
+
+```
+test: add format and config tests (100% coverage)
 ```
 
 **Release Process:**
