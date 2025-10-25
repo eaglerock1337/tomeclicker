@@ -1,3 +1,14 @@
+import {
+	calculateLevelUpCost,
+	calculateUpgradeCost,
+	calculateStatLevelCost,
+	calculateTrainingSpeedMultiplier,
+	calculateTrainingCostMultiplier,
+	calculateOsmosisExpBonus,
+	calculateGlobalIdleSpeedMultiplier,
+	calculateOsmosisSpeedMultiplier
+} from './utils/calculations';
+
 /**
  * Represents an upgrade that can be purchased with EXP
  */
@@ -209,15 +220,7 @@ export class Game {
 	 * @returns Multiplier for training duration (lower is faster)
 	 */
 	getTrainingSpeedMultiplier(): number {
-		let multiplier = 1.0;
-
-		for (const upgrade of Object.values(this.upgrades)) {
-			if (upgrade.effectType === 'trainingSpeed') {
-				multiplier *= Math.pow(1 - upgrade.effectValue, upgrade.currentLevel);
-			}
-		}
-
-		return multiplier;
+		return calculateTrainingSpeedMultiplier(this.upgrades);
 	}
 
 	/**
@@ -225,15 +228,7 @@ export class Game {
 	 * @returns Multiplier for training EXP cost (lower is cheaper)
 	 */
 	getTrainingCostMultiplier(): number {
-		let multiplier = 1.0;
-
-		for (const upgrade of Object.values(this.upgrades)) {
-			if (upgrade.effectType === 'trainingCost') {
-				multiplier *= Math.pow(1 - upgrade.effectValue, upgrade.currentLevel);
-			}
-		}
-
-		return multiplier;
+		return calculateTrainingCostMultiplier(this.upgrades);
 	}
 
 	/**
@@ -241,15 +236,7 @@ export class Game {
 	 * @returns Additional EXP gained per osmosis completion
 	 */
 	getOsmosisExpBonus(): number {
-		let bonus = 0;
-
-		for (const upgrade of Object.values(this.upgrades)) {
-			if (upgrade.effectType === 'osmosisExp') {
-				bonus += upgrade.effectValue * upgrade.currentLevel;
-			}
-		}
-
-		return bonus;
+		return calculateOsmosisExpBonus(this.upgrades);
 	}
 
 	/**
@@ -257,15 +244,7 @@ export class Game {
 	 * @returns Speed multiplier (higher is faster)
 	 */
 	getGlobalIdleSpeedMultiplier(): number {
-		let multiplier = 1.0;
-
-		for (const upgrade of Object.values(this.upgrades)) {
-			if (upgrade.effectType === 'globalIdleSpeed') {
-				multiplier += upgrade.effectValue * upgrade.currentLevel;
-			}
-		}
-
-		return multiplier;
+		return calculateGlobalIdleSpeedMultiplier(this.upgrades);
 	}
 
 	/**
@@ -273,15 +252,7 @@ export class Game {
 	 * @returns Speed multiplier for osmosis actions (higher is faster)
 	 */
 	getOsmosisSpeedMultiplier(): number {
-		let multiplier = 1.0;
-
-		for (const upgrade of Object.values(this.upgrades)) {
-			if (upgrade.effectType === 'osmosisSpeed') {
-				multiplier += upgrade.effectValue * upgrade.currentLevel;
-			}
-		}
-
-		return multiplier;
+		return calculateOsmosisSpeedMultiplier(this.upgrades);
 	}
 
 	/**
@@ -290,10 +261,7 @@ export class Game {
 	 * @returns EXP cost for next level
 	 */
 	getStatLevelCost(stat: keyof Stats): number {
-		const currentLevel = this.stats[stat];
-		const baseCost = 100;
-		const multiplier = 1.5;
-		return Math.floor(baseCost * Math.pow(multiplier, currentLevel - 1));
+		return calculateStatLevelCost(this.stats[stat]);
 	}
 
 	/**
@@ -886,7 +854,7 @@ export class Game {
 	 * @returns EXP required for next level
 	 */
 	getLevelUpCost(): number {
-		return 10000 * Math.pow(100, this.level - 1);
+		return calculateLevelUpCost(this.level);
 	}
 
 	/**
@@ -919,12 +887,7 @@ export class Game {
 		const upgrade = this.upgrades[upgradeId];
 		if (!upgrade) return 0;
 
-		// Special handling for Discipline (multiplicative cost like level ups)
-		if (upgradeId === 'discipline') {
-			return upgrade.baseCost * Math.pow(upgrade.costMultiplier, upgrade.currentLevel);
-		}
-
-		return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMultiplier, upgrade.currentLevel));
+		return calculateUpgradeCost(upgrade);
 	}
 
 	/**
