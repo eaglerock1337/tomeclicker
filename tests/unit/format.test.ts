@@ -121,6 +121,11 @@ describe('Number Formatting', () => {
 			expect(formatCompact(1e39)).toBe('1.0e39');
 		});
 
+		it('should handle edge case around 999.9', () => {
+			// Edge case: just below 1000
+			expect(formatCompact(999.9)).toBe('999');
+		});
+
 		it('should handle custom decimal places', () => {
 			expect(formatCompact(1234, 0)).toBe('1K');
 		});
