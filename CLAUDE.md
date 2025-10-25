@@ -114,7 +114,7 @@ The `design/OUTLINE.md` file contains the complete game design document with det
   - `design-analysis-doc.md` - Design philosophy and architectural notes
 - **docs/** - GitHub Pages build output (auto-generated, do not edit manually)
   - Built by pre-commit hooks with `GITHUB_PAGES=true`
-  - Served at https://eagle-rock.github.io/tomeclicker
+  - Served at https://eaglerock1337.github.io/tomeclicker
 - **CLAUDE.md** - Development guidelines for Claude Code agents
 - **README.md** - Project overview and quick start
 

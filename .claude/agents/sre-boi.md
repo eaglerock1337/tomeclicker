@@ -18,24 +18,37 @@ color: orange
 
 ## Current Focus
 
-**Production Deployment (Completed)**
+**Production Deployment & Semantic Versioning (Completed 2025-10-24)**
 
-TomeClicker is now live at `tomeclicker.marks.dev` via ArgoCD GitOps deployment.
+TomeClicker is now live at `tomeclicker.marks.dev` via ArgoCD GitOps deployment with automated semantic versioning.
 
 **Deployment Architecture:**
 
-- **Frontend**: Static SvelteKit build
-- **Preview**: GitHub Pages at `/tomeclicker` path
-- **Production**: `tomeclicker.marks.dev` via ArgoCD
+- **Production**: `tomeclicker.marks.dev` via ArgoCD (main releases only)
+- **Preview**: GitHub Pages at `eaglerock1337.github.io/tomeclicker` (all commits)
+- **Future Dev**: `tomeclicker-dev.marks.dev` via GitHub Pages + CNAME (all releases: alpha/beta/main)
+  - Will publish to `eaglerock1337.github.io` root (not subpath)
+- **Future Stage**: `tomeclicker-stage.marks.dev` via ArgoCD (beta + main releases)
 - **Backend** (future): Self-hosted Raspberry Pi Kubernetes cluster
 
 **Infrastructure Status:**
 
 - ✅ Docker containerization with security hardening
-- ✅ GitHub Actions CI/CD for multi-arch builds
+- ✅ GitHub Actions CI/CD for multi-arch builds (semantic version + SHA tags)
 - ✅ Helm chart following marks.dev patterns
 - ✅ ArgoCD GitOps configuration
 - ✅ Traefik ingress with TLS
+- ✅ Semantic versioning with automated releases
+- ✅ Sequential workflow: Release → Build → Deploy
+
+**Recent Updates (2025-10-24):**
+
+- Implemented semantic-release with conventional commits
+- CI/CD workflow creates version tags, CHANGELOG.md, GitHub releases
+- Docker images tagged with semantic version (e.g., 0.1.0), git SHA, and latest
+- Build workflow runs AFTER release workflow to use semantic version
+- Autobob (bob@marks.dev) authors all release commits
+- HLC deployment updated to use semantic versions instead of git SHA
 
 ---
 
