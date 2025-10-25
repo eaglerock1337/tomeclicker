@@ -26,8 +26,7 @@
 			</div>
 			<div class="section-body">
 				<p class="tagline">
-					An incremental RPG clicker game where you click to gain experience, level up, train
-					stats, adventure through zones, and eventually discover the secrets of magical tomes.
+					An incremental RPG clicker game that grows on you.
 				</p>
 				<div class="info-row">
 					<span class="info-label">Version:</span>
@@ -38,8 +37,17 @@
 					<span class="info-value">BSD 3-Clause</span>
 				</div>
 				<div class="info-row">
-					<span class="info-label">Built with:</span>
-					<span class="info-value">SvelteKit</span>
+					<span class="info-label">Hosting:</span>
+					<span class="info-value">
+						<a
+							href="https://marks.dev/#/hlc"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-link"
+						>
+							Happy Little Cloud
+						</a>
+					</span>
 				</div>
 			</div>
 		</section>
@@ -52,23 +60,13 @@
 			</div>
 			<div class="section-body">
 				<a
-					href="https://github.com/eagle-rock/tomeclicker"
+					href="https://github.com/eaglerock1337/tomeclicker"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="link-item"
 				>
 					<Github size={20} />
 					<span>GitHub Repository</span>
-					<ExternalLink size={16} class="external-icon" />
-				</a>
-				<a
-					href="https://eagle-rock.github.io/tomeclicker"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="link-item"
-				>
-					<Globe size={20} />
-					<span>Preview (GitHub Pages)</span>
 					<ExternalLink size={16} class="external-icon" />
 				</a>
 				<a
@@ -82,13 +80,23 @@
 					<ExternalLink size={16} class="external-icon" />
 				</a>
 				<a
+					href="https://eaglerock1337.github.io/tomeclicker"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="link-item"
+				>
+					<Globe size={20} />
+					<span>Preview (GitHub Pages)</span>
+					<ExternalLink size={16} class="external-icon" />
+				</a>
+				<a
 					href="https://marks.dev"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="link-item"
 				>
 					<Globe size={20} />
-					<span>Developer Site</span>
+					<span>EagleRock's Website</span>
 					<ExternalLink size={16} class="external-icon" />
 				</a>
 			</div>
@@ -101,11 +109,17 @@
 			</div>
 			<div class="section-body">
 				<p class="credits-text">
-					Created by EagleRock with inspiration from Bob Ross and the joy of happy little
-					accidents.
+					Created by EagleRock with inspiration from <a
+						href="https://hlc.marks.dev/"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-link"
+					>
+						Bob Ross
+					</a> and the joy of happy little accidents.
 				</p>
 				<p class="credits-text">
-					Open source and built using SvelteKit, TypeScript, and CSS custom properties.
+					Open source and built using SvelteKit and the Boi Squad.
 				</p>
 			</div>
 		</section>
@@ -195,6 +209,25 @@
 
 	.info-value {
 		font-weight: 500;
+	}
+
+	/* Inline links within text */
+	.inline-link {
+		color: var(--blue);
+		text-decoration: underline;
+		font-weight: 400;
+		transition: color 0.2s ease;
+	}
+
+	.inline-link:hover {
+		color: var(--green);
+		text-decoration: none;
+	}
+
+	.inline-link:focus {
+		outline: 2px solid var(--blue);
+		outline-offset: 2px;
+		border-radius: 2px;
 	}
 
 	/* Links */
