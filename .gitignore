@@ -10,3 +10,6 @@ node_modules
 
 # Test coverage
 /coverage
+
+# GitHub Pages build output (deployed via CI/CD)
+/docs

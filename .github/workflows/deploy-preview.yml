@@ -1,0 +1,49 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [labeled, synchronize, reopened]
+
+permissions:
+  contents: write # Needed to push to gh-pages/preview branches
+
+jobs:
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    # Run on: push to main OR PR with 'preview' label
+    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'preview')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # For PRs, checkout the PR branch. For main push, checkout main.
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || 'main' }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for GitHub Pages
+        env:
+          GITHUB_PAGES: 'true'
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          # Deploy to 'gh-pages' for main, 'preview' for PRs
+          publish_branch: ${{ github.event_name == 'push' && 'gh-pages' || 'preview' }}
+          force_orphan: true # Keep branches clean (no history)
+          # Dynamic commit message based on trigger
+          commit_message: ${{ github.event_name == 'push' && 'Deploy dev from main branch' || format('Deploy preview from PR #{0}', github.event.pull_request.number) }}
