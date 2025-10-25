@@ -46,4 +46,4 @@ jobs:
           publish_branch: ${{ github.event_name == 'push' && 'gh-pages' || 'preview' }}
           force_orphan: true # Keep branches clean (no history)
           # Dynamic commit message based on trigger
-          commit_message: ${{ github.event_name == 'push' && 'Deploy dev from main branch' || format('Deploy preview from PR #{0}', github.event.pull_request.number) }}
+          commit_message: "${{ github.event_name == 'push' && 'Deploy dev from main branch' || format('Deploy preview from PR #{0}', github.event.pull_request.number) }}"
