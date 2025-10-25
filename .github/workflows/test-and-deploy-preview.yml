@@ -8,9 +8,7 @@ on:
     branches: ['**']
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write # Needed for deployment to preview branch
 
 jobs:
   test:
@@ -72,11 +70,12 @@ jobs:
           ls -la docs/
           echo "Build completed, docs/ directory exists"
 
-      - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to preview branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: ./docs
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: preview
+          force_orphan: true
+          cname: tomeclicker-dev.marks.dev
+          commit_message: 'Deploy preview from PR #${{ github.event.pull_request.number }}'
