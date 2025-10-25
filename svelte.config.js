@@ -14,6 +14,10 @@ export default {
 		}),
 		paths: {
 			base: ''
+		},
+		version: {
+			// Use APP_VERSION if set (git SHA for preview, package.json version for prod)
+			name: process.env.APP_VERSION || Date.now().toString()
 		}
 	}
 };

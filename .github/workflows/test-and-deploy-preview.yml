@@ -60,9 +60,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set version to git SHA
+        id: version
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Build for GitHub Pages
         env:
           GITHUB_PAGES: 'true'
+          APP_VERSION: ${{ steps.version.outputs.sha_short }}
         run: npm run build
 
       - name: Verify build output
