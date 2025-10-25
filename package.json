@@ -1,6 +1,6 @@
 {
 	"name": "tomeclicker",
-	"version": "0.1.0",
+	"version": "0.0.0",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
@@ -16,9 +16,16 @@
 		"test:ui": "vitest --ui",
 		"test:run": "vitest run",
 		"test:coverage": "vitest run --coverage",
-		"validate": "npm run check && npm run lint && npm run test:run && npm run build"
+		"validate": "npm run check && npm run lint && npm run test:run && npm run build",
+		"release": "semantic-release --no-ci"
 	},
 	"devDependencies": {
+		"@commitlint/cli": "^20.1.0",
+		"@commitlint/config-conventional": "^20.0.0",
+		"@semantic-release/changelog": "^6.0.3",
+		"@semantic-release/exec": "^7.1.0",
+		"@semantic-release/git": "^10.0.1",
+		"@semantic-release/github": "^11.0.6",
 		"@sveltejs/adapter-static": "^3.0.9",
 		"@sveltejs/kit": "^2.43.5",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
@@ -33,6 +40,7 @@
 		"husky": "^9.1.7",
 		"prettier": "^3.0.0",
 		"prettier-plugin-svelte": "^3.4.0",
+		"semantic-release": "^24.2.9",
 		"svelte": "^5.39.6",
 		"svelte-check": "^4.3.2",
 		"typescript": "^5.9.2",
