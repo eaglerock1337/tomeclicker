@@ -63,6 +63,8 @@ Present a summary to the user:
 
 ### 2. Automatic Configuration Updates
 
+**IMPORTANT**: You MUST actually use the Edit/Write tools to update the files. Do not just write a report - make real changes to the configuration files.
+
 Immediately proceed to update the relevant files (no user confirmation needed):
 
 #### Agent Files (`.claude/agents/*.md`)
@@ -108,9 +110,22 @@ Update if:
 - Project status updated
 - Roadmap priorities shifted
 
-### 3. Update Report
+### 3. Commit Changes
 
-After making updates, provide a detailed report:
+After updating all files, commit the changes:
+
+```bash
+git add .claude/agents/*.md .claude/commands/*.md design/*.md CLAUDE.md README.md
+git commit -m "chore: debrief - update agent context from session
+
+[Brief summary of what context was added]"
+```
+
+This creates a permanent record of when context was synchronized.
+
+### 4. Update Report
+
+After committing changes, provide a detailed report:
 
 ```markdown
 ## ✅ Debrief Complete

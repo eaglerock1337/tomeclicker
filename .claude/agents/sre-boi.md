@@ -18,37 +18,44 @@ color: orange
 
 ## Current Focus
 
-**Production Deployment & Semantic Versioning (Completed 2025-10-24)**
+### CI/CD Infrastructure Complete (2025-10-25)
 
-TomeClicker is now live at `tomeclicker.marks.dev` via ArgoCD GitOps deployment with automated semantic versioning.
+TomeClicker has fully automated CI/CD pipelines with semantic versioning, preview deployments, and production triggers.
 
 **Deployment Architecture:**
 
-- **Production**: `tomeclicker.marks.dev` via ArgoCD (main releases only)
-- **Preview**: GitHub Pages at `eaglerock1337.github.io/tomeclicker` (all commits)
-- **Future Dev**: `tomeclicker-dev.marks.dev` via GitHub Pages + CNAME (all releases: alpha/beta/main)
-  - Will publish to `eaglerock1337.github.io` root (not subpath)
-- **Future Stage**: `tomeclicker-stage.marks.dev` via ArgoCD (beta + main releases)
+- **Dev/Preview**: `tomeclicker-dev.marks.dev` via GitHub Pages (PRs with `preview` label)
+  - Shows git SHA as version
+  - Deployed using GitHub Actions artifacts (no Jekyll processing)
+  - One preview at a time (overwrites previous)
+- **Production**: `tomeclicker.marks.dev` via ArgoCD (tag-triggered deployments only)
+  - Shows package.json version (e.g., 0.1.0)
+  - Triggers only on version tags (`v*.*.*`)
+  - Multi-arch Docker builds (arm/v7, arm64)
 - **Backend** (future): Self-hosted Raspberry Pi Kubernetes cluster
 
 **Infrastructure Status:**
 
 - ✅ Docker containerization with security hardening
-- ✅ GitHub Actions CI/CD for multi-arch builds (semantic version + SHA tags)
-- ✅ Helm chart following marks.dev patterns
-- ✅ ArgoCD GitOps configuration
+- ✅ GitHub Actions CI/CD for multi-arch builds
+- ✅ Semantic versioning with automated releases (v0.1.0 baseline)
+- ✅ Tag-triggered production deployments
+- ✅ GitHub Pages preview system for mobile testing
+- ✅ Version display strategy (SHA for dev, semver for prod)
+- ✅ Pre-commit quality gates (type check, lint with auto-fix, tests)
+- ✅ Helm chart + ArgoCD GitOps configuration
 - ✅ Traefik ingress with TLS
-- ✅ Semantic versioning with automated releases
-- ✅ Sequential workflow: Release → Build → Deploy
 
-**Recent Updates (2025-10-24):**
+**Recent Updates (2025-10-25):**
 
-- Implemented semantic-release with conventional commits
-- CI/CD workflow creates version tags, CHANGELOG.md, GitHub releases
-- Docker images tagged with semantic version (e.g., 0.1.0), git SHA, and latest
-- Build workflow runs AFTER release workflow to use semantic version
-- Autobob (bob@marks.dev) authors all release commits
-- HLC deployment updated to use semantic versions instead of git SHA
+- Completed preview deployment system with `preview` label trigger
+- Switched to GitHub Actions deployment method (eliminated Jekyll issues)
+- Implemented dynamic version display via `APP_VERSION` env var
+- Production workflow now triggers only on version tags
+- Baseline version established at v0.1.0
+- Updated pre-commit hooks: removed docs/ build, added ESLint --fix
+- Squash merge strategy adopted for version control
+- Ready for major refactoring phase with solid CI foundation
 
 ---
 
