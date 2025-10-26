@@ -1,8 +1,5 @@
 name: Build and Deploy to tomeclicker.marks.dev
 
-# This workflow is disabled (.yml.disabled extension) until production deployment is ready
-# To enable: rename to build-and-deploy.yml and configure secrets
-
 on:
   push:
     tags:
