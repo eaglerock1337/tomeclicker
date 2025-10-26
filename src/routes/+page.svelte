@@ -1,148 +1,228 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-	import { MousePointer } from 'lucide-svelte';
-	import type { Writable } from 'svelte/store';
-	import type { Game } from '$lib/game';
+    import { onMount } from 'svelte';
 
-	// Get stores from context
-	const gameStore = getContext<Writable<Game | null>>('game');
+    import { Config } from '$lib/config';
+    import { Game } from '$lib/game';
 
-	// Reactive values from stores
-	let game = $derived($gameStore);
+    import Header from '$lib/header.svelte';
+    import Navbar from '$lib/navbar.svelte';
+    import View from '$lib/view.svelte';
 
-	let clickText = $derived(game ? game.updateClickText() : 'Loading...');
-	let showCrit = $state(false);
+    import '$lib/styles/themes.css';
 
-	function clickMe() {
-		if (!game) return;
+    // Config values
+    let config = new Config("prussian-blue", "system");
+    let configLoaded = false; // Track if config has been loaded from storage
 
-		let clickValue = game.getClickValue();
+    // Game values
+    let game: Game;
 
-		// Roll for crit
-		const isCrit = Math.random() < game.critChance;
-		if (isCrit) {
-			clickValue *= 1 + game.critDamage;
-			showCrit = true;
-			setTimeout(() => (showCrit = false), 300);
-		}
+    onMount(() => {
+        // Load saved config
+        config.loadFromLocalStorage();
+        configLoaded = true; // Mark as loaded
+        config = config; // Force reactivity
 
-		game.addExp(clickValue);
-		gameStore.set(game); // Update store to trigger reactivity
-	}
+        // Listen for system preference changes
+        if (window.matchMedia) {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            const handleChange = () => {
+                // Force reactivity when system preference changes
+                if (config.displayMode === 'system') {
+                    config = config; // Trigger Svelte reactivity
+                }
+            };
+
+            // Modern browsers
+            if (mediaQuery.addEventListener) {
+                mediaQuery.addEventListener('change', handleChange);
+            } else {
+                // Older browsers
+                mediaQuery.addListener(handleChange);
+            }
+        }
+        game = new Game();
+
+        // Load saved data
+        setTimeout(() => {
+            if (game) {
+                const loadedFromLocalStorage = game.loadFromLocalStorage();
+                if (!loadedFromLocalStorage) {
+                    game.loadFromCookies();
+                }
+                game = game; // Force reactivity
+            }
+        }, 100);
+
+        // Set up autosave every 15 seconds
+        const autosaveInterval = setInterval(() => {
+            if (game) {
+                game.autoSave();
+            }
+        }, 15000);
+
+        // Set up idle action updates every 100ms
+        const idleUpdateInterval = setInterval(() => {
+            if (game) {
+                game.updateIdleActions();
+                // Add idle EXP (idleExpRate is per second, so divide by 10 for 100ms intervals)
+                if (game.idleExpRate > 0) {
+                    game.addExp(game.idleExpRate / 10);
+                }
+                game = game; // Force Svelte reactivity
+            }
+        }, 100);
+
+        // Cleanup on component destroy
+        return () => {
+            clearInterval(autosaveInterval);
+            clearInterval(idleUpdateInterval);
+        };
+
+        // Setup touch event handling for iOS double-tap prevention
+        let lastTouchTime = 0;
+
+        const handleTouchStart = (event: TouchEvent) => {
+            // Allow pinch-zoom (multi-touch)
+            if (event.touches.length > 1) {
+                return;
+            }
+
+            // Prevent double-tap zoom by checking time between taps
+            const currentTime = Date.now();
+            const timeDiff = currentTime - lastTouchTime;
+            lastTouchTime = currentTime;
+
+            // If touches are too close together (< 300ms), prevent default
+            if (timeDiff < 300) {
+                event.preventDefault();
+            }
+        };
+
+        document.addEventListener('touchstart', handleTouchStart, { passive: false });
+
+        return () => {
+            document.removeEventListener('touchstart', handleTouchStart);
+        };
+    });
+
+    // Color theme - reactive to config changes
+    $: theme = config ? config.getTheme() : "";
+
+    // Auto-save config whenever theme or displayMode changes (but only after initial load)
+    $: if (config && configLoaded && typeof localStorage !== 'undefined') {
+        // Reference the properties to make this reactive to their changes
+        config.theme;
+        config.displayMode;
+        config.saveToLocalStorage();
+    }
+
 </script>
 
-<div class="practice-container">
-	<div class="thebutton">
-		<button
-			onclick={clickMe}
-			ontouchstart={clickMe}
-			aria-label="Practice to gain experience points"
-		>
-			{#if showCrit}
-				<div class="crit-text">CRIT!</div>
-			{/if}
-			<div class="item">
-				<MousePointer size={48} /><br />{clickText}
-			</div>
-		</button>
-	</div>
+<svelte:head>
+    <title>TomeClicker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Lato:wght@100;300;400;700&family=Tangerine&display=swap" rel="stylesheet">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="TomeClicker" />
+    <meta property="og:image" content="https://tomeclicker.marks.dev/og-image.png" />
+    <meta property="og:description" content="An incremental RPG clicker game that grows on you." />
+    <meta name="description" content="An incremental RPG clicker game that grows on you." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</svelte:head>
+
+<div class="app {theme}">
+    {#if game}
+        {#if game.showHeader()}
+            <Header {game}/>
+        {/if}
+        <main class="main-content">
+            <View bind:game bind:config/>
+        </main>
+        {#if game.showMenu()}
+            <footer class="footer">
+                <Navbar bind:game/>
+            </footer>
+        {/if}
+    {:else}
+        <div class="loading">
+            <h1>Loading TomeClicker...</h1>
+        </div>
+    {/if}
 </div>
 
 <style>
-	.practice-container {
-		height: 100%;
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		padding: 0;
-		box-sizing: border-box;
-	}
+    :root {
+        font-size: 18px;
+        background-color: #28262cff;
+    }
 
-	/* The Button */
+    :global(html, body) {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        /* Allow scrolling on body for iOS compatibility */
+        overflow: visible;
+        /* Prevent double-tap zoom while allowing pinch-zoom */
+        touch-action: manipulation;
+        /* Enable momentum scrolling on iOS */
+        -webkit-overflow-scrolling: touch;
+    }
 
-	.thebutton {
-		flex: 1;
-		width: 100%;
-	}
+    .app {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100dvh; /* Dynamic viewport height for mobile */
+        width: 100vw;
+        overflow: hidden;
+    }
 
-	.thebutton button {
-		color: var(--text);
-		background-color: var(--bg);
-		border: none;
-		margin: 0;
-		padding: 0;
-		font-family: JetBrains Mono, monospace;
-		font-weight: 400;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		text-align: center;
-		font-size: 1em;
-		touch-action: manipulation;
-		transition:
-			color 1s cubic-bezier(0, 0.5, 0, 1),
-			background-color 1s cubic-bezier(0, 0.5, 0, 1);
-		/* Prevent text selection during rapid clicking */
-		-webkit-touch-callout: none;
-		-webkit-user-select: none;
-		-khtml-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-		outline: none;
-		border-radius: 0;
-		/* Prevent iOS flash on tap */
-		-webkit-tap-highlight-color: transparent;
-		/* Prevent accidental highlighting */
-		-webkit-highlight: none;
-	}
+    .main-content {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        /* Safe area padding for mobile devices */
+        padding-bottom: env(safe-area-inset-bottom, 0);
+        /* Enable momentum scrolling on iOS */
+        -webkit-overflow-scrolling: touch;
+    }
 
-	.item {
-		align-items: center;
-		justify-content: center;
-		text-align: center;
-		transition: scale 0.1s;
-	}
+    .footer {
+        flex-shrink: 0;
+        /* Ensure footer stays above device UI on mobile */
+        padding-bottom: env(safe-area-inset-bottom, 0);
+        position: relative;
+        z-index: 100;
+    }
 
-	.item:hover {
-		scale: 1.05;
-	}
+    .loading {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--text);
+        font-family: Lato, sans-serif;
+        font-weight: 300;
+    }
 
-	.item:active {
-		scale: 0.95;
-	}
+    /* Red and Green Color text */
 
-	.thebutton button:active .item {
-		scale: 0.95;
-	}
+    :global(em) {
+        color: var(--green);
+        font-style: normal;
+        font-weight: 400;
+        transition: color 1s cubic-bezier(0,.5,0,1);
+    }
 
-	.crit-text {
-		position: absolute;
-		top: 35%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		font-size: 2em;
-		font-weight: 700;
-		color: var(--yellow);
-		text-shadow: 0 0 10px var(--yellow);
-		animation: critPulse 0.3s ease-out;
-		pointer-events: none;
-	}
+    :global(strong) {
+        color: var(--red);
+        font-style: normal;
+        font-weight: 500;
+        transition: color 1s cubic-bezier(0,.5,0,1);
+    }
 
-	@keyframes critPulse {
-		0% {
-			transform: translate(-50%, -50%) scale(0.5);
-			opacity: 0;
-		}
-		50% {
-			transform: translate(-50%, -50%) scale(1.2);
-			opacity: 1;
-		}
-		100% {
-			transform: translate(-50%, -50%) scale(1);
-			opacity: 0;
-		}
-	}
+    /* Theme definitions moved to src/lib/styles/themes.css */
+
 </style>

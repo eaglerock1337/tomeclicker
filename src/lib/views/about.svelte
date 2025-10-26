@@ -1,6 +1,15 @@
 <script lang="ts">
 	import { Info, Github, Globe, ExternalLink } from 'lucide-svelte';
+	import type { Config } from '$lib/config';
+	import type { Game } from '$lib/game';
 	import { version } from '$app/environment';
+
+	interface Props {
+		game: Game;
+		config: Config;
+	}
+
+	let { game = $bindable(), config = $bindable() }: Props = $props();
 </script>
 
 <div class="about">
@@ -14,7 +23,9 @@
 				<h2>TomeClicker</h2>
 			</div>
 			<div class="section-body">
-				<p class="tagline">An incremental RPG clicker game that grows on you.</p>
+				<p class="tagline">
+					An incremental RPG clicker game that grows on you.
+				</p>
 				<div class="info-row">
 					<span class="info-label">Version:</span>
 					<span class="info-value">{version}</span>
@@ -96,9 +107,9 @@
 			</div>
 			<div class="section-body">
 				<p class="credits-text">
-					Created by EagleRock with inspiration from classic incremental games like Cookie
-					Clicker, Antimatter Dimensions, NGU Idle, Idling to Rule the Gods, Grimoire, and
-					countless others in the genre. Also inspired by <a
+					Created by EagleRock with inspiration from classic incremental games like Cookie Clicker, Antimatter Dimensions, NGU Idle, Idling to Rule the Gods, Grimoire, and countless others in the genre.					
+
+					Also inspired by <a
 						href="https://hlc.marks.dev/"
 						target="_blank"
 						rel="noopener noreferrer"
@@ -107,7 +118,9 @@
 						Bob Ross
 					</a> and the joy of happy little accidents.
 				</p>
-				<p class="credits-text">Open source and built using SvelteKit and the Boi Squad.</p>
+				<p class="credits-text">
+					Open source and built using SvelteKit and the Boi Squad.
+				</p>
 			</div>
 		</section>
 	</div>
@@ -122,8 +135,7 @@
 		font-weight: 300;
 		height: 100%;
 		padding: 2rem 1rem;
-		transition:
-			color 1s cubic-bezier(0, 0.5, 0, 1),
+		transition: color 1s cubic-bezier(0, 0.5, 0, 1),
 			background-color 1s cubic-bezier(0, 0.5, 0, 1);
 		box-sizing: border-box;
 		overflow-y: auto;

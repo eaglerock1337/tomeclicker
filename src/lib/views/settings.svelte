@@ -1,17 +1,14 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-	import type { Writable } from 'svelte/store';
 	import type { Config, DisplayMode } from '$lib/config';
 	import type { Game } from '$lib/game';
 	import { getThemeNames, getThemeDisplayName } from '$lib/constants/themes';
 
-	// Get stores from context
-	const gameStore = getContext<Writable<Game | null>>('game');
-	const configStore = getContext<Writable<Config>>('config');
+	interface Props {
+		game: Game;
+		config: Config;
+	}
 
-	// Reactive values from stores (using non-null assertion since layout ensures game exists)
-	let game = $derived($gameStore!);
-	let config = $derived($configStore);
+	let { game = $bindable(), config = $bindable() }: Props = $props();
 
 	const availableThemes = getThemeNames();
 </script>
@@ -50,7 +47,11 @@
 			<!-- Theme Selector -->
 			<div class="setting-row">
 				<label for="theme-select">Color Theme</label>
-				<select id="theme-select" class="theme-select" bind:value={config.theme}>
+				<select
+					id="theme-select"
+					class="theme-select"
+					bind:value={config.theme}
+				>
 					{#each availableThemes as themeName}
 						<option value={themeName}>
 							{getThemeDisplayName(themeName)}
@@ -68,7 +69,7 @@
 						class:active={config.displayMode === 'light'}
 						onclick={() => {
 							config.setDisplayMode('light');
-							configStore.set(config); // Update store
+							config = config; // Force Svelte reactivity
 						}}
 						aria-label="Light mode"
 					>
@@ -79,7 +80,7 @@
 						class:active={config.displayMode === 'system'}
 						onclick={() => {
 							config.setDisplayMode('system');
-							configStore.set(config); // Update store
+							config = config; // Force Svelte reactivity
 						}}
 						aria-label="System preference"
 					>
@@ -90,7 +91,7 @@
 						class:active={config.displayMode === 'dark'}
 						onclick={() => {
 							config.setDisplayMode('dark');
-							configStore.set(config); // Update store
+							config = config; // Force Svelte reactivity
 						}}
 						aria-label="Dark mode"
 					>
@@ -100,6 +101,7 @@
 			</div>
 		</section>
 	</div>
+
 </div>
 
 <style>
@@ -111,8 +113,7 @@
 		font-weight: 300;
 		height: 100%;
 		padding: 2rem 1rem;
-		transition:
-			color 1s cubic-bezier(0, 0.5, 0, 1),
+		transition: color 1s cubic-bezier(0, 0.5, 0, 1),
 			background-color 1s cubic-bezier(0, 0.5, 0, 1);
 		box-sizing: border-box;
 		overflow-y: auto;
@@ -244,6 +245,7 @@
 		color: var(--bg);
 		font-weight: 500;
 	}
+
 
 	/* Mobile Responsiveness */
 	@media (max-width: 768px) {
