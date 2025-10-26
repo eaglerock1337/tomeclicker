@@ -66,7 +66,7 @@ export class GameBuilder {
 	 * Set specific stat values
 	 */
 	withStats(stats: Partial<Stats>): this {
-		this.game.stats = { ...this.game.stats, ...stats };
+		this.game.setStats({ ...this.game.stats, ...stats });
 		return this;
 	}
 
