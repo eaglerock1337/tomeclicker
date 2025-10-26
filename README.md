@@ -4,7 +4,7 @@ An open-source web-based incremental RPG game built with SvelteKit.
 
 [![Play on marks.dev](https://img.shields.io/badge/play-marks.dev-blue)](https://tomeclicker.marks.dev)
 [![Preview on GitHub Pages](https://img.shields.io/badge/preview-github%20pages-blue)](https://tomeclicker-dev.marks.dev)
-[![License](https://img.shields.io/badge/BSD%203-Clause-green)](LICENSE)
+[![License](https://img.shields.io/badge/license-BSD%203-Clause-green)](LICENSE)
 
 ## about
 
