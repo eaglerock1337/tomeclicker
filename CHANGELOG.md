@@ -1,3 +1,5 @@
+## [0.1.1](https://github.com/eaglerock1337/tomeclicker/compare/v0.1.0...v0.1.1) (2025-10-26)
+
 # 0.1.0 (2025-10-25)
 
 ### Features
