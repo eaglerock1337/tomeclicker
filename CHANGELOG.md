@@ -1,3 +1,9 @@
+## [0.1.3](https://github.com/eaglerock1337/tomeclicker/compare/v0.1.2...v0.1.3) (2025-10-26)
+
+### Bug Fixes
+
+- revert previous change but keep pipeline improvements ([bec2d91](https://github.com/eaglerock1337/tomeclicker/commit/bec2d91a45a2e62a22553f3e7fc665379f1cd6b1))
+
 ## [0.1.2](https://github.com/eaglerock1337/tomeclicker/compare/v0.1.1...v0.1.2) (2025-10-26)
 
 ## [0.1.1](https://github.com/eaglerock1337/tomeclicker/compare/v0.1.0...v0.1.1) (2025-10-26)
