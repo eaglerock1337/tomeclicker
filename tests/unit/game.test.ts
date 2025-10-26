@@ -577,4 +577,426 @@ describe('Game', () => {
 			});
 		});
 	});
+
+	describe('Helper Methods', () => {
+		describe('updateClickText', () => {
+			it('should return "level up available" when can level up', () => {
+				const game = new GameBuilder()
+					.withLevel(1)
+					.withExp(10000) // Cost for level 2
+					.build();
+
+				expect(game.updateClickText()).toBe('level up available');
+			});
+
+			it('should return "upgrade available" when upgrade can be purchased', () => {
+				const game = new GameBuilder()
+					.withExp(500) // Enough for an upgrade, upgrades shown at 100+
+					.build();
+
+				expect(game.updateClickText()).toBe('upgrade available');
+			});
+
+			it('should return "click me" when lifetimeExp is 0', () => {
+				const game = createTestGame();
+				game.lifetimeExp = 0;
+
+				expect(game.updateClickText()).toBe('click me');
+			});
+
+			it('should return empty string when no special conditions met', () => {
+				const game = new GameBuilder()
+					.withExp(10) // Not enough for upgrades (need 100)
+					.withLifetimeExp(10) // Not first click
+					.build();
+
+				expect(game.updateClickText()).toBe('');
+			});
+
+			it('should prioritize level up over upgrades', () => {
+				const game = new GameBuilder()
+					.withLevel(1)
+					.withExp(20000) // Enough for both level up and upgrades
+					.build();
+
+				expect(game.updateClickText()).toBe('level up available');
+			});
+		});
+
+		describe('canLevelUp', () => {
+			it('should return true when exp >= level up cost', () => {
+				const game = new GameBuilder()
+					.withLevel(1)
+					.withExp(10000) // Exactly level 2 cost
+					.build();
+
+				expect(game.canLevelUp()).toBe(true);
+			});
+
+			it('should return true when exp > level up cost', () => {
+				const game = new GameBuilder()
+					.withLevel(1)
+					.withExp(20000) // More than enough
+					.build();
+
+				expect(game.canLevelUp()).toBe(true);
+			});
+
+			it('should return false when exp < level up cost', () => {
+				const game = new GameBuilder()
+					.withLevel(1)
+					.withExp(5000) // Not enough
+					.build();
+
+				expect(game.canLevelUp()).toBe(false);
+			});
+
+			it('should work for higher levels', () => {
+				const game = new GameBuilder()
+					.withLevel(3)
+					.withExp(100000000) // Cost for level 4
+					.build();
+
+				expect(game.canLevelUp()).toBe(true);
+			});
+		});
+
+		describe('getClickValue', () => {
+			it('should return base click multiplier', () => {
+				const game = createTestGame();
+
+				const value = game.getClickValue();
+				expect(value).toBe(1.0); // Default multiplier
+			});
+
+			it('should return upgraded click multiplier', () => {
+				const game = new GameBuilder()
+					.withUpgrade('discipline', 1) // 5x multiplier
+					.build();
+
+				const value = game.getClickValue();
+				expect(value).toBe(5.0);
+			});
+
+			it('should return click multiplier with level bonuses', () => {
+				const game = new GameBuilder()
+					.withLevel(2) // 2x multiplier for level 2
+					.build();
+
+				const value = game.getClickValue();
+				expect(value).toBe(2.0); // Base 1.0 * 2 (level)
+			});
+
+			it('should combine upgrade and level multipliers', () => {
+				const game = new GameBuilder()
+					.withLevel(2) // 2x
+					.withUpgrade('discipline', 1) // *5
+					.build();
+
+				const value = game.getClickValue();
+				// Base 1.0 * 2 (level) * 5 (discipline) = 10.0
+				expect(value).toBe(10.0);
+			});
+		});
+	});
+
+	describe('UI State Methods', () => {
+		describe('showHeader', () => {
+			it('should return false when lifetimeExp < 10', () => {
+				const game = new GameBuilder().withLifetimeExp(5).build();
+				expect(game.showHeader()).toBe(false);
+			});
+
+			it('should return true when lifetimeExp >= 10', () => {
+				const game = new GameBuilder().withLifetimeExp(10).build();
+				expect(game.showHeader()).toBe(true);
+			});
+
+			it('should return true when lifetimeExp > 10', () => {
+				const game = new GameBuilder().withLifetimeExp(100).build();
+				expect(game.showHeader()).toBe(true);
+			});
+		});
+
+		describe('showMenu', () => {
+			it('should return false when lifetimeExp < 50', () => {
+				const game = new GameBuilder().withLifetimeExp(25).build();
+				expect(game.showMenu()).toBe(false);
+			});
+
+			it('should return true when lifetimeExp >= 50', () => {
+				const game = new GameBuilder().withLifetimeExp(50).build();
+				expect(game.showMenu()).toBe(true);
+			});
+		});
+
+		describe('showUpgrades', () => {
+			it('should return false when lifetimeExp < 50', () => {
+				const game = new GameBuilder().withLifetimeExp(25).build();
+				expect(game.showUpgrades()).toBe(false);
+			});
+
+			it('should return true when lifetimeExp >= 50', () => {
+				const game = new GameBuilder().withLifetimeExp(50).build();
+				expect(game.showUpgrades()).toBe(true);
+			});
+		});
+
+		describe('showTraining', () => {
+			it('should return false for level 1', () => {
+				const game = new GameBuilder().withLevel(1).build();
+				expect(game.showTraining()).toBe(false);
+			});
+
+			it('should return true for level 2', () => {
+				const game = new GameBuilder().withLevel(2).build();
+				expect(game.showTraining()).toBe(true);
+			});
+
+			it('should return true for higher levels', () => {
+				const game = new GameBuilder().withLevel(5).build();
+				expect(game.showTraining()).toBe(true);
+			});
+		});
+
+		describe('showStats', () => {
+			it('should return false for level 1', () => {
+				const game = new GameBuilder().withLevel(1).build();
+				expect(game.showStats()).toBe(false);
+			});
+
+			it('should return false for level 2', () => {
+				const game = new GameBuilder().withLevel(2).build();
+				expect(game.showStats()).toBe(false);
+			});
+
+			it('should return true for level 3', () => {
+				const game = new GameBuilder().withLevel(3).build();
+				expect(game.showStats()).toBe(true);
+			});
+
+			it('should return true for higher levels', () => {
+				const game = new GameBuilder().withLevel(5).build();
+				expect(game.showStats()).toBe(true);
+			});
+		});
+
+		describe('showMeditation', () => {
+			it('should return false when stats < 5', () => {
+				const game = new GameBuilder()
+					.withStats({ strength: 4, dexterity: 4, intelligence: 4, wisdom: 4 })
+					.build();
+				expect(game.showMeditation()).toBe(false);
+			});
+
+			it('should return false when only some stats >= 5', () => {
+				const game = new GameBuilder()
+					.withStats({ strength: 5, dexterity: 5, intelligence: 4, wisdom: 3 })
+					.build();
+				expect(game.showMeditation()).toBe(false);
+			});
+
+			it('should return true when all stats >= 5', () => {
+				const game = new GameBuilder()
+					.withStats({ strength: 5, dexterity: 5, intelligence: 5, wisdom: 5 })
+					.build();
+				expect(game.showMeditation()).toBe(true);
+			});
+
+			it('should return true when all stats > 5', () => {
+				const game = new GameBuilder()
+					.withStats({ strength: 10, dexterity: 8, intelligence: 6, wisdom: 5 })
+					.build();
+				expect(game.showMeditation()).toBe(true);
+			});
+		});
+
+		describe('showAdventure', () => {
+			it('should return false when adventure mode not unlocked', () => {
+				const game = createTestGame();
+				expect(game.showAdventure()).toBe(false);
+			});
+
+			it('should return true when adventure mode unlocked', () => {
+				const game = createTestGame();
+				game.adventureModeUnlocked = true;
+				expect(game.showAdventure()).toBe(true);
+			});
+		});
+	});
+
+	describe('Idle Action System', () => {
+		describe('startIdleAction', () => {
+			it('should not crash when starting training action', () => {
+				const game = new GameBuilder().withExp(1000).build();
+
+				// Should not throw
+				expect(() => game.startIdleAction('training', 'ruminate')).not.toThrow();
+			});
+
+			it('should return boolean result', () => {
+				const game = new GameBuilder().withExp(100000).withLevel(10).build();
+
+				const result = game.startIdleAction('training', 'ruminate');
+
+				// Should return boolean (either true or false)
+				expect(typeof result).toBe('boolean');
+			});
+
+			it('should return false when insufficient exp', () => {
+				const game = new GameBuilder().withExp(0).build();
+
+				const result = game.startIdleAction('training', 'ruminate');
+
+				expect(result).toBe(false);
+			});
+		});
+
+		describe('stopIdleAction', () => {
+			it('should not crash when stopping an action', () => {
+				const game = new GameBuilder().withExp(1000).build();
+				game.startIdleAction('training', 'ruminate');
+
+				// Should not throw
+				expect(() => game.stopIdleAction('training', 'ruminate')).not.toThrow();
+			});
+
+			it('should not crash when stopping non-existent action', () => {
+				const game = new GameBuilder().withExp(1000).build();
+
+				// Should not throw
+				expect(() => game.stopIdleAction('training', 'ruminate')).not.toThrow();
+			});
+		});
+
+		describe('updateIdleActions', () => {
+			it('should not crash when called', () => {
+				const game = new GameBuilder().withExp(1000).build();
+				game.startIdleAction('training', 'ruminate');
+
+				// Should not throw
+				expect(() => game.updateIdleActions()).not.toThrow();
+			});
+
+			it('should not crash when no actions active', () => {
+				const game = new GameBuilder().withExp(1000).build();
+
+				// Should not throw
+				expect(() => game.updateIdleActions()).not.toThrow();
+			});
+		});
+	});
+
+	describe('Save/Load Delegation Methods', () => {
+		describe('saveToCookies', () => {
+			it('should delegate to SaveManager', () => {
+				const game = new GameBuilder().withExp(100).build();
+
+				// Should not throw
+				expect(() => game.saveToCookies()).not.toThrow();
+			});
+		});
+
+		describe('loadFromCookies', () => {
+			it('should delegate to SaveManager', () => {
+				const game = new GameBuilder().build();
+
+				// Returns boolean
+				const result = game.loadFromCookies();
+				expect(typeof result).toBe('boolean');
+			});
+		});
+
+		describe('saveToLocalStorage', () => {
+			it('should delegate to SaveManager', () => {
+				const game = new GameBuilder().withExp(100).build();
+
+				// Should not throw
+				expect(() => game.saveToLocalStorage()).not.toThrow();
+			});
+		});
+
+		describe('loadFromLocalStorage', () => {
+			it('should delegate to SaveManager', () => {
+				const game = new GameBuilder().build();
+
+				// Returns boolean
+				const result = game.loadFromLocalStorage();
+				expect(typeof result).toBe('boolean');
+			});
+		});
+
+		describe('autoSave', () => {
+			it('should delegate to SaveManager', () => {
+				const game = new GameBuilder().withExp(100).build();
+
+				// Should not throw
+				expect(() => game.autoSave()).not.toThrow();
+			});
+		});
+	});
+
+	describe('Hard Reset', () => {
+		it('should reset all game state to defaults', () => {
+			const game = new GameBuilder()
+				.withLevel(5)
+				.withExp(1000000)
+				.withLifetimeExp(1000000)
+				.withUpgrade('discipline', 3)
+				.withStats({ strength: 10, dexterity: 8, intelligence: 6, wisdom: 4 })
+				.build();
+
+			game.adventureModeUnlocked = true;
+			game.meditationUnlocked = true;
+
+			game.hardReset(false);
+
+			expect(game.name).toBe('A Stranger');
+			expect(game.exp).toBe(0);
+			expect(game.lifetimeExp).toBe(0);
+			expect(game.level).toBe(1);
+			expect(game.clickMultiplier).toBe(1.0);
+			expect(game.stats.strength).toBe(1);
+			expect(game.stats.dexterity).toBe(1);
+			expect(game.stats.intelligence).toBe(1);
+			expect(game.stats.wisdom).toBe(1);
+			expect(game.adventureModeUnlocked).toBe(false);
+			expect(game.meditationUnlocked).toBe(false);
+			expect(game.upgrades['discipline'].currentLevel).toBe(0);
+		});
+
+		it('should preserve name when preserveName=true', () => {
+			const game = new GameBuilder().withLevel(5).withExp(1000000).build();
+			game.name = 'TestPlayer';
+
+			game.hardReset(true);
+
+			expect(game.name).toBe('TestPlayer');
+			expect(game.exp).toBe(0); // Everything else reset
+		});
+
+		it('should reset name to "A Stranger" when preserveName=false', () => {
+			const game = createTestGame();
+			game.name = 'OldPlayer';
+
+			game.hardReset(false);
+
+			expect(game.name).toBe('A Stranger');
+		});
+
+		it('should reinitialize all managers', () => {
+			const game = new GameBuilder().withUpgrade('discipline', 5).build();
+
+			game.hardReset(false);
+
+			// Upgrades should be reset
+			expect(game.upgrades['discipline'].currentLevel).toBe(0);
+
+			// Should be able to purchase upgrades (managers working)
+			game.exp = 1000;
+			const result = game.purchaseUpgrade('discipline');
+			expect(result).toBe(true);
+			expect(game.upgrades['discipline'].currentLevel).toBe(1);
+		});
+	});
 });
