@@ -1,95 +1,105 @@
 <script lang="ts">
-    // Lucide icons (modern replacement for Font Awesome)
-    import {
-        BarChart3,
-        Book,
-        Bookmark,
-        Copy,
-        Edit,
-        Settings,
-        History,
-        Clock,
-        Info,
-        List,
-        MapPin,
-        Map,
-        MousePointer,
-        HelpCircle,
-        Shield,
-        Workflow,
-        Trophy,
-        TrendingUp,
-        Save,
-        Dumbbell,
-        Brain,
-        Compass
-    } from 'lucide-svelte';
+	// Lucide icons (modern replacement for Font Awesome)
+	import {
+		BarChart3,
+		Book,
+		Bookmark,
+		Copy,
+		Edit,
+		Settings,
+		History,
+		Clock,
+		Info,
+		List,
+		MapPin,
+		Map,
+		MousePointer,
+		HelpCircle,
+		Shield,
+		Workflow,
+		Trophy,
+		TrendingUp,
+		Save,
+		Dumbbell,
+		Brain,
+		Compass
+	} from 'lucide-svelte';
 
-    import type { Game } from '$lib/game';
+	import { page } from '$app/stores';
+	import type { Game } from '$lib/game';
 
-    export let game: Game;
+	export let game: Game;
 
-    // Check if any upgrades are affordable or level up is available
-    $: hasAvailableUpgrades = game && (
-        game.canLevelUp() ||
-        Object.values(game.upgrades).some(upgrade => game.canAffordUpgrade(upgrade.id))
-    );
+	// Check if any upgrades are affordable or level up is available
+	$: hasAvailableUpgrades =
+		game &&
+		(game.canLevelUp() ||
+			Object.values(game.upgrades).some((upgrade) => game.canAffordUpgrade(upgrade.id)));
+
+	// Get current page path for active state
+	$: currentPath = $page.url.pathname;
+
+	// Map routes to display names
+	$: pageName = (() => {
+		if (currentPath === '/') return 'practice';
+		return currentPath.slice(1); // Remove leading slash
+	})();
 </script>
 
 <div class="navbar">
-    <div class="page-name">
-        <span>{game.menu}</span>
-    </div>
-    <div class="menu">
-        <button on:click="{() => game.menu = 'practice'}">
-            <p class:red="{game.menu === 'practice'}"><MousePointer size={24}/></p>
-        </button>
-        {#if game.showUpgrades()}
-            <button on:click="{() => game.menu = 'upgrades'}">
-                <p
-                    class:red="{game.menu === 'upgrades'}"
-                    class:green="{game.menu !== 'upgrades' && hasAvailableUpgrades}"
-                >
-                    <TrendingUp size={24}/>
-                </p>
-            </button>
-        {/if}
-        {#if game.showTraining()}
-            <button on:click="{() => game.menu = 'training'}">
-                <p class:red="{game.menu === 'training'}"><Dumbbell size={24}/></p>
-            </button>
-        {/if}
-        {#if game.showStats()}
-            <button on:click="{() => game.menu = 'stats'}">
-                <p class:red="{game.menu === 'stats'}"><BarChart3 size={24}/></p>
-            </button>
-        {/if}
-        {#if game.showMeditation()}
-            <button on:click="{() => game.menu = 'meditation'}">
-                <p class:red="{game.menu === 'meditation'}"><Brain size={24}/></p>
-            </button>
-        {/if}
-        {#if game.showAdventure()}
-            <button on:click="{() => game.menu = 'adventure'}">
-                <p class:red="{game.menu === 'adventure'}"><Compass size={24}/></p>
-            </button>
-        {/if}
-        <button on:click="{() => game.menu = 'story'}">
-            <p class:red="{game.menu === 'story'}"><Edit size={24}/></p>
-        </button>
-        <button on:click="{() => game.menu = 'help'}">
-            <p class:red="{game.menu === 'help'}"><HelpCircle size={24}/></p>
-        </button>
-        <button on:click="{() => game.menu = 'saves'}">
-            <p class:red="{game.menu === 'saves'}"><Save size={24}/></p>
-        </button>
-        <button on:click="{() => game.menu = 'settings'}">
-            <p class:red="{game.menu === 'settings'}"><Settings size={24}/></p>
-        </button>
-        <button on:click="{() => game.menu = 'about'}">
-            <p class:red="{game.menu === 'about'}"><Info size={24}/></p>
-        </button>
-    </div>
+	<div class="page-name">
+		<span>{pageName}</span>
+	</div>
+	<div class="menu">
+		<a href="/" class="nav-btn">
+			<p class:red={currentPath === '/'}><MousePointer size={24} /></p>
+		</a>
+		{#if game.showUpgrades()}
+			<a href="/upgrades" class="nav-btn">
+				<p
+					class:red={currentPath === '/upgrades'}
+					class:green={currentPath !== '/upgrades' && hasAvailableUpgrades}
+				>
+					<TrendingUp size={24} />
+				</p>
+			</a>
+		{/if}
+		{#if game.showTraining()}
+			<a href="/training" class="nav-btn">
+				<p class:red={currentPath === '/training'}><Dumbbell size={24} /></p>
+			</a>
+		{/if}
+		{#if game.showStats()}
+			<a href="/stats" class="nav-btn">
+				<p class:red={currentPath === '/stats'}><BarChart3 size={24} /></p>
+			</a>
+		{/if}
+		{#if game.showMeditation()}
+			<a href="/meditation" class="nav-btn">
+				<p class:red={currentPath === '/meditation'}><Brain size={24} /></p>
+			</a>
+		{/if}
+		{#if game.showAdventure()}
+			<a href="/adventure" class="nav-btn">
+				<p class:red={currentPath === '/adventure'}><Compass size={24} /></p>
+			</a>
+		{/if}
+		<a href="/story" class="nav-btn">
+			<p class:red={currentPath === '/story'}><Edit size={24} /></p>
+		</a>
+		<a href="/help" class="nav-btn">
+			<p class:red={currentPath === '/help'}><HelpCircle size={24} /></p>
+		</a>
+		<a href="/saves" class="nav-btn">
+			<p class:red={currentPath === '/saves'}><Save size={24} /></p>
+		</a>
+		<a href="/settings" class="nav-btn">
+			<p class:red={currentPath === '/settings'}><Settings size={24} /></p>
+		</a>
+		<a href="/about" class="nav-btn">
+			<p class:red={currentPath === '/about'}><Info size={24} /></p>
+		</a>
+	</div>
 </div>
 
 <style>
@@ -114,24 +124,28 @@
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
-    .menu button {
-        color: var(--text);
-        background-color: var(--alt-bg);
-        font-size: 1.2em;
-        font-family: JetBrains Mono, monospace;
-        font-weight: 400;
-        margin: 2px 2px 10px;
-        padding: 5px 10px;
-        max-width: 55px;
-        min-width: 50px;
-        min-height: 50px;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
-        border: 2px solid var(--text);
-        border-radius: 5px;
-    }
+	.menu .nav-btn {
+		color: var(--text);
+		background-color: var(--alt-bg);
+		font-size: 1.2em;
+		font-family: JetBrains Mono, monospace;
+		font-weight: 400;
+		margin: 2px 2px 10px;
+		padding: 5px 10px;
+		max-width: 55px;
+		min-width: 50px;
+		min-height: 50px;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		transition:
+			color 1s cubic-bezier(0, 0.5, 0, 1),
+			background-color 1s cubic-bezier(0, 0.5, 0, 1);
+		border: 2px solid var(--text);
+		border-radius: 5px;
+		text-decoration: none;
+		cursor: pointer;
+	}
 
     .page-name {
         color: var(--text);

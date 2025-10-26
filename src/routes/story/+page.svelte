@@ -1,11 +1,13 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
+	import type { Writable } from 'svelte/store';
 	import type { Game } from '$lib/game';
 
-	interface Props {
-		game: Game;
-	}
+	// Get store from context
+	const gameStore = getContext<Writable<Game | null>>('game');
 
-	let { game = $bindable() }: Props = $props();
+	// Reactive value from store
+	let game = $derived($gameStore!);
 
 	// Session-persisted chapter state (resets on page refresh)
 	let currentChapter = $state(1);
@@ -83,7 +85,8 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		transition: color 1s cubic-bezier(0, 0.5, 0, 1),
+		transition:
+			color 1s cubic-bezier(0, 0.5, 0, 1),
 			background-color 1s cubic-bezier(0, 0.5, 0, 1);
 		box-sizing: border-box;
 		overflow-y: auto;
