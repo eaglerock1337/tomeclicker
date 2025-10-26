@@ -124,18 +124,8 @@
                 document.cookie = 'tomeclicker_save=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             }
 
-            // Reset game state to initial values
-            game.name = 'A Stranger';
-            game.exp = 0.0;
-            game.lifetimeExp = 0.0;
-            game.level = 1;
-            game.tick = 0;
-            game.menu = "practice";
-            game.clickMultiplier = 1.0;
-            game.upgrades = game.initializeUpgrades();
-            game.saveIntegrity = 'valid';
-            game.lastValidation = Date.now();
-            game.recalculateClickMultiplier();
+            // Use the Game class's hard reset method
+            game.hardReset(false); // Don't preserve name
 
             // Force Svelte reactivity
             game = game;
