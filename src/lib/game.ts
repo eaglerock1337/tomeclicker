@@ -9,18 +9,13 @@ import {
 	calculateOsmosisSpeedMultiplier
 } from './utils/calculations';
 import {
+	IdleActionManager,
+	type IdleAction,
+	type ActionCompletionResult
+} from './managers/idle-action-manager';
+import {
 	GAME_TICK_RATE,
 	BASE_CRIT_DAMAGE,
-	TRAINING_BASE_COST,
-	TRAINING_REWARD,
-	TRAINING_CRIT_MULTIPLIER,
-	OSMOSIS_BASE_REWARD,
-	OSMOSIS_BASE_DURATION,
-	TRAINING_BASE_DURATION,
-	MEDITATION_FUTURE_DURATION,
-	MEDITATION_FUTURE_COST,
-	MEDITATION_DISASSOCIATE_DURATION,
-	MEDITATION_DISASSOCIATE_COST,
 	UPGRADE_COST_TIER_1,
 	UPGRADE_COST_TIER_2,
 	UPGRADE_COST_TIER_3,
@@ -88,33 +83,6 @@ export interface Stats {
 }
 
 /**
- * Represents a training or meditation action
- */
-export interface IdleAction {
-	id: string;
-	name: string;
-	description: string;
-	/** Progress from 0 to 1 */
-	progress: number;
-	/** Base duration in milliseconds */
-	baseDuration: number;
-	/** Current duration after upgrades */
-	duration: number;
-	/** EXP cost to start/continue this action */
-	expCost: number;
-	/** Whether this action is currently active */
-	isActive: boolean;
-	/** Last time progress was updated */
-	lastUpdate: number;
-	/** What stat this trains (if any) */
-	trainsStat?: keyof Stats;
-	/** Whether this is a one-time action */
-	oneTime?: boolean;
-	/** Whether this one-time action is completed */
-	completed?: boolean;
-}
-
-/**
  * Main game state and logic controller
  * Manages player progression, upgrades, level system, and save/load functionality
  */
@@ -136,11 +104,12 @@ export class Game {
 
 	// New RPG and idle systems
 	public stats: Stats;
-	public trainingActions: { [key: string]: IdleAction };
-	public meditationActions: { [key: string]: IdleAction };
 	public idleExpRate: number;
 	public adventureModeUnlocked: boolean;
 	public meditationUnlocked: boolean;
+
+	// Idle action manager
+	private idleActionManager: IdleActionManager;
 
 	/**
 	 * Creates a new game instance with default values
@@ -164,14 +133,38 @@ export class Game {
 
 		// Initialize new systems
 		this.stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
-		this.trainingActions = this.initializeTrainingActions();
-		this.meditationActions = this.initializeMeditationActions();
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
 		this.meditationUnlocked = false;
 
+		// Initialize idle action manager with dependencies
+		this.idleActionManager = new IdleActionManager({
+			getTrainingSpeedMultiplier: () => this.getTrainingSpeedMultiplier(),
+			getTrainingCostMultiplier: () => this.getTrainingCostMultiplier(),
+			getOsmosisExpBonus: () => this.getOsmosisExpBonus(),
+			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
+			getOsmosisSpeedMultiplier: () => this.getOsmosisSpeedMultiplier(),
+			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
+			getCritChance: () => this.critChance,
+			getCurrentExp: () => this.exp
+		});
+
 		this.startIntegrityMonitoring();
 		this.recalculateClickMultiplier();
+	}
+
+	/**
+	 * Gets all training actions (delegates to IdleActionManager)
+	 */
+	get trainingActions(): { [key: string]: IdleAction } {
+		return this.idleActionManager.getTrainingActions();
+	}
+
+	/**
+	 * Gets all meditation actions (delegates to IdleActionManager)
+	 */
+	get meditationActions(): { [key: string]: IdleAction } {
+		return this.idleActionManager.getMeditationActions();
 	}
 
 	/**
@@ -346,25 +339,8 @@ export class Game {
 	 * Preserves progress and active state while adding new actions
 	 * @param savedActions - Training action data from a saved game
 	 */
-	migrateTrainingActions(savedActions: { [key: string]: IdleAction }): {
-		[key: string]: IdleAction;
-	} {
-		// Get fresh action definitions
-		const freshActions = this.initializeTrainingActions();
-
-		// Preserve progress and state from saved actions
-		for (const actionId in freshActions) {
-			if (savedActions[actionId]) {
-				freshActions[actionId].progress = savedActions[actionId].progress;
-				freshActions[actionId].isActive = savedActions[actionId].isActive;
-				freshActions[actionId].lastUpdate = savedActions[actionId].lastUpdate;
-				if (savedActions[actionId].completed !== undefined) {
-					freshActions[actionId].completed = savedActions[actionId].completed;
-				}
-			}
-		}
-
-		return freshActions;
+	migrateTrainingActions(savedActions: { [key: string]: IdleAction }): void {
+		this.idleActionManager.migrateTrainingActions(savedActions);
 	}
 
 	/**
@@ -372,25 +348,8 @@ export class Game {
 	 * Preserves progress and active state while adding new actions
 	 * @param savedActions - Meditation action data from a saved game
 	 */
-	migrateMeditationActions(savedActions: { [key: string]: IdleAction }): {
-		[key: string]: IdleAction;
-	} {
-		// Get fresh action definitions
-		const freshActions = this.initializeMeditationActions();
-
-		// Preserve progress and state from saved actions
-		for (const actionId in freshActions) {
-			if (savedActions[actionId]) {
-				freshActions[actionId].progress = savedActions[actionId].progress;
-				freshActions[actionId].isActive = savedActions[actionId].isActive;
-				freshActions[actionId].lastUpdate = savedActions[actionId].lastUpdate;
-				if (savedActions[actionId].completed !== undefined) {
-					freshActions[actionId].completed = savedActions[actionId].completed;
-				}
-			}
-		}
-
-		return freshActions;
+	migrateMeditationActions(savedActions: { [key: string]: IdleAction }): void {
+		this.idleActionManager.migrateMeditationActions(savedActions);
 	}
 
 	/**
@@ -526,153 +485,16 @@ export class Game {
 		};
 	}
 
-	/**
-	 * Initializes training actions for stat development
-	 */
-	initializeTrainingActions(): { [key: string]: IdleAction } {
-		return {
-			'practice-osmosis': {
-				id: 'practice-osmosis',
-				name: 'Ruminate',
-				description: 'Learn through observation and reflection',
-				progress: 0,
-				baseDuration: OSMOSIS_BASE_DURATION,
-				duration: OSMOSIS_BASE_DURATION,
-				expCost: 0, // Free to use!
-				isActive: false,
-				lastUpdate: Date.now()
-			},
-			'train-strength': {
-				id: 'train-strength',
-				name: 'Lift Heavy Objects',
-				description: 'Build raw physical power',
-				progress: 0,
-				baseDuration: TRAINING_BASE_DURATION,
-				duration: TRAINING_BASE_DURATION,
-				expCost: TRAINING_BASE_COST,
-				isActive: false,
-				lastUpdate: Date.now(),
-				trainsStat: 'strength'
-			},
-			'train-dexterity': {
-				id: 'train-dexterity',
-				name: 'Practice Quick Movements',
-				description: 'Improve agility and reflexes',
-				progress: 0,
-				baseDuration: TRAINING_BASE_DURATION,
-				duration: TRAINING_BASE_DURATION,
-				expCost: TRAINING_BASE_COST,
-				isActive: false,
-				lastUpdate: Date.now(),
-				trainsStat: 'dexterity'
-			},
-			'train-intelligence': {
-				id: 'train-intelligence',
-				name: 'Study Ancient Texts',
-				description: 'Expand knowledge and understanding',
-				progress: 0,
-				baseDuration: TRAINING_BASE_DURATION,
-				duration: TRAINING_BASE_DURATION,
-				expCost: TRAINING_BASE_COST,
-				isActive: false,
-				lastUpdate: Date.now(),
-				trainsStat: 'intelligence'
-			},
-			'train-wisdom': {
-				id: 'train-wisdom',
-				name: 'Meditate on Meaning',
-				description: 'Deepen insight and awareness',
-				progress: 0,
-				baseDuration: TRAINING_BASE_DURATION,
-				duration: TRAINING_BASE_DURATION,
-				expCost: TRAINING_BASE_COST,
-				isActive: false,
-				lastUpdate: Date.now(),
-				trainsStat: 'wisdom'
-			}
-		};
-	}
-
-	/**
-	 * Initializes meditation actions
-	 */
-	initializeMeditationActions(): { [key: string]: IdleAction } {
-		return {
-			'meditate-future': {
-				id: 'meditate-future',
-				name: 'Meditate on Your Future',
-				description: 'Unlock the path to adventure',
-				progress: 0,
-				baseDuration: MEDITATION_FUTURE_DURATION,
-				duration: MEDITATION_FUTURE_DURATION,
-				expCost: MEDITATION_FUTURE_COST,
-				isActive: false,
-				lastUpdate: Date.now(),
-				oneTime: true,
-				completed: false
-			},
-			disassociate: {
-				id: 'disassociate',
-				name: 'Disassociate',
-				description: 'Take a mental health day. Increases offline progress time.',
-				progress: 0,
-				baseDuration: MEDITATION_DISASSOCIATE_DURATION,
-				duration: MEDITATION_DISASSOCIATE_DURATION,
-				expCost: MEDITATION_DISASSOCIATE_COST,
-				isActive: false,
-				lastUpdate: Date.now(),
-				oneTime: false
-			}
-		};
-	}
-
 	/** Idle Action Management */
 
 	/**
 	 * Starts an idle action (Progress Knight style - keeps running until switched)
-	 * @param actionMap - The action map (trainingActions or meditationActions)
+	 * @param actionMap - The action map ('training' or 'meditation')
 	 * @param actionId - ID of the action to start
 	 * @returns True if action started successfully
 	 */
-	startIdleAction(actionMap: { [key: string]: IdleAction }, actionId: string): boolean {
-		const action = actionMap[actionId];
-		if (!action) return false;
-
-		// Check if already completed (for one-time actions)
-		if (action.oneTime && action.completed) return false;
-
-		// Stop any currently active actions in this map
-		for (const a of Object.values(actionMap)) {
-			if (a.isActive) {
-				a.isActive = false;
-				a.progress = 0;
-			}
-		}
-
-		// Start the action (no EXP cost upfront)
-		action.isActive = true;
-		action.progress = 0;
-		action.lastUpdate = Date.now();
-
-		// Apply speed multipliers based on action type
-		if (actionId === 'practice-osmosis') {
-			// Osmosis gets both osmosis-specific and global idle speed bonuses
-			const osmosisSpeed = this.getOsmosisSpeedMultiplier();
-			const globalSpeed = this.getGlobalIdleSpeedMultiplier();
-			const combinedSpeed = osmosisSpeed * globalSpeed;
-			action.duration = Math.floor(action.baseDuration / combinedSpeed);
-		} else if (action.trainsStat) {
-			// Stat training gets training speed and global idle speed
-			const trainingSpeed = this.getTrainingSpeedMultiplier();
-			const globalSpeed = this.getGlobalIdleSpeedMultiplier();
-			action.duration = Math.floor((action.baseDuration * trainingSpeed) / globalSpeed);
-		} else {
-			// Other idle actions just get global speed
-			const globalSpeed = this.getGlobalIdleSpeedMultiplier();
-			action.duration = Math.floor(action.baseDuration / globalSpeed);
-		}
-
-		return true;
+	startIdleAction(actionMap: 'training' | 'meditation', actionId: string): boolean {
+		return this.idleActionManager.startIdleAction(actionMap, actionId);
 	}
 
 	/**
@@ -680,117 +502,38 @@ export class Game {
 	 * Should be called regularly (e.g., from game loop)
 	 */
 	updateIdleActions(): void {
-		const now = Date.now();
+		const results = this.idleActionManager.updateIdleActions();
 
-		// Update training actions
-		for (const action of Object.values(this.trainingActions)) {
-			if (action.isActive) {
-				const elapsed = now - action.lastUpdate;
-				action.progress += elapsed / action.duration;
-				action.lastUpdate = now;
+		// Apply completion results
+		for (const result of results) {
+			// Add EXP gained
+			if (result.expGained > 0) {
+				this.addExp(result.expGained);
+			}
 
-				if (action.progress >= 1.0) {
-					this.completeTrainingAction(action.id);
+			// Apply stat gains
+			if (result.statGained) {
+				this.stats[result.statGained.stat] += result.statGained.amount;
+				// Deduct the EXP cost
+				if (result.expCost) {
+					this.exp -= result.expCost;
 				}
 			}
-		}
 
-		// Update meditation actions
-		for (const action of Object.values(this.meditationActions)) {
-			if (action.isActive) {
-				const elapsed = now - action.lastUpdate;
-				action.progress += elapsed / action.duration;
-				action.lastUpdate = now;
-
-				if (action.progress >= 1.0) {
-					this.completeMeditationAction(action.id);
-				}
+			// Apply unlocks
+			if (result.unlocks?.adventureMode) {
+				this.adventureModeUnlocked = true;
 			}
 		}
-	}
-
-	/**
-	 * Completes a training action and awards stat points or EXP
-	 * @param actionId - ID of the training action to complete
-	 */
-	completeTrainingAction(actionId: string): void {
-		const action = this.trainingActions[actionId];
-		if (!action || !action.isActive) return;
-
-		// Handle osmosis completion
-		if (actionId === 'practice-osmosis') {
-			const bonus = this.getOsmosisExpBonus();
-			this.addExp(OSMOSIS_BASE_REWARD + bonus);
-
-			// Osmosis always restarts
-			action.progress = 0;
-			action.lastUpdate = Date.now();
-			return;
-		}
-
-		// Handle stat training completion
-		if (action.trainsStat) {
-			const stat = action.trainsStat;
-			const cost = this.getStatLevelCost(stat);
-
-			// Give back some EXP (TRAINING_REWARD base, with crit chance for bonus)
-			let expReward = TRAINING_REWARD;
-			const isCrit = Math.random() < this.critChance;
-			if (isCrit) {
-				expReward = Math.floor(expReward * TRAINING_CRIT_MULTIPLIER);
-			}
-			this.addExp(expReward);
-
-			// Check if we can afford to level up the stat
-			if (this.exp >= cost) {
-				this.exp -= cost;
-				this.stats[stat]++;
-
-				// Restart the action
-				action.progress = 0;
-				action.lastUpdate = Date.now();
-			} else {
-				// Can't afford, stop the action
-				action.isActive = false;
-				action.progress = 0;
-				action.lastUpdate = Date.now();
-			}
-		}
-	}
-
-	/**
-	 * Completes a meditation action and awards appropriate rewards
-	 * @param actionId - ID of the meditation action to complete
-	 */
-	completeMeditationAction(actionId: string): void {
-		const action = this.meditationActions[actionId];
-		if (!action || !action.isActive) return;
-
-		// Handle specific meditation rewards
-		if (actionId === 'meditate-future') {
-			this.adventureModeUnlocked = true;
-			action.completed = true;
-		}
-		// Disassociate increases offline progress time (handled elsewhere)
-
-		// Reset action
-		action.isActive = false;
-		action.progress = 0;
-		action.lastUpdate = Date.now();
 	}
 
 	/**
 	 * Stops an active idle action without completion
-	 * @param actionMap - The action map (trainingActions or meditationActions)
+	 * @param actionMap - The action map ('training' or 'meditation')
 	 * @param actionId - ID of the action to stop
 	 */
-	stopIdleAction(actionMap: { [key: string]: IdleAction }, actionId: string): void {
-		const action = actionMap[actionId];
-		if (!action) return;
-
-		action.isActive = false;
-		action.progress = 0;
-		action.lastUpdate = Date.now();
+	stopIdleAction(actionMap: 'training' | 'meditation', actionId: string): void {
+		this.idleActionManager.stopIdleAction(actionMap, actionId);
 	}
 
 	/** Progression Unlock Conditions */
@@ -1149,12 +892,12 @@ export class Game {
 			this.stats = saveData.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
 
 			// Migrate training and meditation actions to add new actions while preserving progress
-			this.trainingActions = saveData.trainingActions
-				? this.migrateTrainingActions(saveData.trainingActions)
-				: this.initializeTrainingActions();
-			this.meditationActions = saveData.meditationActions
-				? this.migrateMeditationActions(saveData.meditationActions)
-				: this.initializeMeditationActions();
+			if (saveData.trainingActions) {
+				this.migrateTrainingActions(saveData.trainingActions);
+			}
+			if (saveData.meditationActions) {
+				this.migrateMeditationActions(saveData.meditationActions);
+			}
 
 			this.idleExpRate = saveData.idleExpRate || 0;
 			this.adventureModeUnlocked = saveData.adventureModeUnlocked || false;
@@ -1303,14 +1046,25 @@ export class Game {
 		this.critDamage = BASE_CRIT_DAMAGE;
 		this.upgrades = this.initializeUpgrades();
 		this.stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
-		this.trainingActions = this.initializeTrainingActions();
-		this.meditationActions = this.initializeMeditationActions();
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
 		this.meditationUnlocked = false;
 		this.saveIntegrity = 'valid';
 		this.lastValidation = Date.now();
 		this._validationKey = this.generateValidationKey();
+
+		// Reinitialize idle action manager
+		this.idleActionManager = new IdleActionManager({
+			getTrainingSpeedMultiplier: () => this.getTrainingSpeedMultiplier(),
+			getTrainingCostMultiplier: () => this.getTrainingCostMultiplier(),
+			getOsmosisExpBonus: () => this.getOsmosisExpBonus(),
+			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
+			getOsmosisSpeedMultiplier: () => this.getOsmosisSpeedMultiplier(),
+			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
+			getCritChance: () => this.critChance,
+			getCurrentExp: () => this.exp
+		});
+
 		this.recalculateClickMultiplier();
 	}
 }

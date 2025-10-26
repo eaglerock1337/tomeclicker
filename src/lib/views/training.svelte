@@ -4,7 +4,7 @@
     export let game: Game;
 
     function startAction(actionId: string) {
-        game.startIdleAction(game.trainingActions, actionId);
+        game.startIdleAction('training', actionId);
         game = game;
     }
 
