@@ -25,23 +25,12 @@
         }, duration);
     }
 
-    function exportEncrypted() {
+    function exportSaveData() {
         try {
-            const saveData = game.exportSave(true);
+            const saveData = game.exportSave();
             navigator.clipboard.writeText(saveData);
-            downloadFile(saveData, 'tomeclicker-save-encrypted.json');
-            showMessageFor('Encrypted save exported and copied to clipboard!', 'success');
-        } catch (error) {
-            showMessageFor('Failed to export save', 'error');
-        }
-    }
-
-    function exportUnencrypted() {
-        try {
-            const saveData = game.exportSave(false);
-            navigator.clipboard.writeText(saveData);
-            downloadFile(saveData, 'tomeclicker-save-unencrypted.json');
-            showMessageFor('Unencrypted save exported (not leaderboard eligible)', 'warning');
+            downloadFile(saveData, 'tomeclicker-save.json');
+            showMessageFor('Save exported and copied to clipboard!', 'success');
         } catch (error) {
             showMessageFor('Failed to export save', 'error');
         }
@@ -177,16 +166,12 @@
             <h2>Export Save File</h2>
             <p>Download your save file to backup or transfer between devices.</p>
             <div class="button-group">
-                <button class="export-btn encrypted" onclick={exportEncrypted}>
-                    <Download size={20}/> Export (Encrypted)
-                </button>
-                <button class="export-btn unencrypted" onclick={exportUnencrypted}>
-                    <Download size={20}/> Export (Unencrypted)
+                <button class="export-btn" onclick={exportSaveData}>
+                    <Download size={20}/> Export Save
                 </button>
             </div>
             <p class="note">
-                <strong>Encrypted:</strong> Eligible for leaderboards, tamper-resistant<br>
-                <strong>Unencrypted:</strong> Editable but not leaderboard eligible
+                Save files are stored in JSON format for easy backup and transfer.
             </p>
         </div>
 
@@ -351,16 +336,10 @@
         border-color: var(--text);
     }
 
-    .export-btn.encrypted {
+    .export-btn {
         background-color: var(--green);
         color: var(--bg);
         border-color: var(--green);
-    }
-
-    .export-btn.unencrypted {
-        background-color: var(--yellow);
-        color: var(--bg);
-        border-color: var(--yellow);
     }
 
     .export-btn:hover {

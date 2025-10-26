@@ -11,5 +11,8 @@ node_modules
 # Test coverage
 /coverage
 
+# Vitest UI build output
+/html
+
 # GitHub Pages build output (deployed via CI/CD)
 /docs
