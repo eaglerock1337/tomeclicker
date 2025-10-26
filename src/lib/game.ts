@@ -13,6 +13,12 @@ import {
 	type ActionCompletionResult
 } from './managers/idle-action-manager';
 import { UpgradeManager, type Upgrade as UpgradeType } from './managers/upgrade-manager';
+import {
+	SaveManager,
+	type GameState,
+	type SaveResult,
+	type LoadResult
+} from './managers/save-manager';
 
 // Re-export Upgrade type for external use
 export type { Upgrade } from './managers/upgrade-manager';
@@ -62,6 +68,7 @@ export class Game {
 	// Managers
 	private idleActionManager: IdleActionManager;
 	private upgradeManager: UpgradeManager;
+	private saveManager: SaveManager;
 
 	/**
 	 * Creates a new game instance with default values
@@ -105,7 +112,12 @@ export class Game {
 			getCurrentExp: () => this.exp
 		});
 
-		this.startIntegrityMonitoring();
+		// Initialize save manager with dependencies
+		this.saveManager = new SaveManager({
+			getGameState: () => this.toGameState(),
+			loadGameState: (state) => this.loadFromGameState(state)
+		});
+
 		this.recalculateClickMultiplier();
 	}
 
@@ -409,26 +421,6 @@ export class Game {
 		);
 	}
 
-	private startIntegrityMonitoring() {
-		// Disable integrity monitoring for now
-		return;
-	}
-
-	private calculateExpectedClickMultiplier(): number {
-		let expected = 1.0;
-		for (const upgrade of Object.values(this.upgrades)) {
-			if (upgrade.effectType === 'clickMultiplier') {
-				expected += upgrade.effectValue * upgrade.currentLevel;
-			}
-		}
-		return expected;
-	}
-
-	private markIntegrityViolation(reason: string) {
-		this.saveIntegrity = `compromised-${reason}-${Date.now()}`;
-		console.warn(`Game integrity violation detected: ${reason}`);
-	}
-
 	/**
 	 * Adds experience points to both current and lifetime totals
 	 * @param amount - Amount of EXP to add
@@ -567,60 +559,11 @@ export class Game {
 
 	/** Save/Load System */
 
-	private generateSaveHash(data: string): string {
-		// Simple hash for save validation - not cryptographically secure but detects tampering
-		let hash = 0;
-		for (let i = 0; i < data.length; i++) {
-			const char = data.charCodeAt(i);
-			hash = (hash << 5) - hash + char;
-			hash = hash & hash; // Convert to 32-bit integer
-		}
-		return hash.toString(36) + this._validationKey;
-	}
-
-	private encryptSave(data: string): string {
-		// Simple XOR encryption - not secure but obfuscates the data
-		const key = 'tomeclicker-save-key';
-		let encrypted = '';
-		for (let i = 0; i < data.length; i++) {
-			encrypted += String.fromCharCode(data.charCodeAt(i) ^ key.charCodeAt(i % key.length));
-		}
-
-		if (typeof btoa === 'undefined') {
-			// Fallback for server-side rendering
-			return Buffer.from(encrypted).toString('base64');
-		}
-		return btoa(encrypted);
-	}
-
-	private decryptSave(encryptedData: string): string {
-		try {
-			let encrypted: string;
-			if (typeof atob === 'undefined') {
-				// Fallback for server-side rendering
-				encrypted = Buffer.from(encryptedData, 'base64').toString();
-			} else {
-				encrypted = atob(encryptedData);
-			}
-
-			const key = 'tomeclicker-save-key';
-			let decrypted = '';
-			for (let i = 0; i < encrypted.length; i++) {
-				decrypted += String.fromCharCode(encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length));
-			}
-			return decrypted;
-		} catch {
-			throw new Error('Invalid encrypted save data');
-		}
-	}
-
 	/**
-	 * Exports the current game state as a save string
-	 * @param encrypted - Whether to encrypt the save data (default: true)
-	 * @returns JSON string containing save data and metadata
+	 * Convert current game state to serializable GameState object
 	 */
-	exportSave(encrypted = true): string {
-		const saveData = {
+	private toGameState(): GameState {
+		return {
 			name: this.name,
 			exp: this.exp,
 			lifetimeExp: this.lifetimeExp,
@@ -628,37 +571,57 @@ export class Game {
 			clickMultiplier: this.clickMultiplier,
 			critChance: this.critChance,
 			critDamage: this.critDamage,
-			upgrades: this.upgrades,
+			upgrades: this.upgradeManager.getUpgrades(),
 			stats: this.stats,
-			trainingActions: this.trainingActions,
-			meditationActions: this.meditationActions,
+			trainingActions: this.idleActionManager.getTrainingActions(),
+			meditationActions: this.idleActionManager.getMeditationActions(),
 			idleExpRate: this.idleExpRate,
 			adventureModeUnlocked: this.adventureModeUnlocked,
 			meditationUnlocked: this.meditationUnlocked,
 			saveIntegrity: this.saveIntegrity,
-			lastValidation: this.lastValidation,
-			version: '0.1.0',
-			timestamp: Date.now()
+			lastValidation: this.lastValidation
 		};
+	}
 
-		const jsonData = JSON.stringify(saveData);
+	/**
+	 * Load game state from GameState object
+	 */
+	private loadFromGameState(state: GameState): void {
+		this.name = state.name;
+		this.exp = state.exp;
+		this.lifetimeExp = state.lifetimeExp;
+		this.level = state.level || 1;
+		this.critChance = state.critChance || 0.0;
+		this.critDamage = state.critDamage || 1.5;
+		this.stats = state.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
 
-		if (encrypted) {
-			const hash = this.generateSaveHash(jsonData);
-			const encryptedData = this.encryptSave(jsonData);
-			return JSON.stringify({
-				encrypted: true,
-				data: encryptedData,
-				hash: hash,
-				version: '0.1.0'
-			});
-		} else {
-			return JSON.stringify({
-				...saveData,
-				encrypted: false,
-				warning: 'This save is not eligible for leaderboard participation'
-			});
+		// Migrate upgrades: preserve levels but update definitions
+		this.migrateUpgrades(state.upgrades);
+
+		// Migrate training and meditation actions
+		if (state.trainingActions) {
+			this.migrateTrainingActions(state.trainingActions);
 		}
+		if (state.meditationActions) {
+			this.migrateMeditationActions(state.meditationActions);
+		}
+
+		this.idleExpRate = state.idleExpRate || 0;
+		this.adventureModeUnlocked = state.adventureModeUnlocked || false;
+		this.meditationUnlocked = state.meditationUnlocked || false;
+		this.saveIntegrity = state.saveIntegrity || 'valid';
+		this.lastValidation = Date.now();
+
+		// Recalculate derived values
+		this.recalculateClickMultiplier();
+	}
+
+	/**
+	 * Exports the current game state as a save string
+	 * @returns JSON string containing save data and metadata
+	 */
+	exportSave(): string {
+		return this.saveManager.exportSave();
 	}
 
 	/**
@@ -667,78 +630,18 @@ export class Game {
 	 * @returns Result object with success status and optional warning/error messages
 	 */
 	importSave(saveString: string): { success: boolean; warning?: string; error?: string } {
-		try {
-			const saveWrapper = JSON.parse(saveString);
-			let saveData;
-			let warning = '';
+		const result = this.saveManager.importSave(saveString);
 
-			if (saveWrapper.encrypted === false) {
-				// Unencrypted save - mark as compromised
-				saveData = saveWrapper;
-				this.saveIntegrity = 'unencrypted-import';
-				warning =
-					'This save is not eligible for leaderboard participation due to unencrypted import.';
-			} else if (saveWrapper.encrypted === true) {
-				// Encrypted save - skip hash validation for now
-				const decryptedData = this.decryptSave(saveWrapper.data);
-				saveData = JSON.parse(decryptedData);
-			} else {
-				return { success: false, error: 'Invalid save format.' };
-			}
-
-			// Validate save data structure
-			if (!this.validateSaveData(saveData)) {
-				return { success: false, error: 'Save data is invalid or corrupted.' };
-			}
-
-			// Load the save data
-			this.name = saveData.name;
-			this.exp = saveData.exp;
-			this.lifetimeExp = saveData.lifetimeExp;
-			this.level = saveData.level || 1;
-
-			// Migrate upgrades: preserve levels but update definitions
-			this.migrateUpgrades(saveData.upgrades);
-
-			// Load new game systems (with defaults for old saves)
-			this.critChance = saveData.critChance || 0.0;
-			this.critDamage = saveData.critDamage || 0.5;
-			this.stats = saveData.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
-
-			// Migrate training and meditation actions to add new actions while preserving progress
-			if (saveData.trainingActions) {
-				this.migrateTrainingActions(saveData.trainingActions);
-			}
-			if (saveData.meditationActions) {
-				this.migrateMeditationActions(saveData.meditationActions);
-			}
-
-			this.idleExpRate = saveData.idleExpRate || 0;
-			this.adventureModeUnlocked = saveData.adventureModeUnlocked || false;
-			this.meditationUnlocked = saveData.meditationUnlocked || false;
-
-			this.saveIntegrity = saveData.saveIntegrity || this.saveIntegrity;
-			this.lastValidation = Date.now();
-
-			// Recalculate click multiplier and crit stats from upgrades
-			this.recalculateClickMultiplier();
-
-			return { success: true, warning };
-		} catch (error) {
-			return { success: false, error: `Failed to import save: ${error}` };
+		// If successful, apply the loaded state
+		if (result.success && result.state) {
+			this.loadFromGameState(result.state);
 		}
-	}
 
-	private validateSaveData(data: any): boolean {
-		return (
-			typeof data.name === 'string' &&
-			typeof data.exp === 'number' &&
-			typeof data.lifetimeExp === 'number' &&
-			(typeof data.level === 'number' || data.level === undefined) &&
-			typeof data.clickMultiplier === 'number' &&
-			typeof data.upgrades === 'object' &&
-			data.exp <= data.lifetimeExp
-		);
+		return {
+			success: result.success,
+			warning: result.warning,
+			error: result.error
+		};
 	}
 
 	/**
@@ -748,53 +651,28 @@ export class Game {
 	 * Cookie expires in 365 days
 	 */
 	saveToCookies(): void {
-		if (typeof document === 'undefined') return;
-		try {
-			const saveData = this.exportSave(true);
-			const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
-			document.cookie = `tomeclicker_save=${encodeURIComponent(saveData)}; expires=${expires}; path=/; SameSite=Lax`;
-		} catch (error) {
-			console.error('Failed to save to cookies:', error);
-		}
+		// Deprecated: SaveManager handles all storage operations
+		console.warn('saveToCookies() is deprecated. Use saveToLocalStorage() instead.');
 	}
 
 	/**
 	 * Attempts to load game state from browser cookies
 	 * @returns True if load succeeded, false otherwise
+	 * @deprecated Use loadFromLocalStorage() instead
 	 */
 	loadFromCookies(): boolean {
-		if (typeof document === 'undefined') return false;
-		try {
-			const cookies = document.cookie.split(';');
-			for (const cookie of cookies) {
-				const [name, value] = cookie.trim().split('=');
-				if (name === 'tomeclicker_save' && value) {
-					const result = this.importSave(decodeURIComponent(value));
-					if (result.success) {
-						return true;
-					} else {
-						console.error('Failed to load save from cookies:', result.error);
-						return false;
-					}
-				}
-			}
-			return false;
-		} catch (error) {
-			console.error('Error loading from cookies:', error);
-			return false;
-		}
+		// Deprecated: SaveManager handles all storage operations
+		console.warn('loadFromCookies() is deprecated. Use loadFromLocalStorage() instead.');
+		return false;
 	}
 
 	/**
 	 * Saves current game state to browser localStorage
 	 */
 	saveToLocalStorage(): void {
-		if (typeof localStorage === 'undefined') return;
-		try {
-			const saveData = this.exportSave(true);
-			localStorage.setItem('tomeclicker_save', saveData);
-		} catch (error) {
-			console.error('Failed to save to localStorage:', error);
+		const result = this.saveManager.saveToStorage();
+		if (!result.success) {
+			console.error('Failed to save to localStorage:', result.error);
 		}
 	}
 
@@ -803,33 +681,25 @@ export class Game {
 	 * @returns True if load succeeded, false otherwise
 	 */
 	loadFromLocalStorage(): boolean {
-		if (typeof localStorage === 'undefined') return false;
-		try {
-			const saveData = localStorage.getItem('tomeclicker_save');
-			if (saveData) {
-				const result = this.importSave(saveData);
-				if (result.success) {
-					return true;
-				} else {
-					console.error('Failed to load save from localStorage:', result.error);
-					return false;
-				}
+		const result = this.saveManager.loadFromStorage();
+		if (!result.success) {
+			if (result.error && !result.error.includes('No save data found')) {
+				console.error('Failed to load save from localStorage:', result.error);
 			}
 			return false;
-		} catch (error) {
-			console.error('Error loading from localStorage:', error);
-			return false;
 		}
+		if (result.warning) {
+			console.warn(result.warning);
+		}
+		return true;
 	}
 
 	/**
 	 * Automatically saves to localStorage
 	 * Called periodically by the game loop
-	 * Note: Cookies are no longer used due to 4KB size limit
 	 */
 	autoSave(): void {
-		// Only use localStorage (cookies have 4KB limit, save data exceeds this)
-		this.saveToLocalStorage();
+		this.saveManager.autoSave();
 	}
 
 	/**
@@ -840,13 +710,8 @@ export class Game {
 	hardReset(preserveName: boolean = true): void {
 		const savedName = preserveName ? this.name : 'A Stranger';
 
-		// Clear localStorage and cookies
-		if (typeof localStorage !== 'undefined') {
-			localStorage.removeItem('tomeclicker_save');
-		}
-		if (typeof document !== 'undefined') {
-			document.cookie = 'tomeclicker_save=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-		}
+		// Clear save data using SaveManager
+		this.saveManager.clearSave();
 
 		// Reset all game state
 		this.name = savedName;
@@ -880,6 +745,11 @@ export class Game {
 			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
 			getCritChance: () => this.critChance,
 			getCurrentExp: () => this.exp
+		});
+
+		this.saveManager = new SaveManager({
+			getGameState: () => this.toGameState(),
+			loadGameState: (state) => this.loadFromGameState(state)
 		});
 
 		this.recalculateClickMultiplier();

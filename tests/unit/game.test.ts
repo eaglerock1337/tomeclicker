@@ -411,28 +411,26 @@ describe('Game', () => {
 					.withUpgrade('focused-practice', 3)
 					.build();
 
-				// Export unencrypted for testing
-				const saveData = game.exportSave(false);
+				const saveData = game.exportSave();
 				expect(typeof saveData).toBe('string');
 
 				const parsed = JSON.parse(saveData);
-				expect(parsed.exp).toBe(500);
-				expect(parsed.level).toBe(2);
+				expect(parsed.gameState.exp).toBe(500);
+				expect(parsed.gameState.level).toBe(2);
 			});
 
 			it('should include all critical game state', () => {
 				const game = new GameBuilder().withExp(1000).withLifetimeExp(5000).withLevel(3).build();
 
-				// Export unencrypted for testing
-				const saveData = game.exportSave(false);
+				const saveData = game.exportSave();
 				const parsed = JSON.parse(saveData);
 
-				expect(parsed.name).toBe('TestPlayer');
-				expect(parsed.exp).toBe(1000);
-				expect(parsed.lifetimeExp).toBe(5000);
-				expect(parsed.level).toBe(3);
-				expect(parsed.upgrades).toBeDefined();
-				expect(parsed.stats).toBeDefined();
+				expect(parsed.gameState.name).toBe('TestPlayer');
+				expect(parsed.gameState.exp).toBe(1000);
+				expect(parsed.gameState.lifetimeExp).toBe(5000);
+				expect(parsed.gameState.level).toBe(3);
+				expect(parsed.gameState.upgrades).toBeDefined();
+				expect(parsed.gameState.stats).toBeDefined();
 			});
 		});
 
@@ -444,8 +442,7 @@ describe('Game', () => {
 					.withUpgrade('focused-practice', 5)
 					.build();
 
-				// Use unencrypted save for testing
-				const saveData = originalGame.exportSave(false);
+				const saveData = originalGame.exportSave();
 
 				const newGame = createTestGame();
 				newGame.importSave(saveData);
@@ -461,8 +458,7 @@ describe('Game', () => {
 					.withUpgrade('focused-practice', 2)
 					.build();
 
-				// Use unencrypted save for testing
-				const saveData = originalGame.exportSave(false);
+				const saveData = originalGame.exportSave();
 
 				const newGame = createTestGame();
 				newGame.importSave(saveData);
@@ -499,7 +495,7 @@ describe('Game', () => {
 
 			it('should return success on valid save', () => {
 				const game = createTestGame();
-				const saveData = game.exportSave(false);
+				const saveData = game.exportSave();
 
 				const result = game.importSave(saveData);
 
@@ -527,8 +523,7 @@ describe('Game', () => {
 					.withStats({ strength: 5, dexterity: 3 })
 					.build();
 
-				// Use unencrypted save for testing
-				const saveData = original.exportSave(false);
+				const saveData = original.exportSave();
 				const loaded = createTestGame();
 				loaded.importSave(saveData);
 
