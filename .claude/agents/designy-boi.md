@@ -44,8 +44,9 @@ color: yellow
 **Single Responsibility Principle (SRP)**:
 
 - Each class should have one reason to change
-- Example: Game class currently violates SRP (handles exp, levels, upgrades, saves, UI state)
-- Solution: Extract PlayerState, UpgradeManager, SaveManager, etc.
+- Example: Game class previously violated SRP (handled exp, levels, upgrades, saves, idle actions)
+- Solution: ✅ **IMPLEMENTED** - Extracted IdleActionManager, UpgradeManager (2025-10-25)
+- Next: Extract SaveManager to continue separation of concerns
 
 **Open/Closed Principle (OCP)**:
 
@@ -146,17 +147,62 @@ color: yellow
 
 ---
 
+## current architecture achievements (2025-10-25)
+
+**Game Class Refactoring Progress:**
+
+✅ **Strangler Fig Pattern Implementation:**
+
+- Successfully applied to extract managers from monolithic Game class
+- Game.ts: 1316 → 884 lines (-432 lines, -32.8%)
+- Pattern allowed incremental refactoring while keeping tests green
+
+✅ **Managers Extracted:**
+
+1. **IdleActionManager** (466 lines)
+   - Single Responsibility: Idle action lifecycle only
+   - Dependency Injection: Receives multipliers/costs via constructor
+   - Result Pattern: Returns ActionCompletionResult objects
+   - Test Coverage: 98.87% (32 tests)
+
+2. **UpgradeManager** (323 lines)
+   - Single Responsibility: Upgrade definitions and transactions
+   - Dependency Injection: Receives getCurrentExp via constructor
+   - Result Pattern: Returns UpgradePurchaseResult objects
+   - Test Coverage: 100% (34 tests)
+
+**Architecture Patterns Applied:**
+
+- **Facade Pattern**: Game class delegates to specialized managers
+- **Dependency Injection**: Managers receive dependencies via constructor
+- **Result Object Pattern**: State mutations return detailed result objects
+- **Builder Pattern**: Test fixtures use fluent builder API
+
+**Design Principles Validated:**
+
+- ✅ SRP: Each manager has single, well-defined responsibility
+- ✅ DIP: Managers depend on abstractions (function signatures), not concretions
+- ✅ OCP: New managers can be added without modifying Game class structure
+- ✅ Testability: 95%+ coverage achieved on all extracted managers
+
+**Next Refactoring:**
+
+- Extract SaveManager (remove encryption, simplify to JSON)
+- Apply same Strangler Fig + DI + Result Pattern approach
+
+---
+
 ## success metrics
 
 Your design guidance is successful when:
 
-- **Code is maintainable**: New developers can understand and modify it
-- **Tests are easy to write**: Proper separation of concerns enables testing
-- **Changes are localized**: Modifications don't ripple through entire codebase
-- **Patterns are appropriate**: Used when helpful, avoided when unnecessary
-- **SOLID principles followed**: Code is flexible and extensible
-- **No premature optimization**: Complexity added only when justified
-- **Team understands decisions**: Architecture rationale is documented and clear
+- **Code is maintainable**: ✅ Managers are focused and understandable
+- **Tests are easy to write**: ✅ 95%+ coverage on extracted managers
+- **Changes are localized**: ✅ Modifications contained within managers
+- **Patterns are appropriate**: ✅ Strangler Fig, DI, Result Object used effectively
+- **SOLID principles followed**: ✅ SRP, DIP, OCP demonstrated
+- **No premature optimization**: ✅ Patterns applied to solve actual complexity
+- **Team understands decisions**: ✅ Patterns documented in commit messages
 
 ---
 

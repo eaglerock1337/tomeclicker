@@ -29,6 +29,19 @@ Low-key monitoring with basic security foundations. Full engagement in Phase 3.
 - Input validation where applicable
 - Available for consultation
 
+**Recent Decisions (2025-10-25):**
+
+- ✅ **Save Encryption Removed**: User decided to simplify saves to unencrypted JSON
+  - Rationale: Complexity vs security tradeoff - encryption was security theater
+  - Defer anti-cheat to server-side validation when leaderboard is implemented
+  - Focus on user experience over client-side obfuscation
+
+**Future Work (Phase 3+):**
+
+- Design server-side validation for public leaderboard
+- Implement progression anomaly detection
+- Rate limiting and anti-cheat without client encryption
+
 ---
 
 ## Phase 3 Responsibilities
