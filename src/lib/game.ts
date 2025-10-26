@@ -19,6 +19,7 @@ import {
 	type SaveResult,
 	type LoadResult
 } from './managers/save-manager';
+import { StatsManager } from './managers/stats-manager';
 
 // Re-export Upgrade type for external use
 export type { Upgrade } from './managers/upgrade-manager';
@@ -60,7 +61,6 @@ export class Game {
 	private _validationKey: string;
 
 	// New RPG and idle systems
-	public stats: Stats;
 	public idleExpRate: number;
 	public adventureModeUnlocked: boolean;
 	public meditationUnlocked: boolean;
@@ -69,6 +69,7 @@ export class Game {
 	private idleActionManager: IdleActionManager;
 	private upgradeManager: UpgradeManager;
 	private saveManager: SaveManager;
+	private statsManager: StatsManager;
 
 	/**
 	 * Creates a new game instance with default values
@@ -90,10 +91,12 @@ export class Game {
 		this._validationKey = this.generateValidationKey();
 
 		// Initialize new systems
-		this.stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
 		this.meditationUnlocked = false;
+
+		// Initialize stats manager
+		this.statsManager = new StatsManager();
 
 		// Initialize upgrade manager
 		this.upgradeManager = new UpgradeManager({
@@ -119,6 +122,21 @@ export class Game {
 		});
 
 		this.recalculateClickMultiplier();
+	}
+
+	/**
+	 * Gets all stats (delegates to StatsManager)
+	 */
+	get stats(): Stats {
+		return this.statsManager.getStats();
+	}
+
+	/**
+	 * Sets stats (for testing and save/load operations)
+	 * @internal - Use for testing or deserialization only
+	 */
+	setStats(stats: Stats): void {
+		this.statsManager.setStats(stats);
 	}
 
 	/**
@@ -259,7 +277,7 @@ export class Game {
 	 * @returns EXP cost for next level
 	 */
 	getStatLevelCost(stat: keyof Stats): number {
-		return calculateStatLevelCost(this.stats[stat]);
+		return this.statsManager.getStatLevelCost(stat);
 	}
 
 	/**
@@ -345,7 +363,7 @@ export class Game {
 
 			// Apply stat gains
 			if (result.statGained) {
-				this.stats[result.statGained.stat] += result.statGained.amount;
+				this.statsManager.increaseStat(result.statGained.stat, result.statGained.amount);
 				// Deduct the EXP cost
 				if (result.expCost) {
 					this.exp -= result.expCost;
@@ -593,7 +611,10 @@ export class Game {
 		this.level = state.level || 1;
 		this.critChance = state.critChance || 0.0;
 		this.critDamage = state.critDamage || 1.5;
-		this.stats = state.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
+
+		// Load stats into StatsManager
+		const loadedStats = state.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
+		this.statsManager.setStats(loadedStats);
 
 		// Migrate upgrades: preserve levels but update definitions
 		this.migrateUpgrades(state.upgrades);
@@ -723,7 +744,6 @@ export class Game {
 		this.clickMultiplier = 1.0;
 		this.critChance = 0.0;
 		this.critDamage = BASE_CRIT_DAMAGE;
-		this.stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
 		this.meditationUnlocked = false;
@@ -732,6 +752,8 @@ export class Game {
 		this._validationKey = this.generateValidationKey();
 
 		// Reinitialize managers
+		this.statsManager = new StatsManager();
+
 		this.upgradeManager = new UpgradeManager({
 			getCurrentExp: () => this.exp
 		});
