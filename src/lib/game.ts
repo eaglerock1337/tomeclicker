@@ -1,6 +1,5 @@
 import {
 	calculateLevelUpCost,
-	calculateUpgradeCost,
 	calculateStatLevelCost,
 	calculateTrainingSpeedMultiplier,
 	calculateTrainingCostMultiplier,
@@ -13,64 +12,17 @@ import {
 	type IdleAction,
 	type ActionCompletionResult
 } from './managers/idle-action-manager';
+import { UpgradeManager, type Upgrade as UpgradeType } from './managers/upgrade-manager';
+
+// Re-export Upgrade type for external use
+export type { Upgrade } from './managers/upgrade-manager';
 import {
 	GAME_TICK_RATE,
 	BASE_CRIT_DAMAGE,
-	UPGRADE_COST_TIER_1,
-	UPGRADE_COST_TIER_2,
-	UPGRADE_COST_TIER_3,
-	UPGRADE_COST_TIER_4,
-	UPGRADE_COST_TIER_5,
-	UPGRADE_DISCIPLINE_BASE_COST,
-	UPGRADE_TRAINING_SPEED_COST,
-	UPGRADE_TRAINING_COST_REDUCTION,
-	UPGRADE_MAX_STANDARD,
-	UPGRADE_MAX_CRIT,
-	UPGRADE_MAX_TRAINING,
-	UPGRADE_MAX_COST_REDUCTION,
-	UPGRADE_MAX_DISCIPLINE,
 	HEADER_UNLOCK_THRESHOLD,
 	MENU_UNLOCK_THRESHOLD,
 	UPGRADES_UNLOCK_THRESHOLD
 } from './constants/game';
-
-/**
- * Represents an upgrade that can be purchased with EXP
- */
-export interface Upgrade {
-	/** Unique identifier for the upgrade */
-	id: string;
-	/** Display name shown to the player */
-	name: string;
-	/** Detailed description of what the upgrade does */
-	description: string;
-	/** Text describing the numerical effect */
-	effect: string;
-	/** Base cost in EXP for the first level */
-	baseCost: number;
-	/** Multiplier applied to cost for each level purchased */
-	costMultiplier: number;
-	/** Maximum number of times this upgrade can be purchased */
-	maxLevel: number;
-	/** Current level/times purchased */
-	currentLevel: number;
-	/** Type of effect this upgrade provides */
-	effectType:
-		| 'clickMultiplier'
-		| 'idleExp'
-		| 'trainingSpeed'
-		| 'trainingCost'
-		| 'levelUp'
-		| 'critChance'
-		| 'critDamage'
-		| 'osmosisExp'
-		| 'osmosisSpeed'
-		| 'globalIdleSpeed';
-	/** Numeric value of the effect per level */
-	effectValue: number;
-	/** Minimum level required to see this upgrade */
-	minLevel?: number;
-}
 
 /**
  * Represents RPG-style player stats
@@ -97,7 +49,6 @@ export class Game {
 	public clickMultiplier: number;
 	public critChance: number;
 	public critDamage: number;
-	public upgrades: { [key: string]: Upgrade };
 	public saveIntegrity: string;
 	public lastValidation: number;
 	private _validationKey: string;
@@ -108,8 +59,9 @@ export class Game {
 	public adventureModeUnlocked: boolean;
 	public meditationUnlocked: boolean;
 
-	// Idle action manager
+	// Managers
 	private idleActionManager: IdleActionManager;
+	private upgradeManager: UpgradeManager;
 
 	/**
 	 * Creates a new game instance with default values
@@ -126,7 +78,6 @@ export class Game {
 		this.clickMultiplier = 1.0;
 		this.critChance = 0.0; // Start with 0% crit chance
 		this.critDamage = BASE_CRIT_DAMAGE; // Crits do +50% damage (1.5x total)
-		this.upgrades = this.initializeUpgrades();
 		this.saveIntegrity = 'valid';
 		this.lastValidation = Date.now();
 		this._validationKey = this.generateValidationKey();
@@ -136,6 +87,11 @@ export class Game {
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
 		this.meditationUnlocked = false;
+
+		// Initialize upgrade manager
+		this.upgradeManager = new UpgradeManager({
+			getCurrentExp: () => this.exp
+		});
 
 		// Initialize idle action manager with dependencies
 		this.idleActionManager = new IdleActionManager({
@@ -165,6 +121,13 @@ export class Game {
 	 */
 	get meditationActions(): { [key: string]: IdleAction } {
 		return this.idleActionManager.getMeditationActions();
+	}
+
+	/**
+	 * Gets all upgrades (delegates to UpgradeManager)
+	 */
+	get upgrades(): { [key: string]: UpgradeType } {
+		return this.upgradeManager.getUpgrades();
 	}
 
 	/**
@@ -320,18 +283,8 @@ export class Game {
 	 * Preserves progress while allowing upgrade balance changes
 	 * @param savedUpgrades - Upgrade data from a saved game
 	 */
-	migrateUpgrades(savedUpgrades: { [key: string]: Upgrade }): void {
-		// Get fresh upgrade definitions
-		const freshUpgrades = this.initializeUpgrades();
-
-		// Preserve current levels from saved upgrades
-		for (const upgradeId in freshUpgrades) {
-			if (savedUpgrades[upgradeId]) {
-				freshUpgrades[upgradeId].currentLevel = savedUpgrades[upgradeId].currentLevel;
-			}
-		}
-
-		this.upgrades = freshUpgrades;
+	migrateUpgrades(savedUpgrades: { [key: string]: UpgradeType }): void {
+		this.upgradeManager.migrateUpgrades(savedUpgrades);
 	}
 
 	/**
@@ -350,139 +303,6 @@ export class Game {
 	 */
 	migrateMeditationActions(savedActions: { [key: string]: IdleAction }): void {
 		this.idleActionManager.migrateMeditationActions(savedActions);
-	}
-
-	/**
-	 * Initializes all available upgrades with default values
-	 * @returns Object map of upgrade ID to upgrade definition
-	 */
-	initializeUpgrades(): { [key: string]: Upgrade } {
-		return {
-			// Level 1 Click upgrades
-			'focused-practice': {
-				id: 'focused-practice',
-				name: 'Focused Practice',
-				description: 'Deep concentration yields exponentially greater rewards',
-				effect: '+100% EXP per click per level',
-				baseCost: UPGRADE_COST_TIER_1,
-				costMultiplier: 1.15,
-				maxLevel: UPGRADE_MAX_STANDARD,
-				currentLevel: 0,
-				effectType: 'clickMultiplier',
-				effectValue: 1.0,
-				minLevel: 1
-			},
-			'critical-insight': {
-				id: 'critical-insight',
-				name: 'Critical Insight',
-				description: 'Moments of clarity grant bursts of understanding',
-				effect: '+0.5% crit chance per level',
-				baseCost: UPGRADE_COST_TIER_3,
-				costMultiplier: 1.75,
-				maxLevel: UPGRADE_MAX_CRIT,
-				currentLevel: 0,
-				effectType: 'critChance',
-				effectValue: 0.005,
-				minLevel: 1
-			},
-			'devastating-critique': {
-				id: 'devastating-critique',
-				name: 'Devastating Critique',
-				description: 'Critical insights become increasingly profound',
-				effect: '+5% crit damage per level',
-				baseCost: UPGRADE_COST_TIER_5,
-				costMultiplier: 2.0,
-				maxLevel: UPGRADE_MAX_CRIT,
-				currentLevel: 0,
-				effectType: 'critDamage',
-				effectValue: 0.05,
-				minLevel: 1
-			},
-
-			// Level 2 Idle/Rumination upgrades
-			'osmotic-absorption': {
-				id: 'osmotic-absorption',
-				name: 'Deep Contemplation',
-				description: 'Thoughtful reflection yields greater insights',
-				effect: '+1 EXP per rumination level',
-				baseCost: UPGRADE_COST_TIER_2,
-				costMultiplier: 1.18,
-				maxLevel: UPGRADE_MAX_STANDARD,
-				currentLevel: 0,
-				effectType: 'osmosisExp',
-				effectValue: 1,
-				minLevel: 2
-			},
-			'flow-state': {
-				id: 'flow-state',
-				name: 'Flow State',
-				description: 'Enter a state of effortless focus',
-				effect: '+2% rumination speed per level',
-				baseCost: UPGRADE_COST_TIER_4,
-				costMultiplier: 1.2,
-				maxLevel: UPGRADE_MAX_CRIT,
-				currentLevel: 0,
-				effectType: 'osmosisSpeed',
-				effectValue: 0.02,
-				minLevel: 2
-			},
-			'temporal-mastery': {
-				id: 'temporal-mastery',
-				name: 'Temporal Mastery',
-				description: 'Bend time itself to your will (affects ALL idle actions)',
-				effect: '+5% global idle speed per level',
-				baseCost: UPGRADE_COST_TIER_5,
-				costMultiplier: 1.25,
-				maxLevel: UPGRADE_MAX_STANDARD,
-				currentLevel: 0,
-				effectType: 'globalIdleSpeed',
-				effectValue: 0.05,
-				minLevel: 2
-			},
-
-			// Level 3+ Training upgrades
-			'efficient-training': {
-				id: 'efficient-training',
-				name: 'Efficient Training',
-				description: 'Complete training exercises faster',
-				effect: '-10% training time per level',
-				baseCost: UPGRADE_TRAINING_SPEED_COST,
-				costMultiplier: 1.3,
-				maxLevel: UPGRADE_MAX_TRAINING,
-				currentLevel: 0,
-				effectType: 'trainingSpeed',
-				effectValue: 0.1,
-				minLevel: 3
-			},
-			'cost-reduction': {
-				id: 'cost-reduction',
-				name: 'Cost Reduction',
-				description: 'Training requires less EXP to start',
-				effect: '-20% training cost per level',
-				baseCost: UPGRADE_TRAINING_COST_REDUCTION,
-				costMultiplier: 1.35,
-				maxLevel: UPGRADE_MAX_COST_REDUCTION,
-				currentLevel: 0,
-				effectType: 'trainingCost',
-				effectValue: 0.2,
-				minLevel: 3
-			},
-
-			// Special: Discipline upgrade (available early, expensive)
-			discipline: {
-				id: 'discipline',
-				name: 'Discipline',
-				description: 'Unified focus accelerates all progress',
-				effect: '5x all EXP gain per level',
-				baseCost: UPGRADE_DISCIPLINE_BASE_COST,
-				costMultiplier: 100, // Expensive scaling like level-ups
-				maxLevel: UPGRADE_MAX_DISCIPLINE,
-				currentLevel: 0,
-				effectType: 'clickMultiplier',
-				effectValue: 5.0,
-				minLevel: 1
-			}
-		};
 	}
 
 	/** Idle Action Management */
@@ -656,10 +476,7 @@ export class Game {
 	 * @returns EXP cost for next level, or 0 if upgrade doesn't exist
 	 */
 	getUpgradeCost(upgradeId: string): number {
-		const upgrade = this.upgrades[upgradeId];
-		if (!upgrade) return 0;
-
-		return calculateUpgradeCost(upgrade);
+		return this.upgradeManager.getUpgradeCost(upgradeId);
 	}
 
 	/**
@@ -668,8 +485,7 @@ export class Game {
 	 * @returns True if affordable, false otherwise
 	 */
 	canAffordUpgrade(upgradeId: string): boolean {
-		const cost = this.getUpgradeCost(upgradeId);
-		return this.exp >= cost;
+		return this.upgradeManager.canAffordUpgrade(upgradeId);
 	}
 
 	/**
@@ -678,10 +494,7 @@ export class Game {
 	 * @returns True if purchaseable, false otherwise
 	 */
 	canPurchaseUpgrade(upgradeId: string): boolean {
-		const upgrade = this.upgrades[upgradeId];
-		if (!upgrade) return false;
-
-		return this.canAffordUpgrade(upgradeId) && upgrade.currentLevel < upgrade.maxLevel;
+		return this.upgradeManager.canPurchaseUpgrade(upgradeId);
 	}
 
 	/**
@@ -691,18 +504,19 @@ export class Game {
 	 * @returns True if purchase succeeded, false otherwise
 	 */
 	purchaseUpgrade(upgradeId: string): boolean {
-		if (!this.canPurchaseUpgrade(upgradeId)) return false;
+		const result = this.upgradeManager.purchaseUpgrade(upgradeId);
 
-		const upgrade = this.upgrades[upgradeId];
-		const cost = this.getUpgradeCost(upgradeId);
+		if (result.success && result.expCost) {
+			// Deduct EXP cost
+			this.exp -= result.expCost;
 
-		this.exp -= cost;
-		upgrade.currentLevel++;
+			// Recalculate click multiplier after purchase
+			this.recalculateClickMultiplier();
 
-		// Recalculate click multiplier after purchase
-		this.recalculateClickMultiplier();
+			return true;
+		}
 
-		return true;
+		return false;
 	}
 
 	/**
@@ -1044,7 +858,6 @@ export class Game {
 		this.clickMultiplier = 1.0;
 		this.critChance = 0.0;
 		this.critDamage = BASE_CRIT_DAMAGE;
-		this.upgrades = this.initializeUpgrades();
 		this.stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
@@ -1053,7 +866,11 @@ export class Game {
 		this.lastValidation = Date.now();
 		this._validationKey = this.generateValidationKey();
 
-		// Reinitialize idle action manager
+		// Reinitialize managers
+		this.upgradeManager = new UpgradeManager({
+			getCurrentExp: () => this.exp
+		});
+
 		this.idleActionManager = new IdleActionManager({
 			getTrainingSpeedMultiplier: () => this.getTrainingSpeedMultiplier(),
 			getTrainingCostMultiplier: () => this.getTrainingCostMultiplier(),
