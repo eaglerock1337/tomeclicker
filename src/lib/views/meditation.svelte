@@ -6,13 +6,13 @@
     let selectedAction = 'meditate-future';
 
     function startMeditation() {
-        if (game.startIdleAction(game.meditationActions, selectedAction)) {
+        if (game.startIdleAction('meditation', selectedAction)) {
             game = game; // Force reactivity
         }
     }
 
     function stopMeditation() {
-        game.stopIdleAction(game.meditationActions, selectedAction);
+        game.stopIdleAction('meditation', selectedAction);
         game = game;
     }
 
