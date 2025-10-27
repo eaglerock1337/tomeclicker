@@ -44,8 +44,8 @@ export interface Upgrade {
 		| 'levelUp'
 		| 'critChance'
 		| 'critDamage'
-		| 'osmosisExp'
-		| 'osmosisSpeed'
+		| 'ruminateExp'
+		| 'ruminateSpeed'
 		| 'globalIdleSpeed';
 	/** Numeric value of the effect per level */
 	effectValue: number;
@@ -143,7 +143,7 @@ export class UpgradeManager {
 				costMultiplier: 1.18,
 				maxLevel: UPGRADE_MAX_STANDARD,
 				currentLevel: 0,
-				effectType: 'osmosisExp',
+				effectType: 'ruminateExp',
 				effectValue: 1,
 				minLevel: 2
 			},
@@ -156,7 +156,7 @@ export class UpgradeManager {
 				costMultiplier: 1.2,
 				maxLevel: UPGRADE_MAX_CRIT,
 				currentLevel: 0,
-				effectType: 'osmosisSpeed',
+				effectType: 'ruminateSpeed',
 				effectValue: 0.02,
 				minLevel: 2
 			},

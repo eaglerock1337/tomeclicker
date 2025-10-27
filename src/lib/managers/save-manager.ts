@@ -1,4 +1,5 @@
 import type { Stats } from '../game';
+import type { StatXp } from './stats-manager';
 
 /**
  * Serializable game state for save/load operations
@@ -13,6 +14,7 @@ export interface GameState {
 	critDamage: number;
 	upgrades: Record<string, any>; // Upgrade objects or legacy format
 	stats: Stats;
+	statXp?: StatXp; // Optional for backward compatibility with old saves
 	trainingActions: Record<string, any>; // IdleAction objects
 	meditationActions: Record<string, any>; // IdleAction objects
 	idleExpRate: number;

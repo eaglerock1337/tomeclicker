@@ -3,9 +3,9 @@ import {
 	calculateStatLevelCost,
 	calculateTrainingSpeedMultiplier,
 	calculateTrainingCostMultiplier,
-	calculateOsmosisExpBonus,
+	calculateRuminateExpBonus,
 	calculateGlobalIdleSpeedMultiplier,
-	calculateOsmosisSpeedMultiplier
+	calculateRuminateSpeedMultiplier
 } from './utils/calculations';
 import {
 	IdleActionManager,
@@ -19,10 +19,11 @@ import {
 	type SaveResult,
 	type LoadResult
 } from './managers/save-manager';
-import { StatsManager } from './managers/stats-manager';
+import { StatsManager, type StatXp } from './managers/stats-manager';
 
-// Re-export Upgrade type for external use
+// Re-export types for external use
 export type { Upgrade } from './managers/upgrade-manager';
+export type { StatXp } from './managers/stats-manager';
 import {
 	GAME_TICK_RATE,
 	BASE_CRIT_DAMAGE,
@@ -107,12 +108,14 @@ export class Game {
 		this.idleActionManager = new IdleActionManager({
 			getTrainingSpeedMultiplier: () => this.getTrainingSpeedMultiplier(),
 			getTrainingCostMultiplier: () => this.getTrainingCostMultiplier(),
-			getOsmosisExpBonus: () => this.getOsmosisExpBonus(),
+			getRuminateExpBonus: () => this.getRuminateExpBonus(),
 			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
-			getOsmosisSpeedMultiplier: () => this.getOsmosisSpeedMultiplier(),
+			getRuminateSpeedMultiplier: () => this.getRuminateSpeedMultiplier(),
 			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
 			getCritChance: () => this.critChance,
-			getCurrentExp: () => this.exp
+			getCurrentExp: () => this.exp,
+			getPlayerLevel: () => this.level,
+			getStats: () => this.stats
 		});
 
 		// Initialize save manager with dependencies
@@ -132,11 +135,35 @@ export class Game {
 	}
 
 	/**
+	 * Gets all stat XP (delegates to StatsManager)
+	 */
+	get statXp(): StatXp {
+		return this.statsManager.getStatXp();
+	}
+
+	/**
 	 * Sets stats (for testing and save/load operations)
 	 * @internal - Use for testing or deserialization only
 	 */
 	setStats(stats: Stats): void {
 		this.statsManager.setStats(stats);
+	}
+
+	/**
+	 * Sets stat XP (for testing and save/load operations)
+	 * @internal - Use for testing or deserialization only
+	 */
+	setStatXp(statXp: StatXp): void {
+		this.statsManager.setStatXp(statXp);
+	}
+
+	/**
+	 * Gets stat XP progress for a specific stat
+	 * @param stat - The stat to check progress for
+	 * @returns Object with current, required, and percentage
+	 */
+	getStatXpProgress(stat: keyof Stats): { current: number; required: number; percentage: number } {
+		return this.statsManager.getStatXpProgress(stat);
 	}
 
 	/**
@@ -251,8 +278,8 @@ export class Game {
 	 * Gets the osmosis EXP bonus from upgrades
 	 * @returns Additional EXP gained per osmosis completion
 	 */
-	getOsmosisExpBonus(): number {
-		return calculateOsmosisExpBonus(this.upgrades);
+	getRuminateExpBonus(): number {
+		return calculateRuminateExpBonus(this.upgrades);
 	}
 
 	/**
@@ -267,8 +294,8 @@ export class Game {
 	 * Gets the osmosis-specific speed multiplier
 	 * @returns Speed multiplier for osmosis actions (higher is faster)
 	 */
-	getOsmosisSpeedMultiplier(): number {
-		return calculateOsmosisSpeedMultiplier(this.upgrades);
+	getRuminateSpeedMultiplier(): number {
+		return calculateRuminateSpeedMultiplier(this.upgrades);
 	}
 
 	/**
@@ -361,9 +388,9 @@ export class Game {
 				this.addExp(result.expGained);
 			}
 
-			// Apply stat gains
-			if (result.statGained) {
-				this.statsManager.increaseStat(result.statGained.stat, result.statGained.amount);
+			// Apply stat XP gains
+			if (result.statXpGained) {
+				this.statsManager.addStatXp(result.statXpGained.stat, result.statXpGained.amount);
 				// Deduct the EXP cost
 				if (result.expCost) {
 					this.exp -= result.expCost;
@@ -384,6 +411,24 @@ export class Game {
 	 */
 	stopIdleAction(actionMap: 'training' | 'meditation', actionId: string): void {
 		this.idleActionManager.stopIdleAction(actionMap, actionId);
+	}
+
+	/**
+	 * Gets the current modified duration for an action (accounts for upgrades)
+	 * @param actionMap - The action map ('training' or 'meditation')
+	 * @param actionId - ID of the action
+	 * @returns Modified duration in milliseconds
+	 */
+	getActionCurrentDuration(actionMap: 'training' | 'meditation', actionId: string): number {
+		return this.idleActionManager.getActionCurrentDuration(actionMap, actionId);
+	}
+
+	/**
+	 * Gets the current ruminate reward (accounts for level and stat scaling)
+	 * @returns Current ruminate reward in EXP
+	 */
+	getRuminateCurrentReward(): number {
+		return this.idleActionManager.getRuminateCurrentReward();
 	}
 
 	/** Progression Unlock Conditions */
@@ -591,6 +636,7 @@ export class Game {
 			critDamage: this.critDamage,
 			upgrades: this.upgradeManager.getUpgrades(),
 			stats: this.stats,
+			statXp: this.statXp,
 			trainingActions: this.idleActionManager.getTrainingActions(),
 			meditationActions: this.idleActionManager.getMeditationActions(),
 			idleExpRate: this.idleExpRate,
@@ -615,6 +661,10 @@ export class Game {
 		// Load stats into StatsManager
 		const loadedStats = state.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
 		this.statsManager.setStats(loadedStats);
+
+		// Load stat XP (default to 0 for all stats if not present)
+		const loadedStatXp = state.statXp || { strength: 0, dexterity: 0, intelligence: 0, wisdom: 0 };
+		this.statsManager.setStatXp(loadedStatXp);
 
 		// Migrate upgrades: preserve levels but update definitions
 		this.migrateUpgrades(state.upgrades);
@@ -761,12 +811,14 @@ export class Game {
 		this.idleActionManager = new IdleActionManager({
 			getTrainingSpeedMultiplier: () => this.getTrainingSpeedMultiplier(),
 			getTrainingCostMultiplier: () => this.getTrainingCostMultiplier(),
-			getOsmosisExpBonus: () => this.getOsmosisExpBonus(),
+			getRuminateExpBonus: () => this.getRuminateExpBonus(),
 			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
-			getOsmosisSpeedMultiplier: () => this.getOsmosisSpeedMultiplier(),
+			getRuminateSpeedMultiplier: () => this.getRuminateSpeedMultiplier(),
 			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
 			getCritChance: () => this.critChance,
-			getCurrentExp: () => this.exp
+			getCurrentExp: () => this.exp,
+			getPlayerLevel: () => this.level,
+			getStats: () => this.stats
 		});
 
 		this.saveManager = new SaveManager({

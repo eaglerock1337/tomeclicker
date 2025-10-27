@@ -2,14 +2,17 @@ import type { Stats } from '../game';
 import {
 	TRAINING_BASE_COST,
 	TRAINING_REWARD,
+	TRAINING_STAT_XP_GAIN,
 	TRAINING_CRIT_MULTIPLIER,
-	OSMOSIS_BASE_REWARD,
-	OSMOSIS_BASE_DURATION,
+	RUMINATE_BASE_REWARD,
+	RUMINATE_BASE_DURATION,
 	TRAINING_BASE_DURATION,
 	MEDITATION_FUTURE_DURATION,
 	MEDITATION_FUTURE_COST,
 	MEDITATION_DISASSOCIATE_DURATION,
-	MEDITATION_DISASSOCIATE_COST
+	MEDITATION_DISASSOCIATE_COST,
+	RUMINATE_LEVEL_SCALING,
+	RUMINATE_STAT_SCALING
 } from '../constants/game';
 
 /**
@@ -45,12 +48,12 @@ export interface IdleAction {
 export interface ActionCompletionResult {
 	/** EXP gained from completion */
 	expGained: number;
-	/** Stat that was leveled up (if any) */
-	statGained?: {
+	/** Stat XP gained (if training a stat) */
+	statXpGained?: {
 		stat: keyof Stats;
 		amount: number;
 	};
-	/** EXP cost for the stat level (if training) */
+	/** Player EXP cost for the action (if training) */
 	expCost?: number;
 	/** Whether the action should continue running */
 	shouldContinue: boolean;
@@ -68,23 +71,27 @@ export interface IdleActionDependencies {
 	getTrainingSpeedMultiplier: () => number;
 	/** Get training cost multiplier from upgrades */
 	getTrainingCostMultiplier: () => number;
-	/** Get osmosis EXP bonus from upgrades */
-	getOsmosisExpBonus: () => number;
+	/** Get ruminate EXP bonus from upgrades */
+	getRuminateExpBonus: () => number;
 	/** Get global idle speed multiplier from upgrades */
 	getGlobalIdleSpeedMultiplier: () => number;
-	/** Get osmosis-specific speed multiplier */
-	getOsmosisSpeedMultiplier: () => number;
+	/** Get ruminate-specific speed multiplier */
+	getRuminateSpeedMultiplier: () => number;
 	/** Get EXP cost to level up a specific stat */
 	getStatLevelCost: (stat: keyof Stats) => number;
 	/** Get current crit chance (for training rewards) */
 	getCritChance: () => number;
 	/** Get current EXP balance */
 	getCurrentExp: () => number;
+	/** Get current player level (for ruminate scaling) */
+	getPlayerLevel: () => number;
+	/** Get current stats (for ruminate scaling) */
+	getStats: () => Stats;
 }
 
 /**
  * Manages all idle action state and lifecycle
- * Handles training, meditation, and osmosis actions
+ * Handles training, meditation, and ruminate actions
  */
 export class IdleActionManager {
 	private trainingActions: { [key: string]: IdleAction };
@@ -105,8 +112,8 @@ export class IdleActionManager {
 				name: 'Ruminate',
 				description: 'Learn through observation and reflection',
 				progress: 0,
-				baseDuration: OSMOSIS_BASE_DURATION,
-				duration: OSMOSIS_BASE_DURATION,
+				baseDuration: RUMINATE_BASE_DURATION,
+				duration: RUMINATE_BASE_DURATION,
 				expCost: 0, // Free to use!
 				isActive: false,
 				lastUpdate: Date.now()
@@ -224,6 +231,61 @@ export class IdleActionManager {
 	}
 
 	/**
+	 * Calculates the current modified duration for an action based on upgrades
+	 * This is used for UI display to show actual durations before starting
+	 * @param actionId - ID of the action
+	 * @param actionMap - Which map the action belongs to
+	 * @returns Modified duration in milliseconds
+	 */
+	getActionCurrentDuration(actionMap: 'training' | 'meditation', actionId: string): number {
+		const actions = actionMap === 'training' ? this.trainingActions : this.meditationActions;
+		const action = actions[actionId];
+		if (!action) return 0;
+
+		// Apply same logic as startIdleAction
+		if (actionId === 'practice-osmosis') {
+			const ruminateSpeed = this.deps.getRuminateSpeedMultiplier();
+			const globalSpeed = this.deps.getGlobalIdleSpeedMultiplier();
+			const combinedSpeed = ruminateSpeed * globalSpeed;
+			return Math.floor(action.baseDuration / combinedSpeed);
+		} else if (action.trainsStat) {
+			const trainingSpeed = this.deps.getTrainingSpeedMultiplier();
+			const globalSpeed = this.deps.getGlobalIdleSpeedMultiplier();
+			return Math.floor((action.baseDuration * trainingSpeed) / globalSpeed);
+		} else {
+			const globalSpeed = this.deps.getGlobalIdleSpeedMultiplier();
+			return Math.floor(action.baseDuration / globalSpeed);
+		}
+	}
+
+	/**
+	 * Calculates the current ruminate reward based on progression
+	 * This is used for UI display to show actual reward before starting
+	 * @returns Current ruminate reward in EXP
+	 */
+	getRuminateCurrentReward(): number {
+		// Calculate scaled reward based on progression (same logic as completion)
+		const playerLevel = this.deps.getPlayerLevel();
+		const stats = this.deps.getStats();
+		const totalStatLevels = stats.strength + stats.dexterity + stats.intelligence + stats.wisdom;
+
+		// Base reward with upgrade bonus
+		const upgradeBonus = this.deps.getRuminateExpBonus();
+		let expGained = RUMINATE_BASE_REWARD + upgradeBonus;
+
+		// Scale with player level (+15% per level)
+		const levelScaling = 1 + playerLevel * RUMINATE_LEVEL_SCALING;
+		expGained *= levelScaling;
+
+		// Scale with total stat levels (+5% per stat level)
+		const statScaling = 1 + totalStatLevels * RUMINATE_STAT_SCALING;
+		expGained *= statScaling;
+
+		// Floor the result
+		return Math.floor(expGained);
+	}
+
+	/**
 	 * Migrates saved training actions to the latest definitions
 	 * Preserves progress and active state while adding new actions
 	 */
@@ -296,10 +358,10 @@ export class IdleActionManager {
 
 		// Apply speed multipliers based on action type
 		if (actionId === 'practice-osmosis') {
-			// Osmosis gets both osmosis-specific and global idle speed bonuses
-			const osmosisSpeed = this.deps.getOsmosisSpeedMultiplier();
+			// Ruminate gets both ruminate-specific and global idle speed bonuses
+			const ruminateSpeed = this.deps.getRuminateSpeedMultiplier();
 			const globalSpeed = this.deps.getGlobalIdleSpeedMultiplier();
-			const combinedSpeed = osmosisSpeed * globalSpeed;
+			const combinedSpeed = ruminateSpeed * globalSpeed;
 			action.duration = Math.floor(action.baseDuration / combinedSpeed);
 		} else if (action.trainsStat) {
 			// Stat training gets training speed and global idle speed
@@ -377,14 +439,37 @@ export class IdleActionManager {
 		const action = this.trainingActions[actionId];
 		if (!action || !action.isActive) return null;
 
-		// Handle osmosis completion
+		// Handle ruminate completion
 		if (actionId === 'practice-osmosis') {
-			const bonus = this.deps.getOsmosisExpBonus();
-			const expGained = OSMOSIS_BASE_REWARD + bonus;
+			// Calculate scaled reward based on progression
+			const playerLevel = this.deps.getPlayerLevel();
+			const stats = this.deps.getStats();
+			const totalStatLevels = stats.strength + stats.dexterity + stats.intelligence + stats.wisdom;
 
-			// Osmosis always restarts
+			// Base reward with upgrade bonus
+			const upgradeBonus = this.deps.getRuminateExpBonus();
+			let expGained = RUMINATE_BASE_REWARD + upgradeBonus;
+
+			// Scale with player level (+15% per level)
+			const levelScaling = 1 + playerLevel * RUMINATE_LEVEL_SCALING;
+			expGained *= levelScaling;
+
+			// Scale with total stat levels (+5% per stat level)
+			const statScaling = 1 + totalStatLevels * RUMINATE_STAT_SCALING;
+			expGained *= statScaling;
+
+			// Floor the result
+			expGained = Math.floor(expGained);
+
+			// Ruminate always restarts - recalculate duration based on current upgrades
 			action.progress = 0;
 			action.lastUpdate = Date.now();
+
+			// Recalculate duration with current speed bonuses
+			const ruminateSpeed = this.deps.getRuminateSpeedMultiplier();
+			const globalSpeed = this.deps.getGlobalIdleSpeedMultiplier();
+			const combinedSpeed = ruminateSpeed * globalSpeed;
+			action.duration = Math.floor(action.baseDuration / combinedSpeed);
 
 			return {
 				expGained,
@@ -404,18 +489,23 @@ export class IdleActionManager {
 				expReward = Math.floor(expReward * TRAINING_CRIT_MULTIPLIER);
 			}
 
-			// Check if we can afford to level up the stat
+			// Check if we can afford to continue training (pay cost for stat XP)
 			const currentExp = this.deps.getCurrentExp();
 			if (currentExp >= cost) {
-				// Can afford - return result with stat gain
+				// Can afford - return result with stat XP gain and recalculate duration
 				action.progress = 0;
 				action.lastUpdate = Date.now();
 
+				// Recalculate duration with current speed bonuses
+				const trainingSpeed = this.deps.getTrainingSpeedMultiplier();
+				const globalSpeed = this.deps.getGlobalIdleSpeedMultiplier();
+				action.duration = Math.floor((action.baseDuration * trainingSpeed) / globalSpeed);
+
 				return {
 					expGained: expReward,
-					statGained: {
+					statXpGained: {
 						stat,
-						amount: 1
+						amount: TRAINING_STAT_XP_GAIN
 					},
 					expCost: cost,
 					shouldContinue: true

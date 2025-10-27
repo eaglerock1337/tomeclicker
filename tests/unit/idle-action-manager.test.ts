@@ -13,12 +13,14 @@ class IdleActionManagerBuilder {
 	private deps: IdleActionDependencies = {
 		getTrainingSpeedMultiplier: () => 1.0,
 		getTrainingCostMultiplier: () => 1.0,
-		getOsmosisExpBonus: () => 0,
+		getRuminateExpBonus: () => 0,
 		getGlobalIdleSpeedMultiplier: () => 1.0,
-		getOsmosisSpeedMultiplier: () => 1.0,
+		getRuminateSpeedMultiplier: () => 1.0,
 		getStatLevelCost: () => 100,
 		getCritChance: () => 0.0,
-		getCurrentExp: () => 1000
+		getCurrentExp: () => 1000,
+		getPlayerLevel: () => 1,
+		getStats: () => ({ strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 })
 	};
 
 	withTrainingSpeed(multiplier: number): this {
@@ -31,13 +33,13 @@ class IdleActionManagerBuilder {
 		return this;
 	}
 
-	withOsmosisSpeed(multiplier: number): this {
-		this.deps.getOsmosisSpeedMultiplier = () => multiplier;
+	withRuminateSpeed(multiplier: number): this {
+		this.deps.getRuminateSpeedMultiplier = () => multiplier;
 		return this;
 	}
 
-	withOsmosisBonus(bonus: number): this {
-		this.deps.getOsmosisExpBonus = () => bonus;
+	withRuminateBonus(bonus: number): this {
+		this.deps.getRuminateExpBonus = () => bonus;
 		return this;
 	}
 
@@ -53,6 +55,16 @@ class IdleActionManagerBuilder {
 
 	withCurrentExp(exp: number): this {
 		this.deps.getCurrentExp = () => exp;
+		return this;
+	}
+
+	withPlayerLevel(level: number): this {
+		this.deps.getPlayerLevel = () => level;
+		return this;
+	}
+
+	withStats(stats: Stats): this {
+		this.deps.getStats = () => stats;
 		return this;
 	}
 
@@ -204,9 +216,9 @@ describe('IdleActionManager', () => {
 			expect(action?.duration).toBe(6000);
 		});
 
-		it('should apply osmosis-specific and global speed multipliers', () => {
+		it('should apply ruminate-specific and global speed multipliers', () => {
 			const manager = new IdleActionManagerBuilder()
-				.withOsmosisSpeed(1.5) // 1.5x faster
+				.withRuminateSpeed(1.5) // 1.5x faster
 				.withGlobalIdleSpeed(2.0) // 2x faster
 				.build();
 
@@ -239,7 +251,7 @@ describe('IdleActionManager', () => {
 		it('should complete action when progress >= 1.0', () => {
 			vi.useFakeTimers();
 
-			const manager = new IdleActionManagerBuilder().withOsmosisBonus(5).build();
+			const manager = new IdleActionManagerBuilder().withRuminateBonus(5).build();
 
 			manager.startIdleAction('training', 'practice-osmosis');
 			const action = manager.getTrainingAction('practice-osmosis');
@@ -250,7 +262,7 @@ describe('IdleActionManager', () => {
 			const results = manager.updateIdleActions();
 
 			expect(results).toHaveLength(1);
-			expect(results[0].expGained).toBe(15); // 10 base + 5 bonus
+			expect(results[0].expGained).toBe(20); // (10 base + 5 bonus) × 1.15 level × 1.2 stats
 			expect(results[0].shouldContinue).toBe(true);
 
 			// Osmosis should restart
@@ -282,8 +294,8 @@ describe('IdleActionManager', () => {
 		});
 	});
 
-	describe('Osmosis Completion', () => {
-		it('should award base EXP on osmosis completion', () => {
+	describe('Ruminate Completion', () => {
+		it('should award base EXP on ruminate completion', () => {
 			vi.useFakeTimers();
 
 			manager.startIdleAction('training', 'practice-osmosis');
@@ -293,17 +305,17 @@ describe('IdleActionManager', () => {
 
 			const results = manager.updateIdleActions();
 
-			expect(results[0].expGained).toBe(10); // Base reward
+			expect(results[0].expGained).toBe(13); // 10 base × 1.15 level × 1.2 stats
 			expect(results[0].shouldContinue).toBe(true);
-			expect(results[0].statGained).toBeUndefined();
+			expect(results[0].statXpGained).toBeUndefined();
 
 			vi.useRealTimers();
 		});
 
-		it('should add osmosis bonus to EXP reward', () => {
+		it('should add ruminate bonus to EXP reward', () => {
 			vi.useFakeTimers();
 
-			const manager = new IdleActionManagerBuilder().withOsmosisBonus(25).build();
+			const manager = new IdleActionManagerBuilder().withRuminateBonus(25).build();
 
 			manager.startIdleAction('training', 'practice-osmosis');
 			const action = manager.getTrainingAction('practice-osmosis');
@@ -312,12 +324,12 @@ describe('IdleActionManager', () => {
 
 			const results = manager.updateIdleActions();
 
-			expect(results[0].expGained).toBe(35); // 10 base + 25 bonus
+			expect(results[0].expGained).toBe(48); // (10 base + 25 bonus) × 1.15 level × 1.2 stats
 
 			vi.useRealTimers();
 		});
 
-		it('should automatically restart osmosis after completion', () => {
+		it('should automatically restart ruminate after completion', () => {
 			vi.useFakeTimers();
 
 			manager.startIdleAction('training', 'practice-osmosis');
@@ -351,7 +363,7 @@ describe('IdleActionManager', () => {
 			const results = manager.updateIdleActions();
 
 			expect(results[0].expGained).toBe(10); // Training reward
-			expect(results[0].statGained).toEqual({ stat: 'strength', amount: 1 });
+			expect(results[0].statXpGained).toEqual({ stat: 'strength', amount: 10 });
 			expect(results[0].expCost).toBe(50);
 			expect(results[0].shouldContinue).toBe(true);
 
@@ -378,7 +390,7 @@ describe('IdleActionManager', () => {
 			const results = manager.updateIdleActions();
 
 			expect(results[0].expGained).toBe(10); // Still get training reward
-			expect(results[0].statGained).toBeUndefined(); // But no stat gain
+			expect(results[0].statXpGained).toBeUndefined(); // But no stat gain
 			expect(results[0].shouldContinue).toBe(false);
 
 			// Should stop training
@@ -425,21 +437,21 @@ describe('IdleActionManager', () => {
 			let action = manager.getTrainingAction('train-dexterity');
 			vi.advanceTimersByTime(action!.duration + 100);
 			let results = manager.updateIdleActions();
-			expect(results[0].statGained?.stat).toBe('dexterity');
+			expect(results[0].statXpGained?.stat).toBe('dexterity');
 
 			// Test intelligence training
 			manager.startIdleAction('training', 'train-intelligence');
 			action = manager.getTrainingAction('train-intelligence');
 			vi.advanceTimersByTime(action!.duration + 100);
 			results = manager.updateIdleActions();
-			expect(results[0].statGained?.stat).toBe('intelligence');
+			expect(results[0].statXpGained?.stat).toBe('intelligence');
 
 			// Test wisdom training
 			manager.startIdleAction('training', 'train-wisdom');
 			action = manager.getTrainingAction('train-wisdom');
 			vi.advanceTimersByTime(action!.duration + 100);
 			results = manager.updateIdleActions();
-			expect(results[0].statGained?.stat).toBe('wisdom');
+			expect(results[0].statXpGained?.stat).toBe('wisdom');
 
 			vi.useRealTimers();
 		});

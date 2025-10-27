@@ -17,29 +17,6 @@
 	<h1>settings</h1>
 
 	<div class="settings-content">
-		<!-- Game Info Section -->
-		<section class="settings-section">
-			<h2>game information</h2>
-			<div class="info-grid">
-				<div class="info-item">
-					<span class="info-label">Player:</span>
-					<span class="info-value">{game.name}</span>
-				</div>
-				<div class="info-item">
-					<span class="info-label">Level:</span>
-					<span class="info-value">{game.level}</span>
-				</div>
-				<div class="info-item">
-					<span class="info-label">Experience:</span>
-					<span class="info-value">{Math.floor(game.exp).toLocaleString()}</span>
-				</div>
-				<div class="info-item">
-					<span class="info-label">Lifetime EXP:</span>
-					<span class="info-value">{Math.floor(game.lifetimeExp).toLocaleString()}</span>
-				</div>
-			</div>
-		</section>
-
 		<!-- Appearance Settings -->
 		<section class="settings-section">
 			<h2>appearance</h2>
@@ -146,31 +123,6 @@
 		margin-bottom: 1.5rem;
 	}
 
-	/* Game Info Section */
-	.info-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		gap: 1rem;
-	}
-
-	.info-item {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 0.5rem;
-		background-color: var(--bg);
-		border-radius: 5px;
-	}
-
-	.info-label {
-		font-weight: 400;
-		opacity: 0.8;
-	}
-
-	.info-value {
-		font-weight: 500;
-	}
-
 	/* Appearance Settings */
 	.setting-row {
 		display: flex;
@@ -255,10 +207,6 @@
 
 		.settings-section {
 			padding: 1rem;
-		}
-
-		.info-grid {
-			grid-template-columns: 1fr;
 		}
 
 		.setting-row {

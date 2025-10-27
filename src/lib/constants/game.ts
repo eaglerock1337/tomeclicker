@@ -60,6 +60,18 @@ export const STAT_BASE_COST = 100;
 export const STAT_COST_MULTIPLIER = 1.5;
 
 /**
+ * Base stat XP required for the first stat level-up (Level 1 → Level 2)
+ * Training actions give stat XP which accumulates to level up stats
+ */
+export const STAT_XP_BASE = 100;
+
+/**
+ * Exponential multiplier for stat XP requirements
+ * Results in: 100, 150, 225, 337... (1.5x per level)
+ */
+export const STAT_XP_MULTIPLIER = 1.5;
+
+/**
  * Base EXP cost to start a stat training session
  * Paid upfront before training begins
  */
@@ -72,10 +84,30 @@ export const TRAINING_BASE_COST = 10;
 export const TRAINING_REWARD = 10;
 
 /**
- * Base EXP gained per osmosis (rumination) cycle completion
- * Modified by osmosis upgrade bonuses
+ * Stat XP gained per training session completion
+ * This is the base amount before any upgrade multipliers
  */
-export const OSMOSIS_BASE_REWARD = 10;
+export const TRAINING_STAT_XP_GAIN = 10;
+
+/**
+ * Base EXP gained per ruminate cycle completion
+ * Modified by ruminate upgrade bonuses and player progression
+ */
+export const RUMINATE_BASE_REWARD = 10;
+
+/**
+ * Ruminate scales with player level
+ * Formula: baseReward * (1 + level * RUMINATE_LEVEL_SCALING)
+ * Example: Level 5 = 10 * (1 + 5 * 0.15) = 17.5 EXP
+ */
+export const RUMINATE_LEVEL_SCALING = 0.15;
+
+/**
+ * Ruminate also scales with total stat levels
+ * Formula: baseReward * (1 + totalStatLevels * RUMINATE_STAT_SCALING)
+ * Encourages stat training for better idle income
+ */
+export const RUMINATE_STAT_SCALING = 0.05;
 
 // ============================================================================
 // COMBAT & CRITICAL HITS
@@ -112,11 +144,11 @@ export const GAME_TICK_RATE = 1000;
 export const TRAINING_BASE_DURATION = 15000;
 
 /**
- * Base duration for osmosis (rumination) action in milliseconds
- * Osmosis is the free idle action available early game
- * Modified by osmosis speed and global idle speed upgrades
+ * Base duration for ruminate action in milliseconds
+ * Ruminate is the free idle action available early game
+ * Modified by ruminate speed and global idle speed upgrades
  */
-export const OSMOSIS_BASE_DURATION = 15000;
+export const RUMINATE_BASE_DURATION = 15000;
 
 /**
  * Base duration for "Meditate on Your Future" action in milliseconds
@@ -151,7 +183,7 @@ export const MEDITATION_DISASSOCIATE_COST = 100;
 export const UPGRADE_COST_TIER_1 = 50;
 
 /**
- * Base cost for mid-tier upgrades (osmosis, training related)
+ * Base cost for mid-tier upgrades (ruminate, training related)
  * Scales with 1.18-1.2x multipliers
  */
 export const UPGRADE_COST_TIER_2 = 100;

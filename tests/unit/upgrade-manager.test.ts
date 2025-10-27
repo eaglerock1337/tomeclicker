@@ -76,11 +76,11 @@ describe('UpgradeManager', () => {
 			const flowState = manager.getUpgrade('flow-state');
 			const temporal = manager.getUpgrade('temporal-mastery');
 
-			expect(osmosis?.effectType).toBe('osmosisExp');
+			expect(osmosis?.effectType).toBe('ruminateExp');
 			expect(osmosis?.effectValue).toBe(1);
 			expect(osmosis?.minLevel).toBe(2);
 
-			expect(flowState?.effectType).toBe('osmosisSpeed');
+			expect(flowState?.effectType).toBe('ruminateSpeed');
 			expect(flowState?.effectValue).toBe(0.02);
 			expect(flowState?.minLevel).toBe(2);
 

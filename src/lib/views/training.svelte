@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Game } from '$lib/game';
+    import { TRAINING_STAT_XP_GAIN } from '$lib/constants/game';
 
     export let game: Game;
 
@@ -24,6 +25,11 @@
         return true;
     }
 
+    function formatDuration(milliseconds: number): string {
+        const seconds = milliseconds / 1000;
+        return seconds.toFixed(1) + 's';
+    }
+
     // Filter actions by level
     $: availableActions = Object.values(game.trainingActions).filter(action => {
         if (action.id === 'practice-osmosis') return game.level >= 2;
@@ -32,66 +38,90 @@
     });
 </script>
 
-<div class="training-container">
-    <h2>Training</h2>
+<div class="training-page">
+    <div class="training-container">
+        <h2>Training</h2>
 
-    <div class="actions-grid">
-        {#each availableActions as action (action.id)}
-            {@const isActive = action.isActive}
-            {@const canAfford = canAffordAction(action)}
-            {@const cost = getActionCost(action)}
-            {@const progress = isActive ? action.progress : 0}
+        <div class="actions-grid">
+            {#each availableActions as action (action.id)}
+                {@const isActive = action.isActive}
+                {@const canAfford = canAffordAction(action)}
+                {@const cost = getActionCost(action)}
+                {@const progress = isActive ? action.progress : 0}
+                {@const currentDuration = game.getActionCurrentDuration('training', action.id)}
 
-            <button
-                class="action-card"
-                class:active={isActive}
-                class:blocked={!canAfford && !isActive}
-                on:click={() => startAction(action.id)}
-                disabled={isActive}
-            >
-                <div class="action-header">
-                    <div class="action-name">{action.name}</div>
-                    {#if action.trainsStat}
-                        <div class="stat-level">
-                            {action.trainsStat.toUpperCase()}: {game.stats[action.trainsStat]}
-                        </div>
-                    {/if}
-                </div>
-
-                <div class="action-description">{action.description}</div>
-
-                <div class="action-info">
-                    {#if cost > 0}
-                        <div class="cost" class:cannot-afford={!canAfford}>
-                            Cost: {cost} EXP
-                        </div>
-                    {:else}
-                        <div class="cost free">Free</div>
-                    {/if}
-                    <div class="reward">+10 EXP</div>
-                </div>
-
-                {#if isActive}
-                    <div class="progress-container">
-                        <div class="progress-bar" style="width: {Math.min(progress * 100, 100)}%"></div>
-                        <div class="progress-text">{Math.floor(Math.min(progress * 100, 100))}%</div>
+                <button
+                    class="action-card"
+                    class:active={isActive}
+                    class:blocked={!canAfford && !isActive}
+                    on:click={() => startAction(action.id)}
+                    disabled={isActive}
+                >
+                    <div class="action-header">
+                        <div class="action-name">{action.name}</div>
+                        {#if action.trainsStat}
+                            <div class="stat-level">
+                                {action.trainsStat.toUpperCase()}: {game.stats[action.trainsStat]}
+                            </div>
+                        {/if}
                     </div>
-                {/if}
-            </button>
-        {/each}
+
+                    <div class="action-description">{action.description}</div>
+
+                    <div class="action-info">
+                        <div class="info-row">
+                            <span class="info-label">Duration:</span>
+                            <span class="info-value duration">{formatDuration(currentDuration)}</span>
+                        </div>
+                        {#if action.trainsStat}
+                            <div class="info-row">
+                                <span class="info-label">Stat XP:</span>
+                                <span class="info-value stat-xp">+{TRAINING_STAT_XP_GAIN}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Cost:</span>
+                                <span class="info-value cost" class:cannot-afford={!canAfford}>
+                                    {cost} EXP
+                                </span>
+                            </div>
+                        {:else}
+                            <div class="info-row">
+                                <span class="info-label">Reward:</span>
+                                <span class="info-value reward">+{game.getRuminateCurrentReward()} EXP</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Cost:</span>
+                                <span class="info-value free">Free</span>
+                            </div>
+                        {/if}
+                    </div>
+
+                    {#if isActive}
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: {Math.min(progress * 100, 100)}%"></div>
+                            <div class="progress-text">{Math.floor(Math.min(progress * 100, 100))}%</div>
+                        </div>
+                    {/if}
+                </button>
+            {/each}
+        </div>
     </div>
 </div>
 
 <style>
-    .training-container {
-        color: var(--text);
-        background-color: var(--bg);
+    .training-page {
         height: 100%;
         width: 100%;
+        overflow-y: auto;
+        background-color: var(--bg);
+        transition: background-color 1s cubic-bezier(0,.5,0,1);
+    }
+
+    .training-container {
+        color: var(--text);
         padding: 2rem;
         box-sizing: border-box;
-        transition: color 1s cubic-bezier(0,.5,0,1),
-                    background-color 1s cubic-bezier(0,.5,0,1);
+        transition: color 1s cubic-bezier(0,.5,0,1);
     }
 
     h2 {
@@ -125,7 +155,7 @@
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
-        min-height: 180px;
+        min-height: 200px;
         font-family: inherit;
     }
 
@@ -137,8 +167,8 @@
 
     .action-card:hover:not(:disabled):not(.active) .action-name,
     .action-card:hover:not(:disabled):not(.active) .action-description,
-    .action-card:hover:not(:disabled):not(.active) .cost,
-    .action-card:hover:not(:disabled):not(.active) .reward,
+    .action-card:hover:not(:disabled):not(.active) .info-label,
+    .action-card:hover:not(:disabled):not(.active) .info-value,
     .action-card:hover:not(:disabled):not(.active) .stat-level {
         color: var(--bg);
     }
@@ -151,8 +181,8 @@
 
     .action-card.active .action-name,
     .action-card.active .action-description,
-    .action-card.active .cost,
-    .action-card.active .reward,
+    .action-card.active .info-label,
+    .action-card.active .info-value,
     .action-card.active .stat-level {
         color: var(--bg);
     }
@@ -204,13 +234,26 @@
 
     .action-info {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
         margin-top: auto;
     }
 
-    .cost {
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .info-label {
+        color: var(--text);
+        font-family: Lato, sans-serif;
+        font-size: 0.85rem;
+        opacity: 0.8;
+        transition: color 0.2s;
+    }
+
+    .info-value {
         color: var(--text);
         font-family: 'JetBrains Mono', monospace;
         font-weight: 700;
@@ -218,28 +261,38 @@
         transition: color 0.2s;
     }
 
-    .cost.free {
+    .info-value.duration {
+        color: var(--text);
+    }
+
+    .info-value.stat-xp {
         color: var(--green);
     }
 
-    .cost.cannot-afford {
+    .info-value.cost {
+        color: var(--text);
+    }
+
+    .info-value.cannot-afford {
         color: var(--red);
     }
 
-    .action-card.active .cost.cannot-afford {
+    .info-value.reward {
+        color: var(--green);
+    }
+
+    .info-value.free {
+        color: var(--green);
+    }
+
+    .action-card.active .info-value.cannot-afford {
         color: var(--red);
         opacity: 0.9;
     }
 
-    .reward {
-        color: var(--green);
-        font-family: 'JetBrains Mono', monospace;
-        font-weight: 700;
-        font-size: 0.9rem;
-        transition: color 0.2s;
-    }
-
-    .action-card.active .reward {
+    .action-card.active .info-value.stat-xp,
+    .action-card.active .info-value.reward,
+    .action-card.active .info-value.free {
         color: var(--bg);
         opacity: 0.9;
     }
@@ -292,7 +345,7 @@
 
         .action-card {
             padding: 1rem;
-            min-height: 160px;
+            min-height: 180px;
         }
 
         .action-name {

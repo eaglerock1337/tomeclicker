@@ -8,7 +8,9 @@ import {
 	BASE_LEVEL_COST,
 	LEVEL_COST_MULTIPLIER,
 	STAT_BASE_COST,
-	STAT_COST_MULTIPLIER
+	STAT_COST_MULTIPLIER,
+	STAT_XP_BASE,
+	STAT_XP_MULTIPLIER
 } from '$lib/constants/game';
 
 /**
@@ -70,6 +72,44 @@ export function calculateStatLevelCost(currentStatLevel: number): number {
 }
 
 /**
+ * Calculates the stat XP required to reach a specific stat level
+ * Uses exponential scaling: STAT_XP_BASE * STAT_XP_MULTIPLIER^(level-1)
+ *
+ * @param targetLevel - The level to calculate XP requirement for
+ * @returns Stat XP required to reach this level
+ *
+ * @example
+ * calculateStatXpForLevel(1) // 0 (starting level)
+ * calculateStatXpForLevel(2) // 100
+ * calculateStatXpForLevel(3) // 150
+ * calculateStatXpForLevel(4) // 225
+ */
+export function calculateStatXpForLevel(targetLevel: number): number {
+	if (targetLevel <= 1) return 0;
+	return Math.floor(STAT_XP_BASE * Math.pow(STAT_XP_MULTIPLIER, targetLevel - 2));
+}
+
+/**
+ * Calculates the stat level from total accumulated stat XP
+ * Inverse of calculateStatXpForLevel
+ *
+ * @param currentXp - Current stat XP amount
+ * @returns The stat level this XP corresponds to
+ *
+ * @example
+ * getStatLevelFromXp(0) // 1
+ * getStatLevelFromXp(100) // 2
+ * getStatLevelFromXp(250) // 3
+ */
+export function getStatLevelFromXp(currentXp: number): number {
+	if (currentXp < STAT_XP_BASE) return 1;
+
+	// Calculate level using logarithm (inverse of exponential formula)
+	const level = Math.floor(Math.log(currentXp / STAT_XP_BASE) / Math.log(STAT_XP_MULTIPLIER)) + 2;
+	return Math.max(1, level);
+}
+
+/**
  * Calculates the training speed multiplier from upgrades
  * Lower multiplier = faster training
  *
@@ -126,25 +166,25 @@ export function calculateTrainingCostMultiplier(upgrades: { [key: string]: Upgra
 }
 
 /**
- * Calculates the osmosis EXP bonus from upgrades
+ * Calculates the ruminate EXP bonus from upgrades
  *
  * @param upgrades - Map of all upgrades
- * @returns Additional EXP gained per osmosis completion
+ * @returns Additional EXP gained per ruminate completion
  *
  * @example
  * // No upgrades: 0 bonus EXP
- * calculateOsmosisExpBonus({})
+ * calculateRuminateExpBonus({})
  *
  * // 5 levels of +1 EXP: 5 bonus EXP
- * calculateOsmosisExpBonus({
- *   'osmotic-absorption': { effectType: 'osmosisExp', effectValue: 1, currentLevel: 5 }
+ * calculateRuminateExpBonus({
+ *   'osmotic-absorption': { effectType: 'ruminateExp', effectValue: 1, currentLevel: 5 }
  * })
  */
-export function calculateOsmosisExpBonus(upgrades: { [key: string]: Upgrade }): number {
+export function calculateRuminateExpBonus(upgrades: { [key: string]: Upgrade }): number {
 	let bonus = 0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'osmosisExp') {
+		if (upgrade.effectType === 'ruminateExp') {
 			bonus += upgrade.effectValue * upgrade.currentLevel;
 		}
 	}
@@ -181,26 +221,26 @@ export function calculateGlobalIdleSpeedMultiplier(upgrades: { [key: string]: Up
 }
 
 /**
- * Calculates the osmosis-specific speed multiplier
+ * Calculates the ruminate-specific speed multiplier
  * Higher multiplier = faster osmosis
  *
  * @param upgrades - Map of all upgrades
- * @returns Speed multiplier for osmosis actions (higher is faster)
+ * @returns Speed multiplier for ruminate actions (higher is faster)
  *
  * @example
  * // No upgrades: 1.0 (100% speed)
- * calculateOsmosisSpeedMultiplier({})
+ * calculateRuminateSpeedMultiplier({})
  *
  * // 5 levels of +2% speed: 1.1 (110% speed)
- * calculateOsmosisSpeedMultiplier({
- *   'flow-state': { effectType: 'osmosisSpeed', effectValue: 0.02, currentLevel: 5 }
+ * calculateRuminateSpeedMultiplier({
+ *   'flow-state': { effectType: 'ruminateSpeed', effectValue: 0.02, currentLevel: 5 }
  * })
  */
-export function calculateOsmosisSpeedMultiplier(upgrades: { [key: string]: Upgrade }): number {
+export function calculateRuminateSpeedMultiplier(upgrades: { [key: string]: Upgrade }): number {
 	let multiplier = 1.0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'osmosisSpeed') {
+		if (upgrade.effectType === 'ruminateSpeed') {
 			multiplier += upgrade.effectValue * upgrade.currentLevel;
 		}
 	}

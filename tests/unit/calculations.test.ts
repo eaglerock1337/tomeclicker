@@ -5,9 +5,9 @@ import {
 	calculateStatLevelCost,
 	calculateTrainingSpeedMultiplier,
 	calculateTrainingCostMultiplier,
-	calculateOsmosisExpBonus,
+	calculateRuminateExpBonus,
 	calculateGlobalIdleSpeedMultiplier,
-	calculateOsmosisSpeedMultiplier
+	calculateRuminateSpeedMultiplier
 } from '$lib/utils/calculations';
 import type { Upgrade } from '$lib/game';
 
@@ -277,55 +277,55 @@ describe('Upgrade Effect Calculations', () => {
 		});
 	});
 
-	describe('calculateOsmosisExpBonus', () => {
+	describe('calculateRuminateExpBonus', () => {
 		it('should return 0 with no upgrades', () => {
-			expect(calculateOsmosisExpBonus({})).toBe(0);
+			expect(calculateRuminateExpBonus({})).toBe(0);
 		});
 
 		it('should calculate bonus for single upgrade level', () => {
 			const upgrades = {
 				'osmotic-absorption': {
 					id: 'osmotic-absorption',
-					effectType: 'osmosisExp',
+					effectType: 'ruminateExp',
 					effectValue: 1,
 					currentLevel: 1
 				} as Upgrade
 			};
 
-			expect(calculateOsmosisExpBonus(upgrades)).toBe(1);
+			expect(calculateRuminateExpBonus(upgrades)).toBe(1);
 		});
 
 		it('should calculate bonus for multiple upgrade levels', () => {
 			const upgrades = {
 				'osmotic-absorption': {
 					id: 'osmotic-absorption',
-					effectType: 'osmosisExp',
+					effectType: 'ruminateExp',
 					effectValue: 1,
 					currentLevel: 5
 				} as Upgrade
 			};
 
-			expect(calculateOsmosisExpBonus(upgrades)).toBe(5);
+			expect(calculateRuminateExpBonus(upgrades)).toBe(5);
 		});
 
 		it('should sum multiple different upgrades', () => {
 			const upgrades = {
 				'upgrade-1': {
 					id: 'upgrade-1',
-					effectType: 'osmosisExp',
+					effectType: 'ruminateExp',
 					effectValue: 1,
 					currentLevel: 3
 				} as Upgrade,
 				'upgrade-2': {
 					id: 'upgrade-2',
-					effectType: 'osmosisExp',
+					effectType: 'ruminateExp',
 					effectValue: 2,
 					currentLevel: 2
 				} as Upgrade
 			};
 
 			// (1 * 3) + (2 * 2) = 3 + 4 = 7
-			expect(calculateOsmosisExpBonus(upgrades)).toBe(7);
+			expect(calculateRuminateExpBonus(upgrades)).toBe(7);
 		});
 	});
 
@@ -383,37 +383,37 @@ describe('Upgrade Effect Calculations', () => {
 		});
 	});
 
-	describe('calculateOsmosisSpeedMultiplier', () => {
+	describe('calculateRuminateSpeedMultiplier', () => {
 		it('should return 1.0 with no upgrades', () => {
-			expect(calculateOsmosisSpeedMultiplier({})).toBe(1.0);
+			expect(calculateRuminateSpeedMultiplier({})).toBe(1.0);
 		});
 
 		it('should calculate multiplier for single upgrade level', () => {
 			const upgrades = {
 				'flow-state': {
 					id: 'flow-state',
-					effectType: 'osmosisSpeed',
+					effectType: 'ruminateSpeed',
 					effectValue: 0.02,
 					currentLevel: 1
 				} as Upgrade
 			};
 
 			// 1.0 + (0.02 * 1) = 1.02
-			expect(calculateOsmosisSpeedMultiplier(upgrades)).toBe(1.02);
+			expect(calculateRuminateSpeedMultiplier(upgrades)).toBe(1.02);
 		});
 
 		it('should calculate multiplier for multiple upgrade levels', () => {
 			const upgrades = {
 				'flow-state': {
 					id: 'flow-state',
-					effectType: 'osmosisSpeed',
+					effectType: 'ruminateSpeed',
 					effectValue: 0.02,
 					currentLevel: 5
 				} as Upgrade
 			};
 
 			// 1.0 + (0.02 * 5) = 1.1
-			expect(calculateOsmosisSpeedMultiplier(upgrades)).toBeCloseTo(1.1, 5);
+			expect(calculateRuminateSpeedMultiplier(upgrades)).toBeCloseTo(1.1, 5);
 		});
 	});
 });
