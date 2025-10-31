@@ -18,17 +18,16 @@ color: blue
 
 ## Current Focus
 
-**MVP Core Gameplay UI (In Progress)**
+**ViewLayout Standardization & MVP UI (2025-10-31)**
 
-Implementing UI for new gameplay systems (Training, Stats, Meditation, Adventure pages).
+Creating reusable ViewLayout component to standardize all game views and solve recent UI inconsistencies.
 
 **Active Tasks:**
 
-- Training page with stat display and action selection
-- Stats page showing player progression
-- Meditation page for idle actions
-- Adventure page with locked/unlocked states
-- Navbar integration for new pages
+- **ViewLayout Component** - Design reusable layout pattern (header, back button, scrolling, mobile optimization)
+- **View Migration** - Migrate existing views to ViewLayout pattern
+- **Animation Infrastructure** (if needed) - Celebration system for milestone moments
+- **Responsive Design Tokens** - Standardize breakpoints and spacing constants
 
 ---
 
@@ -104,6 +103,44 @@ Implementing UI for new gameplay systems (Training, Stats, Meditation, Adventure
 - Navbar in `src/lib/navbar.svelte`
 
 ---
+
+## Recent Context (2025-10-31)
+
+**ViewLayout Component Decision:**
+
+**Problem Solved:**
+
+- Recent cleanup revealed UI inconsistencies (Story page scrolling, Settings layout, mobile viewport issues)
+- Each view currently implements layout patterns independently
+- No standardization across views
+
+**Solution - ViewLayout Component:**
+
+```typescript
+<ViewLayout title="Equipment" showBack={true}>
+  <EquipmentScreen {game} />
+</ViewLayout>
+```
+
+**Benefits:**
+
+- Consistent header, back button, scrolling behavior across all views
+- Mobile-first responsive patterns established once, reused everywhere
+- Easy to add new views in the future (Equipment, Retreats, Tome library)
+- Solves the discrepancies we encountered during Phase 1.x cleanup
+
+**Prep Work Priorities:**
+
+1. **ViewLayout component** (30 min) - Establish pattern before adding mechanics
+2. **Component TypeScript migration** - Type safety for refactoring confidence
+3. **Animation/celebration infrastructure** - If mechanics include milestone moments
+
+**Current View System:**
+
+- ✅ Performs well (fast, mobile-friendly)
+- ✅ Simple state management (just `game.view` string)
+- ✅ No need for router library or complex navigation
+- User is comfortable with current approach
 
 **Design Documents:**
 
