@@ -18,9 +18,15 @@ color: green
 
 ## Current Focus
 
-**Narrative Approach: As-Needed Content Creation**
+**Story Mode Deferred to Post-MVP (2025-10-31)**
 
-Story content is written **when implementation needs it** - core gameplay leads, narrative follows.
+Story content will be implemented **after MVP launch**. MVP focuses on core game mechanics first.
+
+**Decision Rationale:**
+
+- Core progression loop takes priority
+- Story mode is a major feature requiring dedicated implementation time
+- Deferring allows focus on getting basic gameplay right first
 
 **Story System (defined, waiting for implementation):**
 
@@ -90,6 +96,22 @@ Story content is written **when implementation needs it** - core gameplay leads,
 - Magic as understanding, not power
 
 ---
+
+## Recent Context (2025-10-31)
+
+**MVP Scope Decision:**
+
+- Story mode **deferred to post-MVP** (user decision)
+- Focus is on core game mechanics (Practice, Stats, Training, Upgrades, Adventures, Tome unlocks)
+- Story system design (chapter notes, major beats) is complete and ready
+- Implementation will happen after MVP launch
+
+**When Story Mode Returns:**
+
+- Level 2 first story note - "The Call" (sets tone)
+- Early game story beats (Levels 2-19)
+- Wizard Cave reveal sequence (Level 20)
+- 600 tome chapter notes (as tome system is implemented)
 
 **Design Documents:**
 

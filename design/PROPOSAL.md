@@ -10,40 +10,87 @@ This proposal outlines a comprehensive plan to modernize and enhance TomeClicker
 
 ### Priority: High | Estimated Time: 1-2 days
 
-These changes address current TODOs and polish the existing experience without requiring major refactoring.
+**STATUS: MOSTLY COMPLETED** ✅
 
-#### 1.1 UI/UX Polish
+Recent cleanup work addressed most Phase 1.x items:
 
-**Upgrades Page Formatting**
+- ✅ Upgrades page mobile responsiveness improved
+- ✅ Practice page cleanup done
+- ✅ Click feedback enhanced (progress bar, contextual messages)
+- ✅ Hard reset moved to dedicated save page
 
-- Fix grid layout responsiveness on mobile devices
-- Ensure proper spacing and alignment of upgrade cards
-- Improve special button styling consistency
-- Add visual feedback for level-up availability
+**REVISED Phase 1.x (2025-10-31): ViewLayout Standardization**
 
-**Practice Page Cleanup**
+#### 1.1 ViewLayout Component Implementation
 
-- Remove debug EXP/Click display (currently visible in production)
-- Clean up development artifacts
-- Ensure proper text sizing and alignment
+**Problem:**
 
-**Enhanced Click Feedback**
+- Recent cleanup revealed UI inconsistencies across views
+- Story page scrolling issues
+- Settings layout discrepancies
+- Mobile viewport problems
+- Each view implements layout patterns independently
 
-- Implement contextual help messages in click text
-  - "level up available" → Already implemented
-  - "upgrade available" → Already implemented
-  - Add hints for next milestones (e.g., "50 more EXP unlocks upgrades")
-  - Add achievement notifications
-- Add level-up ready notification with pulsing animation or visual indicator
+**Solution:**
 
-#### 1.2 Safety Features
+Create reusable `ViewLayout` component that standardizes:
 
-**Hard Reset Functionality**
+- View headers and titles
+- Back button behavior
+- Scrolling and overflow handling
+- Mobile-first responsive patterns
+- Consistent spacing and padding
 
-- Implement hard reset button in settings
-- Add multi-step confirmation dialog with warning
-- Preserve player name option during reset
-- Clear all saves (localStorage and cookies)
+**Implementation:**
+
+```svelte
+<!-- ViewLayout.svelte -->
+<script lang="ts">
+  export let title: string;
+  export let showBack: boolean = false;
+</script>
+
+<div class="view-layout">
+  <header>
+    {#if showBack}
+      <button on:click={() => history.back()}>← Back</button>
+    {/if}
+    <h1>{title}</h1>
+  </header>
+  <main class="view-content">
+    <slot />
+  </main>
+</div>
+```
+
+**Migration Plan:**
+
+1. Create ViewLayout component with mobile-first CSS
+2. Migrate existing views one by one:
+   - Practice
+   - Stats
+   - Settings
+   - Story
+   - Upgrades
+3. Test each migration on mobile and desktop
+4. Establish pattern for future views (Equipment, Retreats, Tome library)
+
+**Benefits:**
+
+- Solves all current UI inconsistency issues
+- Establishes clear pattern for future development
+- Makes adding new views trivial (30 seconds of boilerplate)
+- Mobile optimization handled in one place
+
+#### 1.2 Core Game Mechanics Tuning
+
+**Focus:** Get basic progression loop right for MVP
+
+- Experience gain and click multiplier balance
+- Level progression curve validation
+- Upgrade costs and benefits tuning
+- Stat training effectiveness
+- Adventure difficulty scaling (if implemented for MVP)
 
 ---
 
@@ -53,7 +100,15 @@ These changes address current TODOs and polish the existing experience without r
 
 **Added 2025-10-18**: This phase was inserted between Phase 1 and Phase 2 based on user feedback to establish quality guardrails before major refactoring work.
 
-This phase sets up testing and code quality infrastructure to enable confident refactoring in Phase 2.
+**STATUS: COMPLETED** ✅ **(2025-10-21)**
+
+Phase 1.5 successfully completed with:
+
+- ✅ Vitest test framework configured
+- ✅ 60%+ test coverage on Game class
+- ✅ Pre-commit hooks enforcing quality (type check, lint, tests)
+- ✅ GitHub Actions CI pipeline running on all PRs
+- ✅ Test infrastructure ready for Phase 2 refactoring
 
 #### 1.5.1 Linting & Code Quality
 
