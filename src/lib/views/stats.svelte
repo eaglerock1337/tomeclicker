@@ -15,181 +15,110 @@
         }
         return num.toFixed(2);
     }
-
-    // Define all 6 RPG stats with their effects
-    // TODO: These will eventually have independent levels and EXP
-    interface StatDisplay {
-        id: string;
-        name: string;
-        shortName: string;
-        value: number;
-        level: number; // Placeholder - will be independent stat level
-        effect: string;
-        color: string;
-        available: boolean;
-    }
-
-    $: rpgStats = [
-        {
-            id: 'strength',
-            name: 'Strength',
-            shortName: 'STR',
-            value: game.stats.strength,
-            level: 1, // TODO: Will come from independent stat system
-            effect: 'Attack',
-            color: 'var(--red)',
-            available: game.level >= 3
-        },
-        {
-            id: 'agility',
-            name: 'Agility',
-            shortName: 'AGI',
-            value: game.stats.dexterity, // Currently using dexterity, will be separate
-            level: 1,
-            effect: 'Attack Speed',
-            color: 'var(--green)',
-            available: game.level >= 3
-        },
-        {
-            id: 'willpower',
-            name: 'Willpower',
-            shortName: 'WIL',
-            value: 0, // TODO: New stat, not implemented yet
-            level: 1,
-            effect: 'Defense',
-            color: 'var(--blue)',
-            available: false // Will unlock later
-        },
-        {
-            id: 'endurance',
-            name: 'Endurance',
-            shortName: 'END',
-            value: 0, // TODO: New stat, not implemented yet
-            level: 1,
-            effect: 'HP',
-            color: 'var(--yellow)',
-            available: false // Will unlock later
-        },
-        {
-            id: 'intelligence',
-            name: 'Intelligence',
-            shortName: 'INT',
-            value: game.stats.intelligence,
-            level: 1,
-            effect: 'Mana',
-            color: 'var(--blue)',
-            available: game.level >= 3
-        },
-        {
-            id: 'wisdom',
-            name: 'Wisdom',
-            shortName: 'WIS',
-            value: game.stats.wisdom,
-            level: 1,
-            effect: 'Mana Regen',
-            color: 'var(--yellow)',
-            available: game.level >= 3
-        }
-    ] as StatDisplay[];
 </script>
 
 <div class="stats-view">
 <div class="stats-container">
-    <h2>Statistics</h2>
+    <h2>Player Stats</h2>
+    <p class="description">View your progression and statistics</p>
 
-    <!-- Player Information - Compact single column -->
-    <div class="info-section">
-        <div class="info-row">
-            <span class="info-label">Name:</span>
-            <span class="info-value">{game.name}</span>
-        </div>
-        <div class="info-row highlight">
-            <span class="info-label">Level:</span>
-            <span class="info-value level">{game.level}</span>
-        </div>
-        <div class="info-row">
-            <span class="info-label">Current EXP:</span>
-            <span class="info-value">{formatNumber(game.exp)}</span>
-        </div>
-        <div class="info-row">
-            <span class="info-label">Lifetime EXP:</span>
-            <span class="info-value">{formatNumber(game.lifetimeExp)}</span>
+    <!-- Player Information -->
+    <div class="stats-section">
+        <h3>General</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Name</div>
+                <div class="stat-value">{game.name}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Level</div>
+                <div class="stat-value level">{game.level}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Current EXP</div>
+                <div class="stat-value">{formatNumber(game.exp)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Lifetime EXP</div>
+                <div class="stat-value">{formatNumber(game.lifetimeExp)}</div>
+            </div>
         </div>
     </div>
 
-    <!-- RPG Stats - 6 stats in single column -->
+    <!-- Combat Stats (Level 3+) -->
     {#if game.level >= 3}
-        <div class="section-header">RPG Statistics</div>
-        <div class="rpg-stats">
-            {#each rpgStats as stat (stat.id)}
-                <div class="stat-row" class:locked={!stat.available}>
-                    <div class="stat-main">
-                        <div class="stat-name-group">
-                            <span class="stat-short" style="color: {stat.color}">{stat.shortName}</span>
-                            <span class="stat-name">{stat.name}</span>
-                            <span class="stat-effect">+{stat.effect}</span>
-                        </div>
-                        <div class="stat-values">
-                            <span class="stat-level">Lv.{stat.level}</span>
-                            <span class="stat-value" style="color: {stat.color}">{stat.value}</span>
-                        </div>
-                    </div>
-                    <!-- TODO: Progress bar for stat EXP will go here -->
-                    <div class="stat-progress-placeholder">
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: 0%"></div>
-                        </div>
-                        <div class="progress-info">
-                            {#if stat.available}
-                                <span class="progress-text">0 / 100 EXP</span>
-                                <span class="progress-cost">Cost: 0 EXP</span>
-                            {:else}
-                                <span class="progress-text locked-text">Locked</span>
-                            {/if}
-                        </div>
-                    </div>
+        <div class="stats-section">
+            <h3>Combat Stats</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Strength</div>
+                    <div class="stat-value strength">{game.stats.strength}</div>
+                    <div class="stat-desc">Physical power and damage</div>
                 </div>
-            {/each}
+                <div class="stat-card">
+                    <div class="stat-label">Dexterity</div>
+                    <div class="stat-value dexterity">{game.stats.dexterity}</div>
+                    <div class="stat-desc">Agility and precision</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Intelligence</div>
+                    <div class="stat-value intelligence">{game.stats.intelligence}</div>
+                    <div class="stat-desc">Knowledge and magic</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Wisdom</div>
+                    <div class="stat-value wisdom">{game.stats.wisdom}</div>
+                    <div class="stat-desc">Insight and awareness</div>
+                </div>
+            </div>
         </div>
     {/if}
 
-    <!-- Progress Rates - Derived stats -->
-    <div class="section-header">Progress Rates</div>
-    <div class="rates-section">
-        <div class="rate-row">
-            <span class="rate-label">Click Value:</span>
-            <span class="rate-value">{formatNumber(game.getClickValue())} EXP</span>
+    <!-- Progress Rates -->
+    <div class="stats-section">
+        <h3>Progress Rates</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Click Value</div>
+                <div class="stat-value">{formatNumber(game.getClickValue())}</div>
+                <div class="stat-desc">EXP per click</div>
+            </div>
+            {#if game.idleExpRate > 0}
+                <div class="stat-card">
+                    <div class="stat-label">Idle EXP</div>
+                    <div class="stat-value">{formatNumber(game.idleExpRate)}/s</div>
+                    <div class="stat-desc">Passive EXP gain</div>
+                </div>
+            {/if}
+            {#if game.level >= 3}
+                <div class="stat-card">
+                    <div class="stat-label">Training Speed</div>
+                    <div class="stat-value">{(game.getTrainingSpeedMultiplier() * 100).toFixed(0)}%</div>
+                    <div class="stat-desc">Of base duration</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Training Cost</div>
+                    <div class="stat-value">{(game.getTrainingCostMultiplier() * 100).toFixed(0)}%</div>
+                    <div class="stat-desc">Of base cost</div>
+                </div>
+            {/if}
         </div>
-        {#if game.idleExpRate > 0}
-            <div class="rate-row">
-                <span class="rate-label">Idle EXP:</span>
-                <span class="rate-value">{formatNumber(game.idleExpRate)}/s</span>
-            </div>
-        {/if}
-        {#if game.level >= 3}
-            <div class="rate-row">
-                <span class="rate-label">Training Speed:</span>
-                <span class="rate-value">{(game.getTrainingSpeedMultiplier() * 100).toFixed(0)}%</span>
-            </div>
-            <div class="rate-row">
-                <span class="rate-label">Training Cost:</span>
-                <span class="rate-value">{(game.getTrainingCostMultiplier() * 100).toFixed(0)}%</span>
-            </div>
-        {/if}
     </div>
 
-    <!-- Upgrades Owned - Condensed -->
-    <div class="section-header">Upgrades Owned ({Object.values(game.upgrades).filter(u => u.currentLevel > 0).length})</div>
-    <div class="upgrades-section">
-        {#each Object.values(game.upgrades).filter(u => u.currentLevel > 0) as upgrade}
-            <div class="upgrade-row">
-                <span class="upgrade-name">{upgrade.name}</span>
-                <span class="upgrade-level">Lv.{upgrade.currentLevel}</span>
-            </div>
-        {/each}
-        {#if Object.values(game.upgrades).filter(u => u.currentLevel > 0).length === 0}
-            <div class="empty-message">No upgrades purchased yet</div>
-        {/if}
+    <!-- Upgrade Progress -->
+    <div class="stats-section">
+        <h3>Upgrades Owned</h3>
+        <div class="upgrades-list">
+            {#each Object.values(game.upgrades).filter(u => u.currentLevel > 0) as upgrade}
+                <div class="upgrade-item">
+                    <span class="upgrade-name">{upgrade.name}</span>
+                    <span class="upgrade-level">Level {upgrade.currentLevel}</span>
+                </div>
+            {/each}
+            {#if Object.values(game.upgrades).filter(u => u.currentLevel > 0).length === 0}
+                <p class="no-upgrades">No upgrades purchased yet</p>
+            {/if}
+        </div>
     </div>
 </div>
 </div>
@@ -202,258 +131,129 @@
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
-
     .stats-container {
-        padding: 0.75rem;
-        max-width: 700px;
+        padding: 1rem;
+        max-width: 1000px;
         margin: 0 auto;
-        font-family: 'JetBrains Mono', monospace;
     }
 
     h2 {
         color: var(--text);
         font-family: Lato, sans-serif;
         font-weight: 300;
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        text-align: center;
+        margin-bottom: 0.5rem;
     }
 
-    /* Section Headers */
-    .section-header {
+    .description {
+        color: var(--text);
+        font-family: Lato, sans-serif;
+        opacity: 0.8;
+        margin-bottom: 2rem;
+    }
+
+    .stats-section {
+        background: var(--alt-bg);
+        border: 1px solid var(--text);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .stats-section h3 {
         color: var(--blue);
         font-family: Lato, sans-serif;
         font-weight: 400;
-        font-size: 1.1rem;
-        margin-top: 1.5rem;
-        margin-bottom: 0.5rem;
-        padding-bottom: 0.25rem;
-        border-bottom: 1px solid var(--text);
-        opacity: 0.9;
-    }
-
-    /* Player Info Section - Compact rows */
-    .info-section {
-        background: var(--alt-bg);
-        border: 1px solid var(--text);
-        border-radius: 4px;
-        padding: 0.5rem;
         margin-bottom: 1rem;
     }
 
-    .info-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.35rem 0.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .info-row:last-child {
-        border-bottom: none;
-    }
-
-    .info-row.highlight {
-        background: rgba(255, 255, 255, 0.05);
-    }
-
-    .info-label {
-        color: var(--text);
-        font-size: 0.85rem;
-        opacity: 0.8;
-    }
-
-    .info-value {
-        color: var(--text);
-        font-size: 0.9rem;
-        font-weight: 700;
-    }
-
-    .info-value.level {
-        color: var(--yellow);
-        font-size: 1rem;
-    }
-
-    /* RPG Stats Section - Dense single column */
-    .rpg-stats {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .stat-row {
-        background: var(--alt-bg);
-        border: 1px solid var(--text);
-        border-radius: 4px;
-        padding: 0.5rem;
-        transition: opacity 0.3s;
-    }
-
-    .stat-row.locked {
-        opacity: 0.4;
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .stat-main {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.35rem;
-    }
-
-    .stat-name-group {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .stat-short {
-        font-weight: 700;
-        font-size: 0.85rem;
-        min-width: 2.5rem;
-    }
-
-    .stat-name {
-        color: var(--text);
-        font-size: 0.85rem;
-        font-weight: 400;
-    }
-
-    .stat-effect {
-        color: var(--text);
-        font-size: 0.75rem;
-        opacity: 0.6;
-        font-style: italic;
-    }
-
-    .stat-values {
-        display: flex;
-        align-items: center;
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 0.75rem;
     }
 
-    .stat-level {
+    .stat-card {
+        background: var(--bg);
+        border: 1px solid var(--text);
+        border-radius: 4px;
+        padding: 0.75rem;
+        text-align: center;
+    }
+
+    .stat-label {
         color: var(--text);
-        font-size: 0.75rem;
-        opacity: 0.7;
+        font-family: Lato, sans-serif;
+        font-size: 0.9rem;
+        opacity: 0.8;
+        margin-bottom: 0.5rem;
     }
 
     .stat-value {
-        font-size: 1.1rem;
+        color: var(--text);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.5rem;
         font-weight: 700;
+        margin-bottom: 0.25rem;
     }
 
-    /* Progress Bar Placeholder */
-    .stat-progress-placeholder {
+    .stat-value.level {
+        color: var(--yellow);
+    }
+
+    .stat-value.strength {
+        color: var(--red);
+    }
+
+    .stat-value.dexterity {
+        color: var(--green);
+    }
+
+    .stat-value.intelligence {
+        color: var(--blue);
+    }
+
+    .stat-value.wisdom {
+        color: var(--yellow);
+    }
+
+    .stat-desc {
+        color: var(--text);
+        font-family: Lato, sans-serif;
+        font-size: 0.8rem;
+        opacity: 0.6;
+    }
+
+    .upgrades-list {
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: 0.75rem;
     }
 
-    .progress-bar-container {
-        height: 8px;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 4px;
-        overflow: hidden;
-    }
-
-    .progress-bar {
-        height: 100%;
-        background: var(--green);
-        transition: width 0.3s ease;
-    }
-
-    .progress-info {
+    .upgrade-item {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 0.7rem;
-    }
-
-    .progress-text {
-        color: var(--text);
-        opacity: 0.7;
-    }
-
-    .progress-text.locked-text {
-        color: var(--red);
-        opacity: 0.8;
-    }
-
-    .progress-cost {
-        color: var(--blue);
-        opacity: 0.8;
-    }
-
-    /* Rates Section - Compact rows */
-    .rates-section {
-        background: var(--alt-bg);
+        background: var(--bg);
         border: 1px solid var(--text);
         border-radius: 4px;
-        padding: 0.5rem;
-    }
-
-    .rate-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.35rem 0.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .rate-row:last-child {
-        border-bottom: none;
-    }
-
-    .rate-label {
-        color: var(--text);
-        font-size: 0.85rem;
-        opacity: 0.8;
-    }
-
-    .rate-value {
-        color: var(--green);
-        font-size: 0.9rem;
-        font-weight: 700;
-    }
-
-    /* Upgrades Section - Compact list */
-    .upgrades-section {
-        background: var(--alt-bg);
-        border: 1px solid var(--text);
-        border-radius: 4px;
-        padding: 0.5rem;
-        max-height: 300px;
-        overflow-y: auto;
-    }
-
-    .upgrade-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.35rem 0.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .upgrade-row:last-child {
-        border-bottom: none;
+        padding: 0.75rem 1rem;
     }
 
     .upgrade-name {
         color: var(--text);
-        font-size: 0.85rem;
-        opacity: 0.9;
+        font-family: Lato, sans-serif;
+        font-weight: 400;
     }
 
     .upgrade-level {
         color: var(--blue);
-        font-size: 0.85rem;
+        font-family: 'JetBrains Mono', monospace;
         font-weight: 700;
     }
 
-    .empty-message {
+    .no-upgrades {
         color: var(--text);
-        font-size: 0.85rem;
+        font-family: Lato, sans-serif;
         opacity: 0.6;
         text-align: center;
         padding: 1rem;
@@ -462,44 +262,35 @@
     /* Mobile optimizations */
     @media (max-width: 768px) {
         .stats-container {
-            padding: 0.5rem;
+            padding: 0.75rem;
         }
 
-        h2 {
-            font-size: 1.25rem;
+        .stats-section {
+            padding: 0.75rem;
             margin-bottom: 0.75rem;
         }
 
-        .section-header {
-            font-size: 1rem;
-            margin-top: 1rem;
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
         }
 
-        .info-row,
-        .rate-row,
-        .upgrade-row {
-            padding: 0.3rem 0.4rem;
-        }
-
-        .stat-row {
-            padding: 0.4rem;
-        }
-
-        .stat-short {
-            font-size: 0.8rem;
-            min-width: 2.25rem;
-        }
-
-        .stat-name {
-            font-size: 0.8rem;
-        }
-
-        .stat-effect {
-            font-size: 0.7rem;
+        .stat-card {
+            padding: 0.6rem;
         }
 
         .stat-value {
-            font-size: 1rem;
+            font-size: 1.25rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
         }
     }
 </style>
