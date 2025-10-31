@@ -17,6 +17,7 @@
     }
 </script>
 
+<div class="stats-view">
 <div class="stats-container">
     <h2>Player Stats</h2>
     <p class="description">View your progression and statistics</p>
@@ -120,10 +121,18 @@
         </div>
     </div>
 </div>
+</div>
 
 <style>
+    .stats-view {
+        height: 100%;
+        width: 100%;
+        background-color: var(--bg);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
     .stats-container {
-        padding: 2rem;
+        padding: 1rem;
         max-width: 1000px;
         margin: 0 auto;
     }
@@ -146,8 +155,8 @@
         background: var(--alt-bg);
         border: 1px solid var(--text);
         border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
     }
 
     .stats-section h3 {
@@ -159,15 +168,15 @@
 
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.75rem;
     }
 
     .stat-card {
         background: var(--bg);
         border: 1px solid var(--text);
         border-radius: 4px;
-        padding: 1rem;
+        padding: 0.75rem;
         text-align: center;
     }
 
@@ -253,15 +262,35 @@
     /* Mobile optimizations */
     @media (max-width: 768px) {
         .stats-container {
-            padding: 1rem;
+            padding: 0.75rem;
+        }
+
+        .stats-section {
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
         }
 
         .stats-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .stat-card {
+            padding: 0.6rem;
         }
 
         .stat-value {
             font-size: 1.25rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
         }
     }
 </style>

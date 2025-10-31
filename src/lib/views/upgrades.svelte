@@ -37,6 +37,7 @@
     config;
 </script>
 
+<div class="upgrades-view">
 <div class="upgrades">
     <h1>upgrades</h1>
 
@@ -169,21 +170,26 @@
         </div>
     </div>
 </div>
+</div>
 
 <style>
+    .upgrades-view {
+        height: 100%;
+        width: 100%;
+        background-color: var(--bg);
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
     .upgrades {
         color: var(--text);
-        background-color: var(--bg);
         font-size: 1em;
         font-family: JetBrains Mono, monospace;
         font-weight: 300;
         padding: 2rem 1rem;
         text-align: center;
-        height: 100%;
-        overflow-y: auto;
         box-sizing: border-box;
-        transition: color 1s cubic-bezier(0,.5,0,1),
-                    background-color 1s cubic-bezier(0,.5,0,1);
+        transition: color 1s cubic-bezier(0,.5,0,1);
     }
 
     h1 {
@@ -438,20 +444,24 @@
     @media (max-width: 1023px) {
         .upgrade-details {
             position: fixed;
-            bottom: 115px; /* Position well above navbar */
-            left: 0.5rem;
-            right: 0.5rem;
+            bottom: 0;
+            left: 0;
+            right: 0;
             height: auto;
-            max-height: none;
-            border-radius: 10px;
+            max-height: 40vh;
+            border-radius: 16px 16px 0 0;
             border: 2px solid var(--text);
+            border-bottom: none;
             box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
             z-index: 50;
             margin: 0;
-            padding: 0.75rem;
+            padding: 1rem;
+            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Hide panel on mobile when nothing is selected */
@@ -527,7 +537,7 @@
         }
 
         .upgrade-grid {
-            padding-bottom: 200px; /* Space for panel + navbar */
+            padding-bottom: calc(40vh + 100px); /* Space for panel + navbar */
         }
 
         .details-header h2 {
@@ -587,7 +597,7 @@
         }
 
         .upgrade-grid {
-            padding-bottom: 180px;
+            padding-bottom: calc(40vh + 90px);
         }
     }
 
