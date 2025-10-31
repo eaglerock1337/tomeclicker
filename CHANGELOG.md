@@ -1,9 +1,3 @@
-## [0.2.1](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.0...v0.2.1) (2025-10-31)
-
-### Bug Fixes
-
-- correct version number after improper semantic release ([0480bec](https://github.com/eaglerock1337/tomeclicker/commit/0480bec2278b975482659268ff1383536ba9d105))
-
 # [0.2.0](https://github.com/eaglerock1337/tomeclicker/compare/v0.1.3...v0.2.0) (2025-10-31)
 
 ### Bug Fixes
