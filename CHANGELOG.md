@@ -1,3 +1,11 @@
+## [0.1.4](https://github.com/eaglerock1337/tomeclicker/compare/v0.1.3...v0.1.4) (2025-10-31)
+
+### Bug Fixes
+
+- apply consistent background to training page ([a184cf5](https://github.com/eaglerock1337/tomeclicker/commit/a184cf579a310eb57a24cd721d72a8f6fc911286))
+- improve mobile UX for stats and upgrades pages ([ac409a7](https://github.com/eaglerock1337/tomeclicker/commit/ac409a722ac812218f45e4a3c1a706ea64fb0a02))
+- typo ([4a67f7a](https://github.com/eaglerock1337/tomeclicker/commit/4a67f7a934ffff7360aa4fd8c7d25fb5c7ba8604))
+
 ## [0.1.3](https://github.com/eaglerock1337/tomeclicker/compare/v0.1.2...v0.1.3) (2025-10-26)
 
 ### Bug Fixes
