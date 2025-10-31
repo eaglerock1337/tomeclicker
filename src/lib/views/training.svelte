@@ -32,6 +32,7 @@
     });
 </script>
 
+<div class="training-view">
 <div class="training-container">
     <h2>Training</h2>
 
@@ -81,17 +82,22 @@
         {/each}
     </div>
 </div>
+</div>
 
 <style>
-    .training-container {
-        color: var(--text);
-        background-color: var(--bg);
+    .training-view {
         height: 100%;
         width: 100%;
+        background-color: var(--bg);
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+    .training-container {
+        color: var(--text);
         padding: 2rem;
         box-sizing: border-box;
-        transition: color 1s cubic-bezier(0,.5,0,1),
-                    background-color 1s cubic-bezier(0,.5,0,1);
+        transition: color 1s cubic-bezier(0,.5,0,1);
     }
 
     h2 {
