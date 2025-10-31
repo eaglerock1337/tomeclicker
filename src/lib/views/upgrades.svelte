@@ -440,23 +440,21 @@
         background-color: var(--alt-bg);
     }
 
-    /* Mobile: Make details panel sticky at bottom ABOVE navbar */
+    /* Mobile: Make details panel overlay just above navbar */
     @media (max-width: 1023px) {
         .upgrade-details {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            left: 0.5rem;
+            right: 0.5rem;
+            bottom: 180px; /* Well above navbar (allows for 2 rows + gap) */
             height: auto;
-            max-height: 40vh;
-            border-radius: 16px 16px 0 0;
+            max-height: 30vh;
+            border-radius: 10px;
             border: 2px solid var(--text);
-            border-bottom: none;
-            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 50;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 100;
             margin: 0;
             padding: 1rem;
-            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
@@ -537,7 +535,7 @@
         }
 
         .upgrade-grid {
-            padding-bottom: calc(40vh + 100px); /* Space for panel + navbar */
+            padding-bottom: calc(30vh + 200px); /* Space for popup + navbar + gap */
         }
 
         .details-header h2 {
@@ -597,7 +595,7 @@
         }
 
         .upgrade-grid {
-            padding-bottom: calc(40vh + 90px);
+            padding-bottom: calc(30vh + 190px);
         }
     }
 

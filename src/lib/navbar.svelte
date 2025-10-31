@@ -120,7 +120,7 @@
         font-size: 1.2em;
         font-family: JetBrains Mono, monospace;
         font-weight: 400;
-        margin: 2px 2px 10px;
+        margin: 2px 2px 4px;
         padding: 5px 10px;
         max-width: 55px;
         min-width: 50px;
