@@ -24,8 +24,37 @@
         return cost.toLocaleString();
     }
 
-    $: availableUpgrades = Object.values(game.upgrades).filter(u => !u.minLevel || u.minLevel <= game.level).filter(u => u.id !== 'discipline');
+    $: visibleCategories = game.getVisibleUpgradeCategories();
     $: discipline = game.upgrades['discipline'];
+
+    // Track which categories are expanded
+    let expandedCategories: Set<string> = new Set(['click']); // Start with click category expanded
+
+    function toggleCategory(category: string) {
+        expandedCategories = expandedCategories.has(category)
+            ? new Set([...expandedCategories].filter(c => c !== category))
+            : new Set([...expandedCategories, category]);
+    }
+
+    function getCategoryDisplayName(category: string): string {
+        switch (category) {
+            case 'click': return 'Click Power';
+            case 'ruminate': return 'Ruminate (Idle)';
+            case 'training': return 'Stat Training';
+            case 'special': return 'Special';
+            default: return category;
+        }
+    }
+
+    function getCategoryDescription(category: string): string {
+        switch (category) {
+            case 'click': return 'Enhance active clicking power and critical hits';
+            case 'ruminate': return 'Improve passive EXP generation and efficiency';
+            case 'training': return 'Accelerate stat development and training';
+            case 'special': return 'Powerful universal bonuses';
+            default: return '';
+        }
+    }
 
     function levelUp() {
         if (game.levelUp()) {
@@ -69,44 +98,76 @@
             <div class="upgrade-name">{discipline.name}</div>
             <div class="upgrade-level">Level {discipline.currentLevel}/{discipline.maxLevel}</div>
             <div class="upgrade-cost">{formatCost(game.getUpgradeCost(discipline.id))} EXP</div>
+            <div class="upgrade-benefit">
+                {discipline.effectValue}x all EXP gain per level
+            </div>
         </button>
 
-        {#each availableUpgrades as upgrade (upgrade.id)}
-            <button
-                class="upgrade-btn"
-                class:selected={selectedUpgrade?.id === upgrade.id}
-                class:affordable={game.canAffordUpgrade(upgrade.id)}
-                class:maxed={upgrade.currentLevel >= upgrade.maxLevel}
-                on:click={() => selectUpgrade(upgrade)}
-                aria-label="Select {upgrade.name} upgrade. Level {upgrade.currentLevel} of {upgrade.maxLevel}. Cost: {formatCost(game.getUpgradeCost(upgrade.id))} EXP"
-            >
-                <div class="upgrade-name">{upgrade.name}</div>
-                <div class="upgrade-level">Level {upgrade.currentLevel}/{upgrade.maxLevel}</div>
-                <div class="upgrade-cost">{formatCost(game.getUpgradeCost(upgrade.id))} EXP</div>
-                <div class="upgrade-benefit">
-                    {#if upgrade.effectType === 'clickMultiplier'}
-                        +{(upgrade.effectValue * 100).toFixed(0)}% click EXP per level
-                    {:else if upgrade.effectType === 'critChance'}
-                        +{(upgrade.effectValue * 100).toFixed(1)}% crit chance per level
-                    {:else if upgrade.effectType === 'critDamage'}
-                        +{(upgrade.effectValue * 100).toFixed(0)}% crit damage per level
-                    {:else if upgrade.effectType === 'osmosisExp'}
-                        +{upgrade.effectValue} rumination EXP per level
-                    {:else if upgrade.effectType === 'osmosisSpeed'}
-                        +{(upgrade.effectValue * 100).toFixed(0)}% rumination speed per level
-                    {:else if upgrade.effectType === 'globalIdleSpeed'}
-                        +{(upgrade.effectValue * 100).toFixed(0)}% all idle speed per level
-                    {:else if upgrade.effectType === 'idleExp'}
-                        +{upgrade.effectValue} idle EXP/s per level
-                    {:else if upgrade.effectType === 'trainingSpeed'}
-                        -{(upgrade.effectValue * 100).toFixed(0)}% training time per level
-                    {:else if upgrade.effectType === 'trainingCost'}
-                        -{(upgrade.effectValue * 100).toFixed(0)}% training cost per level
-                    {:else}
-                        Enhanced efficiency
+        <!-- Categorized Upgrades -->
+        {#each visibleCategories.filter(cat => cat !== 'special') as category (category)}
+            {@const categoryUpgrades = game.getUpgradesByCategory(category).filter(u => !u.minLevel || u.minLevel <= game.level)}
+            {#if categoryUpgrades.length > 0}
+                <div class="category-section">
+                    <button
+                        class="category-header"
+                        class:expanded={expandedCategories.has(category)}
+                        on:click={() => toggleCategory(category)}
+                    >
+                        <div class="category-info">
+                            <div class="category-name">{getCategoryDisplayName(category)}</div>
+                            <div class="category-description">{getCategoryDescription(category)}</div>
+                        </div>
+                        <div class="category-toggle">
+                            {expandedCategories.has(category) ? '−' : '+'}
+                        </div>
+                    </button>
+
+                    {#if expandedCategories.has(category)}
+                        <div class="category-upgrades">
+                            {#each categoryUpgrades as upgrade (upgrade.id)}
+                                <button
+                                    class="upgrade-btn category-upgrade"
+                                    class:selected={selectedUpgrade?.id === upgrade.id}
+                                    class:affordable={game.canAffordUpgrade(upgrade.id)}
+                                    class:maxed={upgrade.currentLevel >= upgrade.maxLevel}
+                                    on:click={() => selectUpgrade(upgrade)}
+                                    disabled={upgrade.currentLevel >= upgrade.maxLevel}
+                                    aria-label="Select {upgrade.name} upgrade. Level {upgrade.currentLevel} of {upgrade.maxLevel}. Cost: {formatCost(game.getUpgradeCost(upgrade.id))} EXP"
+                                >
+                                    <div class="upgrade-name">{upgrade.name}</div>
+                                    <div class="upgrade-level">Level {upgrade.currentLevel}/{upgrade.maxLevel}</div>
+                                    <div class="upgrade-cost">{formatCost(game.getUpgradeCost(upgrade.id))} EXP</div>
+                                    <div class="upgrade-benefit">
+                                        {#if upgrade.effectType === 'clickMultiplier'}
+                                            +{upgrade.effectValue} EXP per click per level
+                                        {:else if upgrade.effectType === 'clickCrit'}
+                                            +{(upgrade.effectValue * 100).toFixed(1)}% crit chance per level
+                                        {:else if upgrade.effectType === 'clickCritDamage'}
+                                            +{(upgrade.effectValue * 100).toFixed(0)}% crit damage per level
+                                        {:else if upgrade.effectType === 'ruminatePower'}
+                                            +{upgrade.effectValue} EXP per tick per level
+                                        {:else if upgrade.effectType === 'ruminateSpeed'}
+                                            -{upgrade.effectValue}s per tick per level
+                                        {:else if upgrade.effectType === 'ruminateEfficiency'}
+                                            +{(upgrade.effectValue * 100).toFixed(0)}% ruminate EXP per level
+                                        {:else if upgrade.effectType === 'trainingSpeed'}
+                                            -{upgrade.effectValue}s per training per level
+                                        {:else if upgrade.effectType === 'trainingEfficiency'}
+                                            -{(upgrade.effectValue * 100).toFixed(0)}% training cost per level
+                                        {:else if upgrade.effectType === 'statGain'}
+                                            +{upgrade.effectValue} stat EXP per training per level
+                                        {:else if upgrade.effectType === 'trainingCrit'}
+                                            +{(upgrade.effectValue * 100).toFixed(1)}% training crit chance per level
+                                        {:else}
+                                            Enhanced efficiency
+                                        {/if}
+                                    </div>
+                                </button>
+                            {/each}
+                        </div>
                     {/if}
                 </div>
-            </button>
+            {/if}
         {/each}
 
         <!-- Coming Soon Section -->
@@ -649,5 +710,131 @@
         background-color: var(--text);
         color: var(--bg);
         border-color: var(--text);
+    }
+
+    /* Category Accordion Styles */
+    .category-section {
+        width: 100%;
+        margin-bottom: 1rem;
+        border: 1px solid var(--text);
+        border-radius: 8px;
+        overflow: hidden;
+        grid-column: 1 / -1; /* Span full width of grid */
+    }
+
+    .category-header {
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--alt-bg);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.3s ease;
+        font-family: inherit;
+    }
+
+    .category-header:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .category-header.expanded {
+        background-color: var(--blue);
+        color: var(--bg);
+    }
+
+    .category-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .category-name {
+        color: var(--text);
+        font-family: Lato, sans-serif;
+        font-weight: 400;
+        font-size: 1.1rem;
+    }
+
+    .category-header.expanded .category-name {
+        color: var(--bg);
+    }
+
+    .category-description {
+        color: var(--text);
+        font-family: Lato, sans-serif;
+        font-size: 0.85rem;
+        opacity: 0.7;
+    }
+
+    .category-header.expanded .category-description {
+        color: var(--bg);
+        opacity: 0.9;
+    }
+
+    .category-toggle {
+        color: var(--text);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.5rem;
+        font-weight: 700;
+        min-width: 2rem;
+        text-align: center;
+    }
+
+    .category-header.expanded .category-toggle {
+        color: var(--bg);
+    }
+
+    .category-upgrades {
+        padding: 0.5rem;
+        background-color: var(--bg);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Start with 2 columns like main grid */
+        gap: 0.5rem;
+    }
+
+    .category-upgrade {
+        margin: 0;
+        border-radius: 6px;
+    }
+
+    /* Responsive breakpoints for category upgrades (match main grid) */
+    @media (min-width: 768px) {
+        .category-upgrades {
+            grid-template-columns: repeat(3, 1fr); /* 3 columns on tablet */
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .category-upgrades {
+            grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
+        }
+    }
+
+    /* Mobile optimizations for categories */
+    @media (max-width: 768px) {
+        .category-header {
+            padding: 0.75rem;
+        }
+
+        .category-name {
+            font-size: 1rem;
+        }
+
+        .category-description {
+            font-size: 0.8rem;
+        }
+
+        .category-toggle {
+            font-size: 1.25rem;
+        }
+    }
+
+    @media (max-width: 380px) {
+        .category-upgrades {
+            grid-template-columns: 1fr !important; /* Single column on very small screens */
+        }
     }
 </style>

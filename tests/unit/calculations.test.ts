@@ -71,7 +71,8 @@ describe('Upgrade Calculations', () => {
 				maxLevel: 100,
 				currentLevel: 0,
 				effectType: 'clickMultiplier',
-				effectValue: 1.0
+				effectValue: 1.0,
+				category: 'click'
 			};
 
 			expect(calculateUpgradeCost(upgrade)).toBe(50);
@@ -88,7 +89,8 @@ describe('Upgrade Calculations', () => {
 				maxLevel: 100,
 				currentLevel: 1,
 				effectType: 'clickMultiplier',
-				effectValue: 1.0
+				effectValue: 1.0,
+				category: 'click'
 			};
 
 			// 50 * 1.15^1 = 57.5 -> floor to 57
@@ -106,7 +108,8 @@ describe('Upgrade Calculations', () => {
 				maxLevel: 100,
 				currentLevel: 10,
 				effectType: 'clickMultiplier',
-				effectValue: 1.0
+				effectValue: 1.0,
+				category: 'click'
 			};
 
 			// 50 * 1.15^10 = 202.27... -> floor to 202
@@ -124,7 +127,8 @@ describe('Upgrade Calculations', () => {
 				maxLevel: 10,
 				currentLevel: 1,
 				effectType: 'clickMultiplier',
-				effectValue: 5.0
+				effectValue: 5.0,
+				category: 'click'
 			};
 
 			// 1000 * 100^1 = 100,000 (no floor)
@@ -142,7 +146,8 @@ describe('Upgrade Calculations', () => {
 				maxLevel: 10,
 				currentLevel: 2,
 				effectType: 'clickMultiplier',
-				effectValue: 5.0
+				effectValue: 5.0,
+				category: 'click'
 			};
 
 			// 1000 * 100^2 = 10,000,000
@@ -160,7 +165,8 @@ describe('Upgrade Calculations', () => {
 				maxLevel: 10,
 				currentLevel: 3,
 				effectType: 'clickMultiplier',
-				effectValue: 1.0
+				effectValue: 1.0,
+				category: 'click'
 			};
 
 			// 100 * 1.5^3 = 337.5 -> floor to 337
@@ -181,7 +187,8 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'efficient-training',
 					effectType: 'trainingSpeed',
 					effectValue: 0.1,
-					currentLevel: 1
+					currentLevel: 1,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -195,7 +202,8 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'efficient-training',
 					effectType: 'trainingSpeed',
 					effectValue: 0.1,
-					currentLevel: 2
+					currentLevel: 2,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -209,13 +217,15 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'upgrade-1',
 					effectType: 'trainingSpeed',
 					effectValue: 0.1,
-					currentLevel: 1
+					currentLevel: 1,
+					category: 'click'
 				} as Upgrade,
 				'upgrade-2': {
 					id: 'upgrade-2',
 					effectType: 'trainingSpeed',
 					effectValue: 0.2,
-					currentLevel: 1
+					currentLevel: 1,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -229,13 +239,15 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'efficient-training',
 					effectType: 'trainingSpeed',
 					effectValue: 0.1,
-					currentLevel: 1
+					currentLevel: 1,
+					category: 'click'
 				} as Upgrade,
 				'other-upgrade': {
 					id: 'other-upgrade',
 					effectType: 'clickMultiplier',
 					effectValue: 1.0,
-					currentLevel: 5
+					currentLevel: 5,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -254,7 +266,8 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'cost-reduction',
 					effectType: 'trainingCost',
 					effectValue: 0.2,
-					currentLevel: 1
+					currentLevel: 1,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -268,7 +281,8 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'cost-reduction',
 					effectType: 'trainingCost',
 					effectValue: 0.2,
-					currentLevel: 2
+					currentLevel: 2,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -288,7 +302,8 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'osmotic-absorption',
 					effectType: 'osmosisExp',
 					effectValue: 1,
-					currentLevel: 1
+					currentLevel: 1,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -301,7 +316,8 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'osmotic-absorption',
 					effectType: 'osmosisExp',
 					effectValue: 1,
-					currentLevel: 5
+					currentLevel: 5,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -314,13 +330,15 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'upgrade-1',
 					effectType: 'osmosisExp',
 					effectValue: 1,
-					currentLevel: 3
+					currentLevel: 3,
+					category: 'click'
 				} as Upgrade,
 				'upgrade-2': {
 					id: 'upgrade-2',
 					effectType: 'osmosisExp',
 					effectValue: 2,
-					currentLevel: 2
+					currentLevel: 2,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -340,7 +358,8 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'temporal-mastery',
 					effectType: 'globalIdleSpeed',
 					effectValue: 0.05,
-					currentLevel: 1
+					currentLevel: 1,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -354,7 +373,8 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'temporal-mastery',
 					effectType: 'globalIdleSpeed',
 					effectValue: 0.05,
-					currentLevel: 10
+					currentLevel: 10,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -368,13 +388,15 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'upgrade-1',
 					effectType: 'globalIdleSpeed',
 					effectValue: 0.05,
-					currentLevel: 10
+					currentLevel: 10,
+					category: 'click'
 				} as Upgrade,
 				'upgrade-2': {
 					id: 'upgrade-2',
 					effectType: 'globalIdleSpeed',
 					effectValue: 0.1,
-					currentLevel: 5
+					currentLevel: 5,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -394,7 +416,8 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'flow-state',
 					effectType: 'osmosisSpeed',
 					effectValue: 0.02,
-					currentLevel: 1
+					currentLevel: 1,
+					category: 'click'
 				} as Upgrade
 			};
 
@@ -408,7 +431,8 @@ describe('Upgrade Effect Calculations', () => {
 					id: 'flow-state',
 					effectType: 'osmosisSpeed',
 					effectValue: 0.02,
-					currentLevel: 5
+					currentLevel: 5,
+					category: 'click'
 				} as Upgrade
 			};
 
