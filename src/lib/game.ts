@@ -175,6 +175,20 @@ export class Game {
 	}
 
 	/**
+	 * Gets upgrades by category (v0.1.5+ categorized system)
+	 */
+	getUpgradesByCategory(category: 'click' | 'ruminate' | 'training' | 'special'): UpgradeType[] {
+		return this.upgradeManager.getUpgradesByCategory(category);
+	}
+
+	/**
+	 * Gets all visible upgrade categories for the current level
+	 */
+	getVisibleUpgradeCategories(): ('click' | 'ruminate' | 'training' | 'special')[] {
+		return this.upgradeManager.getVisibleCategories(this.level);
+	}
+
+	/**
 	 * Recalculates the click multiplier based on current upgrades and level
 	 * Uses a hybrid additive+multiplicative system:
 	 * - Most upgrades add to base multiplier (additive)
@@ -212,9 +226,9 @@ export class Game {
 	recalculateIdleExpRate(): void {
 		this.idleExpRate = 0;
 
-		// Add idle EXP upgrades
+		// Add idle EXP upgrades (v0.1.5+: from ruminate power upgrades)
 		for (const upgrade of Object.values(this.upgrades)) {
-			if (upgrade.effectType === 'idleExp') {
+			if (upgrade.effectType === 'ruminatePower') {
 				this.idleExpRate += upgrade.effectValue * upgrade.currentLevel;
 			}
 		}
@@ -237,9 +251,9 @@ export class Game {
 		this.critDamage = BASE_CRIT_DAMAGE; // Base +50%
 
 		for (const upgrade of Object.values(this.upgrades)) {
-			if (upgrade.effectType === 'critChance') {
+			if (upgrade.effectType === 'clickCrit') {
 				this.critChance += upgrade.effectValue * upgrade.currentLevel;
-			} else if (upgrade.effectType === 'critDamage') {
+			} else if (upgrade.effectType === 'clickCritDamage') {
 				this.critDamage += upgrade.effectValue * upgrade.currentLevel;
 			}
 		}
@@ -299,7 +313,9 @@ export class Game {
 	 * @param stat - The stat to check
 	 * @returns Current stat EXP
 	 */
-	getStatExp(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+	getStatExp(
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+	): number {
 		return this.statsManager.getStatExp(stat);
 	}
 
@@ -308,7 +324,9 @@ export class Game {
 	 * @param stat - The stat to check
 	 * @returns Stat EXP required for next level
 	 */
-	getStatExpRequired(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+	getStatExpRequired(
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+	): number {
 		return this.statsManager.getStatExpRequired(stat);
 	}
 
@@ -317,7 +335,9 @@ export class Game {
 	 * @param stat - The stat to check
 	 * @returns Character EXP cost to start training
 	 */
-	getStatTrainingCost(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+	getStatTrainingCost(
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+	): number {
 		return this.statsManager.getStatTrainingCost(stat);
 	}
 
@@ -326,7 +346,9 @@ export class Game {
 	 * @param stat - The stat to check
 	 * @returns Maximum stat level allowed
 	 */
-	getMaxStatLevel(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+	getMaxStatLevel(
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+	): number {
 		return this.statsManager.getMaxStatLevel(stat);
 	}
 

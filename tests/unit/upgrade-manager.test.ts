@@ -326,7 +326,8 @@ describe('UpgradeManager', () => {
 					currentLevel: 25, // Progress to preserve
 					effectType: 'clickMultiplier',
 					effectValue: 2.0,
-					minLevel: 1
+					minLevel: 1,
+					category: 'click'
 				}
 			};
 
@@ -352,7 +353,8 @@ describe('UpgradeManager', () => {
 					currentLevel: 10,
 					effectType: 'clickMultiplier',
 					effectValue: 1.0,
-					minLevel: 1
+					minLevel: 1,
+					category: 'click'
 				}
 				// Note: saved game doesn't have 'critical-insight' yet
 			};

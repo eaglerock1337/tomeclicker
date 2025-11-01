@@ -90,7 +90,12 @@ export function calculateTrainingSpeedMultiplier(upgrades: { [key: string]: Upgr
 
 	for (const upgrade of Object.values(upgrades)) {
 		if (upgrade.effectType === 'trainingSpeed') {
-			multiplier *= Math.pow(1 - upgrade.effectValue, upgrade.currentLevel);
+			// v0.1.5+: -0.5s per level from 30s base
+			// Convert seconds reduction to multiplier: (30 - (0.5 * level)) / 30
+			const secondsReduced = upgrade.effectValue * upgrade.currentLevel; // 0.5s * level
+			const baseDuration = 30; // 30 second base training time
+			const newDuration = Math.max(1, baseDuration - secondsReduced); // Min 1 second
+			multiplier *= newDuration / baseDuration;
 		}
 	}
 
@@ -117,7 +122,8 @@ export function calculateTrainingCostMultiplier(upgrades: { [key: string]: Upgra
 	let multiplier = 1.0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'trainingCost') {
+		if (upgrade.effectType === 'trainingEfficiency') {
+			// v0.1.5+: -1% training cost per level
 			multiplier *= Math.pow(1 - upgrade.effectValue, upgrade.currentLevel);
 		}
 	}
@@ -144,7 +150,8 @@ export function calculateOsmosisExpBonus(upgrades: { [key: string]: Upgrade }): 
 	let bonus = 0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'osmosisExp') {
+		if (upgrade.effectType === 'ruminatePower') {
+			// v0.1.5+: +1 EXP per tick per level
 			bonus += upgrade.effectValue * upgrade.currentLevel;
 		}
 	}
@@ -200,8 +207,13 @@ export function calculateOsmosisSpeedMultiplier(upgrades: { [key: string]: Upgra
 	let multiplier = 1.0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'osmosisSpeed') {
-			multiplier += upgrade.effectValue * upgrade.currentLevel;
+		if (upgrade.effectType === 'ruminateSpeed') {
+			// v0.1.5+: -0.1s per level from 10s base
+			// Convert seconds reduction to speed multiplier
+			const secondsReduced = upgrade.effectValue * upgrade.currentLevel; // 0.1s * level
+			const baseDuration = 10; // 10 second base ruminate time
+			const newDuration = Math.max(0.1, baseDuration - secondsReduced); // Min 0.1 second
+			multiplier *= baseDuration / newDuration; // Speed multiplier (higher = faster)
 		}
 	}
 
@@ -263,4 +275,91 @@ export function calculateMaxStatLevel(characterLevel: number): number {
 	}
 	// 5:1 ratio: Each character level unlocks 5 potential stat levels
 	return characterLevel * 5;
+}
+
+/**
+ * Calculates the ruminate efficiency multiplier from upgrades (v0.1.5+)
+ * Multiplicative bonus to all rumination EXP gain
+ *
+ * @param upgrades - Map of all upgrades
+ * @returns Multiplier for ruminate EXP (higher is more EXP)
+ *
+ * @example
+ * // No upgrades: 1.0 (100% EXP)
+ * calculateRuminateEfficiencyMultiplier({})
+ *
+ * // 10 levels of +2% efficiency: 1.2 (120% EXP)
+ * calculateRuminateEfficiencyMultiplier({
+ *   'ruminate-efficiency': { effectType: 'ruminateEfficiency', effectValue: 0.02, currentLevel: 10 }
+ * })
+ */
+export function calculateRuminateEfficiencyMultiplier(upgrades: { [key: string]: Upgrade }): number {
+	let multiplier = 1.0;
+
+	for (const upgrade of Object.values(upgrades)) {
+		if (upgrade.effectType === 'ruminateEfficiency') {
+			// v0.1.5+: +2% ruminate EXP gain per level (multiplicative)
+			multiplier += upgrade.effectValue * upgrade.currentLevel;
+		}
+	}
+
+	return multiplier;
+}
+
+/**
+ * Calculates the stat gain bonus from upgrades (v0.1.5+ training system)
+ * Additional stat EXP gained per training completion
+ *
+ * @param upgrades - Map of all upgrades
+ * @returns Additional stat EXP per training completion
+ *
+ * @example
+ * // No upgrades: 0 bonus stat EXP
+ * calculateStatGainBonus({})
+ *
+ * // 5 levels of +1 stat EXP: 5 bonus stat EXP
+ * calculateStatGainBonus({
+ *   'stat-gain': { effectType: 'statGain', effectValue: 1, currentLevel: 5 }
+ * })
+ */
+export function calculateStatGainBonus(upgrades: { [key: string]: Upgrade }): number {
+	let bonus = 0;
+
+	for (const upgrade of Object.values(upgrades)) {
+		if (upgrade.effectType === 'statGain') {
+			// v0.1.5+: +1 stat EXP per training per level
+			bonus += upgrade.effectValue * upgrade.currentLevel;
+		}
+	}
+
+	return bonus;
+}
+
+/**
+ * Calculates the training crit chance from upgrades (v0.1.5+ training system)
+ * Chance for training to grant double stat EXP
+ *
+ * @param upgrades - Map of all upgrades
+ * @returns Crit chance for training (0.0 to 1.0)
+ *
+ * @example
+ * // No upgrades: 0.0 (0% crit chance)
+ * calculateTrainingCritChance({})
+ *
+ * // 10 levels of +2% crit: 0.2 (20% crit chance)
+ * calculateTrainingCritChance({
+ *   'perfect-form': { effectType: 'trainingCrit', effectValue: 0.02, currentLevel: 10 }
+ * })
+ */
+export function calculateTrainingCritChance(upgrades: { [key: string]: Upgrade }): number {
+	let critChance = 0;
+
+	for (const upgrade of Object.values(upgrades)) {
+		if (upgrade.effectType === 'trainingCrit') {
+			// v0.1.5+: +2% training crit chance per level
+			critChance += upgrade.effectValue * upgrade.currentLevel;
+		}
+	}
+
+	return Math.min(1.0, critChance); // Cap at 100%
 }

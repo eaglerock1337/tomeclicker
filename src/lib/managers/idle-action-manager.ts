@@ -77,9 +77,14 @@ export interface IdleActionDependencies {
 	/** Get EXP cost to level up a specific stat (legacy - kept for migration) */
 	getStatLevelCost: (stat: keyof Stats) => number;
 	/** Get character EXP cost to start training a specific stat (v0.1.5+) */
-	getStatTrainingCost: (stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>) => number;
+	getStatTrainingCost: (
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+	) => number;
 	/** Add stat EXP and handle level ups (v0.1.5+) */
-	addStatExp: (stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>, amount: number) => { success: boolean; leveledUp: boolean; newLevel: number };
+	addStatExp: (
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>,
+		amount: number
+	) => { success: boolean; leveledUp: boolean; newLevel: number };
 	/** Get current crit chance (for training rewards) */
 	getCritChance: () => number;
 	/** Get current EXP balance */
@@ -460,10 +465,12 @@ export class IdleActionManager {
 
 			return {
 				expGained: 0, // No character EXP gained from training completion
-				statGained: statResult.leveledUp ? {
-					stat,
-					amount: 1
-				} : undefined,
+				statGained: statResult.leveledUp
+					? {
+							stat,
+							amount: 1
+						}
+					: undefined,
 				shouldContinue: true
 			};
 		}

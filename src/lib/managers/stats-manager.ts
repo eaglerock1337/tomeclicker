@@ -140,7 +140,9 @@ export class StatsManager {
 	 * Get the current EXP for a specific stat
 	 * @param stat - The stat to query (only the base stat names)
 	 */
-	getStatExp(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+	getStatExp(
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+	): number {
 		const expKey = `${stat}Exp` as keyof Stats;
 		return this.stats[expKey] as number;
 	}
@@ -149,7 +151,9 @@ export class StatsManager {
 	 * Get the EXP required for the next level of a specific stat
 	 * @param stat - The stat to query
 	 */
-	getStatExpRequired(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+	getStatExpRequired(
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+	): number {
 		const currentLevel = this.getStatLevel(stat);
 		return calculateStatExpRequired(currentLevel);
 	}
@@ -158,7 +162,9 @@ export class StatsManager {
 	 * Get the character EXP cost to start training a specific stat
 	 * @param stat - The stat to query
 	 */
-	getStatTrainingCost(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+	getStatTrainingCost(
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+	): number {
 		const currentLevel = this.getStatLevel(stat);
 		return calculateStatTrainingCost(currentLevel);
 	}
@@ -167,7 +173,9 @@ export class StatsManager {
 	 * Get the maximum allowed level for a stat based on character level
 	 * @param stat - The stat to query
 	 */
-	getMaxStatLevel(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+	getMaxStatLevel(
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+	): number {
 		if (!this.deps?.getCharacterLevel) {
 			return 100; // Fallback for when no character level dependency
 		}
@@ -178,7 +186,9 @@ export class StatsManager {
 	 * Check if a stat can be leveled up (has enough EXP and hasn't hit cap)
 	 * @param stat - The stat to check
 	 */
-	canStatLevelUp(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): boolean {
+	canStatLevelUp(
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+	): boolean {
 		const currentLevel = this.getStatLevel(stat);
 		const currentExp = this.getStatExp(stat);
 		const requiredExp = this.getStatExpRequired(stat);
@@ -192,7 +202,10 @@ export class StatsManager {
 	 * @param stat - The stat to add EXP to
 	 * @param expAmount - Amount of stat EXP to add (default: 10 from design doc)
 	 */
-	addStatExp(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>, expAmount: number = 10): StatExpGainResult {
+	addStatExp(
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>,
+		expAmount: number = 10
+	): StatExpGainResult {
 		const expKey = `${stat}Exp` as keyof Stats;
 		const currentLevel = this.getStatLevel(stat);
 		const currentExp = this.getStatExp(stat);
@@ -234,7 +247,7 @@ export class StatsManager {
 			statExpAdded: expAmount,
 			leveledUp,
 			newLevel,
-			newStatExp: this.stats[expKey] as number,
+			newStatExp: this.stats[expKey] as number
 		};
 	}
 

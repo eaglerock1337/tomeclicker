@@ -16,79 +16,78 @@
         return num.toFixed(2);
     }
 
-    // Define all 6 RPG stats with their effects
-    // TODO: These will eventually have independent levels and EXP
+    // Define all 4 RPG stats with their effects (v0.1.5+ stat system)
     interface StatDisplay {
-        id: string;
+        id: keyof Pick<typeof game.stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>;
         name: string;
         shortName: string;
-        value: number;
-        level: number; // Placeholder - will be independent stat level
+        level: number;
+        currentExp: number;
+        requiredExp: number;
+        maxLevel: number;
+        trainingCost: number;
         effect: string;
         color: string;
         available: boolean;
+        atCap: boolean;
     }
 
     $: rpgStats = [
         {
-            id: 'strength',
+            id: 'strength' as const,
             name: 'Strength',
             shortName: 'STR',
-            value: game.stats.strength,
-            level: 1, // TODO: Will come from independent stat system
+            level: game.stats.strength,
+            currentExp: game.getStatExp('strength'),
+            requiredExp: game.getStatExpRequired('strength'),
+            maxLevel: game.getMaxStatLevel('strength'),
+            trainingCost: game.getStatTrainingCost('strength'),
             effect: 'Attack',
             color: 'var(--red)',
-            available: game.level >= 3
+            available: game.level >= 3,
+            atCap: game.stats.strength >= game.getMaxStatLevel('strength')
         },
         {
-            id: 'agility',
-            name: 'Agility',
-            shortName: 'AGI',
-            value: game.stats.dexterity, // Currently using dexterity, will be separate
-            level: 1,
+            id: 'dexterity' as const,
+            name: 'Dexterity',
+            shortName: 'DEX',
+            level: game.stats.dexterity,
+            currentExp: game.getStatExp('dexterity'),
+            requiredExp: game.getStatExpRequired('dexterity'),
+            maxLevel: game.getMaxStatLevel('dexterity'),
+            trainingCost: game.getStatTrainingCost('dexterity'),
             effect: 'Attack Speed',
             color: 'var(--green)',
-            available: game.level >= 3
+            available: game.level >= 3,
+            atCap: game.stats.dexterity >= game.getMaxStatLevel('dexterity')
         },
         {
-            id: 'willpower',
-            name: 'Willpower',
-            shortName: 'WIL',
-            value: 0, // TODO: New stat, not implemented yet
-            level: 1,
-            effect: 'Defense',
-            color: 'var(--blue)',
-            available: false // Will unlock later
-        },
-        {
-            id: 'endurance',
-            name: 'Endurance',
-            shortName: 'END',
-            value: 0, // TODO: New stat, not implemented yet
-            level: 1,
-            effect: 'HP',
-            color: 'var(--yellow)',
-            available: false // Will unlock later
-        },
-        {
-            id: 'intelligence',
+            id: 'intelligence' as const,
             name: 'Intelligence',
             shortName: 'INT',
-            value: game.stats.intelligence,
-            level: 1,
+            level: game.stats.intelligence,
+            currentExp: game.getStatExp('intelligence'),
+            requiredExp: game.getStatExpRequired('intelligence'),
+            maxLevel: game.getMaxStatLevel('intelligence'),
+            trainingCost: game.getStatTrainingCost('intelligence'),
             effect: 'Mana',
             color: 'var(--blue)',
-            available: game.level >= 3
+            available: game.level >= 3,
+            atCap: game.stats.intelligence >= game.getMaxStatLevel('intelligence')
         },
         {
-            id: 'wisdom',
+            id: 'wisdom' as const,
             name: 'Wisdom',
             shortName: 'WIS',
-            value: game.stats.wisdom,
-            level: 1,
+            level: game.stats.wisdom,
+            currentExp: game.getStatExp('wisdom'),
+            requiredExp: game.getStatExpRequired('wisdom'),
+            maxLevel: game.getMaxStatLevel('wisdom'),
+            trainingCost: game.getStatTrainingCost('wisdom'),
             effect: 'Mana Regen',
             color: 'var(--yellow)',
-            available: game.level >= 3
+            available: game.level >= 3,
+            atCap: game.stats.wisdom >= game.getMaxStatLevel('wisdom')
         }
     ] as StatDisplay[];
 </script>
@@ -130,21 +129,29 @@
                             <span class="stat-effect">+{stat.effect}</span>
                         </div>
                         <div class="stat-values">
-                            <span class="stat-level">Lv.{stat.level}</span>
-                            <span class="stat-value" style="color: {stat.color}">{stat.value}</span>
+                            <span class="stat-level">Lv.{stat.level}/{stat.maxLevel}</span>
+                            <span class="stat-value" style="color: {stat.color}">{stat.level}</span>
                         </div>
                     </div>
-                    <!-- TODO: Progress bar for stat EXP will go here -->
-                    <div class="stat-progress-placeholder">
+                    <!-- Stat EXP Progress Bar (v0.1.5+) -->
+                    <div class="stat-progress">
                         <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: 0%"></div>
+                            {#if stat.available && !stat.atCap}
+                                <div class="progress-bar" style="width: {Math.min(100, (stat.currentExp / stat.requiredExp) * 100)}%; background-color: {stat.color}"></div>
+                            {:else if stat.atCap}
+                                <div class="progress-bar" style="width: 100%; background-color: var(--yellow)"></div>
+                            {:else}
+                                <div class="progress-bar" style="width: 0%; background-color: var(--text)"></div>
+                            {/if}
                         </div>
                         <div class="progress-info">
-                            {#if stat.available}
-                                <span class="progress-text">0 / 100 EXP</span>
-                                <span class="progress-cost">Cost: 0 EXP</span>
+                            {#if !stat.available}
+                                <span class="progress-text locked-text">Unlock at Level 3</span>
+                            {:else if stat.atCap}
+                                <span class="progress-text capped-text">Max Level (Character Level {game.level})</span>
                             {:else}
-                                <span class="progress-text locked-text">Locked</span>
+                                <span class="progress-text">{formatNumber(stat.currentExp)} / {formatNumber(stat.requiredExp)} EXP</span>
+                                <span class="progress-cost">Training: {formatNumber(stat.trainingCost)} EXP</span>
                             {/if}
                         </div>
                     </div>
@@ -343,12 +350,6 @@
         font-weight: 700;
     }
 
-    /* Progress Bar Placeholder */
-    .stat-progress-placeholder {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
 
     .progress-bar-container {
         height: 8px;
@@ -378,6 +379,12 @@
     .progress-text.locked-text {
         color: var(--red);
         opacity: 0.8;
+    }
+
+    .progress-text.capped-text {
+        color: var(--yellow);
+        opacity: 0.9;
+        font-weight: 600;
     }
 
     .progress-cost {

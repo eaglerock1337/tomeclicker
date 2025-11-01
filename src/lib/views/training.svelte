@@ -11,7 +11,7 @@
     function getActionCost(action: any): number {
         if (action.id === 'practice-osmosis') return 0;
         if (action.trainsStat) {
-            return game.getStatLevelCost(action.trainsStat);
+            return game.getStatTrainingCost(action.trainsStat);
         }
         return 0;
     }
@@ -19,7 +19,7 @@
     function canAffordAction(action: any): boolean {
         if (action.id === 'practice-osmosis') return true;
         if (action.trainsStat) {
-            return game.exp >= game.getStatLevelCost(action.trainsStat);
+            return game.exp >= game.getStatTrainingCost(action.trainsStat);
         }
         return true;
     }
@@ -69,7 +69,13 @@
                     {:else}
                         <div class="cost free">Free</div>
                     {/if}
-                    <div class="reward">+10 EXP</div>
+                    {#if action.id === 'practice-osmosis'}
+                        <div class="reward">+{10 + game.getOsmosisExpBonus()} EXP</div>
+                    {:else if action.trainsStat}
+                        <div class="reward">+10 {action.trainsStat.toUpperCase()} EXP</div>
+                    {:else}
+                        <div class="reward">+10 EXP</div>
+                    {/if}
                 </div>
 
                 {#if isActive}
