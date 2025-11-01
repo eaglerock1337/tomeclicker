@@ -45,7 +45,7 @@ class SaveManagerBuilder {
 		critChance: 0.0,
 		critDamage: 1.5,
 		upgrades: {},
-		stats: { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 },
+		stats: { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 },
 		trainingActions: {},
 		meditationActions: {},
 		idleExpRate: 0,
@@ -160,7 +160,7 @@ describe('SaveManager', () => {
 				.withName('Bob')
 				.withExp(1000, 1500)
 				.withLevel(5)
-				.withStats({ strength: 10, dexterity: 8, intelligence: 6, wisdom: 4 })
+				.withStats({ strength: 10, dexterity: 8, intelligence: 6, wisdom: 4, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 })
 				.withUpgrades({ discipline: 3, focus: 2 })
 				.build();
 
@@ -198,7 +198,7 @@ describe('SaveManager', () => {
 				.withName('Charlie')
 				.withExp(2000, 2500)
 				.withLevel(10)
-				.withStats({ strength: 20, dexterity: 15, intelligence: 12, wisdom: 8 })
+				.withStats({ strength: 20, dexterity: 15, intelligence: 12, wisdom: 8, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 })
 				.withUpgrades({ discipline: 5, focus: 4, memory: 3 });
 
 			const manager = builder.build();
@@ -247,7 +247,7 @@ describe('SaveManager', () => {
 				level: 1,
 				clickMultiplier: 1.0,
 				upgrades: {},
-				stats: { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 },
+				stats: { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 },
 				trainingActions: {},
 				meditationActions: {},
 				critChance: 0.0,
@@ -362,7 +362,7 @@ describe('SaveManager', () => {
 					level: 1,
 					clickMultiplier: 1.0,
 					upgrades: {},
-					stats: { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 },
+					stats: { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 },
 					trainingActions: {},
 					meditationActions: {},
 					critChance: 0,
@@ -393,7 +393,7 @@ describe('SaveManager', () => {
 					level: 1,
 					clickMultiplier: 1.0,
 					upgrades: {},
-					stats: { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 },
+					stats: { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 },
 					trainingActions: {},
 					meditationActions: {},
 					critChance: 0,
