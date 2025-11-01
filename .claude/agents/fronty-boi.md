@@ -18,16 +18,24 @@ color: blue
 
 ## Current Focus
 
-**ViewLayout Standardization & MVP UI (2025-10-31)**
+**v0.1.5 UI/UX Updates & ViewLayout (2025-10-31)**
 
-Creating reusable ViewLayout component to standardize all game views and solve recent UI inconsistencies.
+Two parallel tracks: ViewLayout standardization + v0.1.5 game rebalancing UI updates.
 
 **Active Tasks:**
 
-- **ViewLayout Component** - Design reusable layout pattern (header, back button, scrolling, mobile optimization)
-- **View Migration** - Migrate existing views to ViewLayout pattern
-- **Animation Infrastructure** (if needed) - Celebration system for milestone moments
-- **Responsive Design Tokens** - Standardize breakpoints and spacing constants
+**Track 1: ViewLayout Component** (Deferred for v0.1.5)
+
+- Design reusable layout pattern (header, back button, scrolling, mobile optimization)
+- Migrate existing views to ViewLayout pattern
+- Standardize responsive breakpoints and spacing
+
+**Track 2: v0.1.5 Game Rebalancing UI** (Priority)
+
+- **Upgrade Interface Redesign** - Multi-level upgrade UI (show current level, cost to next, max level)
+- **Stats Page Refinement** - Show stat level + EXP progress bars, stat EXP to next level
+- **Training Page Updates** - Display character EXP cost, stat EXP gained
+- **Ruminate Display** - Clear idle EXP income visualization
 
 ---
 
@@ -142,8 +150,37 @@ Creating reusable ViewLayout component to standardize all game views and solve r
 - ✅ No need for router library or complex navigation
 - User is comfortable with current approach
 
+**v0.1.5 UI Requirements:**
+
+From `design/sessions/0.1.5-game-rebalancing.md`:
+
+**Upgrade UI Needs:**
+
+- Show current level / max level
+- Show cost to next level (exponential 1.5x scaling)
+- Show benefit per level (linear, e.g., "+1 exp/click")
+- Visual feedback when affordable
+- Handle 25-100 level upgrades
+
+**Stats Page Needs:**
+
+- Stat level display
+- Stat EXP progress bar (current / required for next level)
+- Character EXP cost to train
+- Stat EXP gained per training
+- 4 stats (Str/Agi/Will/End) for early game
+
+**Training Page Needs:**
+
+- Training selection UI
+- Character EXP cost display (changes per stat level)
+- Stat EXP gain display (base 10, plus upgrades)
+- Training timer (30s base, reducible to 5s)
+- Affordable/not affordable visual feedback
+
 **Design Documents:**
 
+- **v0.1.5 rebalancing:** `design/sessions/0.1.5-game-rebalancing.md` ⭐
 - Theme definitions: `src/lib/styles/themes.css`
 - Full game design: `design/OUTLINE.md`
 - MVP requirements: `MVP.md`

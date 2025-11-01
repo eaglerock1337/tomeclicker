@@ -236,6 +236,32 @@ Your design guidance is successful when:
 - Components tightly coupled to Game class
 - All documented in PROPOSAL.md Phase 2, deferred until post-MVP
 
+**v0.1.5 Architecture Task - Scaling Multiplier System:**
+
+From `design/sessions/0.1.5-game-rebalancing.md`:
+
+**Goal:** Design flexible multiplier architecture for tunable scaling that can reach millions.
+
+**Requirements:**
+
+- Centralized scaling multiplier system
+- Separate multipliers for: Click power, Idle power, Training efficiency, Stat exp gain
+- Easily tunable via configuration (not hardcoded magic numbers)
+- Support for post-retreat KP multipliers
+- Pattern: Base value × upgrade multiplier × prestige multiplier × special scaling multiplier
+
+**Target Scaling:**
+
+- Click: 1 → 100 → 100,000 → 10,000,000 (across early/mid/late game)
+- Idle: 10 → 600 → 6,000 → 60,000 (slower scaling than click)
+
+**Action Item:** Design multiplier architecture that:
+
+1. Easy tuning of scaling rates
+2. Different scaling rates per system (click vs idle)
+3. Integration with existing upgrade system
+4. Support for future "Exponential Mastery" upgrades (meta-scaling)
+
 ---
 
 **Documentation Structure:**
