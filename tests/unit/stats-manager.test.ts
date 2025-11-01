@@ -6,7 +6,7 @@ import type { Stats } from '../../src/lib/game';
  * Test fixture builder for StatsManager
  */
 class StatsManagerBuilder {
-	private stats: Stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
+	private stats: Stats = { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 };
 
 	withStat(stat: keyof Stats, level: number): this {
 		this.stats[stat] = level;
@@ -14,7 +14,7 @@ class StatsManagerBuilder {
 	}
 
 	withAllStats(level: number): this {
-		this.stats = { strength: level, dexterity: level, intelligence: level, wisdom: level };
+		this.stats = { strength: level, dexterity: level, intelligence: level, wisdom: level, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 };
 		return this;
 	}
 
@@ -60,7 +60,7 @@ describe('StatsManager', () => {
 		});
 
 		it('should create StatsManager with custom stats', () => {
-			const customStats = { strength: 10, dexterity: 5, intelligence: 8, wisdom: 3 };
+			const customStats = { strength: 10, dexterity: 5, intelligence: 8, wisdom: 3, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 };
 			const manager = new StatsManager(customStats);
 			const stats = manager.getStats();
 
@@ -262,7 +262,7 @@ describe('StatsManager', () => {
 	describe('Set Stats (Bulk)', () => {
 		it('should set all stats from Stats object', () => {
 			const manager = new StatsManager();
-			const newStats = { strength: 25, dexterity: 30, intelligence: 35, wisdom: 40 };
+			const newStats = { strength: 25, dexterity: 30, intelligence: 35, wisdom: 40, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 };
 
 			manager.setStats(newStats);
 			const stats = manager.getStats();
@@ -272,7 +272,7 @@ describe('StatsManager', () => {
 
 		it('should replace all previous stat values', () => {
 			const manager = new StatsManagerBuilder().withAllStats(50).build();
-			const newStats = { strength: 1, dexterity: 2, intelligence: 3, wisdom: 4 };
+			const newStats = { strength: 1, dexterity: 2, intelligence: 3, wisdom: 4, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 };
 
 			manager.setStats(newStats);
 			const stats = manager.getStats();
@@ -282,7 +282,7 @@ describe('StatsManager', () => {
 
 		it('should create independent copy of stats', () => {
 			const manager = new StatsManager();
-			const externalStats = { strength: 10, dexterity: 10, intelligence: 10, wisdom: 10 };
+			const externalStats = { strength: 10, dexterity: 10, intelligence: 10, wisdom: 10, strengthExp: 0, dexterityExp: 0, intelligenceExp: 0, wisdomExp: 0 };
 
 			manager.setStats(externalStats);
 			externalStats.strength = 999; // Modify external object

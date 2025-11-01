@@ -1,4 +1,9 @@
-import { calculateStatLevelCost } from '../utils/calculations';
+import {
+	calculateStatLevelCost,
+	calculateStatExpRequired,
+	calculateStatTrainingCost,
+	calculateMaxStatLevel
+} from '../utils/calculations';
 import type { Stats } from '../game';
 
 /**
@@ -12,10 +17,23 @@ export interface StatIncreaseResult {
 }
 
 /**
- * Dependencies required by StatsManager (currently none, but placeholder for future)
+ * Result of attempting to add stat EXP and potentially level up
+ */
+export interface StatExpGainResult {
+	success: boolean;
+	statExpAdded: number;
+	leveledUp: boolean;
+	newLevel: number;
+	newStatExp: number;
+	error?: string;
+}
+
+/**
+ * Dependencies required by StatsManager
  */
 export interface StatsManagerDependencies {
-	// Placeholder for future dependencies (e.g., character level for stat caps)
+	/** Get current character level for stat cap enforcement */
+	getCharacterLevel: () => number;
 }
 
 /**
@@ -24,14 +42,27 @@ export interface StatsManagerDependencies {
  */
 export class StatsManager {
 	private stats: Stats;
+	private deps?: StatsManagerDependencies;
 
 	/**
 	 * Creates a new StatsManager with default or provided stats
-	 * @param initialStats - Starting stat values (defaults to all 1s)
-	 * @param deps - Optional dependencies for future features
+	 * @param initialStats - Starting stat values (defaults to all 1s with 0 EXP)
+	 * @param deps - Dependencies for character level checks
 	 */
 	constructor(initialStats?: Stats, deps?: StatsManagerDependencies) {
-		this.stats = initialStats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
+		this.stats = initialStats || {
+			// Stat levels (start at 1)
+			strength: 1,
+			dexterity: 1,
+			intelligence: 1,
+			wisdom: 1,
+			// Stat EXP (start at 0)
+			strengthExp: 0,
+			dexterityExp: 0,
+			intelligenceExp: 0,
+			wisdomExp: 0
+		};
+		this.deps = deps;
 	}
 
 	/**
@@ -105,15 +136,113 @@ export class StatsManager {
 		this.stats = { ...stats };
 	}
 
-	// Future: Stat caps based on character level
-	// getStatCap(stat: keyof Stats, characterLevel: number): number {
-	//   return characterLevel * 10;
-	// }
+	/**
+	 * Get the current EXP for a specific stat
+	 * @param stat - The stat to query (only the base stat names)
+	 */
+	getStatExp(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+		const expKey = `${stat}Exp` as keyof Stats;
+		return this.stats[expKey] as number;
+	}
 
-	// Future: Equipment bonuses
-	// getEffectiveStatValue(stat: keyof Stats, equipment?: Equipment): number {
-	//   let value = this.stats[stat];
-	//   // Add equipment bonuses when implemented
-	//   return value;
-	// }
+	/**
+	 * Get the EXP required for the next level of a specific stat
+	 * @param stat - The stat to query
+	 */
+	getStatExpRequired(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+		const currentLevel = this.getStatLevel(stat);
+		return calculateStatExpRequired(currentLevel);
+	}
+
+	/**
+	 * Get the character EXP cost to start training a specific stat
+	 * @param stat - The stat to query
+	 */
+	getStatTrainingCost(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+		const currentLevel = this.getStatLevel(stat);
+		return calculateStatTrainingCost(currentLevel);
+	}
+
+	/**
+	 * Get the maximum allowed level for a stat based on character level
+	 * @param stat - The stat to query
+	 */
+	getMaxStatLevel(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+		if (!this.deps?.getCharacterLevel) {
+			return 100; // Fallback for when no character level dependency
+		}
+		return calculateMaxStatLevel(this.deps.getCharacterLevel());
+	}
+
+	/**
+	 * Check if a stat can be leveled up (has enough EXP and hasn't hit cap)
+	 * @param stat - The stat to check
+	 */
+	canStatLevelUp(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): boolean {
+		const currentLevel = this.getStatLevel(stat);
+		const currentExp = this.getStatExp(stat);
+		const requiredExp = this.getStatExpRequired(stat);
+		const maxLevel = this.getMaxStatLevel(stat);
+
+		return currentExp >= requiredExp && currentLevel < maxLevel;
+	}
+
+	/**
+	 * Add EXP to a stat and automatically level up if enough EXP is gained
+	 * @param stat - The stat to add EXP to
+	 * @param expAmount - Amount of stat EXP to add (default: 10 from design doc)
+	 */
+	addStatExp(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>, expAmount: number = 10): StatExpGainResult {
+		const expKey = `${stat}Exp` as keyof Stats;
+		const currentLevel = this.getStatLevel(stat);
+		const currentExp = this.getStatExp(stat);
+		const maxLevel = this.getMaxStatLevel(stat);
+
+		// Check if stat is already at cap
+		if (currentLevel >= maxLevel) {
+			return {
+				success: false,
+				statExpAdded: 0,
+				leveledUp: false,
+				newLevel: currentLevel,
+				newStatExp: currentExp,
+				error: 'Stat is at maximum level for current character level'
+			};
+		}
+
+		// Add EXP
+		const newExp = currentExp + expAmount;
+		(this.stats[expKey] as number) = newExp;
+
+		// Check for level up
+		const requiredExp = this.getStatExpRequired(stat);
+		let leveledUp = false;
+		let newLevel = currentLevel;
+
+		if (newExp >= requiredExp && currentLevel < maxLevel) {
+			// Level up!
+			newLevel = currentLevel + 1;
+			this.stats[stat] = newLevel;
+
+			// Subtract the required EXP for the level
+			(this.stats[expKey] as number) = newExp - requiredExp;
+			leveledUp = true;
+		}
+
+		return {
+			success: true,
+			statExpAdded: expAmount,
+			leveledUp,
+			newLevel,
+			newStatExp: this.stats[expKey] as number,
+		};
+	}
+
+	/**
+	 * Update dependencies (used when character level changes)
+	 * @param deps - New dependencies
+	 */
+	updateDependencies(deps: StatsManagerDependencies): void {
+		this.deps = deps;
+	}
 }

@@ -207,3 +207,60 @@ export function calculateOsmosisSpeedMultiplier(upgrades: { [key: string]: Upgra
 
 	return multiplier;
 }
+
+/**
+ * Calculates the stat EXP required to reach the next level (v0.1.5+ stat system)
+ * Uses the formula: 100 × (1.5 ^ (statLevel - 1)), rounded to nearest 5
+ *
+ * @param currentStatLevel - The current level of the stat
+ * @returns Stat EXP required to reach the next level
+ *
+ * @example
+ * calculateStatExpRequired(1) // 100 (Level 1 → 2)
+ * calculateStatExpRequired(2) // 150 (Level 2 → 3)
+ * calculateStatExpRequired(3) // 225 (Level 3 → 4)
+ * calculateStatExpRequired(10) // 3,885 (Level 10 → 11)
+ */
+export function calculateStatExpRequired(currentStatLevel: number): number {
+	const rawCost = 100 * Math.pow(1.5, currentStatLevel - 1);
+	// Round to nearest 5 as specified in design document
+	return Math.round(rawCost / 5) * 5;
+}
+
+/**
+ * Calculates the character EXP cost to start stat training (v0.1.5+ training economy)
+ * Uses the formula: 100 × (statLevel ^ 1.3)
+ *
+ * @param currentStatLevel - The current level of the stat being trained
+ * @returns Character EXP cost to start training this stat
+ *
+ * @example
+ * calculateStatTrainingCost(1) // 100 (Train Strength 1→2)
+ * calculateStatTrainingCost(5) // 900 (Train Strength 5→6)
+ * calculateStatTrainingCost(10) // 2,800 (Train Strength 10→11)
+ * calculateStatTrainingCost(20) // 13,000 (Train Strength 20→21)
+ */
+export function calculateStatTrainingCost(currentStatLevel: number): number {
+	return Math.floor(100 * Math.pow(currentStatLevel, 1.3));
+}
+
+/**
+ * Calculates the maximum stat level allowed based on character level (5:1 ratio)
+ * Each character level unlocks 5 potential stat levels
+ *
+ * @param characterLevel - The player's current character level
+ * @returns Maximum stat level allowed
+ *
+ * @example
+ * calculateMaxStatLevel(3) // 15 (Character Level 3 = 15 stat levels max)
+ * calculateMaxStatLevel(4) // 20 (Character Level 4 = 20 stat levels max)
+ * calculateMaxStatLevel(20) // 100 (Character Level 20 = 100 stat levels max)
+ */
+export function calculateMaxStatLevel(characterLevel: number): number {
+	// Character levels 1-2 have no stat training available
+	if (characterLevel < 3) {
+		return 0;
+	}
+	// 5:1 ratio: Each character level unlocks 5 potential stat levels
+	return characterLevel * 5;
+}
