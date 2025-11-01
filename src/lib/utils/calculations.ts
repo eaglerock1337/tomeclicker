@@ -293,7 +293,9 @@ export function calculateMaxStatLevel(characterLevel: number): number {
  *   'ruminate-efficiency': { effectType: 'ruminateEfficiency', effectValue: 0.02, currentLevel: 10 }
  * })
  */
-export function calculateRuminateEfficiencyMultiplier(upgrades: { [key: string]: Upgrade }): number {
+export function calculateRuminateEfficiencyMultiplier(upgrades: {
+	[key: string]: Upgrade;
+}): number {
 	let multiplier = 1.0;
 
 	for (const upgrade of Object.values(upgrades)) {

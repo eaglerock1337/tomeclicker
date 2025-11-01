@@ -389,7 +389,11 @@ describe('StatsManager', () => {
 				strength: 1,
 				dexterity: 1,
 				intelligence: 1,
-				wisdom: 1
+				wisdom: 1,
+				strengthExp: 0,
+				dexterityExp: 0,
+				intelligenceExp: 0,
+				wisdomExp: 0
 			});
 		});
 
@@ -482,7 +486,11 @@ describe('StatsManager', () => {
 				strength: 10,
 				dexterity: 20,
 				intelligence: 30,
-				wisdom: 40
+				wisdom: 40,
+				strengthExp: 0,
+				dexterityExp: 0,
+				intelligenceExp: 0,
+				wisdomExp: 0
 			});
 		});
 	});

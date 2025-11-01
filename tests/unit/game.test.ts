@@ -197,19 +197,19 @@ describe('Game', () => {
 		describe('getUpgradeCost', () => {
 			it('should return base cost for level 0 upgrade', () => {
 				const game = createTestGame();
-				const upgrade = game.upgrades['focused-practice'];
-				const cost = game.getUpgradeCost('focused-practice');
+				const upgrade = game.upgrades['click-strength'];
+				const cost = game.getUpgradeCost('click-strength');
 
 				expect(cost).toBe(upgrade.baseCost);
 			});
 
 			it('should scale cost for purchased upgrades', () => {
-				const game = new GameBuilder().withUpgrade('focused-practice', 1).build();
+				const game = new GameBuilder().withUpgrade('click-strength', 1).build();
 
-				const upgrade = game.upgrades['focused-practice'];
+				const upgrade = game.upgrades['click-strength'];
 				const expectedCost = getExpectedUpgradeCost(upgrade.baseCost, upgrade.costMultiplier, 1);
 
-				expect(game.getUpgradeCost('focused-practice')).toBe(expectedCost);
+				expect(game.getUpgradeCost('click-strength')).toBe(expectedCost);
 			});
 
 			it('should use exponential scaling for Discipline', () => {
@@ -228,13 +228,13 @@ describe('Game', () => {
 			it('should return true when exp >= cost', () => {
 				const game = new GameBuilder().withExp(100).build();
 
-				expect(game.canAffordUpgrade('focused-practice')).toBe(true);
+				expect(game.canAffordUpgrade('click-strength')).toBe(true);
 			});
 
 			it('should return false when exp < cost', () => {
 				const game = new GameBuilder().withExp(49).build();
 
-				expect(game.canAffordUpgrade('focused-practice')).toBe(false);
+				expect(game.canAffordUpgrade('click-strength')).toBe(false);
 			});
 		});
 
@@ -242,22 +242,22 @@ describe('Game', () => {
 			it('should return true when affordable and not maxed', () => {
 				const game = new GameBuilder().withExp(100).build();
 
-				expect(game.canPurchaseUpgrade('focused-practice')).toBe(true);
+				expect(game.canPurchaseUpgrade('click-strength')).toBe(true);
 			});
 
 			it('should return false when maxed', () => {
 				const game = new GameBuilder()
 					.withRichState()
-					.withUpgrade('focused-practice', 100) // Max level
+					.withUpgrade('click-strength', 100) // Max level
 					.build();
 
-				expect(game.canPurchaseUpgrade('focused-practice')).toBe(false);
+				expect(game.canPurchaseUpgrade('click-strength')).toBe(false);
 			});
 
 			it('should return false when not affordable', () => {
 				const game = new GameBuilder().withExp(10).build();
 
-				expect(game.canPurchaseUpgrade('focused-practice')).toBe(false);
+				expect(game.canPurchaseUpgrade('click-strength')).toBe(false);
 			});
 		});
 
@@ -265,15 +265,15 @@ describe('Game', () => {
 			it('should increase upgrade level', () => {
 				const game = createRichGame();
 
-				game.purchaseUpgrade('focused-practice');
-				expect(game.upgrades['focused-practice'].currentLevel).toBe(1);
+				game.purchaseUpgrade('click-strength');
+				expect(game.upgrades['click-strength'].currentLevel).toBe(1);
 			});
 
 			it('should deduct cost from exp', () => {
 				const game = new GameBuilder().withExp(100).build();
 
-				const cost = game.getUpgradeCost('focused-practice');
-				game.purchaseUpgrade('focused-practice');
+				const cost = game.getUpgradeCost('click-strength');
+				game.purchaseUpgrade('click-strength');
 
 				expect(game.exp).toBe(100 - cost);
 			});
@@ -281,7 +281,7 @@ describe('Game', () => {
 			it('should not deduct from lifetime exp', () => {
 				const game = new GameBuilder().withExp(100).build();
 
-				game.purchaseUpgrade('focused-practice');
+				game.purchaseUpgrade('click-strength');
 				expect(game.lifetimeExp).toBe(100);
 			});
 
@@ -289,7 +289,7 @@ describe('Game', () => {
 				const game = createRichGame();
 				const oldMultiplier = game.clickMultiplier;
 
-				game.purchaseUpgrade('focused-practice');
+				game.purchaseUpgrade('click-strength');
 
 				// Focused practice adds +1.0 to multiplier
 				expect(game.clickMultiplier).toBe(oldMultiplier + 1.0);
@@ -298,16 +298,16 @@ describe('Game', () => {
 			it('should fail if insufficient exp', () => {
 				const game = new GameBuilder().withExp(10).build();
 
-				const result = game.purchaseUpgrade('focused-practice');
+				const result = game.purchaseUpgrade('click-strength');
 
 				expect(result).toBe(false);
-				expect(game.upgrades['focused-practice'].currentLevel).toBe(0);
+				expect(game.upgrades['click-strength'].currentLevel).toBe(0);
 			});
 
 			it('should fail if upgrade is maxed', () => {
-				const game = new GameBuilder().withRichState().withUpgrade('focused-practice', 100).build();
+				const game = new GameBuilder().withRichState().withUpgrade('click-strength', 100).build();
 
-				const result = game.purchaseUpgrade('focused-practice');
+				const result = game.purchaseUpgrade('click-strength');
 
 				expect(result).toBe(false);
 			});
@@ -315,7 +315,7 @@ describe('Game', () => {
 			it('should return true on success', () => {
 				const game = createRichGame();
 
-				const result = game.purchaseUpgrade('focused-practice');
+				const result = game.purchaseUpgrade('click-strength');
 				expect(result).toBe(true);
 			});
 		});
@@ -328,7 +328,7 @@ describe('Game', () => {
 		});
 
 		it('should add additive upgrades', () => {
-			const game = new GameBuilder().withUpgrade('focused-practice', 3).build();
+			const game = new GameBuilder().withUpgrade('click-strength', 3).build();
 
 			// Focused Practice: +1.0 per level, additive
 			expect(game.clickMultiplier).toBe(1.0 + 3.0);
@@ -351,7 +351,7 @@ describe('Game', () => {
 		it('should combine all multipliers correctly', () => {
 			const game = new GameBuilder()
 				.withLevel(2) // 2x from level
-				.withUpgrade('focused-practice', 2) // +2.0 additive
+				.withUpgrade('click-strength', 2) // +2.0 additive
 				.withUpgrade('discipline', 1) // 5x multiplicative
 				.build();
 
@@ -372,18 +372,13 @@ describe('Game', () => {
 		});
 
 		it('should increase crit chance with upgrade', () => {
-			const game = new GameBuilder().withUpgrade('critical-insight', 10).build();
+			const game = new GameBuilder().withUpgrade('critical-clicks', 10).build();
 
-			// Base 0% + (10 * 0.5%) = 5%
-			expect(game.critChance).toBeCloseTo(0.05, 2);
+			// v0.1.5: Base 0% + (10 * 2%) = 20%
+			expect(game.critChance).toBeCloseTo(0.2, 2);
 		});
 
-		it('should increase crit damage with upgrade', () => {
-			const game = new GameBuilder().withUpgrade('devastating-critique', 10).build();
-
-			// Base 50% + (10 * 5.0%) = 100%
-			expect(game.critDamage).toBeCloseTo(1.0, 2);
-		});
+		// v0.1.5: Crit damage is no longer upgradeable (fixed 2x multiplier)
 
 		describe('getClickValue', () => {
 			it('should return base click multiplier', () => {
@@ -394,7 +389,7 @@ describe('Game', () => {
 			});
 
 			it('should scale with upgrades', () => {
-				const game = new GameBuilder().withUpgrade('focused-practice', 5).build();
+				const game = new GameBuilder().withUpgrade('click-strength', 5).build();
 
 				const value = game.getClickValue();
 				expect(value).toBe(game.clickMultiplier);
@@ -408,7 +403,7 @@ describe('Game', () => {
 				const game = new GameBuilder()
 					.withExp(500)
 					.withLevel(2)
-					.withUpgrade('focused-practice', 3)
+					.withUpgrade('click-strength', 3)
 					.build();
 
 				const saveData = game.exportSave();
@@ -439,7 +434,7 @@ describe('Game', () => {
 				const originalGame = new GameBuilder()
 					.withExp(1000)
 					.withLevel(2)
-					.withUpgrade('focused-practice', 5)
+					.withUpgrade('click-strength', 5)
 					.build();
 
 				const saveData = originalGame.exportSave();
@@ -449,13 +444,13 @@ describe('Game', () => {
 
 				expect(newGame.exp).toBe(1000);
 				expect(newGame.level).toBe(2);
-				expect(newGame.upgrades['focused-practice'].currentLevel).toBe(5);
+				expect(newGame.upgrades['click-strength'].currentLevel).toBe(5);
 			});
 
 			it('should recalculate multipliers after load', () => {
 				const originalGame = new GameBuilder()
 					.withLevel(3)
-					.withUpgrade('focused-practice', 2)
+					.withUpgrade('click-strength', 2)
 					.build();
 
 				const saveData = originalGame.exportSave();
@@ -478,8 +473,8 @@ describe('Game', () => {
 					level: 1,
 					clickMultiplier: 1,
 					upgrades: {
-						'focused-practice': {
-							id: 'focused-practice',
+						'click-strength': {
+							id: 'click-strength',
 							currentLevel: 2
 						}
 					}
@@ -488,9 +483,9 @@ describe('Game', () => {
 				game.importSave(JSON.stringify(oldSave));
 
 				// Should have all current upgrades
-				expect(game.upgrades['focused-practice']).toBeDefined();
+				expect(game.upgrades['click-strength']).toBeDefined();
 				expect(game.upgrades['discipline']).toBeDefined();
-				expect(game.upgrades['critical-insight']).toBeDefined();
+				expect(game.upgrades['critical-clicks']).toBeDefined();
 			});
 
 			it('should return success on valid save', () => {
@@ -518,7 +513,7 @@ describe('Game', () => {
 					.withExp(12345)
 					.withLifetimeExp(50000)
 					.withLevel(5)
-					.withUpgrade('focused-practice', 10)
+					.withUpgrade('click-strength', 10)
 					.withUpgrade('discipline', 2)
 					.withStats({ strength: 5, dexterity: 3 })
 					.build();
@@ -530,8 +525,8 @@ describe('Game', () => {
 				expect(loaded.exp).toBe(original.exp);
 				expect(loaded.lifetimeExp).toBe(original.lifetimeExp);
 				expect(loaded.level).toBe(original.level);
-				expect(loaded.upgrades['focused-practice'].currentLevel).toBe(
-					original.upgrades['focused-practice'].currentLevel
+				expect(loaded.upgrades['click-strength'].currentLevel).toBe(
+					original.upgrades['click-strength'].currentLevel
 				);
 				expect(loaded.stats.strength).toBe(original.stats.strength);
 				expect(loaded.stats.dexterity).toBe(original.stats.dexterity);
