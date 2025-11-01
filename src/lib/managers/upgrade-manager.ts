@@ -271,7 +271,7 @@ export class UpgradeManager {
 	 * Gets all upgrades in a specific category
 	 */
 	getUpgradesByCategory(category: 'click' | 'ruminate' | 'training' | 'special'): Upgrade[] {
-		return Object.values(this.upgrades).filter(upgrade => upgrade.category === category);
+		return Object.values(this.upgrades).filter((upgrade) => upgrade.category === category);
 	}
 
 	/**

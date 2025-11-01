@@ -48,6 +48,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@anthropic-ai/claude-code": "^2.0.31",
 		"lucide-svelte": "^0.544.0"
 	}
 }

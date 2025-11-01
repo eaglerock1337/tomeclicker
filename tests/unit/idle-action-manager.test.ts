@@ -5,6 +5,7 @@ import {
 	type IdleAction
 } from '../../src/lib/managers/idle-action-manager';
 import type { Stats } from '../../src/lib/game';
+import { ParametricIdleActionBuilder } from '../helpers/parametric-idle-action-builder';
 
 /**
  * Test helper builder for creating IdleActionManager with mock dependencies
@@ -337,81 +338,99 @@ describe('IdleActionManager', () => {
 	});
 
 	describe('Training Completion', () => {
-		it('should award EXP and level up stat when affordable', () => {
+		it('should level up stat after accumulating training EXP', () => {
 			vi.useFakeTimers();
 
-			const manager = new IdleActionManagerBuilder()
-				.withStatCost(50) // Low cost
-				.withCurrentExp(100) // Sufficient EXP
+			const manager = new ParametricIdleActionBuilder()
+				.withTrainingRewardOf(10) // 10 stat EXP per training
+				.withStatLevelCostOf(1, 50) // Need 50 EXP to level 1→2
+				.withCurrentExp(500) // Sufficient character EXP for training costs
 				.build();
 
-			manager.startIdleAction('training', 'train-strength');
+			// Complete 5 trainings = 50 stat EXP = level up
+			for (let i = 0; i < 5; i++) {
+				manager.startIdleAction('training', 'train-strength');
+				const action = manager.getTrainingAction('train-strength');
+				vi.advanceTimersByTime(action!.duration + 100);
+				const results = manager.updateIdleActions();
+
+				// v0.1.5+: Training no longer awards character EXP
+				expect(results[0].expGained).toBe(0);
+				expect(results[0].shouldContinue).toBe(true);
+
+				// On final training, should level up
+				if (i === 4) {
+					expect(results[0].statGained).toBeDefined();
+					expect(results[0].statGained?.stat).toBe('strength');
+					expect(results[0].statGained?.amount).toBe(1);
+				}
+			}
+
+			// Training should still be active (Progress Knight style - never stops)
 			const action = manager.getTrainingAction('train-strength');
-
-			vi.advanceTimersByTime(action!.duration + 100);
-
-			const results = manager.updateIdleActions();
-
-			expect(results[0].expGained).toBe(10); // Training reward
-			expect(results[0].statGained).toEqual({ stat: 'strength', amount: 1 });
-			expect(results[0].expCost).toBe(50);
-			expect(results[0].shouldContinue).toBe(true);
-
-			// Should restart training
 			expect(action?.isActive).toBe(true);
-			expect(action?.progress).toBe(0);
 
 			vi.useRealTimers();
 		});
 
-		it('should stop training when stat level is unaffordable', () => {
+		it('should continue training indefinitely without level-up', () => {
 			vi.useFakeTimers();
 
-			const manager = new IdleActionManagerBuilder()
-				.withStatCost(200) // High cost
-				.withCurrentExp(50) // Insufficient EXP
+			const manager = new ParametricIdleActionBuilder()
+				.withTrainingRewardOf(10) // 10 stat EXP per training
+				.withStatLevelCostOf(1, 100) // Need 100 EXP to level (won't reach it)
+				.withCurrentExp(500)
 				.build();
 
-			manager.startIdleAction('training', 'train-strength');
-			const action = manager.getTrainingAction('train-strength');
+			// Complete 5 trainings (50 stat EXP - not enough to level up)
+			for (let i = 0; i < 5; i++) {
+				manager.startIdleAction('training', 'train-strength');
+				const action = manager.getTrainingAction('train-strength');
+				vi.advanceTimersByTime(action!.duration + 100);
+				const results = manager.updateIdleActions();
 
-			vi.advanceTimersByTime(action!.duration + 100);
+				// v0.1.5+: Training continues indefinitely (Progress Knight style)
+				expect(results[0].expGained).toBe(0);
+				expect(results[0].shouldContinue).toBe(true);
+				expect(results[0].statGained).toBeUndefined(); // No level-up yet
 
-			const results = manager.updateIdleActions();
-
-			expect(results[0].expGained).toBe(10); // Still get training reward
-			expect(results[0].statGained).toBeUndefined(); // But no stat gain
-			expect(results[0].shouldContinue).toBe(false);
-
-			// Should stop training
-			expect(action?.isActive).toBe(false);
-			expect(action?.progress).toBe(0);
+				// Training should continue
+				expect(action?.isActive).toBe(true);
+				expect(action?.progress).toBe(0);
+			}
 
 			vi.useRealTimers();
 		});
 
-		it('should apply crit chance to training reward', () => {
+		it('should level up faster with crits (2x stat EXP)', () => {
 			vi.useFakeTimers();
 
 			// Mock Math.random to always crit
 			const originalRandom = Math.random;
 			Math.random = () => 0.01; // Always less than crit chance
 
-			const manager = new IdleActionManagerBuilder()
-				.withCritChance(0.5) // 50% crit chance
-				.withStatCost(50)
-				.withCurrentExp(100)
+			const manager = new ParametricIdleActionBuilder()
+				.withTrainingRewardOf(10) // 10 base stat EXP
+				.withCritMultiplierOf(2) // 2x on crit = 20 stat EXP
+				.withStatLevelCostOf(1, 60) // Need 60 EXP to level
+				.withCritChance(1.0) // 100% crit chance
+				.withCurrentExp(500)
 				.build();
 
-			manager.startIdleAction('training', 'train-strength');
-			const action = manager.getTrainingAction('train-strength');
+			// With crits (20 EXP each), need only 3 trainings (60 EXP)
+			// Without crits (10 EXP each), would need 6 trainings
+			for (let i = 0; i < 3; i++) {
+				manager.startIdleAction('training', 'train-strength');
+				const action = manager.getTrainingAction('train-strength');
+				vi.advanceTimersByTime(action!.duration + 100);
+				const results = manager.updateIdleActions();
 
-			vi.advanceTimersByTime(action!.duration + 100);
-
-			const results = manager.updateIdleActions();
-
-			// 10 * 1.5 = 15 (crit multiplier is 1.5x)
-			expect(results[0].expGained).toBe(15);
+				// On final training, should level up
+				if (i === 2) {
+					expect(results[0].statGained).toBeDefined();
+					expect(results[0].statGained?.stat).toBe('strength');
+				}
+			}
 
 			Math.random = originalRandom;
 			vi.useRealTimers();
@@ -420,28 +439,32 @@ describe('IdleActionManager', () => {
 		it('should train different stats correctly', () => {
 			vi.useFakeTimers();
 
-			const manager = new IdleActionManagerBuilder().withStatCost(50).withCurrentExp(100).build();
+			const manager = new ParametricIdleActionBuilder()
+				.withTrainingRewardOf(10)
+				.withStatLevelCostOf(1, 50) // Each stat needs 50 EXP to level
+				.withCurrentExp(500)
+				.build();
 
-			// Test dexterity training
-			manager.startIdleAction('training', 'train-dexterity');
-			let action = manager.getTrainingAction('train-dexterity');
-			vi.advanceTimersByTime(action!.duration + 100);
-			let results = manager.updateIdleActions();
-			expect(results[0].statGained?.stat).toBe('dexterity');
+			// Train each stat 5 times (50 stat EXP each = level up)
+			const stats = [
+				{ action: 'train-dexterity', stat: 'dexterity' },
+				{ action: 'train-intelligence', stat: 'intelligence' },
+				{ action: 'train-wisdom', stat: 'wisdom' }
+			];
 
-			// Test intelligence training
-			manager.startIdleAction('training', 'train-intelligence');
-			action = manager.getTrainingAction('train-intelligence');
-			vi.advanceTimersByTime(action!.duration + 100);
-			results = manager.updateIdleActions();
-			expect(results[0].statGained?.stat).toBe('intelligence');
+			for (const { action: actionName, stat } of stats) {
+				for (let i = 0; i < 5; i++) {
+					manager.startIdleAction('training', actionName);
+					const action = manager.getTrainingAction(actionName);
+					vi.advanceTimersByTime(action!.duration + 100);
+					const results = manager.updateIdleActions();
 
-			// Test wisdom training
-			manager.startIdleAction('training', 'train-wisdom');
-			action = manager.getTrainingAction('train-wisdom');
-			vi.advanceTimersByTime(action!.duration + 100);
-			results = manager.updateIdleActions();
-			expect(results[0].statGained?.stat).toBe('wisdom');
+					// On final training, should level up the correct stat
+					if (i === 4) {
+						expect(results[0].statGained?.stat).toBe(stat);
+					}
+				}
+			}
 
 			vi.useRealTimers();
 		});
