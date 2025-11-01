@@ -17,6 +17,8 @@ class IdleActionManagerBuilder {
 		getGlobalIdleSpeedMultiplier: () => 1.0,
 		getOsmosisSpeedMultiplier: () => 1.0,
 		getStatLevelCost: () => 100,
+		getStatTrainingCost: () => 100,
+		addStatExp: () => ({ success: true, leveledUp: false, newLevel: 1 }),
 		getCritChance: () => 0.0,
 		getCurrentExp: () => 1000
 	};

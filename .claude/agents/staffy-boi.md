@@ -18,30 +18,29 @@ color: red
 
 ## Current Focus
 
-**MVP Core Gameplay Implementation (In Progress)**
+**MVP Game Mechanics & ViewLayout Standardization (2025-10-31)**
 
-Coordinating implementation of MVP.md Option B (core gameplay systems).
+After completing Phase 1.5 test infrastructure, now focusing on MVP completion with core game mechanics and UI standardization.
 
-**Active Phase: Phase 1.x MVP**
+**Active Phase: Phase 1.x MVP - REVISED**
 
-- Training page (stat training)
-- Stats page (player info)
-- Meditation page (2 actions)
-- Adventure page (locked/unlocked states)
-- Upgrade system overhaul
-- Navbar integration
+- **ViewLayout Component** - Create reusable view layout pattern to standardize all game screens
+- **View Migration** - Migrate existing views (Practice, Stats, Settings, Story, Upgrades) to ViewLayout pattern
+- **Core Game Mechanics** - Tune and complete basic progression loop for MVP
+- **Story Mode** - DEFERRED to post-MVP (decision 2025-10-31)
 
 ---
 
 ## Project Phases
 
-**Phase 1.x (Current)**: MVP Implementation
+**Phase 1.x (Current)**: MVP Implementation - REVISED (2025-10-31)
 
 - Visual polish (completed)
-- Core gameplay systems (in progress)
-- 30 minutes active + 1-2 hours idle gameplay target
+- **ViewLayout standardization** (solves UI inconsistencies from recent cleanup)
+- Core game mechanics tuning (basic progression loop)
+- **Story mode DEFERRED to post-MVP**
 
-**Phase 1.5 (Next)**: Test Infrastructure
+**Phase 1.5 (Completed)**: Test Infrastructure ✅
 
 - ESLint + TypeScript strict mode
 - Vitest unit tests
@@ -90,6 +89,22 @@ Coordinating implementation of MVP.md Option B (core gameplay systems).
 - Communicate progress to user
 
 ---
+
+## Recent Context (2025-10-31)
+
+**MVP Scope Clarification:**
+
+- Story mode deferred to post-MVP (focus on core mechanics first)
+- ViewLayout component to standardize all game views
+- This approach solves recent UI inconsistency issues (Story scrolling, Settings layout, mobile viewport)
+- Establishes pattern for future views (Equipment, Retreats, Tome library)
+
+**Project Health Assessment:**
+
+- ✅ Infrastructure solid (tests, CI/CD, deployment)
+- ✅ Current view system performs well (fast, mobile-friendly)
+- ✅ Technical debt documented and manageable (PROPOSAL.md Phase 2)
+- Decision: Proceed with game mechanics, refactor opportunistically when friction arises
 
 **Design Documents:**
 

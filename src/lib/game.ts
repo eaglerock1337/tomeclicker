@@ -5,7 +5,10 @@ import {
 	calculateTrainingCostMultiplier,
 	calculateOsmosisExpBonus,
 	calculateGlobalIdleSpeedMultiplier,
-	calculateOsmosisSpeedMultiplier
+	calculateOsmosisSpeedMultiplier,
+	calculateStatExpRequired,
+	calculateStatTrainingCost,
+	calculateMaxStatLevel
 } from './utils/calculations';
 import {
 	IdleActionManager,
@@ -32,13 +35,20 @@ import {
 } from './constants/game';
 
 /**
- * Represents RPG-style player stats
+ * Represents RPG-style player stats with EXP-based leveling
  */
 export interface Stats {
+	// Stat levels (display values)
 	strength: number;
 	dexterity: number;
 	intelligence: number;
 	wisdom: number;
+
+	// Stat EXP tracking (v0.1.5+ EXP-based progression)
+	strengthExp: number;
+	dexterityExp: number;
+	intelligenceExp: number;
+	wisdomExp: number;
 }
 
 /**
@@ -95,8 +105,10 @@ export class Game {
 		this.adventureModeUnlocked = false;
 		this.meditationUnlocked = false;
 
-		// Initialize stats manager
-		this.statsManager = new StatsManager();
+		// Initialize stats manager with character level dependency
+		this.statsManager = new StatsManager(undefined, {
+			getCharacterLevel: () => this.level
+		});
 
 		// Initialize upgrade manager
 		this.upgradeManager = new UpgradeManager({
@@ -111,6 +123,8 @@ export class Game {
 			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
 			getOsmosisSpeedMultiplier: () => this.getOsmosisSpeedMultiplier(),
 			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
+			getStatTrainingCost: (stat) => this.statsManager.getStatTrainingCost(stat),
+			addStatExp: (stat, amount) => this.statsManager.addStatExp(stat, amount),
 			getCritChance: () => this.critChance,
 			getCurrentExp: () => this.exp
 		});
@@ -272,12 +286,66 @@ export class Game {
 	}
 
 	/**
-	 * Gets the EXP cost to level up a specific stat
+	 * Gets the EXP cost to level up a specific stat (legacy method)
 	 * @param stat - The stat to check
 	 * @returns EXP cost for next level
 	 */
 	getStatLevelCost(stat: keyof Stats): number {
 		return this.statsManager.getStatLevelCost(stat);
+	}
+
+	/**
+	 * Gets the current stat EXP for a specific stat (v0.1.5+)
+	 * @param stat - The stat to check
+	 * @returns Current stat EXP
+	 */
+	getStatExp(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+		return this.statsManager.getStatExp(stat);
+	}
+
+	/**
+	 * Gets the stat EXP required for the next level (v0.1.5+)
+	 * @param stat - The stat to check
+	 * @returns Stat EXP required for next level
+	 */
+	getStatExpRequired(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+		return this.statsManager.getStatExpRequired(stat);
+	}
+
+	/**
+	 * Gets the character EXP cost to start training a specific stat (v0.1.5+)
+	 * @param stat - The stat to check
+	 * @returns Character EXP cost to start training
+	 */
+	getStatTrainingCost(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+		return this.statsManager.getStatTrainingCost(stat);
+	}
+
+	/**
+	 * Gets the maximum allowed level for a stat based on character level (v0.1.5+)
+	 * @param stat - The stat to check
+	 * @returns Maximum stat level allowed
+	 */
+	getMaxStatLevel(stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>): number {
+		return this.statsManager.getMaxStatLevel(stat);
+	}
+
+	/**
+	 * Checks if a training action can be started (has enough character EXP)
+	 * @param actionId - ID of the training action
+	 * @returns True if the action can be started
+	 */
+	canStartTraining(actionId: string): boolean {
+		return this.idleActionManager.canStartTraining(actionId);
+	}
+
+	/**
+	 * Gets the character EXP cost to start a training action
+	 * @param actionId - ID of the training action
+	 * @returns Character EXP cost
+	 */
+	getTrainingCost(actionId: string): number {
+		return this.idleActionManager.getTrainingCost(actionId);
 	}
 
 	/**
@@ -344,6 +412,27 @@ export class Game {
 	 * @returns True if action started successfully
 	 */
 	startIdleAction(actionMap: 'training' | 'meditation', actionId: string): boolean {
+		// For stat training, check and deduct character EXP cost upfront (v0.1.5+)
+		if (actionMap === 'training') {
+			const trainingCost = this.idleActionManager.getTrainingCost(actionId);
+			if (trainingCost > 0) {
+				// Check if we can afford the training
+				if (this.exp < trainingCost) {
+					return false; // Cannot afford training
+				}
+
+				// Attempt to start the action
+				const started = this.idleActionManager.startIdleAction(actionMap, actionId);
+				if (started) {
+					// Deduct the character EXP cost
+					this.exp -= trainingCost;
+					return true;
+				}
+				return false;
+			}
+		}
+
+		// For meditation actions or free training (osmosis), no cost
 		return this.idleActionManager.startIdleAction(actionMap, actionId);
 	}
 
@@ -356,19 +445,13 @@ export class Game {
 
 		// Apply completion results
 		for (const result of results) {
-			// Add EXP gained
+			// Add EXP gained (mainly from osmosis)
 			if (result.expGained > 0) {
 				this.addExp(result.expGained);
 			}
 
-			// Apply stat gains
-			if (result.statGained) {
-				this.statsManager.increaseStat(result.statGained.stat, result.statGained.amount);
-				// Deduct the EXP cost
-				if (result.expCost) {
-					this.exp -= result.expCost;
-				}
-			}
+			// Note: stat gains are now handled internally by StatsManager.addStatExp()
+			// called directly from the IdleActionManager during training completion
 
 			// Apply unlocks
 			if (result.unlocks?.adventureMode) {
@@ -612,9 +695,23 @@ export class Game {
 		this.critChance = state.critChance || 0.0;
 		this.critDamage = state.critDamage || 1.5;
 
-		// Load stats into StatsManager
+		// Load stats into StatsManager with migration for v0.1.5+ stat EXP system
 		const loadedStats = state.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
-		this.statsManager.setStats(loadedStats);
+
+		// Migrate old saves: add stat EXP fields if missing
+		const migratedStats: Stats = {
+			strength: loadedStats.strength || 1,
+			dexterity: loadedStats.dexterity || 1,
+			intelligence: loadedStats.intelligence || 1,
+			wisdom: loadedStats.wisdom || 1,
+			// Default to 0 stat EXP for migrated saves
+			strengthExp: (loadedStats as any).strengthExp ?? 0,
+			dexterityExp: (loadedStats as any).dexterityExp ?? 0,
+			intelligenceExp: (loadedStats as any).intelligenceExp ?? 0,
+			wisdomExp: (loadedStats as any).wisdomExp ?? 0
+		};
+
+		this.statsManager.setStats(migratedStats);
 
 		// Migrate upgrades: preserve levels but update definitions
 		this.migrateUpgrades(state.upgrades);
@@ -752,7 +849,9 @@ export class Game {
 		this._validationKey = this.generateValidationKey();
 
 		// Reinitialize managers
-		this.statsManager = new StatsManager();
+		this.statsManager = new StatsManager(undefined, {
+			getCharacterLevel: () => this.level
+		});
 
 		this.upgradeManager = new UpgradeManager({
 			getCurrentExp: () => this.exp
@@ -765,6 +864,8 @@ export class Game {
 			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
 			getOsmosisSpeedMultiplier: () => this.getOsmosisSpeedMultiplier(),
 			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
+			getStatTrainingCost: (stat) => this.statsManager.getStatTrainingCost(stat),
+			addStatExp: (stat, amount) => this.statsManager.addStatExp(stat, amount),
 			getCritChance: () => this.critChance,
 			getCurrentExp: () => this.exp
 		});

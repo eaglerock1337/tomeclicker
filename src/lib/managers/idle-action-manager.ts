@@ -31,8 +31,8 @@ export interface IdleAction {
 	isActive: boolean;
 	/** Last time progress was updated */
 	lastUpdate: number;
-	/** What stat this trains (if any) */
-	trainsStat?: keyof Stats;
+	/** What stat this trains (if any) - only base stats, not EXP properties */
+	trainsStat?: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>;
 	/** Whether this is a one-time action */
 	oneTime?: boolean;
 	/** Whether this one-time action is completed */
@@ -47,7 +47,7 @@ export interface ActionCompletionResult {
 	expGained: number;
 	/** Stat that was leveled up (if any) */
 	statGained?: {
-		stat: keyof Stats;
+		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>;
 		amount: number;
 	};
 	/** EXP cost for the stat level (if training) */
@@ -74,8 +74,12 @@ export interface IdleActionDependencies {
 	getGlobalIdleSpeedMultiplier: () => number;
 	/** Get osmosis-specific speed multiplier */
 	getOsmosisSpeedMultiplier: () => number;
-	/** Get EXP cost to level up a specific stat */
+	/** Get EXP cost to level up a specific stat (legacy - kept for migration) */
 	getStatLevelCost: (stat: keyof Stats) => number;
+	/** Get character EXP cost to start training a specific stat (v0.1.5+) */
+	getStatTrainingCost: (stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>) => number;
+	/** Add stat EXP and handle level ups (v0.1.5+) */
+	addStatExp: (stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>, amount: number) => { success: boolean; leveledUp: boolean; newLevel: number };
 	/** Get current crit chance (for training rewards) */
 	getCritChance: () => number;
 	/** Get current EXP balance */
@@ -281,6 +285,21 @@ export class IdleActionManager {
 		// Check if already completed (for one-time actions)
 		if (action.oneTime && action.completed) return false;
 
+		// For stat training (v0.1.5+): Check character EXP cost and charge upfront
+		if (action.trainsStat && actionId !== 'practice-osmosis') {
+			const stat = action.trainsStat;
+			const cost = this.deps.getStatTrainingCost(stat);
+			const currentExp = this.deps.getCurrentExp();
+
+			// Check if player can afford the training
+			if (currentExp < cost) {
+				return false; // Cannot start training - insufficient character EXP
+			}
+
+			// Note: The actual EXP deduction is handled in the Game class
+			// when this method returns true, similar to how upgrade purchases work
+		}
+
 		// Stop any currently active actions in this map
 		for (const a of Object.values(actions)) {
 			if (a.isActive) {
@@ -289,7 +308,7 @@ export class IdleActionManager {
 			}
 		}
 
-		// Start the action (no EXP cost upfront)
+		// Start the action
 		action.isActive = true;
 		action.progress = 0;
 		action.lastUpdate = Date.now();
@@ -370,6 +389,35 @@ export class IdleActionManager {
 	}
 
 	/**
+	 * Get the character EXP cost to start a training action (v0.1.5+)
+	 * @param actionId - ID of the training action
+	 * @returns Character EXP cost, or 0 if not a stat training action
+	 */
+	getTrainingCost(actionId: string): number {
+		const action = this.trainingActions[actionId];
+		if (!action || !action.trainsStat || actionId === 'practice-osmosis') {
+			return 0; // Osmosis is free, non-training actions have no cost
+		}
+
+		return this.deps.getStatTrainingCost(action.trainsStat);
+	}
+
+	/**
+	 * Check if a training action can be started (has enough character EXP)
+	 * @param actionId - ID of the training action
+	 * @returns True if the action can be started
+	 */
+	canStartTraining(actionId: string): boolean {
+		const action = this.trainingActions[actionId];
+		if (!action || !action.trainsStat || actionId === 'practice-osmosis') {
+			return true; // Osmosis and non-training actions can always be started
+		}
+
+		const cost = this.getTrainingCost(actionId);
+		return this.deps.getCurrentExp() >= cost;
+	}
+
+	/**
 	 * Completes a training action and returns the result
 	 * @param actionId - ID of the training action to complete
 	 */
@@ -392,45 +440,32 @@ export class IdleActionManager {
 			};
 		}
 
-		// Handle stat training completion
+		// Handle stat training completion (v0.1.5+ stat EXP system)
 		if (action.trainsStat) {
 			const stat = action.trainsStat;
-			const cost = this.deps.getStatLevelCost(stat);
 
-			// Give back some EXP (TRAINING_REWARD base, with crit chance for bonus)
-			let expReward = TRAINING_REWARD;
+			// Calculate stat EXP gained (base 10, with crit chance for 2x bonus)
+			let statExpGained = 10; // Base stat EXP per completion
 			const isCrit = Math.random() < this.deps.getCritChance();
 			if (isCrit) {
-				expReward = Math.floor(expReward * TRAINING_CRIT_MULTIPLIER);
+				statExpGained *= 2; // Critical training gives 2x stat EXP
 			}
 
-			// Check if we can afford to level up the stat
-			const currentExp = this.deps.getCurrentExp();
-			if (currentExp >= cost) {
-				// Can afford - return result with stat gain
-				action.progress = 0;
-				action.lastUpdate = Date.now();
+			// Add the stat EXP and check for level up
+			const statResult = this.deps.addStatExp(stat, statExpGained);
 
-				return {
-					expGained: expReward,
-					statGained: {
-						stat,
-						amount: 1
-					},
-					expCost: cost,
-					shouldContinue: true
-				};
-			} else {
-				// Can't afford - stop the action
-				action.isActive = false;
-				action.progress = 0;
-				action.lastUpdate = Date.now();
+			// Training always continues (Progress Knight style)
+			action.progress = 0;
+			action.lastUpdate = Date.now();
 
-				return {
-					expGained: expReward,
-					shouldContinue: false
-				};
-			}
+			return {
+				expGained: 0, // No character EXP gained from training completion
+				statGained: statResult.leveledUp ? {
+					stat,
+					amount: 1
+				} : undefined,
+				shouldContinue: true
+			};
 		}
 
 		return null;

@@ -18,17 +18,24 @@ color: blue
 
 ## Current Focus
 
-**MVP Core Gameplay UI (In Progress)**
+**v0.1.5 UI/UX Updates & ViewLayout (2025-10-31)**
 
-Implementing UI for new gameplay systems (Training, Stats, Meditation, Adventure pages).
+Two parallel tracks: ViewLayout standardization + v0.1.5 game rebalancing UI updates.
 
 **Active Tasks:**
 
-- Training page with stat display and action selection
-- Stats page showing player progression
-- Meditation page for idle actions
-- Adventure page with locked/unlocked states
-- Navbar integration for new pages
+**Track 1: ViewLayout Component** (Deferred for v0.1.5)
+
+- Design reusable layout pattern (header, back button, scrolling, mobile optimization)
+- Migrate existing views to ViewLayout pattern
+- Standardize responsive breakpoints and spacing
+
+**Track 2: v0.1.5 Game Rebalancing UI** (Priority)
+
+- **Upgrade Interface Redesign** - Multi-level upgrade UI (show current level, cost to next, max level)
+- **Stats Page Refinement** - Show stat level + EXP progress bars, stat EXP to next level
+- **Training Page Updates** - Display character EXP cost, stat EXP gained
+- **Ruminate Display** - Clear idle EXP income visualization
 
 ---
 
@@ -105,8 +112,75 @@ Implementing UI for new gameplay systems (Training, Stats, Meditation, Adventure
 
 ---
 
+## Recent Context (2025-10-31)
+
+**ViewLayout Component Decision:**
+
+**Problem Solved:**
+
+- Recent cleanup revealed UI inconsistencies (Story page scrolling, Settings layout, mobile viewport issues)
+- Each view currently implements layout patterns independently
+- No standardization across views
+
+**Solution - ViewLayout Component:**
+
+```typescript
+<ViewLayout title="Equipment" showBack={true}>
+  <EquipmentScreen {game} />
+</ViewLayout>
+```
+
+**Benefits:**
+
+- Consistent header, back button, scrolling behavior across all views
+- Mobile-first responsive patterns established once, reused everywhere
+- Easy to add new views in the future (Equipment, Retreats, Tome library)
+- Solves the discrepancies we encountered during Phase 1.x cleanup
+
+**Prep Work Priorities:**
+
+1. **ViewLayout component** (30 min) - Establish pattern before adding mechanics
+2. **Component TypeScript migration** - Type safety for refactoring confidence
+3. **Animation/celebration infrastructure** - If mechanics include milestone moments
+
+**Current View System:**
+
+- ✅ Performs well (fast, mobile-friendly)
+- ✅ Simple state management (just `game.view` string)
+- ✅ No need for router library or complex navigation
+- User is comfortable with current approach
+
+**v0.1.5 UI Requirements:**
+
+From `design/sessions/0.1.5-game-rebalancing.md`:
+
+**Upgrade UI Needs:**
+
+- Show current level / max level
+- Show cost to next level (exponential 1.5x scaling)
+- Show benefit per level (linear, e.g., "+1 exp/click")
+- Visual feedback when affordable
+- Handle 25-100 level upgrades
+
+**Stats Page Needs:**
+
+- Stat level display
+- Stat EXP progress bar (current / required for next level)
+- Character EXP cost to train
+- Stat EXP gained per training
+- 4 stats (Str/Agi/Will/End) for early game
+
+**Training Page Needs:**
+
+- Training selection UI
+- Character EXP cost display (changes per stat level)
+- Stat EXP gain display (base 10, plus upgrades)
+- Training timer (30s base, reducible to 5s)
+- Affordable/not affordable visual feedback
+
 **Design Documents:**
 
+- **v0.1.5 rebalancing:** `design/sessions/0.1.5-game-rebalancing.md` ⭐
 - Theme definitions: `src/lib/styles/themes.css`
 - Full game design: `design/OUTLINE.md`
 - MVP requirements: `MVP.md`

@@ -206,6 +206,64 @@ Your design guidance is successful when:
 
 ---
 
+## current context (2025-10-31)
+
+**MVP Architecture Decisions:**
+
+**Project Health:**
+
+- Infrastructure is solid (Phase 1.5 complete: tests, CI/CD, pre-commit hooks)
+- Game class is ~884 lines after manager extractions (was 1316)
+- Current view system performs well, no need for premature refactoring
+
+**Architecture Strategy for MVP:**
+
+- **Option 1 (Chosen)**: Incremental improvements with current architecture
+- Proceed with game mechanics work using existing Game class structure
+- Refactor opportunistically when pain points arise (not prophylactically)
+- ViewLayout component will standardize UI without deep refactoring
+
+**When to Refactor:**
+
+- ✅ Add small mechanics (new upgrades, stat tweaks): Use current architecture
+- ⚠️ Add major new system (Adventures, Equipment, Retreats): Extract manager first
+- Pattern established: Strangler Fig + DI + Result Object (from IdleActionManager, UpgradeManager)
+
+**Technical Debt Acknowledged:**
+
+- Game class still violates SRP (handles multiple concerns)
+- Svelte 5 runes not yet adopted (using Svelte 4 patterns)
+- Components tightly coupled to Game class
+- All documented in PROPOSAL.md Phase 2, deferred until post-MVP
+
+**v0.1.5 Architecture Task - Scaling Multiplier System:**
+
+From `design/sessions/0.1.5-game-rebalancing.md`:
+
+**Goal:** Design flexible multiplier architecture for tunable scaling that can reach millions.
+
+**Requirements:**
+
+- Centralized scaling multiplier system
+- Separate multipliers for: Click power, Idle power, Training efficiency, Stat exp gain
+- Easily tunable via configuration (not hardcoded magic numbers)
+- Support for post-retreat KP multipliers
+- Pattern: Base value × upgrade multiplier × prestige multiplier × special scaling multiplier
+
+**Target Scaling:**
+
+- Click: 1 → 100 → 100,000 → 10,000,000 (across early/mid/late game)
+- Idle: 10 → 600 → 6,000 → 60,000 (slower scaling than click)
+
+**Action Item:** Design multiplier architecture that:
+
+1. Easy tuning of scaling rates
+2. Different scaling rates per system (click vs idle)
+3. Integration with existing upgrade system
+4. Support for future "Exponential Mastery" upgrades (meta-scaling)
+
+---
+
 **Documentation Structure:**
 
 - `design/` - Internal design documents (source of truth)

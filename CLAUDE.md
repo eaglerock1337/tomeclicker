@@ -152,13 +152,13 @@ The `design/OUTLINE.md` file contains the complete game design document with det
 
 See `design/PROPOSAL.md` for the complete modernization and enhancement roadmap, including:
 
-- **Phase 1.x (Current)**: Immediate QoL improvements
-  - Upgrades menu: Fix mobile navigation issues
-  - Story page: Center layout, add navigation system
-  - Settings/Saves: Polish layout, remove test buttons
-- **Phase 1.5 (Next)**: Test infrastructure (ESLint, Vitest, CI/CD)
-- **Phase 2**: Technical modernization (Svelte 5, TypeScript, modular architecture)
-- **Phase 3**: Cloud save system on Raspberry Pi Kubernetes cluster
+- **Phase 1.x (Current)**: ViewLayout standardization & MVP game mechanics (REVISED 2025-10-31)
+  - ViewLayout component to standardize all views (solves UI inconsistencies)
+  - Core game mechanics tuning (basic progression loop)
+  - Story mode DEFERRED to post-MVP
+- **Phase 1.5 (Completed)**: Test infrastructure ✅ (ESLint, Vitest, CI/CD, pre-commit hooks)
+- **Phase 2 (Future)**: Technical modernization (Svelte 5, TypeScript, modular architecture)
+- **Phase 3 (Future)**: Cloud save system on Raspberry Pi Kubernetes cluster
 
 ### Goals
 
@@ -397,9 +397,9 @@ The repository uses pre-commit hooks to enforce quality standards locally before
 - **Preview site**: Deployed to `preview` branch when PR labeled with `preview`
 - **Production site**: tomeclicker.marks.dev (via ArgoCD, future)
 
-### Recent Major Implementations (2025-10-19)
+### Recent Major Implementations
 
-**Interface Polish & UX Improvements:** ✅ **COMPLETED**
+**Interface Polish & UX Improvements:** ✅ **COMPLETED** (2025-10-19)
 
 - Subtle progress bar in header (Level 2+, tracks next unlock)
 - Seamless practice page button (100% space utilization)
@@ -423,3 +423,10 @@ The repository uses pre-commit hooks to enforce quality standards locally before
 - Pre-commit hooks for quality enforcement (type check, lint, test, build)
 - GitHub Actions validation pipeline (ensures hooks ran properly)
 - Build output configured to go directly to docs/ for GitHub Pages
+
+**MVP Scope Clarification & Architecture Decision:** (2025-10-31)
+
+- **Story mode deferred to post-MVP** - Focus on core game mechanics first
+- **ViewLayout standardization** - Reusable component to solve UI inconsistencies
+- **Architecture strategy** - Proceed with current structure, refactor opportunistically
+- **Project health confirmed** - Infrastructure solid, ready for MVP mechanics work
