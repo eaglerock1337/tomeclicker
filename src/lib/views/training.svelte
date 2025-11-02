@@ -140,11 +140,11 @@
                                 </span>
                             {/if}
                         </div>
-                        {#if action.trainsStat && game.critChance > 0}
+                        {#if action.trainsStat && game.trainingCritChance > 0}
                             <div class="detail-half">
                                 <span class="detail-label">Crit:</span>
                                 <span class="detail-value crit-value">
-                                    {(game.critChance * 100).toFixed(0)}% for 2x
+                                    {(game.trainingCritChance * 100).toFixed(0)}% for 2x
                                 </span>
                             </div>
                         {/if}
