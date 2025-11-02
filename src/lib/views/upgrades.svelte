@@ -7,13 +7,25 @@
     export let config: Config;
 
     let selectedUpgrade: Upgrade | null = null;
+    let isLevelUpSelected = false;
 
     function selectUpgrade(upgrade: Upgrade) {
         selectedUpgrade = upgrade;
+        isLevelUpSelected = false;
+    }
+
+    function selectLevelUp() {
+        selectedUpgrade = null;
+        isLevelUpSelected = true;
     }
 
     function purchaseSelected() {
-        if (selectedUpgrade && game.purchaseUpgrade(selectedUpgrade.id)) {
+        if (isLevelUpSelected) {
+            // Handle level up
+            if (game.levelUp()) {
+                game.autoSave();
+            }
+        } else if (selectedUpgrade && game.purchaseUpgrade(selectedUpgrade.id)) {
             // Refresh the selected upgrade data
             selectedUpgrade = game.upgrades[selectedUpgrade.id];
             // Save progress
@@ -100,10 +112,10 @@
         <!-- Level Up Button -->
         <button
             class="upgrade-btn special-btn"
+            class:selected={isLevelUpSelected}
             class:affordable={game.canLevelUp()}
-            on:click={levelUp}
-            disabled={!game.canLevelUp()}
-            aria-label="Level up from {game.level} to {game.level + 1}. Cost: {formatCost(game.getLevelUpCost())} EXP"
+            on:click={selectLevelUp}
+            aria-label="Select Level Up. Level {game.level} → {game.level + 1}. Cost: {formatCost(game.getLevelUpCost())} EXP"
         >
             <div class="upgrade-name">Level Up</div>
             <div class="upgrade-level">Level {game.level} → {game.level + 1}</div>
@@ -165,26 +177,36 @@
                                     <div class="upgrade-benefit">
                                         {#if upgrade.effectType === 'clickMultiplier'}
                                             +{upgrade.effectValue} EXP per click per level
+                                        {:else if upgrade.effectType === 'clickMultiplierPercent'}
+                                            +{(upgrade.effectValue * 100).toFixed(0)}% click EXP per level
                                         {:else if upgrade.effectType === 'clickCrit'}
                                             +{(upgrade.effectValue * 100).toFixed(1)}% crit chance per level
                                         {:else if upgrade.effectType === 'clickCritDamage'}
                                             +{(upgrade.effectValue * 100).toFixed(0)}% crit damage per level
-                                        {:else if upgrade.effectType === 'ruminatePower'}
-                                            +{upgrade.effectValue} EXP per tick per level
-                                        {:else if upgrade.effectType === 'ruminateSpeed'}
-                                            -{upgrade.effectValue}s per tick per level
-                                        {:else if upgrade.effectType === 'ruminateEfficiency'}
+                                        {:else if upgrade.effectType === 'ruminateMultiplierPercent'}
                                             +{(upgrade.effectValue * 100).toFixed(0)}% ruminate EXP per level
+                                        {:else if upgrade.effectType === 'ruminateSpeed'}
+                                            -{upgrade.effectValue}s per thought per level
+                                        {:else if upgrade.effectType === 'ruminateCrit'}
+                                            +{(upgrade.effectValue * 100).toFixed(1)}% ruminate crit per level
+                                        {:else if upgrade.effectType === 'ruminateCritDamage'}
+                                            +{(upgrade.effectValue * 100).toFixed(0)}% ruminate crit damage per level
+                                        {:else if upgrade.effectType === 'ruminateEfficiency'}
+                                            -{(upgrade.effectValue * 100).toFixed(0)}% ruminate cost per level
+                                        {:else if upgrade.effectType === 'statGainPercent'}
+                                            +{(upgrade.effectValue * 100).toFixed(0)}% stat EXP per level
                                         {:else if upgrade.effectType === 'trainingSpeed'}
                                             -{upgrade.effectValue}s per training per level
+                                        {:else if upgrade.effectType === 'trainingCrit'}
+                                            +{(upgrade.effectValue * 100).toFixed(1)}% training crit per level
+                                        {:else if upgrade.effectType === 'trainingCritDamage'}
+                                            +{(upgrade.effectValue * 100).toFixed(0)}% training crit damage per level
                                         {:else if upgrade.effectType === 'trainingEfficiency'}
                                             -{(upgrade.effectValue * 100).toFixed(0)}% training cost per level
-                                        {:else if upgrade.effectType === 'statGain'}
-                                            +{upgrade.effectValue} stat EXP per training per level
-                                        {:else if upgrade.effectType === 'trainingCrit'}
-                                            +{(upgrade.effectValue * 100).toFixed(1)}% training crit chance per level
+                                        {:else if upgrade.effectType === 'discipline'}
+                                            {upgrade.effectValue}x all EXP per level
                                         {:else}
-                                            Enhanced efficiency
+                                            {upgrade.effect}
                                         {/if}
                                     </div>
                                 </button>
@@ -194,33 +216,38 @@
                 </div>
             {/if}
         {/each}
-
-        <!-- Coming Soon Section -->
-        <div class="coming-soon-section">
-            <h3>Coming Soon</h3>
-            <div class="coming-soon-grid">
-                <div class="coming-soon-item">
-                    <div class="upgrade-name">Adventure Training</div>
-                    <div class="upgrade-description">Unlock at Level 3</div>
-                </div>
-                <div class="coming-soon-item">
-                    <div class="upgrade-name">Advanced Techniques</div>
-                    <div class="upgrade-description">Unlock at Level 5</div>
-                </div>
-                <div class="coming-soon-item">
-                    <div class="upgrade-name">Specialized Tools</div>
-                    <div class="upgrade-description">Unlock at Level 7</div>
-                </div>
-                <div class="coming-soon-item">
-                    <div class="upgrade-name">???</div>
-                    <div class="upgrade-description">Unlock at Level 10</div>
-                </div>
-            </div>
-        </div>
         </div>
 
         <div class="upgrade-details">
-            {#if selectedUpgrade}
+            {#if isLevelUpSelected}
+                <div class="details-header">
+                    <h2>Level Up</h2>
+                    <button class="close-btn" on:click={() => isLevelUpSelected = false} aria-label="Close">×</button>
+                </div>
+
+                <div class="details-body">
+                    <div class="details-content">
+                        <p class="description">Advance to the next level and unlock greater power</p>
+                        <p class="effect"><strong>Effect:</strong> 10x multiplier to all EXP gains</p>
+                        <p class="cost"><strong>Cost:</strong> {formatCost(game.getLevelUpCost())} EXP</p>
+                        <p class="level"><strong>Current Level:</strong> {game.level}</p>
+                    </div>
+
+                    <div class="details-actions">
+                        <button
+                            class="purchase-btn"
+                            disabled={!game.canLevelUp()}
+                            on:click={purchaseSelected}
+                        >
+                            {#if !game.canLevelUp()}
+                                CANNOT AFFORD
+                            {:else}
+                                LEVEL UP
+                            {/if}
+                        </button>
+                    </div>
+                </div>
+            {:else if selectedUpgrade}
                 <div class="details-header">
                     <h2>{selectedUpgrade.name}</h2>
                     <button class="close-btn" on:click={() => selectedUpgrade = null} aria-label="Close">×</button>

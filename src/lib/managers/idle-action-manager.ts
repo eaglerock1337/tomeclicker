@@ -40,7 +40,7 @@ export interface IdleAction {
 	/** Last time progress was updated */
 	lastUpdate: number;
 	/** What stat this trains (if any) - only base stats, not EXP properties */
-	trainsStat?: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>;
+	trainsStat?: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>;
 	/** Whether this is a one-time action */
 	oneTime?: boolean;
 	/** Whether this one-time action is completed */
@@ -55,7 +55,7 @@ export interface ActionCompletionResult {
 	expGained: number;
 	/** Stat that was leveled up (if any) */
 	statGained?: {
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>;
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>;
 		amount: number;
 	};
 	/** EXP cost for the stat level (if training) */
@@ -90,11 +90,11 @@ export interface IdleActionDependencies {
 	getStatLevelCost: (stat: keyof Stats) => number;
 	/** Get character EXP cost to start training a specific stat (v0.1.5+) */
 	getStatTrainingCost: (
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	) => number;
 	/** Add stat EXP and handle level ups (v0.1.5+) */
 	addStatExp: (
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>,
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>,
 		amount: number
 	) => { success: boolean; leveledUp: boolean; newLevel: number };
 	/** Get current crit chance (for training rewards) */
@@ -156,41 +156,41 @@ export class IdleActionManager {
 				lastUpdate: Date.now(),
 				trainsStat: 'strength'
 			},
-			'train-dexterity': {
-				id: 'train-dexterity',
+			'train-agility': {
+				id: 'train-agility',
 				name: 'Practice Quick Movements',
-				description: 'Improve agility and reflexes',
+				description: 'Improve speed and reflexes',
 				progress: 0,
 				baseDuration: TRAINING_BASE_DURATION,
 				duration: TRAINING_BASE_DURATION,
 				expCost: TRAINING_BASE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
-				trainsStat: 'dexterity'
+				trainsStat: 'agility'
 			},
-			'train-intelligence': {
-				id: 'train-intelligence',
-				name: 'Study Ancient Texts',
-				description: 'Expand knowledge and understanding',
+			'train-willpower': {
+				id: 'train-willpower',
+				name: 'Mental Conditioning',
+				description: 'Strengthen resolve and focus',
 				progress: 0,
 				baseDuration: TRAINING_BASE_DURATION,
 				duration: TRAINING_BASE_DURATION,
 				expCost: TRAINING_BASE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
-				trainsStat: 'intelligence'
+				trainsStat: 'willpower'
 			},
-			'train-wisdom': {
-				id: 'train-wisdom',
-				name: 'Meditate on Meaning',
-				description: 'Deepen insight and awareness',
+			'train-endurance': {
+				id: 'train-endurance',
+				name: 'Physical Conditioning',
+				description: 'Build stamina and resilience',
 				progress: 0,
 				baseDuration: TRAINING_BASE_DURATION,
 				duration: TRAINING_BASE_DURATION,
 				expCost: TRAINING_BASE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
-				trainsStat: 'wisdom'
+				trainsStat: 'endurance'
 			}
 		};
 	}

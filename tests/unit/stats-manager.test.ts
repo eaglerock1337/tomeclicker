@@ -8,11 +8,15 @@ import type { Stats } from '../../src/lib/game';
 class StatsManagerBuilder {
 	private stats: Stats = {
 		strength: 1,
-		dexterity: 1,
+		agility: 1,
+		willpower: 1,
+		endurance: 1,
 		intelligence: 1,
 		wisdom: 1,
 		strengthExp: 0,
-		dexterityExp: 0,
+		agilityExp: 0,
+		willpowerExp: 0,
+		enduranceExp: 0,
 		intelligenceExp: 0,
 		wisdomExp: 0
 	};
@@ -25,11 +29,15 @@ class StatsManagerBuilder {
 	withAllStats(level: number): this {
 		this.stats = {
 			strength: level,
-			dexterity: level,
+			agility: level,
+			willpower: 1,
+			endurance: 1,
 			intelligence: level,
 			wisdom: level,
 			strengthExp: 0,
-			dexterityExp: 0,
+			agilityExp: 0,
+			willpowerExp: 0,
+			enduranceExp: 0,
 			intelligenceExp: 0,
 			wisdomExp: 0
 		};
@@ -41,8 +49,8 @@ class StatsManagerBuilder {
 		return this;
 	}
 
-	withDexterity(level: number): this {
-		this.stats.dexterity = level;
+	withAgility(level: number): this {
+		this.stats.agility = level;
 		return this;
 	}
 
@@ -72,7 +80,7 @@ describe('StatsManager', () => {
 			const stats = manager.getStats();
 
 			expect(stats.strength).toBe(1);
-			expect(stats.dexterity).toBe(1);
+			expect(stats.agility).toBe(1);
 			expect(stats.intelligence).toBe(1);
 			expect(stats.wisdom).toBe(1);
 		});
@@ -80,11 +88,15 @@ describe('StatsManager', () => {
 		it('should create StatsManager with custom stats', () => {
 			const customStats = {
 				strength: 10,
-				dexterity: 5,
+				agility: 5,
+				willpower: 1,
+				endurance: 1,
 				intelligence: 8,
 				wisdom: 3,
 				strengthExp: 0,
-				dexterityExp: 0,
+				agilityExp: 0,
+				willpowerExp: 0,
+				enduranceExp: 0,
 				intelligenceExp: 0,
 				wisdomExp: 0
 			};
@@ -92,7 +104,7 @@ describe('StatsManager', () => {
 			const stats = manager.getStats();
 
 			expect(stats.strength).toBe(10);
-			expect(stats.dexterity).toBe(5);
+			expect(stats.agility).toBe(5);
 			expect(stats.intelligence).toBe(8);
 			expect(stats.wisdom).toBe(3);
 		});
@@ -111,13 +123,13 @@ describe('StatsManager', () => {
 		it('should get individual stat levels', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(15)
-				.withDexterity(10)
+				.withAgility(10)
 				.withIntelligence(20)
 				.withWisdom(5)
 				.build();
 
 			expect(manager.getStatLevel('strength')).toBe(15);
-			expect(manager.getStatLevel('dexterity')).toBe(10);
+			expect(manager.getStatLevel('agility')).toBe(10);
 			expect(manager.getStatLevel('intelligence')).toBe(20);
 			expect(manager.getStatLevel('wisdom')).toBe(5);
 		});
@@ -126,7 +138,7 @@ describe('StatsManager', () => {
 			const manager = new StatsManager();
 
 			expect(manager.getStatLevel('strength')).toBe(1);
-			expect(manager.getStatLevel('dexterity')).toBe(1);
+			expect(manager.getStatLevel('agility')).toBe(1);
 			expect(manager.getStatLevel('intelligence')).toBe(1);
 			expect(manager.getStatLevel('wisdom')).toBe(1);
 		});
@@ -138,7 +150,7 @@ describe('StatsManager', () => {
 
 			// From calculations.ts: level 1 should cost 100 EXP
 			expect(manager.getStatLevelCost('strength')).toBe(100);
-			expect(manager.getStatLevelCost('dexterity')).toBe(100);
+			expect(manager.getStatLevelCost('agility')).toBe(100);
 			expect(manager.getStatLevelCost('intelligence')).toBe(100);
 			expect(manager.getStatLevelCost('wisdom')).toBe(100);
 		});
@@ -153,12 +165,12 @@ describe('StatsManager', () => {
 		it('should calculate different costs for different stat levels', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(1)
-				.withDexterity(10)
+				.withAgility(10)
 				.withIntelligence(20)
 				.build();
 
 			const costStr = manager.getStatLevelCost('strength');
-			const costDex = manager.getStatLevelCost('dexterity');
+			const costDex = manager.getStatLevelCost('agility');
 			const costInt = manager.getStatLevelCost('intelligence');
 
 			expect(costDex).toBeGreaterThan(costStr);
@@ -178,13 +190,13 @@ describe('StatsManager', () => {
 		});
 
 		it('should increase stat by custom amount', () => {
-			const manager = new StatsManagerBuilder().withDexterity(10).build();
+			const manager = new StatsManagerBuilder().withAgility(10).build();
 
-			const result = manager.increaseStat('dexterity', 5);
+			const result = manager.increaseStat('agility', 5);
 
 			expect(result.success).toBe(true);
 			expect(result.newLevel).toBe(15);
-			expect(manager.getStatLevel('dexterity')).toBe(15);
+			expect(manager.getStatLevel('agility')).toBe(15);
 		});
 
 		it('should return correct exp cost after increase', () => {
@@ -228,7 +240,7 @@ describe('StatsManager', () => {
 		it('should not affect other stats when increasing one stat', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(10)
-				.withDexterity(15)
+				.withAgility(15)
 				.withIntelligence(20)
 				.withWisdom(25)
 				.build();
@@ -236,7 +248,7 @@ describe('StatsManager', () => {
 			manager.increaseStat('strength', 5);
 
 			expect(manager.getStatLevel('strength')).toBe(15);
-			expect(manager.getStatLevel('dexterity')).toBe(15); // Unchanged
+			expect(manager.getStatLevel('agility')).toBe(15); // Unchanged
 			expect(manager.getStatLevel('intelligence')).toBe(20); // Unchanged
 			expect(manager.getStatLevel('wisdom')).toBe(25); // Unchanged
 		});
@@ -252,13 +264,13 @@ describe('StatsManager', () => {
 		});
 
 		it('should enforce minimum value of 1', () => {
-			const manager = new StatsManagerBuilder().withDexterity(20).build();
+			const manager = new StatsManagerBuilder().withAgility(20).build();
 
-			manager.setStat('dexterity', 0);
-			expect(manager.getStatLevel('dexterity')).toBe(1);
+			manager.setStat('agility', 0);
+			expect(manager.getStatLevel('agility')).toBe(1);
 
-			manager.setStat('dexterity', -10);
-			expect(manager.getStatLevel('dexterity')).toBe(1);
+			manager.setStat('agility', -10);
+			expect(manager.getStatLevel('agility')).toBe(1);
 		});
 
 		it('should allow setting stat to any positive value', () => {
@@ -272,7 +284,7 @@ describe('StatsManager', () => {
 		it('should not affect other stats', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(10)
-				.withDexterity(10)
+				.withAgility(10)
 				.withIntelligence(10)
 				.withWisdom(10)
 				.build();
@@ -280,7 +292,7 @@ describe('StatsManager', () => {
 			manager.setStat('strength', 50);
 
 			expect(manager.getStatLevel('strength')).toBe(50);
-			expect(manager.getStatLevel('dexterity')).toBe(10);
+			expect(manager.getStatLevel('agility')).toBe(10);
 			expect(manager.getStatLevel('intelligence')).toBe(10);
 			expect(manager.getStatLevel('wisdom')).toBe(10);
 		});
@@ -291,11 +303,15 @@ describe('StatsManager', () => {
 			const manager = new StatsManager();
 			const newStats = {
 				strength: 25,
-				dexterity: 30,
+				agility: 30,
+				willpower: 1,
+				endurance: 1,
 				intelligence: 35,
 				wisdom: 40,
 				strengthExp: 0,
-				dexterityExp: 0,
+				agilityExp: 0,
+				willpowerExp: 0,
+				enduranceExp: 0,
 				intelligenceExp: 0,
 				wisdomExp: 0
 			};
@@ -310,11 +326,15 @@ describe('StatsManager', () => {
 			const manager = new StatsManagerBuilder().withAllStats(50).build();
 			const newStats = {
 				strength: 1,
-				dexterity: 2,
+				agility: 2,
+				willpower: 1,
+				endurance: 1,
 				intelligence: 3,
 				wisdom: 4,
 				strengthExp: 0,
-				dexterityExp: 0,
+				agilityExp: 0,
+				willpowerExp: 0,
+				enduranceExp: 0,
 				intelligenceExp: 0,
 				wisdomExp: 0
 			};
@@ -329,11 +349,15 @@ describe('StatsManager', () => {
 			const manager = new StatsManager();
 			const externalStats = {
 				strength: 10,
-				dexterity: 10,
+				agility: 10,
+				willpower: 1,
+				endurance: 1,
 				intelligence: 10,
 				wisdom: 10,
 				strengthExp: 0,
-				dexterityExp: 0,
+				agilityExp: 0,
+				willpowerExp: 0,
+				enduranceExp: 0,
 				intelligenceExp: 0,
 				wisdomExp: 0
 			};
@@ -349,7 +373,7 @@ describe('StatsManager', () => {
 		it('should preserve stats through save/load cycle', () => {
 			const originalManager = new StatsManagerBuilder()
 				.withStrength(15)
-				.withDexterity(20)
+				.withAgility(20)
 				.withIntelligence(25)
 				.withWisdom(30)
 				.build();
@@ -377,7 +401,7 @@ describe('StatsManager', () => {
 			manager = new StatsManager(saved);
 
 			expect(manager.getStatLevel('strength')).toBe(15);
-			expect(manager.getStatLevel('dexterity')).toBe(10);
+			expect(manager.getStatLevel('agility')).toBe(10);
 		});
 	});
 
@@ -387,11 +411,15 @@ describe('StatsManager', () => {
 
 			expect(manager.getStats()).toEqual({
 				strength: 1,
-				dexterity: 1,
+				agility: 1,
+				willpower: 1,
+				endurance: 1,
 				intelligence: 1,
 				wisdom: 1,
 				strengthExp: 0,
-				dexterityExp: 0,
+				agilityExp: 0,
+				willpowerExp: 0,
+				enduranceExp: 0,
 				intelligenceExp: 0,
 				wisdomExp: 0
 			});
@@ -401,7 +429,7 @@ describe('StatsManager', () => {
 			const manager = new StatsManagerBuilder().withAllStats(10000).build();
 
 			expect(manager.getStatLevel('strength')).toBe(10000);
-			expect(manager.getStatLevel('dexterity')).toBe(10000);
+			expect(manager.getStatLevel('agility')).toBe(10000);
 			expect(manager.getStatLevel('intelligence')).toBe(10000);
 			expect(manager.getStatLevel('wisdom')).toBe(10000);
 		});
@@ -409,14 +437,14 @@ describe('StatsManager', () => {
 		it('should handle mixed stat levels', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(1)
-				.withDexterity(100)
+				.withAgility(100)
 				.withIntelligence(5)
 				.withWisdom(50)
 				.build();
 
 			const stats = manager.getStats();
 			expect(stats.strength).toBe(1);
-			expect(stats.dexterity).toBe(100);
+			expect(stats.agility).toBe(100);
 			expect(stats.intelligence).toBe(5);
 			expect(stats.wisdom).toBe(50);
 		});
@@ -446,14 +474,14 @@ describe('StatsManager', () => {
 		it('should build with custom stats', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(10)
-				.withDexterity(20)
+				.withAgility(20)
 				.withIntelligence(30)
 				.withWisdom(40)
 				.build();
 
 			const stats = manager.getStats();
 			expect(stats.strength).toBe(10);
-			expect(stats.dexterity).toBe(20);
+			expect(stats.agility).toBe(20);
 			expect(stats.intelligence).toBe(30);
 			expect(stats.wisdom).toBe(40);
 		});
@@ -469,7 +497,7 @@ describe('StatsManager', () => {
 
 			const stats = manager.getStats();
 			expect(stats.strength).toBe(50);
-			expect(stats.dexterity).toBe(50);
+			expect(stats.agility).toBe(50);
 			expect(stats.intelligence).toBe(50);
 			expect(stats.wisdom).toBe(50);
 		});
@@ -477,18 +505,22 @@ describe('StatsManager', () => {
 		it('should allow method chaining', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(10)
-				.withDexterity(20)
+				.withAgility(20)
 				.withIntelligence(30)
 				.withWisdom(40)
 				.build();
 
 			expect(manager.getStats()).toEqual({
 				strength: 10,
-				dexterity: 20,
+				agility: 20,
+				willpower: 1,
+				endurance: 1,
 				intelligence: 30,
 				wisdom: 40,
 				strengthExp: 0,
-				dexterityExp: 0,
+				agilityExp: 0,
+				willpowerExp: 0,
+				enduranceExp: 0,
 				intelligenceExp: 0,
 				wisdomExp: 0
 			});

@@ -51,14 +51,20 @@ export class StatsManager {
 	 */
 	constructor(initialStats?: Stats, deps?: StatsManagerDependencies) {
 		this.stats = initialStats || {
-			// Stat levels (start at 1)
+			// Physical stat levels (start at 1)
 			strength: 1,
-			dexterity: 1,
+			agility: 1,
+			willpower: 1,
+			endurance: 1,
+			// Magic stat levels (locked, start at 1 for future use)
 			intelligence: 1,
 			wisdom: 1,
-			// Stat EXP (start at 0)
+			// Physical stat EXP (start at 0)
 			strengthExp: 0,
-			dexterityExp: 0,
+			agilityExp: 0,
+			willpowerExp: 0,
+			enduranceExp: 0,
+			// Magic stat EXP (locked, start at 0)
 			intelligenceExp: 0,
 			wisdomExp: 0
 		};
@@ -141,7 +147,7 @@ export class StatsManager {
 	 * @param stat - The stat to query (only the base stat names)
 	 */
 	getStatExp(
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): number {
 		const expKey = `${stat}Exp` as keyof Stats;
 		return this.stats[expKey] as number;
@@ -152,7 +158,7 @@ export class StatsManager {
 	 * @param stat - The stat to query
 	 */
 	getStatExpRequired(
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): number {
 		const currentLevel = this.getStatLevel(stat);
 		return calculateStatExpRequired(currentLevel);
@@ -163,7 +169,7 @@ export class StatsManager {
 	 * @param stat - The stat to query
 	 */
 	getStatTrainingCost(
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): number {
 		const currentLevel = this.getStatLevel(stat);
 		return calculateStatTrainingCost(currentLevel);
@@ -174,7 +180,7 @@ export class StatsManager {
 	 * @param stat - The stat to query
 	 */
 	getMaxStatLevel(
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): number {
 		if (!this.deps?.getCharacterLevel) {
 			return 100; // Fallback for when no character level dependency
@@ -187,7 +193,7 @@ export class StatsManager {
 	 * @param stat - The stat to check
 	 */
 	canStatLevelUp(
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): boolean {
 		const currentLevel = this.getStatLevel(stat);
 		const currentExp = this.getStatExp(stat);
@@ -203,7 +209,7 @@ export class StatsManager {
 	 * @param expAmount - Amount of stat EXP to add (default: 10 from design doc)
 	 */
 	addStatExp(
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>,
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>,
 		expAmount: number = 10
 	): StatExpGainResult {
 		const expKey = `${stat}Exp` as keyof Stats;
