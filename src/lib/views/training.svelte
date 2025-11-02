@@ -381,7 +381,7 @@
     }
 
     .action-card.active .detail-value {
-        color: var(--red);
+        color: var(--green);
         font-weight: 700;
     }
 
@@ -391,7 +391,7 @@
     }
 
     .action-card.active .cost-value.cannot-afford {
-        color: var(--red);
+        color: var(--green);
         opacity: 0.7;
     }
 
