@@ -23,7 +23,13 @@ class IdleActionManagerBuilder {
 		getStatTrainingCost: () => 100,
 		addStatExp: () => ({ success: true, leveledUp: false, newLevel: 1 }),
 		getCritChance: () => 0.0,
-		getCurrentExp: () => 1000
+		getCurrentExp: () => 1000,
+		getRuminateMultiplierPercent: () => 1.0,
+		getRuminateCritChance: () => 0.0,
+		getRuminateCritDamage: () => 0.5,
+		getStatGainBonus: () => 0,
+		getStatGainMultiplierPercent: () => 1.0,
+		getTrainingCritDamage: () => 0.5
 	};
 
 	withTrainingSpeed(multiplier: number): this {
@@ -413,13 +419,13 @@ describe('IdleActionManager', () => {
 
 			const manager = new ParametricIdleActionBuilder()
 				.withTrainingRewardOf(10) // 10 base stat EXP
-				.withCritMultiplierOf(2) // 2x on crit = 20 stat EXP
+				.withTrainingCritDamage(1.0) // +100% damage = 2x total on crit
 				.withStatLevelCostOf(1, 60) // Need 60 EXP to level
 				.withCritChance(1.0) // 100% crit chance
 				.withCurrentExp(500)
 				.build();
 
-			// With crits (20 EXP each), need only 3 trainings (60 EXP)
+			// With crits (10 * 2.0 = 20 EXP each), need only 3 trainings (60 EXP)
 			// Without crits (10 EXP each), would need 6 trainings
 			for (let i = 0; i < 3; i++) {
 				manager.startIdleAction('training', 'train-strength');

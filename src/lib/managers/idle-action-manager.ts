@@ -11,6 +11,14 @@ import {
 	MEDITATION_DISASSOCIATE_DURATION,
 	MEDITATION_DISASSOCIATE_COST
 } from '../constants/game';
+import {
+	calculateRuminateMultiplierPercent,
+	calculateRuminateCritChance,
+	calculateRuminateCritDamage,
+	calculateStatGainBonus,
+	calculateStatGainMultiplierPercent,
+	calculateTrainingCritDamage
+} from '../utils/calculations';
 
 /**
  * Represents a training or meditation action
@@ -93,6 +101,18 @@ export interface IdleActionDependencies {
 	getCritChance: () => number;
 	/** Get current EXP balance */
 	getCurrentExp: () => number;
+	/** Get ruminate percentage multiplier from upgrades */
+	getRuminateMultiplierPercent: () => number;
+	/** Get ruminate crit chance from upgrades */
+	getRuminateCritChance: () => number;
+	/** Get ruminate crit damage multiplier from upgrades */
+	getRuminateCritDamage: () => number;
+	/** Get stat gain bonus from upgrades */
+	getStatGainBonus: () => number;
+	/** Get stat gain percentage multiplier from upgrades */
+	getStatGainMultiplierPercent: () => number;
+	/** Get training crit damage multiplier from upgrades */
+	getTrainingCritDamage: () => number;
 }
 
 /**
@@ -439,9 +459,20 @@ export class IdleActionManager {
 			const bonus = this.deps.getOsmosisExpBonus();
 			const level = this.deps.getCurrentLevel();
 			const disciplineMult = this.deps.getDisciplineMultiplier();
+			const percentMult = this.deps.getRuminateMultiplierPercent();
+			const critChance = this.deps.getRuminateCritChance();
+			const critDamage = this.deps.getRuminateCritDamage();
 
-			// Apply formula: (base + bonus) × 10^(level-1) × 5^(discipline_level)
-			const baseReward = OSMOSIS_BASE_REWARD + bonus;
+			// Apply formula: (base + bonus) × percentage_mult × 10^(level-1) × 5^(discipline_level)
+			let baseReward = OSMOSIS_BASE_REWARD + bonus;
+			baseReward *= percentMult; // Apply percentage multiplier
+
+			// Check for crit
+			const isCrit = Math.random() < critChance;
+			if (isCrit) {
+				baseReward *= 1 + critDamage; // Apply crit damage (e.g., 1.5x = 1 + 0.5)
+			}
+
 			const levelMult = level > 1 ? Math.pow(10, level - 1) : 1;
 			const expGained = baseReward * levelMult * disciplineMult;
 
@@ -458,12 +489,19 @@ export class IdleActionManager {
 		// Handle stat training completion (v0.1.5+ stat EXP system)
 		if (action.trainsStat) {
 			const stat = action.trainsStat;
+			const statGainBonus = this.deps.getStatGainBonus();
+			const statGainPercent = this.deps.getStatGainMultiplierPercent();
+			const critChance = this.deps.getCritChance();
+			const critDamage = this.deps.getTrainingCritDamage();
 
-			// Calculate stat EXP gained (base 10, with crit chance for 2x bonus)
-			let statExpGained = 10; // Base stat EXP per completion
-			const isCrit = Math.random() < this.deps.getCritChance();
+			// Calculate stat EXP gained: (base + bonus) × percentage_mult × crit_mult
+			let statExpGained = 10 + statGainBonus; // Base 10 + flat bonus
+			statExpGained *= statGainPercent; // Apply percentage multiplier
+
+			// Check for crit
+			const isCrit = Math.random() < critChance;
 			if (isCrit) {
-				statExpGained *= 2; // Critical training gives 2x stat EXP
+				statExpGained *= 1 + critDamage; // Apply crit damage (e.g., 1.5x = 1 + 0.5)
 			}
 
 			// Add the stat EXP and check for level up

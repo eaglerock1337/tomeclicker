@@ -8,7 +8,14 @@ import {
 	calculateOsmosisSpeedMultiplier,
 	calculateStatExpRequired,
 	calculateStatTrainingCost,
-	calculateMaxStatLevel
+	calculateMaxStatLevel,
+	calculateRuminateMultiplierPercent,
+	calculateRuminateCritChance,
+	calculateRuminateCritDamage,
+	calculateStatGainBonus,
+	calculateStatGainMultiplierPercent,
+	calculateTrainingCritChance,
+	calculateTrainingCritDamage
 } from './utils/calculations';
 import {
 	IdleActionManager,
@@ -130,7 +137,13 @@ export class Game {
 			getStatTrainingCost: (stat) => this.statsManager.getStatTrainingCost(stat),
 			addStatExp: (stat, amount) => this.statsManager.addStatExp(stat, amount),
 			getCritChance: () => this.critChance,
-			getCurrentExp: () => this.exp
+			getCurrentExp: () => this.exp,
+			getRuminateMultiplierPercent: () => this.getRuminateMultiplierPercent(),
+			getRuminateCritChance: () => this.getRuminateCritChance(),
+			getRuminateCritDamage: () => this.getRuminateCritDamage(),
+			getStatGainBonus: () => this.getStatGainBonus(),
+			getStatGainMultiplierPercent: () => this.getStatGainMultiplierPercent(),
+			getTrainingCritDamage: () => this.getTrainingCritDamage()
 		});
 
 		// Initialize save manager with dependencies
@@ -253,16 +266,15 @@ export class Game {
 	recalculateCritStats(): void {
 		this.critChance = 0.0; // Base 0% character crit
 		this.critDamage = BASE_CRIT_DAMAGE; // Base +50%
-		this.trainingCritChance = 0.0; // Base 0% training crit
+		this.trainingCritChance = calculateTrainingCritChance(this.upgrades); // Calculate from upgrades
 
 		for (const upgrade of Object.values(this.upgrades)) {
 			if (upgrade.effectType === 'clickCrit') {
 				this.critChance += upgrade.effectValue * upgrade.currentLevel;
 			} else if (upgrade.effectType === 'clickCritDamage') {
 				this.critDamage += upgrade.effectValue * upgrade.currentLevel;
-			} else if (upgrade.effectType === 'trainingCrit') {
-				this.trainingCritChance += upgrade.effectValue * upgrade.currentLevel;
 			}
+			// trainingCrit is now calculated via calculateTrainingCritChance above
 		}
 	}
 
@@ -330,6 +342,54 @@ export class Game {
 	 */
 	getOsmosisSpeedMultiplier(): number {
 		return calculateOsmosisSpeedMultiplier(this.upgrades);
+	}
+
+	/**
+	 * Gets the ruminate percentage multiplier from upgrades
+	 * @returns Multiplier for ruminate EXP (higher is more EXP)
+	 */
+	getRuminateMultiplierPercent(): number {
+		return calculateRuminateMultiplierPercent(this.upgrades);
+	}
+
+	/**
+	 * Gets the ruminate crit chance from upgrades
+	 * @returns Crit chance for ruminate (0.0 to 0.25)
+	 */
+	getRuminateCritChance(): number {
+		return calculateRuminateCritChance(this.upgrades);
+	}
+
+	/**
+	 * Gets the ruminate crit damage multiplier from upgrades
+	 * @returns Crit damage multiplier (0.5 to 1.5)
+	 */
+	getRuminateCritDamage(): number {
+		return calculateRuminateCritDamage(this.upgrades);
+	}
+
+	/**
+	 * Gets the stat gain bonus from upgrades
+	 * @returns Additional stat EXP per training completion
+	 */
+	getStatGainBonus(): number {
+		return calculateStatGainBonus(this.upgrades);
+	}
+
+	/**
+	 * Gets the stat gain percentage multiplier from upgrades
+	 * @returns Multiplier for stat EXP (higher is more stat EXP)
+	 */
+	getStatGainMultiplierPercent(): number {
+		return calculateStatGainMultiplierPercent(this.upgrades);
+	}
+
+	/**
+	 * Gets the training crit damage multiplier from upgrades
+	 * @returns Crit damage multiplier (0.5 to 1.5)
+	 */
+	getTrainingCritDamage(): number {
+		return calculateTrainingCritDamage(this.upgrades);
 	}
 
 	/**
@@ -957,7 +1017,13 @@ export class Game {
 			getStatTrainingCost: (stat) => this.statsManager.getStatTrainingCost(stat),
 			addStatExp: (stat, amount) => this.statsManager.addStatExp(stat, amount),
 			getCritChance: () => this.critChance,
-			getCurrentExp: () => this.exp
+			getCurrentExp: () => this.exp,
+			getRuminateMultiplierPercent: () => this.getRuminateMultiplierPercent(),
+			getRuminateCritChance: () => this.getRuminateCritChance(),
+			getRuminateCritDamage: () => this.getRuminateCritDamage(),
+			getStatGainBonus: () => this.getStatGainBonus(),
+			getStatGainMultiplierPercent: () => this.getStatGainMultiplierPercent(),
+			getTrainingCritDamage: () => this.getTrainingCritDamage()
 		});
 
 		this.saveManager = new SaveManager({
