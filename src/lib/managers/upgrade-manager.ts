@@ -181,7 +181,7 @@ export class UpgradeManager {
 				currentLevel: 0,
 				category: 'ruminate',
 				effectType: 'ruminateMultiplierPercent',
-				effectValue: 0.01,
+				effectValue: 0.05,
 				minLevel: 2
 			},
 			'ruminate-speed': {
@@ -230,14 +230,14 @@ export class UpgradeManager {
 				id: 'ruminate-mastery',
 				name: 'Ruminate Mastery',
 				description: 'Multiplicative bonus to all rumination EXP gains',
-				effect: '+5% ruminate EXP per level',
+				effect: '+10% ruminate EXP per level',
 				baseCost: 1500,
 				costMultiplier: 2,
 				maxLevel: 20,
 				currentLevel: 0,
 				category: 'ruminate',
 				effectType: 'ruminateMultiplierPercent',
-				effectValue: 0.05,
+				effectValue: 0.1,
 				minLevel: 4
 			},
 			'ruminate-efficiency': {
@@ -252,7 +252,7 @@ export class UpgradeManager {
 				category: 'ruminate',
 				effectType: 'ruminateEfficiency',
 				effectValue: 0.01,
-				minLevel: 2
+				minLevel: 99
 			},
 
 			// === TRAINING CATEGORY (Level 3-4) ===
