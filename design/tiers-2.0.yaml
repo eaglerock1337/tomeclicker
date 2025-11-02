@@ -1,0 +1,60 @@
+# The Tomes of Magic - Tiers
+tiers:
+  - 1: Introduction
+    story: "These Tomes are giving me the vibe that they'll teach me a lot, but they're gonna read like a boring college textbook."
+  - 2: Basic Applications
+    prereqs: 1
+    story: "These Tomes look like they're finally getting into something substantial, but they still read as if written from an ivory tower."
+  - 3: Types of Magic
+    prereqs: 2
+    story: 'These Tomes are finally giving me a fundamental understanding of how magic works. They still are very academic, but I can see their value.'
+  - 4: Basic Spells
+    prereqs: 3
+    minimum: 1
+    story: 'These Tomes are finally teaching me actual spells I can use! All that theory laid the groundwork to hit the ground running.'
+  - 5: Advanced Applications
+    prereqs: 4
+    story: "These Tomes are starting to get into some complex ideas. It's true what they say that the more you know, the more you know you don't know."
+  - 6: Advanced Spells
+    prereqs: 5
+    minimum: 2
+    restrictions:
+      elements: 1
+      alignments: 1
+      unlock: 45
+    story: 'These Tomes are teaching me some really powerful spells. This is starting to feel much more important than my combat skills.'
+  - 7: Expert Concepts
+    prereqs: 6
+    story: "These Tomes are really getting into the weeds of magic theory. It's starting to blend the fundamental concepts of attack and defense."
+  - 8: Expert Techniques
+    prereqs: 7
+    story: 'These Tomes are getting into mastering the elements and alignments. This is going to unlock some seriously powerful magic.'
+  - 9: Expert Spells
+    minimum: 4
+    restrictions:
+      elements: 1
+      alignments: 1
+      unlock: 49
+    story: "These Tomes have some of truly powerful spells. I'm starting to finally understand what the concept of expert magic really means."
+  - 10: Master Concepts
+    story: "These Tomes are starting to transcend the limits of normal magic. I'm starting to understand how to master magic."
+  - 11: Master Spells
+    story: 'These Tomes are taking my spellcasting to another level. Harnessing the power of all of the elements is the key greater magic.'
+  - 12: Master Alignment Concepts
+    prereqs:
+      - 9
+      - 11
+    story: 'These Tomes are making me realize that true mastery will only come from blending the power of the elements and alignments.'
+  - 13: Master Alignment Spells
+    minimum: 1
+    prereqs: 12
+    story: 'These Tomes are teaching magic that is becoming unstoppable. The combination of elements and alignments is the pinnacle of magic.'
+  - 14: True Master Concepts
+    prereqs:
+      - 13
+    story: "These Tomes make me realize that true magic master is still to come. I still have more to learn if I'm going to truly master magic."
+  - 15: True Master Spellcasting
+    prereqs:
+      - 13
+      - 14
+    story: "These Tomes are reaching the limit of their ability to teach, but I'm realizing that my magical journey is just beginning."
