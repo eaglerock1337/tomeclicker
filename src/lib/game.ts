@@ -300,6 +300,44 @@ export class Game {
 	}
 
 	/**
+	 * Gets the base stat EXP gain per training completion (v0.1.5+)
+	 * Includes bonuses from stat-gain upgrade
+	 * @returns Stat EXP gained per training (before crit)
+	 */
+	getStatExpGainPerTraining(): number {
+		const baseReward = 10; // TRAINING_REWARD constant
+		const statGainUpgrade = this.upgrades['stat-gain'];
+		const bonus = statGainUpgrade ? statGainUpgrade.currentLevel * statGainUpgrade.effectValue : 0;
+		return baseReward + bonus;
+	}
+
+	/**
+	 * Gets the actual training duration for a specific action with all bonuses applied
+	 * This calculates what the duration would be if you started the action now
+	 * @param actionId - ID of the training action
+	 * @returns Duration in milliseconds with all bonuses applied
+	 */
+	getTrainingDuration(actionId: string): number {
+		const action = this.trainingActions[actionId];
+		if (!action) return 0;
+
+		// Calculate bonused duration (same logic as startIdleAction)
+		if (actionId === 'practice-osmosis') {
+			const osmosisSpeed = this.getOsmosisSpeedMultiplier();
+			const globalSpeed = this.getGlobalIdleSpeedMultiplier();
+			const combinedSpeed = osmosisSpeed * globalSpeed;
+			return Math.floor(action.baseDuration / combinedSpeed);
+		} else if (action.trainsStat) {
+			const trainingSpeed = this.getTrainingSpeedMultiplier();
+			const globalSpeed = this.getGlobalIdleSpeedMultiplier();
+			return Math.floor((action.baseDuration * trainingSpeed) / globalSpeed);
+		} else {
+			const globalSpeed = this.getGlobalIdleSpeedMultiplier();
+			return Math.floor(action.baseDuration / globalSpeed);
+		}
+	}
+
+	/**
 	 * Gets the EXP cost to level up a specific stat (legacy method)
 	 * @param stat - The stat to check
 	 * @returns EXP cost for next level
