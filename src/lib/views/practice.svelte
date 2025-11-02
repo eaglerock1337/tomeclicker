@@ -54,7 +54,7 @@
                         {#if game.canLevelUp()}
                             level up available
                         {:else if showCritAmount}
-                            +{critAmount.toFixed(1)} EXP
+                            +{critAmount.toFixed(0)} EXP
                         {:else}
                             {clickText}
                         {/if}
