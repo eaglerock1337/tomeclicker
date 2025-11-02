@@ -82,7 +82,7 @@
                     <div class="action-name">{action.name}</div>
                     {#if action.trainsStat}
                         <div class="stat-level">
-                            Lv.{statLevel}/{maxStatLevel}
+                            Level {statLevel}/{maxStatLevel}
                         </div>
                     {/if}
                 </div>
@@ -115,7 +115,7 @@
                                     {formatNumber(cost)} EXP
                                 </span>
                             {:else}
-                                <span class="detail-value" style="color: var(--green)">Free</span>
+                                <span class="detail-value">Free</span>
                             {/if}
                         </div>
                         <div class="detail-half">
@@ -355,6 +355,7 @@
         align-items: center;
         gap: 0.5rem;
         flex: 1;
+        min-width: 0; /* Allow flex items to shrink */
     }
 
     .detail-label {
@@ -363,6 +364,7 @@
         color: var(--text);
         opacity: 0.7;
         transition: color 0.2s;
+        min-width: 60px; /* Consistent label width for alignment */
     }
 
     .action-card.active .detail-label {
@@ -374,39 +376,23 @@
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.85rem;
         font-weight: 600;
-        color: var(--text);
+        color: var(--red);
         transition: color 0.2s;
     }
 
     .action-card.active .detail-value {
-        color: var(--bg);
+        color: var(--red);
+        font-weight: 700;
     }
 
     .cost-value.cannot-afford {
         color: var(--red);
+        opacity: 0.7;
     }
 
     .action-card.active .cost-value.cannot-afford {
         color: var(--red);
-        opacity: 0.9;
-    }
-
-    .reward-value {
-        color: var(--green);
-    }
-
-    .action-card.active .reward-value {
-        color: var(--bg);
-        opacity: 0.9;
-    }
-
-    .crit-value {
-        color: var(--yellow);
-    }
-
-    .action-card.active .crit-value {
-        color: var(--bg);
-        opacity: 0.9;
+        opacity: 0.7;
     }
 
     .progress-container {

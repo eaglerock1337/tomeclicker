@@ -13,6 +13,8 @@
 
     let clickText = $derived(game ? game.updateClickText() : 'Loading...');
     let showCrit = $state(false);
+    let critAmount = $state(0);
+    let showCritAmount = $state(false);
 
     function clickMe() {
         if (!game) return;
@@ -23,8 +25,11 @@
         const isCrit = Math.random() < game.critChance;
         if (isCrit) {
             clickValue *= (1 + game.critDamage);
+            critAmount = Math.floor(clickValue);
             showCrit = true;
+            showCritAmount = true;
             setTimeout(() => showCrit = false, 300);
+            setTimeout(() => showCritAmount = false, 1500);
         }
 
         game.addExp(clickValue);
@@ -39,11 +44,20 @@
             ontouchstart={clickMe}
             aria-label="Practice to gain experience points"
         >
-            {#if showCrit}
-                <div class="crit-text">CRIT!</div>
-            {/if}
-            <div class="item">
-                <MousePointer size={48}/><br>{clickText}
+            <div class="icon-container">
+                {#if showCrit}
+                    <div class="crit-text">CRIT!</div>
+                {/if}
+                <div class="item">
+                    <MousePointer size={48}/>
+                    <div class="click-text" class:crit-active={showCritAmount}>
+                        {#if showCritAmount}
+                            +{critAmount} EXP
+                        {:else}
+                            {clickText}
+                        {/if}
+                    </div>
+                </div>
             </div>
         </button>
     </div>
@@ -99,10 +113,20 @@
         -webkit-highlight: none;
     }
 
+    .icon-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .item {
+        display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
+        gap: 0.5rem;
         transition: scale 0.1s;
     }
 
@@ -118,31 +142,56 @@
         scale: 0.95;
     }
 
+    .click-text {
+        font-family: JetBrains Mono, monospace;
+        font-weight: 400;
+        font-size: 1em;
+        color: var(--text);
+        transition: color 0.3s ease;
+    }
+
+    .click-text.crit-active {
+        color: var(--red);
+        font-weight: 700;
+        animation: critTextPulse 1.5s ease-out;
+    }
+
     .crit-text {
         position: absolute;
-        top: 35%;
+        top: -60px; /* Fixed offset above icon */
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translateX(-50%);
         font-size: 2em;
         font-weight: 700;
         color: var(--yellow);
         text-shadow: 0 0 10px var(--yellow);
         animation: critPulse 0.3s ease-out;
         pointer-events: none;
+        white-space: nowrap;
     }
 
     @keyframes critPulse {
         0% {
-            transform: translate(-50%, -50%) scale(0.5);
+            transform: translateX(-50%) scale(0.5);
             opacity: 0;
         }
         50% {
-            transform: translate(-50%, -50%) scale(1.2);
+            transform: translateX(-50%) scale(1.2);
             opacity: 1;
         }
         100% {
-            transform: translate(-50%, -50%) scale(1);
+            transform: translateX(-50%) scale(1);
             opacity: 0;
+        }
+    }
+
+    @keyframes critTextPulse {
+        0%, 100% {
+            color: var(--red);
+        }
+        50% {
+            color: var(--red);
+            text-shadow: 0 0 8px var(--red);
         }
     }
 </style>
