@@ -138,6 +138,34 @@ export class UpgradeManager {
 				effectValue: 0.02,
 				minLevel: 2
 			},
+			'click-mastery': {
+				id: 'click-mastery',
+				name: 'Click Mastery',
+				description: 'Multiplicative bonus to all click EXP gain',
+				effect: '+5% click power per level',
+				baseCost: 300,
+				costMultiplier: 1.5,
+				maxLevel: 50,
+				currentLevel: 0,
+				category: 'click',
+				effectType: 'clickMultiplierPercent',
+				effectValue: 0.05,
+				minLevel: 2
+			},
+			'devastating-click': {
+				id: 'devastating-click',
+				name: 'Devastating Click',
+				description: 'Amplify the power of critical clicks',
+				effect: '+5% crit damage per level',
+				baseCost: 400,
+				costMultiplier: 1.5,
+				maxLevel: 20,
+				currentLevel: 0,
+				category: 'click',
+				effectType: 'clickCritDamage',
+				effectValue: 0.05,
+				minLevel: 3
+			},
 
 			// === RUMINATE CATEGORY (Level 2+) ===
 			'ruminate-speed': {
@@ -181,6 +209,48 @@ export class UpgradeManager {
 				effectType: 'ruminateEfficiency',
 				effectValue: 0.02,
 				minLevel: 3
+			},
+			'ruminate-mastery': {
+				id: 'ruminate-mastery',
+				name: 'Ruminate Mastery',
+				description: 'Multiplicative bonus to ruminate power',
+				effect: '+5% ruminate power per level',
+				baseCost: 1500,
+				costMultiplier: 1.5,
+				maxLevel: 50,
+				currentLevel: 0,
+				category: 'ruminate',
+				effectType: 'ruminateMultiplierPercent',
+				effectValue: 0.05,
+				minLevel: 3
+			},
+			'ruminate-crit': {
+				id: 'ruminate-crit',
+				name: 'Ruminate Crit',
+				description: 'Occasional bursts of clarity double your ruminate EXP',
+				effect: '+2% ruminate crit chance per level',
+				baseCost: 800,
+				costMultiplier: 1.5,
+				maxLevel: 25,
+				currentLevel: 0,
+				category: 'ruminate',
+				effectType: 'ruminateCrit',
+				effectValue: 0.02,
+				minLevel: 3
+			},
+			'devastating-ruminate': {
+				id: 'devastating-ruminate',
+				name: 'Devastating Ruminate',
+				description: 'Amplify the power of critical ruminations',
+				effect: '+5% ruminate crit damage per level',
+				baseCost: 2000,
+				costMultiplier: 1.5,
+				maxLevel: 20,
+				currentLevel: 0,
+				category: 'ruminate',
+				effectType: 'ruminateCritDamage',
+				effectValue: 0.05,
+				minLevel: 4
 			},
 
 			// === TRAINING CATEGORY (Level 3+) ===
@@ -239,6 +309,34 @@ export class UpgradeManager {
 				effectType: 'trainingCrit',
 				effectValue: 0.02,
 				minLevel: 4
+			},
+			'training-mastery': {
+				id: 'training-mastery',
+				name: 'Training Mastery',
+				description: 'Multiplicative bonus to all stat gains from training',
+				effect: '+5% stat gain per level',
+				baseCost: 3500,
+				costMultiplier: 1.5,
+				maxLevel: 50,
+				currentLevel: 0,
+				category: 'training',
+				effectType: 'statGainPercent',
+				effectValue: 0.05,
+				minLevel: 4
+			},
+			'devastating-training': {
+				id: 'devastating-training',
+				name: 'Devastating Training',
+				description: 'Amplify the power of critical training sessions',
+				effect: '+5% training crit damage per level',
+				baseCost: 4000,
+				costMultiplier: 1.5,
+				maxLevel: 20,
+				currentLevel: 0,
+				category: 'training',
+				effectType: 'trainingCritDamage',
+				effectValue: 0.05,
+				minLevel: 5
 			},
 
 			// === SPECIAL CATEGORY ===
