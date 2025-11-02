@@ -20,18 +20,24 @@ tomes:
         story: "Before I can actually start casting spells, I need to meditate on it. I'm not quite sure how this works."
       - 6: Fire Orb
         type: spell
+        effect: 'Does nothing, a practice spell.'
+        mastery: +1% fire spell damage per level
         story: 'I figure out how to create a fire orb. I nearly burned my hands trying to do it, but it gives me a sense of power.'
       - 7: Frost Orb
         type: spell
+        mastery: +1% frost spell damage per level
         story: "I manage to create a frost orb. My hands feel numb from the cold, but it's amazing to see it take shape in my hands."
       - 8: Shock Orb
         type: spell
+        mastery: +1% shock spell damage per level
         story: 'I create a shock orb. The tingling sensation in my hands is intense, but I can feel the energy coursing through me.'
       - 9: Light Orb
         type: spell
+        mastery: +1% light spell damage per level
         story: "I create a light orb. It's warm and comforting, and I can see how it could be useful in dark places."
       - 10: Dark Orb
         type: spell
+        mastery: +1% dark spell damage per level
         story: "I create a dark orb. It feels heavy and ominous, but I can sense its power, almost like it's calling to me."
       - 11: Understanding Magic
         type: concept
@@ -96,6 +102,7 @@ tomes:
         story: "This is going over drawing mana again. It's starting feel repetitive, but I feel like I'm learning more each time I revist the subject. That's probably on purpose."
       - 5: Proper Mana Drawing
         type: technique
+        effect: +1% spell effectiveness
         story: "If I put my palms together with my fingers pointing in opposite directions, I can feel more mana flowing out of my wrists. It's helping me create orbs with more mana."
       - 6: Practicing Mana Drawing
         type: concept
@@ -108,12 +115,14 @@ tomes:
         story: 'If I want more mana to cast spells, I need to focus my mind on it. Meditation is going to be the key to making my spells more powerful over time.'
       - 9: Mana Pool Meditation
         type: technique
+        effect: +1% maximum mana per level
         story: "This meditation is similar to the first one I did, but I'm starting to see how focusing my mind on the how much mana I can carry actually helps me do it."
       - 10: Increasing Mana Regeneration
         type: concept
         story: 'Increasing my mana pool is only half the battle. If I want to cast more spells in a row, I need to focus on improving my mana regeneration as well.'
       - 11: Mana Regeneration Meditation
         type: technique
+        effect: +1% mana regeneration per level
         story: "This meditation is similar to the first one I did, but it's helping me recover my mana quicker. Focusing my mind on mana coming to me helps it happen."
       - 12: Mana Training Discipline
         type: concept
@@ -136,21 +145,26 @@ tomes:
         story: "There's plenty of ways to deliver an attack. It all comes down to how you get the orb over to your opponent."
       - 5: Touch Attacks
         type: technique
+        effect: +1% touch attack damage per level
         story: "Touch attacks seem to be about putting your hands into the orb and wearing the mana energy like gloves. Then touch 'em."
       - 6: Short Range Attacks
         type: technique
+        effect: +1% short-range attack damage per level
         story: 'This is basically like throwing a dagger. You just have to throw it hard enough to hit your opponent and have some aim.'
       - 7: Long Range Attacks
         type: technique
+        effect: +1% long-range attack damage per level
         story: 'This is more like throwing a spear. It seems like you can use mana to propel the orn much farther than you can by strength alone.'
       - 8: Forms of an Attack
         type: concept
         story: "Now we're going into different forms an orb can take. It's starting to get more complicated than throwing a ball."
       - 9: Projectiles
         type: technique
+        effect: +1% projectile attack damage per level
         story: "Projectile attacks are like magical shrapnel. It's a way to cover more area and hit multiple targets at once."
       - 10: Objects
         type: technique
+        effect: +1% object attack damage per level
         story: "Object attacks are simpler. It's not just about throwing orbs, but shaping the mana into different forms."
       - 11: Delivering the Attack
         type: concept
