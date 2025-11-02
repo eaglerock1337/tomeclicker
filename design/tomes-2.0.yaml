@@ -124,28 +124,40 @@ tomes:
     chapters:
       - 1: Magic on the Offense
         type: concept
+        story: "More concepts, more theory, but at least we're getting into the technical weeds of how you can use magic to attack."
       - 2: The Principle of the Attack
         type: concept
+        story: 'This is explaining the basic principle behind magical attacks. It seems to all come down to directing the orb toward the target.'
       - 3: Directing the Orb
         type: concept
+        story: 'This is going over how to actually direct the orb toward the target. It seems a lot like handling a ball, but a magic one.'
       - 4: Types of Attacks
         type: concept
+        story: "There's plenty of ways to deliver an attack. It all comes down to how you get the orb over to your opponent."
       - 5: Touch Attacks
         type: technique
+        story: "Touch attacks seem to be about putting your hands into the orb and wearing the mana energy like gloves. Then touch 'em."
       - 6: Short Range Attacks
         type: technique
+        story: 'This is basically like throwing a dagger. You just have to throw it hard enough to hit your opponent and have some aim.'
       - 7: Long Range Attacks
         type: technique
+        story: 'This is more like throwing a spear. It seems like you can use mana to propel the orn much farther than you can by strength alone.'
       - 8: Forms of an Attack
         type: concept
+        story: "Now we're going into different forms an orb can take. It's starting to get more complicated than throwing a ball."
       - 9: Projectiles
         type: technique
+        story: "Projectile attacks are like magical shrapnel. It's a way to cover more area and hit multiple targets at once."
       - 10: Objects
         type: technique
+        story: "Object attacks are simpler. It's not just about throwing orbs, but shaping the mana into different forms."
       - 11: Delivering the Attack
         type: concept
+        story: "This is going over the overall concept of delivering an attack. It's all about offensive combat strategy."
       - 12: Learning More
         type: concept
+        story: 'It was mostly a throwaway chapter, but it did end with some really intriguing thoughts on how to attack an opponent.'
   - 5: Tome of Defense
     tier: 2
     prereqs: 3
