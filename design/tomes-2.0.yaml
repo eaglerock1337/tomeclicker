@@ -25,18 +25,22 @@ tomes:
         story: 'I figure out how to create a fire orb. I nearly burned my hands trying to do it, but it gives me a sense of power.'
       - 7: Frost Orb
         type: spell
+        effect: 'Does nothing, a practice spell.'
         mastery: +1% frost spell damage per level
         story: "I manage to create a frost orb. My hands feel numb from the cold, but it's amazing to see it take shape in my hands."
       - 8: Shock Orb
         type: spell
+        effect: 'Does nothing, a practice spell.'
         mastery: +1% shock spell damage per level
         story: 'I create a shock orb. The tingling sensation in my hands is intense, but I can feel the energy coursing through me.'
       - 9: Light Orb
         type: spell
+        effect: 'Does nothing, a practice spell.'
         mastery: +1% light spell damage per level
         story: "I create a light orb. It's warm and comforting, and I can see how it could be useful in dark places."
       - 10: Dark Orb
         type: spell
+        effect: 'Does nothing, a practice spell.'
         mastery: +1% dark spell damage per level
         story: "I create a dark orb. It feels heavy and ominous, but I can sense its power, almost like it's calling to me."
       - 11: Understanding Magic
@@ -222,28 +226,45 @@ tomes:
     chapters:
       - 1: The World of Magic
         type: concept
+        story: "This is going over the big picture of magic again. It's more repetition, but at least I keep learning more each go around."
       - 2: Magical Discipline
         type: concept
+        story: 'More pontification about the importance of discipline. I get it already, but I guess it is an important point.'
       - 3: Pursuit of the Art
         type: concept
+        story: "Now it's going on about how magic is going to be a life-long pursuit. If the speed of these Tomes are any indication, I can see that being true."
       - 4: The Potential of the Orb
         type: concept
+        story: "More blabbering about how powerful the orb can become. I'm starting to get the idea that these wizards liked to listen to themselves."
       - 5: Changing the Orb
         type: concept
+        story: "Now it's getting back into the technique around manipulating the orb. It's starting to make more sense now."
       - 6: Changing the Fire Orb
         type: technique
+        effect: +1% fire spell efficiency per level
+        story: "This technique is very repetitive, but it's making working with the fire orb easier. I'm feeling the fire inside me."
       - 7: Changing the Frost Orb
         type: technique
+        effect: +1% frost spell efficiency per level
+        story: "This technique is very repetitive, but it's making working with the frost orb easier. The cold is becoming more comfortable."
       - 8: Changing the Shock Orb
         type: technique
-      - 9: Changing the Holy Orb
+        effect: +1% shock spell efficiency per level
+        story: "This technique is very repetitive, but it's making working with the shock orb easier. The tingling sensation excites me."
+      - 9: Changing the Light Orb
         type: technique
-      - 10: Changing the Black Orb
+        effect: +1% light spell efficiency per level
+        story: "This technique is very repetitive, but it's making working with the light orb easier. The brightness and warmth is soothing."
+      - 10: Changing the Dark Orb
         type: technique
+        effect: +1% dark spell efficiency per level
+        story: "This technique is very repetitive, but it's making working with the dark orb easier. The ominous power intrigues me."
       - 11: Choosing Your Magic
         type: concept
+        story: 'Working with all the elements and alignments more is making me think harder about which form of magic I want to pursue.'
       - 12: Pursuing Your Choice
         type: concept
+        story: "I still don't know what form of magic makes most sense for me, but I'm starting to get an understanding of my choices."
   - 7: Tome of Elements
     tier: 3
     prereqs: 6
