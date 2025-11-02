@@ -15,6 +15,8 @@ class IdleActionManagerBuilder {
 		getTrainingSpeedMultiplier: () => 1.0,
 		getTrainingCostMultiplier: () => 1.0,
 		getOsmosisExpBonus: () => 0,
+		getDisciplineMultiplier: () => 1.0,
+		getCurrentLevel: () => 1,
 		getGlobalIdleSpeedMultiplier: () => 1.0,
 		getOsmosisSpeedMultiplier: () => 1.0,
 		getStatLevelCost: () => 100,
