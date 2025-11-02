@@ -43,7 +43,13 @@ export class ParametricIdleActionBuilder {
 		getStatTrainingCost: () => 10,
 		addStatExp: () => ({ success: true, leveledUp: false, newLevel: 1 }),
 		getCritChance: () => 0.0,
-		getCurrentExp: () => 1000
+		getCurrentExp: () => 1000,
+		getRuminateMultiplierPercent: () => 1.0,
+		getRuminateCritChance: () => 0.0,
+		getRuminateCritDamage: () => 0.5,
+		getStatGainBonus: () => 0,
+		getStatGainMultiplierPercent: () => 1.0,
+		getTrainingCritDamage: () => 0.5
 	};
 
 	// Training rewards (base stat EXP per training completion)
@@ -203,6 +209,14 @@ export class ParametricIdleActionBuilder {
 	}
 
 	/**
+	 * Set training crit damage bonus (0.5 to 1.5, meaning 1.5x to 2.5x total)
+	 */
+	withTrainingCritDamage(damage: number): this {
+		this.deps.getTrainingCritDamage = () => damage;
+		return this;
+	}
+
+	/**
 	 * Set current character EXP balance
 	 */
 	withCurrentExp(exp: number): this {
@@ -311,7 +325,13 @@ export class IdleActionManagerBuilder {
 		getStatTrainingCost: () => 10,
 		addStatExp: () => ({ success: true, leveledUp: false, newLevel: 1 }),
 		getCritChance: () => 0.0,
-		getCurrentExp: () => 1000
+		getCurrentExp: () => 1000,
+		getRuminateMultiplierPercent: () => 1.0,
+		getRuminateCritChance: () => 0.0,
+		getRuminateCritDamage: () => 0.5,
+		getStatGainBonus: () => 0,
+		getStatGainMultiplierPercent: () => 1.0,
+		getTrainingCritDamage: () => 0.5
 	};
 
 	withTrainingSpeed(multiplier: number): this {
