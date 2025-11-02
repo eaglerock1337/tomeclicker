@@ -313,28 +313,43 @@ tomes:
     chapters:
       - 1: The Alignment of Magic
         type: concept
-      - 2: The Roles of the Divines
+        story: "Now we're getting into the two alignments of magic. They both try to accomplish the same thing but in opposite ways."
+      - 2: The Power of the Sun
         type: concept
-      - 3: Black Magic Origins
+        story: 'Light magic is all about order, protection, and life. Harness the power of the sun, protect the weak, and uphold justice.'
+      - 3: Dark Magic Origins
         type: concept
-      - 4: The Polarity of Alignment
+        story: 'Dark magic is about decay, death, and destruction. It embraces death as a source of power and as the great equalizer of all.'
+      - 4: The Polarity of the Alignments
         type: concept
+        story: 'Light and Dark magic are polar opposites of one another. They are strong against one another, both in attack and defense.'
       - 5: Applying Aligned Magic
         type: concept
-      - 6: Holy Magic Principles
+        story: 'Being aligned with either Light or Dark magic involves embracing one or the other. The more devoted you are, the stronger you become.'
+      - 6: Light Magic Principles
         type: concept
-      - 7: Holy Magic Applications
+        story: "Light magic is about protection, healing, and restoration. It's a very giving magic, full of benevolence and justice."
+      - 7: Light Magic Applications
         type: concept
-      - 8: Black Magic Principles
+        story: 'Light magic is strong against Dark magic, but is equally vulnerable to it. The more devoted practicer becomes the victor.'
+      - 8: Dark Magic Principles
         type: concept
-      - 9: Black Magic Applications
+        story: 'Dark magic is about destruction, decay, and corruption. It gives you great strength, but takes something back in return.'
+      - 9: Dark Magic Applications
         type: concept
+        story: 'Dark magic is strong against Light magic, but is equally vulnerable to it. The more committed practicer wins the duel.'
       - 10: Finding Your Alignment
         type: concept
+        story: "I'm coming to a crossroads, here. The alignment I choose will have long-term consequences for my magical path."
       - 11: Alignment Meditation
         type: technique
+        unlocks: 'Choose an alignment: Light or Dark. Your choice restricts your ability to learn the other.'
+        effect: +1% spell damage for your chosen alignment per level
+        story: "Choosing an alignment is shaping up to be a big deal. I should take my time and decide only once I'm good and ready."
       - 12: Pursuing Your Alignment
         type: concept
+        story: "Now I can see why these mages talk so much about your alignment. It's going to shape my entire magical journey from here."
+
   - 9: Tome of Fire Magic
     tier: 4
     element: fire
