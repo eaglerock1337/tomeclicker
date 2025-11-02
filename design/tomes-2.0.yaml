@@ -178,28 +178,45 @@ tomes:
     chapters:
       - 1: Magic on the Defense
         type: concept
+        story: 'Another typical academic treatise, this one on magical defense. It looks like it will get into some interesting concepts.'
       - 2: The Principle of Defense
         type: concept
+        story: "A bit preachy, but at least it's starting to get into the funamentals of use the orb for defense. The orb's energy basically absorbs the attack."
       - 3: Directing the Orb
         type: concept
-      - 4: Types of Attacks
+        story: "Still conceptual, but at least we're getting into how you direct the orb to defend yourself. It's pretty much sticking the orb between you and the attack."
+      - 4: Types of Defenses
         type: concept
+        story: "Now we're starting to get into the details a bit, and it's getting interesting. You can shape a magical orb in many different ways."
       - 5: Shields
         type: technique
+        effect: +1% damage blocked by shields per level
+        story: 'Magical shields can block physical attacks. This is going to make my life so much easier dealing with the endless animal around these caves.'
       - 6: Counters
         type: technique
+        effect: +1% damage blocked by counters per level
+        story: "Magical counters block magical attacks. It's basically throwing your orb to hit the incoming attack and nullify it."
       - 7: Mirrors
         type: technique
+        effect: +1% damage reflected by mirrors per level
+        story: 'Magical mirrors reflect magical attacks back at the caster. Mirrors only work on certain spells, though, so I need to figure out which ones to use.'
       - 8: Forms of Defense
         type: concept
+        story: "Now we're talking about how defenses can take different forms. It's a bit more involved than just holding up a shield as it turns out."
       - 9: Held Defenses
         type: technique
+        effect: +1% damage blocked or reflected by held defenses per level
+        story: "I'm starting to see how you hold your defense matters. It's no different than physical combat in that regard."
       - 10: Thrown Defenses
         type: technique
+        effect:
+        story: "This dynamic seems unique to magical warfare, as I'm not used to throwing stuff back at the things coming at me."
       - 11: Using the Defense
         type: concept
+        story: "Now we're getting into how to put these defenses together to protect yourself against any type of attack."
       - 12: Learning More
         type: concept
+        story: "We're going academic again, but I'm liking the open-ended questions about how I can create a seamless defense strategy."
   - 6: Tome of Magic Mastery
     tier: 3
     chapters:
