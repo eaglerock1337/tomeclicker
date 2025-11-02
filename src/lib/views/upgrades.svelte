@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import type { Game, Upgrade } from '$lib/game';
     import type { Config } from '$lib/config';
 
@@ -27,8 +28,32 @@
     $: visibleCategories = game.getVisibleUpgradeCategories();
     $: discipline = game.upgrades['discipline'];
 
-    // Track which categories are expanded
-    let expandedCategories: Set<string> = new Set(['click']); // Start with click category expanded
+    // Track which categories are expanded (with localStorage persistence)
+    let expandedCategories: Set<string> = new Set(['click']); // Default: click category expanded
+    let accordionStateLoaded = false;
+
+    // Load accordion state from localStorage on mount
+    onMount(() => {
+        try {
+            const saved = localStorage.getItem('tomeclicker-upgrade-accordion');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                expandedCategories = new Set(parsed);
+            }
+        } catch (e) {
+            console.warn('Failed to load accordion state:', e);
+        }
+        accordionStateLoaded = true;
+    });
+
+    // Save accordion state to localStorage whenever it changes
+    $: if (accordionStateLoaded) {
+        try {
+            localStorage.setItem('tomeclicker-upgrade-accordion', JSON.stringify([...expandedCategories]));
+        } catch (e) {
+            console.warn('Failed to save accordion state:', e);
+        }
+    }
 
     function toggleCategory(category: string) {
         expandedCategories = expandedCategories.has(category)

@@ -24,12 +24,34 @@
         return true;
     }
 
+    function formatNumber(num: number): string {
+        if (num >= 1_000_000) return (num / 1_000_000).toFixed(2) + 'M';
+        if (num >= 1_000) return (num / 1_000).toFixed(2) + 'K';
+        return Math.floor(num).toString();
+    }
+
+    function formatDuration(ms: number): string {
+        const totalSeconds = ms / 1000;
+        if (totalSeconds >= 60) {
+            const mins = Math.floor(totalSeconds / 60);
+            const secs = totalSeconds % 60;
+            // Show decimal if not a whole number
+            const secsStr = secs % 1 === 0 ? Math.floor(secs).toString() : secs.toFixed(1);
+            return `${mins}m ${secsStr}s`;
+        }
+        // Show decimal if not a whole number
+        return totalSeconds % 1 === 0 ? `${Math.floor(totalSeconds)}s` : `${totalSeconds.toFixed(1)}s`;
+    }
+
     // Filter actions by level
     $: availableActions = Object.values(game.trainingActions).filter(action => {
         if (action.id === 'practice-osmosis') return game.level >= 2;
         if (action.trainsStat) return game.level >= 3;
         return false;
     });
+
+    // Get dynamic stat EXP gain with bonuses
+    $: statExpGain = game.getStatExpGainPerTraining();
 </script>
 
 <div class="training-view">
@@ -42,6 +64,12 @@
             {@const canAfford = canAffordAction(action)}
             {@const cost = getActionCost(action)}
             {@const progress = isActive ? action.progress : 0}
+            {@const duration = game.getTrainingDuration(action.id)}
+            {@const currentStatExp = action.trainsStat ? game.getStatExp(action.trainsStat) : 0}
+            {@const requiredStatExp = action.trainsStat ? game.getStatExpRequired(action.trainsStat) : 0}
+            {@const statLevel = action.trainsStat ? game.stats[action.trainsStat] : 0}
+            {@const maxStatLevel = action.trainsStat ? game.getMaxStatLevel(action.trainsStat) : 0}
+            {@const atCap = action.trainsStat ? statLevel >= maxStatLevel : false}
 
             <button
                 class="action-card"
@@ -54,28 +82,74 @@
                     <div class="action-name">{action.name}</div>
                     {#if action.trainsStat}
                         <div class="stat-level">
-                            {action.trainsStat.toUpperCase()}: {game.stats[action.trainsStat]}
+                            Lv.{statLevel}/{maxStatLevel}
                         </div>
                     {/if}
                 </div>
 
                 <div class="action-description">{action.description}</div>
 
-                <div class="action-info">
-                    {#if cost > 0}
-                        <div class="cost" class:cannot-afford={!canAfford}>
-                            Cost: {cost} EXP
+                <!-- Stat EXP Progress Bar (v0.1.5+) -->
+                {#if action.trainsStat && !atCap}
+                    <div class="stat-exp-progress">
+                        <div class="stat-exp-bar-container">
+                            <div class="stat-exp-bar" style="width: {Math.min(100, (currentStatExp / requiredStatExp) * 100)}%"></div>
                         </div>
-                    {:else}
-                        <div class="cost free">Free</div>
-                    {/if}
-                    {#if action.id === 'practice-osmosis'}
-                        <div class="reward">+{10 + game.getOsmosisExpBonus()} EXP</div>
-                    {:else if action.trainsStat}
-                        <div class="reward">+10 {action.trainsStat.toUpperCase()} EXP</div>
-                    {:else}
-                        <div class="reward">+10 EXP</div>
-                    {/if}
+                        <div class="stat-exp-text">
+                            {formatNumber(currentStatExp)} / {formatNumber(requiredStatExp)} EXP
+                        </div>
+                    </div>
+                {:else if atCap}
+                    <div class="stat-exp-progress capped">
+                        <div class="stat-exp-text capped-text">Max Level Reached</div>
+                    </div>
+                {/if}
+
+                <div class="action-details">
+                    <!-- Row 1: Cost + Duration -->
+                    <div class="detail-row">
+                        <div class="detail-half">
+                            <span class="detail-label">Cost:</span>
+                            {#if cost > 0}
+                                <span class="detail-value cost-value" class:cannot-afford={!canAfford}>
+                                    {formatNumber(cost)} EXP
+                                </span>
+                            {:else}
+                                <span class="detail-value" style="color: var(--green)">Free</span>
+                            {/if}
+                        </div>
+                        <div class="detail-half">
+                            <span class="detail-label">Duration:</span>
+                            <span class="detail-value">
+                                {formatDuration(duration)}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Reward + Crit -->
+                    <div class="detail-row">
+                        <div class="detail-half">
+                            <span class="detail-label">Reward:</span>
+                            {#if action.id === 'practice-osmosis'}
+                                {@const totalReward = 10 + game.getOsmosisExpBonus()}
+                                <span class="detail-value reward-value">
+                                    +{totalReward} EXP
+                                </span>
+                            {:else if action.trainsStat}
+                                <span class="detail-value reward-value">
+                                    +{statExpGain} {action.trainsStat.toUpperCase().slice(0, 3)} EXP
+                                </span>
+                            {/if}
+                        </div>
+                        {#if action.trainsStat && game.critChance > 0}
+                            <div class="detail-half">
+                                <span class="detail-label">Crit:</span>
+                                <span class="detail-value crit-value">
+                                    {(game.critChance * 100).toFixed(0)}% for 2x
+                                </span>
+                            </div>
+                        {/if}
+                    </div>
                 </div>
 
                 {#if isActive}
@@ -137,7 +211,7 @@
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
-        min-height: 180px;
+        min-height: 240px;
         font-family: inherit;
     }
 
@@ -149,8 +223,6 @@
 
     .action-card:hover:not(:disabled):not(.active) .action-name,
     .action-card:hover:not(:disabled):not(.active) .action-description,
-    .action-card:hover:not(:disabled):not(.active) .cost,
-    .action-card:hover:not(:disabled):not(.active) .reward,
     .action-card:hover:not(:disabled):not(.active) .stat-level {
         color: var(--bg);
     }
@@ -163,8 +235,6 @@
 
     .action-card.active .action-name,
     .action-card.active .action-description,
-    .action-card.active .cost,
-    .action-card.active .reward,
     .action-card.active .stat-level {
         color: var(--bg);
     }
@@ -214,44 +284,128 @@
         transition: color 0.2s;
     }
 
-    .action-info {
+    /* Stat EXP Progress Bar */
+    .stat-exp-progress {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-        margin-top: auto;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.5rem 0;
     }
 
-    .cost {
-        color: var(--text);
+    .stat-exp-progress.capped {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .stat-exp-bar-container {
+        width: 100%;
+        height: 6px;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .stat-exp-bar {
+        height: 100%;
+        background-color: var(--blue);
+        transition: width 0.3s ease;
+    }
+
+    .action-card.active .stat-exp-bar {
+        background-color: var(--bg);
+    }
+
+    .stat-exp-text {
         font-family: 'JetBrains Mono', monospace;
-        font-weight: 700;
-        font-size: 0.9rem;
+        font-size: 0.75rem;
+        color: var(--text);
+        opacity: 0.8;
         transition: color 0.2s;
     }
 
-    .cost.free {
-        color: var(--green);
+    .stat-exp-text.capped-text {
+        color: var(--yellow);
+        font-weight: 600;
+        opacity: 1;
     }
 
-    .cost.cannot-afford {
+    .action-card.active .stat-exp-text {
+        color: var(--bg);
+        opacity: 0.9;
+    }
+
+    /* Action Details */
+    .action-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        margin-top: auto;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(128, 128, 128, 0.2);
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .detail-half {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+    }
+
+    .detail-label {
+        font-family: Lato, sans-serif;
+        font-size: 0.85rem;
+        color: var(--text);
+        opacity: 0.7;
+        transition: color 0.2s;
+    }
+
+    .action-card.active .detail-label {
+        color: var(--bg);
+        opacity: 0.8;
+    }
+
+    .detail-value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text);
+        transition: color 0.2s;
+    }
+
+    .action-card.active .detail-value {
+        color: var(--bg);
+    }
+
+    .cost-value.cannot-afford {
         color: var(--red);
     }
 
-    .action-card.active .cost.cannot-afford {
+    .action-card.active .cost-value.cannot-afford {
         color: var(--red);
         opacity: 0.9;
     }
 
-    .reward {
+    .reward-value {
         color: var(--green);
-        font-family: 'JetBrains Mono', monospace;
-        font-weight: 700;
-        font-size: 0.9rem;
-        transition: color 0.2s;
     }
 
-    .action-card.active .reward {
+    .action-card.active .reward-value {
+        color: var(--bg);
+        opacity: 0.9;
+    }
+
+    .crit-value {
+        color: var(--yellow);
+    }
+
+    .action-card.active .crit-value {
         color: var(--bg);
         opacity: 0.9;
     }
@@ -304,7 +458,7 @@
 
         .action-card {
             padding: 1rem;
-            min-height: 160px;
+            min-height: 220px;
         }
 
         .action-name {
@@ -313,6 +467,15 @@
 
         .stat-level {
             font-size: 0.8rem;
+        }
+
+        .detail-label,
+        .detail-value {
+            font-size: 0.8rem;
+        }
+
+        .stat-exp-text {
+            font-size: 0.7rem;
         }
     }
 </style>

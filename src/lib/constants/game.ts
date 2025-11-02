@@ -72,8 +72,8 @@ export const TRAINING_BASE_COST = 10;
 export const TRAINING_REWARD = 10;
 
 /**
- * Base EXP gained per osmosis (rumination) cycle completion
- * Modified by osmosis upgrade bonuses
+ * Base EXP gained per ruminate cycle completion
+ * Modified by ruminate upgrade bonuses
  */
 export const OSMOSIS_BASE_REWARD = 10;
 
@@ -112,9 +112,9 @@ export const GAME_TICK_RATE = 1000;
 export const TRAINING_BASE_DURATION = 15000;
 
 /**
- * Base duration for osmosis (rumination) action in milliseconds
- * Osmosis is the free idle action available early game
- * Modified by osmosis speed and global idle speed upgrades
+ * Base duration for ruminate action in milliseconds
+ * Ruminate is the free idle action available early game
+ * Modified by ruminate speed and global idle speed upgrades
  */
 export const OSMOSIS_BASE_DURATION = 15000;
 
