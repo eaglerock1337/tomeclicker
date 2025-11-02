@@ -50,8 +50,10 @@
                 {/if}
                 <div class="item">
                     <MousePointer size={48}/>
-                    <div class="click-text" class:crit-active={showCritAmount}>
-                        {#if showCritAmount}
+                    <div class="click-text" class:crit-active={showCritAmount && !game.canLevelUp()} class:level-up-available={game.canLevelUp()}>
+                        {#if game.canLevelUp()}
+                            level up available
+                        {:else if showCritAmount}
                             +{critAmount} EXP
                         {:else}
                             {clickText}
@@ -154,6 +156,11 @@
         color: var(--red);
         font-weight: 700;
         animation: critTextPulse 1.5s ease-out;
+    }
+
+    .click-text.level-up-available {
+        color: var(--green);
+        font-weight: 700;
     }
 
     .crit-text {
