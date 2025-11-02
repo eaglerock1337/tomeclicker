@@ -70,6 +70,10 @@ export interface IdleActionDependencies {
 	getTrainingCostMultiplier: () => number;
 	/** Get osmosis EXP bonus from upgrades */
 	getOsmosisExpBonus: () => number;
+	/** Get Discipline multiplier for all EXP gains */
+	getDisciplineMultiplier: () => number;
+	/** Get current character level */
+	getCurrentLevel: () => number;
 	/** Get global idle speed multiplier from upgrades */
 	getGlobalIdleSpeedMultiplier: () => number;
 	/** Get osmosis-specific speed multiplier */
@@ -430,12 +434,18 @@ export class IdleActionManager {
 		const action = this.trainingActions[actionId];
 		if (!action || !action.isActive) return null;
 
-		// Handle osmosis completion
+		// Handle ruminate (osmosis) completion
 		if (actionId === 'practice-osmosis') {
 			const bonus = this.deps.getOsmosisExpBonus();
-			const expGained = OSMOSIS_BASE_REWARD + bonus;
+			const level = this.deps.getCurrentLevel();
+			const disciplineMult = this.deps.getDisciplineMultiplier();
 
-			// Osmosis always restarts
+			// Apply formula: (base + bonus) × 10^(level-1) × 5^(discipline_level)
+			const baseReward = OSMOSIS_BASE_REWARD + bonus;
+			const levelMult = level > 1 ? Math.pow(10, level - 1) : 1;
+			const expGained = baseReward * levelMult * disciplineMult;
+
+			// Ruminate always restarts
 			action.progress = 0;
 			action.lastUpdate = Date.now();
 

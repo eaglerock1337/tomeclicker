@@ -171,7 +171,7 @@ describe('Game', () => {
 				// Note: levelUp doesn't auto-recalculate multipliers
 				// Multipliers are recalculated on next upgrade purchase or manual call
 				game.recalculateClickMultiplier();
-				expect(game.clickMultiplier).toBe(2.0); // Level 2 = 2x
+				expect(game.clickMultiplier).toBe(10.0); // Level 2 = 10x
 			});
 
 			it('should fail if insufficient exp', () => {
@@ -334,11 +334,11 @@ describe('Game', () => {
 			expect(game.clickMultiplier).toBe(1.0 + 3.0);
 		});
 
-		it('should apply level multiplier (2x per level after 1)', () => {
+		it('should apply level multiplier (10x per level after 1)', () => {
 			const game = createGameAtLevel(3);
 
-			// Level 3: 1.0 * 2^(3-1) = 1.0 * 4 = 4.0
-			expect(game.clickMultiplier).toBe(4.0);
+			// Level 3: 1.0 * 10^(3-1) = 1.0 * 100 = 100.0
+			expect(game.clickMultiplier).toBe(100.0);
 		});
 
 		it('should apply Discipline multiplier (5x per level)', () => {
@@ -350,13 +350,13 @@ describe('Game', () => {
 
 		it('should combine all multipliers correctly', () => {
 			const game = new GameBuilder()
-				.withLevel(2) // 2x from level
+				.withLevel(2) // 10x from level
 				.withUpgrade('click-strength', 2) // +2.0 additive
 				.withUpgrade('discipline', 1) // 5x multiplicative
 				.build();
 
-			// (1.0 + 2.0) * 2 * 5 = 3.0 * 2 * 5 = 30.0
-			expect(game.clickMultiplier).toBe(30.0);
+			// (1.0 + 2.0) * 10 * 5 = 3.0 * 10 * 5 = 150.0
+			expect(game.clickMultiplier).toBe(150.0);
 		});
 	});
 
@@ -584,12 +584,12 @@ describe('Game', () => {
 				expect(game.updateClickText()).toBe('level up available');
 			});
 
-			it('should return "upgrade available" when upgrade can be purchased', () => {
+			it('should return "+X EXP" when upgrade can be purchased', () => {
 				const game = new GameBuilder()
 					.withExp(500) // Enough for an upgrade, upgrades shown at 100+
 					.build();
 
-				expect(game.updateClickText()).toBe('upgrade available');
+				expect(game.updateClickText()).toBe('+1 EXP');
 			});
 
 			it('should return "click me" when lifetimeExp is 0', () => {
@@ -599,13 +599,13 @@ describe('Game', () => {
 				expect(game.updateClickText()).toBe('click me');
 			});
 
-			it('should return empty string when no special conditions met', () => {
+			it('should return "+X EXP" when no special conditions met', () => {
 				const game = new GameBuilder()
 					.withExp(10) // Not enough for upgrades (need 100)
 					.withLifetimeExp(10) // Not first click
 					.build();
 
-				expect(game.updateClickText()).toBe('');
+				expect(game.updateClickText()).toBe('+1 EXP');
 			});
 
 			it('should prioritize level up over upgrades', () => {
@@ -675,22 +675,22 @@ describe('Game', () => {
 
 			it('should return click multiplier with level bonuses', () => {
 				const game = new GameBuilder()
-					.withLevel(2) // 2x multiplier for level 2
+					.withLevel(2) // 10x multiplier for level 2
 					.build();
 
 				const value = game.getClickValue();
-				expect(value).toBe(2.0); // Base 1.0 * 2 (level)
+				expect(value).toBe(10.0); // Base 1.0 * 10 (level)
 			});
 
 			it('should combine upgrade and level multipliers', () => {
 				const game = new GameBuilder()
-					.withLevel(2) // 2x
+					.withLevel(2) // 10x
 					.withUpgrade('discipline', 1) // *5
 					.build();
 
 				const value = game.getClickValue();
-				// Base 1.0 * 2 (level) * 5 (discipline) = 10.0
-				expect(value).toBe(10.0);
+				// Base 1.0 * 10 (level) * 5 (discipline) = 50.0
+				expect(value).toBe(50.0);
 			});
 		});
 	});

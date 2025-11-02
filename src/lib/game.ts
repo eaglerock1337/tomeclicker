@@ -120,6 +120,8 @@ export class Game {
 			getTrainingSpeedMultiplier: () => this.getTrainingSpeedMultiplier(),
 			getTrainingCostMultiplier: () => this.getTrainingCostMultiplier(),
 			getOsmosisExpBonus: () => this.getOsmosisExpBonus(),
+			getDisciplineMultiplier: () => this.getDisciplineMultiplier(),
+			getCurrentLevel: () => this.level,
 			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
 			getOsmosisSpeedMultiplier: () => this.getOsmosisSpeedMultiplier(),
 			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
@@ -192,8 +194,8 @@ export class Game {
 	 * Recalculates the click multiplier based on current upgrades and level
 	 * Uses a hybrid additive+multiplicative system:
 	 * - Most upgrades add to base multiplier (additive)
-	 * - Level bonuses multiply by 2^(level-1)
-	 * - Discipline multiplies by 5^level
+	 * - Level bonuses multiply by 10^(level-1)
+	 * - Discipline multiplies by 5^(discipline_level)
 	 */
 	recalculateClickMultiplier(): void {
 		this.clickMultiplier = 1.0;
@@ -205,9 +207,9 @@ export class Game {
 			}
 		}
 
-		// Apply multiplicative level bonuses (2x per level after 1)
+		// Apply multiplicative level bonuses (10x per level after 1)
 		if (this.level > 1) {
-			this.clickMultiplier *= Math.pow(2, this.level - 1);
+			this.clickMultiplier *= Math.pow(10, this.level - 1);
 		}
 
 		// Apply multiplicative Discipline (5x per level)
@@ -276,11 +278,37 @@ export class Game {
 	}
 
 	/**
+	 * Gets the Discipline multiplier for all EXP gains
+	 * @returns Discipline multiplier (5^level)
+	 */
+	getDisciplineMultiplier(): number {
+		const discipline = this.upgrades['discipline'];
+		if (!discipline || discipline.currentLevel === 0) {
+			return 1.0;
+		}
+		return Math.pow(5, discipline.currentLevel);
+	}
+
+	/**
 	 * Gets the osmosis EXP bonus from upgrades
 	 * @returns Additional EXP gained per osmosis completion
 	 */
 	getOsmosisExpBonus(): number {
 		return calculateOsmosisExpBonus(this.upgrades);
+	}
+
+	/**
+	 * Gets the full Ruminate (osmosis) reward with all multipliers applied
+	 * Formula: (base + bonus) × 10^(level-1) × 5^(discipline_level)
+	 * @returns Total EXP that will be gained from completing Ruminate
+	 */
+	getRuminateReward(): number {
+		const baseReward = 10; // OSMOSIS_BASE_REWARD
+		const bonus = this.getOsmosisExpBonus();
+		const levelMult = this.level > 1 ? Math.pow(10, this.level - 1) : 1;
+		const disciplineMult = this.getDisciplineMultiplier();
+
+		return Math.floor((baseReward + bonus) * levelMult * disciplineMult);
 	}
 
 	/**
@@ -418,22 +446,14 @@ export class Game {
 			return 'level up available';
 		}
 
-		// Check if any upgrades are available
-		if (this.showUpgrades()) {
-			for (const upgrade of Object.values(this.upgrades)) {
-				if (this.canPurchaseUpgrade(upgrade.id)) {
-					return 'upgrade available';
-				}
-			}
-		}
-
 		// Show click me only at the very beginning
 		if (this.lifetimeExp === 0) {
 			return 'click me';
 		}
 
-		// After first click, just show empty text
-		return '';
+		// Show the EXP amount (whole number)
+		const expAmount = Math.floor(this.clickMultiplier);
+		return `+${expAmount} EXP`;
 	}
 
 	/**
@@ -921,6 +941,8 @@ export class Game {
 			getTrainingSpeedMultiplier: () => this.getTrainingSpeedMultiplier(),
 			getTrainingCostMultiplier: () => this.getTrainingCostMultiplier(),
 			getOsmosisExpBonus: () => this.getOsmosisExpBonus(),
+			getDisciplineMultiplier: () => this.getDisciplineMultiplier(),
+			getCurrentLevel: () => this.level,
 			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
 			getOsmosisSpeedMultiplier: () => this.getOsmosisSpeedMultiplier(),
 			getStatLevelCost: (stat) => this.getStatLevelCost(stat),

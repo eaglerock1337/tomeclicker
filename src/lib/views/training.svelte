@@ -131,9 +131,8 @@
                         <div class="detail-half">
                             <span class="detail-label">Reward:</span>
                             {#if action.id === 'practice-osmosis'}
-                                {@const totalReward = 10 + game.getOsmosisExpBonus()}
                                 <span class="detail-value reward-value">
-                                    +{totalReward} EXP
+                                    +{game.getRuminateReward()} EXP
                                 </span>
                             {:else if action.trainsStat}
                                 <span class="detail-value reward-value">
