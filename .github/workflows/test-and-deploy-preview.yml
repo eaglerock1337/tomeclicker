@@ -44,10 +44,14 @@ jobs:
   deploy:
     name: Deploy Preview to GitHub Pages
     runs-on: ubuntu-latest
-    # TODO: Remove comment to require tests pass before deploy
-    # needs: test # Wait for tests to pass
+    needs: test # Wait for tests to pass
     # Deploy only for PRs with 'preview' label
-    if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'preview')
+    if: ${{ github.event_name == 'pull_request' && 
+      contains(github.event.pull_request.labels.*.name, 'preview') &&
+      (
+        needs.test.result == 'success' ||
+        contains(github.event.pull_request.labels.*.name, 'crash-override') )
+      ) }}
 
     steps:
       - name: Checkout code
