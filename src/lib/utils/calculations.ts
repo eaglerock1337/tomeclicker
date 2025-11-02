@@ -363,5 +363,237 @@ export function calculateTrainingCritChance(upgrades: { [key: string]: Upgrade }
 		}
 	}
 
-	return Math.min(1.0, critChance); // Cap at 100%
+	return Math.min(0.25, critChance); // Cap at 25%
+}
+
+/**
+ * Calculates the click crit chance from upgrades (v0.1.5+ click system)
+ * Chance for clicks to grant double EXP
+ *
+ * @param upgrades - Map of all upgrades
+ * @returns Crit chance for clicks (0.0 to 0.25)
+ *
+ * @example
+ * // No upgrades: 0.0 (0% crit chance)
+ * calculateClickCritChance({})
+ *
+ * // 10 levels of +2% crit: 0.2 (20% crit chance)
+ * calculateClickCritChance({
+ *   'critical-clicks': { effectType: 'clickCrit', effectValue: 0.02, currentLevel: 10 }
+ * })
+ */
+export function calculateClickCritChance(upgrades: { [key: string]: Upgrade }): number {
+	let critChance = 0;
+
+	for (const upgrade of Object.values(upgrades)) {
+		if (upgrade.effectType === 'clickCrit') {
+			// v0.1.5+: +2% click crit chance per level
+			critChance += upgrade.effectValue * upgrade.currentLevel;
+		}
+	}
+
+	return Math.min(0.25, critChance); // Cap at 25%
+}
+
+/**
+ * Calculates the click crit damage multiplier from upgrades (v0.1.5+ click system)
+ * Additional damage dealt when a crit occurs
+ *
+ * @param upgrades - Map of all upgrades
+ * @returns Crit damage multiplier (0.5 to 1.5, meaning 1.5x to 2.5x total damage)
+ *
+ * @example
+ * // No upgrades: 0.5 (1.5x damage on crit)
+ * calculateClickCritDamage({})
+ *
+ * // 10 levels of +5% crit damage: 1.0 (2.0x damage on crit)
+ * calculateClickCritDamage({
+ *   'devastating-click': { effectType: 'clickCritDamage', effectValue: 0.05, currentLevel: 10 }
+ * })
+ */
+export function calculateClickCritDamage(upgrades: { [key: string]: Upgrade }): number {
+	let critDamage = 0.5; // Base 50% bonus (1.5x damage)
+
+	for (const upgrade of Object.values(upgrades)) {
+		if (upgrade.effectType === 'clickCritDamage') {
+			// v0.1.5+: +5% crit damage per level
+			critDamage += upgrade.effectValue * upgrade.currentLevel;
+		}
+	}
+
+	return Math.min(1.5, critDamage); // Cap at 150% bonus (2.5x damage)
+}
+
+/**
+ * Calculates the ruminate crit chance from upgrades (v0.1.5+ ruminate system)
+ * Chance for ruminate ticks to grant double EXP
+ *
+ * @param upgrades - Map of all upgrades
+ * @returns Crit chance for ruminate (0.0 to 0.25)
+ *
+ * @example
+ * // No upgrades: 0.0 (0% crit chance)
+ * calculateRuminateCritChance({})
+ *
+ * // 10 levels of +2% crit: 0.2 (20% crit chance)
+ * calculateRuminateCritChance({
+ *   'ruminate-crit': { effectType: 'ruminateCrit', effectValue: 0.02, currentLevel: 10 }
+ * })
+ */
+export function calculateRuminateCritChance(upgrades: { [key: string]: Upgrade }): number {
+	let critChance = 0;
+
+	for (const upgrade of Object.values(upgrades)) {
+		if (upgrade.effectType === 'ruminateCrit') {
+			// v0.1.5+: +2% ruminate crit chance per level
+			critChance += upgrade.effectValue * upgrade.currentLevel;
+		}
+	}
+
+	return Math.min(0.25, critChance); // Cap at 25%
+}
+
+/**
+ * Calculates the ruminate crit damage multiplier from upgrades (v0.1.5+ ruminate system)
+ * Additional EXP gained when a ruminate crit occurs
+ *
+ * @param upgrades - Map of all upgrades
+ * @returns Crit damage multiplier (0.5 to 1.5, meaning 1.5x to 2.5x total EXP)
+ *
+ * @example
+ * // No upgrades: 0.5 (1.5x EXP on crit)
+ * calculateRuminateCritDamage({})
+ *
+ * // 10 levels of +5% crit damage: 1.0 (2.0x EXP on crit)
+ * calculateRuminateCritDamage({
+ *   'devastating-ruminate': { effectType: 'ruminateCritDamage', effectValue: 0.05, currentLevel: 10 }
+ * })
+ */
+export function calculateRuminateCritDamage(upgrades: { [key: string]: Upgrade }): number {
+	let critDamage = 0.5; // Base 50% bonus (1.5x EXP)
+
+	for (const upgrade of Object.values(upgrades)) {
+		if (upgrade.effectType === 'ruminateCritDamage') {
+			// v0.1.5+: +5% crit damage per level
+			critDamage += upgrade.effectValue * upgrade.currentLevel;
+		}
+	}
+
+	return Math.min(1.5, critDamage); // Cap at 150% bonus (2.5x EXP)
+}
+
+/**
+ * Calculates the training crit damage multiplier from upgrades (v0.1.5+ training system)
+ * Additional stat EXP gained when a training crit occurs
+ *
+ * @param upgrades - Map of all upgrades
+ * @returns Crit damage multiplier (0.5 to 1.5, meaning 1.5x to 2.5x total stat EXP)
+ *
+ * @example
+ * // No upgrades: 0.5 (1.5x stat EXP on crit)
+ * calculateTrainingCritDamage({})
+ *
+ * // 10 levels of +5% crit damage: 1.0 (2.0x stat EXP on crit)
+ * calculateTrainingCritDamage({
+ *   'devastating-training': { effectType: 'trainingCritDamage', effectValue: 0.05, currentLevel: 10 }
+ * })
+ */
+export function calculateTrainingCritDamage(upgrades: { [key: string]: Upgrade }): number {
+	let critDamage = 0.5; // Base 50% bonus (1.5x stat EXP)
+
+	for (const upgrade of Object.values(upgrades)) {
+		if (upgrade.effectType === 'trainingCritDamage') {
+			// v0.1.5+: +5% crit damage per level
+			critDamage += upgrade.effectValue * upgrade.currentLevel;
+		}
+	}
+
+	return Math.min(1.5, critDamage); // Cap at 150% bonus (2.5x stat EXP)
+}
+
+/**
+ * Calculates the click power percentage multiplier from upgrades (v0.1.5+ click system)
+ * Multiplicative bonus to all click EXP gain
+ *
+ * @param upgrades - Map of all upgrades
+ * @returns Multiplier for click EXP (higher is more EXP)
+ *
+ * @example
+ * // No upgrades: 1.0 (100% EXP)
+ * calculateClickMultiplierPercent({})
+ *
+ * // 10 levels of +5% bonus: 1.5 (150% EXP)
+ * calculateClickMultiplierPercent({
+ *   'click-mastery': { effectType: 'clickMultiplierPercent', effectValue: 0.05, currentLevel: 10 }
+ * })
+ */
+export function calculateClickMultiplierPercent(upgrades: { [key: string]: Upgrade }): number {
+	let multiplier = 1.0;
+
+	for (const upgrade of Object.values(upgrades)) {
+		if (upgrade.effectType === 'clickMultiplierPercent') {
+			// v0.1.5+: +5% click power per level (additive)
+			multiplier += upgrade.effectValue * upgrade.currentLevel;
+		}
+	}
+
+	return multiplier;
+}
+
+/**
+ * Calculates the ruminate power percentage multiplier from upgrades (v0.1.5+ ruminate system)
+ * Multiplicative bonus to all ruminate EXP gain
+ *
+ * @param upgrades - Map of all upgrades
+ * @returns Multiplier for ruminate EXP (higher is more EXP)
+ *
+ * @example
+ * // No upgrades: 1.0 (100% EXP)
+ * calculateRuminateMultiplierPercent({})
+ *
+ * // 10 levels of +5% bonus: 1.5 (150% EXP)
+ * calculateRuminateMultiplierPercent({
+ *   'ruminate-mastery': { effectType: 'ruminateMultiplierPercent', effectValue: 0.05, currentLevel: 10 }
+ * })
+ */
+export function calculateRuminateMultiplierPercent(upgrades: { [key: string]: Upgrade }): number {
+	let multiplier = 1.0;
+
+	for (const upgrade of Object.values(upgrades)) {
+		if (upgrade.effectType === 'ruminateMultiplierPercent') {
+			// v0.1.5+: +5% ruminate power per level (additive)
+			multiplier += upgrade.effectValue * upgrade.currentLevel;
+		}
+	}
+
+	return multiplier;
+}
+
+/**
+ * Calculates the stat gain percentage multiplier from upgrades (v0.1.5+ training system)
+ * Multiplicative bonus to all stat EXP gain from training
+ *
+ * @param upgrades - Map of all upgrades
+ * @returns Multiplier for stat EXP (higher is more stat EXP)
+ *
+ * @example
+ * // No upgrades: 1.0 (100% stat EXP)
+ * calculateStatGainMultiplierPercent({})
+ *
+ * // 10 levels of +5% bonus: 1.5 (150% stat EXP)
+ * calculateStatGainMultiplierPercent({
+ *   'training-mastery': { effectType: 'statGainPercent', effectValue: 0.05, currentLevel: 10 }
+ * })
+ */
+export function calculateStatGainMultiplierPercent(upgrades: { [key: string]: Upgrade }): number {
+	let multiplier = 1.0;
+
+	for (const upgrade of Object.values(upgrades)) {
+		if (upgrade.effectType === 'statGainPercent') {
+			// v0.1.5+: +5% stat gain per level (additive)
+			multiplier += upgrade.effectValue * upgrade.currentLevel;
+		}
+	}
+
+	return multiplier;
 }
