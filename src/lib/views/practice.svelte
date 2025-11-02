@@ -25,7 +25,7 @@
         const isCrit = Math.random() < game.critChance;
         if (isCrit) {
             clickValue *= (1 + game.critDamage);
-            critAmount = Math.floor(clickValue);
+            critAmount = clickValue; // Store full value with decimal
             showCrit = true;
             showCritAmount = true;
             setTimeout(() => showCrit = false, 300);
@@ -54,7 +54,7 @@
                         {#if game.canLevelUp()}
                             level up available
                         {:else if showCritAmount}
-                            +{critAmount} EXP
+                            +{critAmount.toFixed(1)} EXP
                         {:else}
                             {clickText}
                         {/if}

@@ -64,8 +64,9 @@ export class Game {
 	public tick: number;
 	public menu: string;
 	public clickMultiplier: number;
-	public critChance: number;
-	public critDamage: number;
+	public critChance: number; // Character EXP crit chance (clicking)
+	public critDamage: number; // Character EXP crit damage multiplier
+	public trainingCritChance: number; // Stat EXP training crit chance
 	public saveIntegrity: string;
 	public lastValidation: number;
 	private _validationKey: string;
@@ -94,8 +95,9 @@ export class Game {
 		this.tick = 0;
 		this.menu = 'practice';
 		this.clickMultiplier = 1.0;
-		this.critChance = 0.0; // Start with 0% crit chance
+		this.critChance = 0.0; // Start with 0% character crit chance
 		this.critDamage = BASE_CRIT_DAMAGE; // Crits do +50% damage (1.5x total)
+		this.trainingCritChance = 0.0; // Start with 0% training crit chance
 		this.saveIntegrity = 'valid';
 		this.lastValidation = Date.now();
 		this._validationKey = this.generateValidationKey();
@@ -249,14 +251,17 @@ export class Game {
 	 * Recalculates crit chance and crit damage based on upgrades
 	 */
 	recalculateCritStats(): void {
-		this.critChance = 0.0; // Base 0%
+		this.critChance = 0.0; // Base 0% character crit
 		this.critDamage = BASE_CRIT_DAMAGE; // Base +50%
+		this.trainingCritChance = 0.0; // Base 0% training crit
 
 		for (const upgrade of Object.values(this.upgrades)) {
 			if (upgrade.effectType === 'clickCrit') {
 				this.critChance += upgrade.effectValue * upgrade.currentLevel;
 			} else if (upgrade.effectType === 'clickCritDamage') {
 				this.critDamage += upgrade.effectValue * upgrade.currentLevel;
+			} else if (upgrade.effectType === 'trainingCrit') {
+				this.trainingCritChance += upgrade.effectValue * upgrade.currentLevel;
 			}
 		}
 	}
@@ -752,6 +757,7 @@ export class Game {
 			clickMultiplier: this.clickMultiplier,
 			critChance: this.critChance,
 			critDamage: this.critDamage,
+			trainingCritChance: this.trainingCritChance,
 			upgrades: this.upgradeManager.getUpgrades(),
 			stats: this.stats,
 			trainingActions: this.idleActionManager.getTrainingActions(),
@@ -774,6 +780,7 @@ export class Game {
 		this.level = state.level || 1;
 		this.critChance = state.critChance || 0.0;
 		this.critDamage = state.critDamage || 1.5;
+		this.trainingCritChance = state.trainingCritChance || 0.0;
 
 		// Load stats into StatsManager with migration for v0.1.5+ stat EXP system
 		const loadedStats = state.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
@@ -921,6 +928,7 @@ export class Game {
 		this.clickMultiplier = 1.0;
 		this.critChance = 0.0;
 		this.critDamage = BASE_CRIT_DAMAGE;
+		this.trainingCritChance = 0.0;
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
 		this.meditationUnlocked = false;

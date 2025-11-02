@@ -11,6 +11,7 @@ export interface GameState {
 	clickMultiplier: number;
 	critChance: number;
 	critDamage: number;
+	trainingCritChance: number;
 	upgrades: Record<string, any>; // Upgrade objects or legacy format
 	stats: Stats;
 	trainingActions: Record<string, any>; // IdleAction objects

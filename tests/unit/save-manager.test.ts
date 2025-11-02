@@ -44,6 +44,7 @@ class SaveManagerBuilder {
 		clickMultiplier: 1.0,
 		critChance: 0.0,
 		critDamage: 1.5,
+		trainingCritChance: 0.0,
 		upgrades: {},
 		stats: {
 			strength: 1,
