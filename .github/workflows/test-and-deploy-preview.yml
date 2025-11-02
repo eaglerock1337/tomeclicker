@@ -50,7 +50,7 @@ jobs:
       contains(github.event.pull_request.labels.*.name, 'preview') &&
       (
         needs.test.result == 'success' ||
-        contains(github.event.pull_request.labels.*.name, 'crash-override') )
+        contains(github.event.pull_request.labels.*.name, 'crash-override')
       ) }}
 
     steps:
