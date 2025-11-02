@@ -16,9 +16,10 @@
         return num.toFixed(2);
     }
 
-    // Define all 4 RPG stats with their effects (v0.1.5+ stat system)
+    // Define all 4 physical stats with their effects (v0.1.5+ stat system)
+    // Magic stats (INT/WIS) will be unlocked later through meditation
     interface StatDisplay {
-        id: keyof Pick<typeof game.stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>;
+        id: keyof Pick<typeof game.stats, 'strength' | 'agility' | 'willpower' | 'endurance'>;
         name: string;
         shortName: string;
         level: number;
@@ -42,52 +43,52 @@
             requiredExp: game.getStatExpRequired('strength'),
             maxLevel: game.getMaxStatLevel('strength'),
             trainingCost: game.getStatTrainingCost('strength'),
-            effect: 'Attack',
+            effect: 'Physical Power',
             color: 'var(--red)',
             available: game.level >= 3,
             atCap: game.stats.strength >= game.getMaxStatLevel('strength')
         },
         {
-            id: 'dexterity' as const,
-            name: 'Dexterity',
-            shortName: 'DEX',
-            level: game.stats.dexterity,
-            currentExp: game.getStatExp('dexterity'),
-            requiredExp: game.getStatExpRequired('dexterity'),
-            maxLevel: game.getMaxStatLevel('dexterity'),
-            trainingCost: game.getStatTrainingCost('dexterity'),
-            effect: 'Attack Speed',
+            id: 'agility' as const,
+            name: 'Agility',
+            shortName: 'AGI',
+            level: game.stats.agility,
+            currentExp: game.getStatExp('agility'),
+            requiredExp: game.getStatExpRequired('agility'),
+            maxLevel: game.getMaxStatLevel('agility'),
+            trainingCost: game.getStatTrainingCost('agility'),
+            effect: 'Speed & Reflexes',
             color: 'var(--green)',
             available: game.level >= 3,
-            atCap: game.stats.dexterity >= game.getMaxStatLevel('dexterity')
+            atCap: game.stats.agility >= game.getMaxStatLevel('agility')
         },
         {
-            id: 'intelligence' as const,
-            name: 'Intelligence',
-            shortName: 'INT',
-            level: game.stats.intelligence,
-            currentExp: game.getStatExp('intelligence'),
-            requiredExp: game.getStatExpRequired('intelligence'),
-            maxLevel: game.getMaxStatLevel('intelligence'),
-            trainingCost: game.getStatTrainingCost('intelligence'),
-            effect: 'Mana',
+            id: 'willpower' as const,
+            name: 'Willpower',
+            shortName: 'WIL',
+            level: game.stats.willpower,
+            currentExp: game.getStatExp('willpower'),
+            requiredExp: game.getStatExpRequired('willpower'),
+            maxLevel: game.getMaxStatLevel('willpower'),
+            trainingCost: game.getStatTrainingCost('willpower'),
+            effect: 'Mental Fortitude',
             color: 'var(--blue)',
             available: game.level >= 3,
-            atCap: game.stats.intelligence >= game.getMaxStatLevel('intelligence')
+            atCap: game.stats.willpower >= game.getMaxStatLevel('willpower')
         },
         {
-            id: 'wisdom' as const,
-            name: 'Wisdom',
-            shortName: 'WIS',
-            level: game.stats.wisdom,
-            currentExp: game.getStatExp('wisdom'),
-            requiredExp: game.getStatExpRequired('wisdom'),
-            maxLevel: game.getMaxStatLevel('wisdom'),
-            trainingCost: game.getStatTrainingCost('wisdom'),
-            effect: 'Mana Regen',
+            id: 'endurance' as const,
+            name: 'Endurance',
+            shortName: 'END',
+            level: game.stats.endurance,
+            currentExp: game.getStatExp('endurance'),
+            requiredExp: game.getStatExpRequired('endurance'),
+            maxLevel: game.getMaxStatLevel('endurance'),
+            trainingCost: game.getStatTrainingCost('endurance'),
+            effect: 'Stamina & Resilience',
             color: 'var(--yellow)',
             available: game.level >= 3,
-            atCap: game.stats.wisdom >= game.getMaxStatLevel('wisdom')
+            atCap: game.stats.endurance >= game.getMaxStatLevel('endurance')
         }
     ] as StatDisplay[];
 </script>

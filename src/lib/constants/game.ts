@@ -218,6 +218,6 @@ export const UPGRADE_MAX_STANDARD = 100;
 
 /**
  * Maximum level for Discipline upgrade
- * Most powerful upgrade, heavily limited
+ * Endgame progression - 100 levels available
  */
-export const UPGRADE_MAX_DISCIPLINE = 10;
+export const UPGRADE_MAX_DISCIPLINE = 100;

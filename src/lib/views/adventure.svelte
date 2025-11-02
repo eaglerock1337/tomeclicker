@@ -6,9 +6,9 @@
     $: isUnlocked = game.adventureModeUnlocked;
     $: meetsStatRequirements =
         game.stats.strength >= 5 &&
-        game.stats.dexterity >= 5 &&
-        game.stats.intelligence >= 5 &&
-        game.stats.wisdom >= 5;
+        game.stats.agility >= 5 &&
+        game.stats.willpower >= 5 &&
+        game.stats.endurance >= 5;
 </script>
 
 <div class="adventure-container">
@@ -31,25 +31,25 @@
                             {#if game.stats.strength >= 5}✓{/if}
                         </span>
                     </div>
-                    <div class="requirement-item" class:met={game.stats.dexterity >= 5}>
-                        <span class="requirement-label">Dexterity:</span>
+                    <div class="requirement-item" class:met={game.stats.agility >= 5}>
+                        <span class="requirement-label">Agility:</span>
                         <span class="requirement-value">
-                            {game.stats.dexterity} / 5
-                            {#if game.stats.dexterity >= 5}✓{/if}
+                            {game.stats.agility} / 5
+                            {#if game.stats.agility >= 5}✓{/if}
                         </span>
                     </div>
-                    <div class="requirement-item" class:met={game.stats.intelligence >= 5}>
-                        <span class="requirement-label">Intelligence:</span>
+                    <div class="requirement-item" class:met={game.stats.willpower >= 5}>
+                        <span class="requirement-label">Willpower:</span>
                         <span class="requirement-value">
-                            {game.stats.intelligence} / 5
-                            {#if game.stats.intelligence >= 5}✓{/if}
+                            {game.stats.willpower} / 5
+                            {#if game.stats.willpower >= 5}✓{/if}
                         </span>
                     </div>
-                    <div class="requirement-item" class:met={game.stats.wisdom >= 5}>
-                        <span class="requirement-label">Wisdom:</span>
+                    <div class="requirement-item" class:met={game.stats.endurance >= 5}>
+                        <span class="requirement-label">Endurance:</span>
                         <span class="requirement-value">
-                            {game.stats.wisdom} / 5
-                            {#if game.stats.wisdom >= 5}✓{/if}
+                            {game.stats.endurance} / 5
+                            {#if game.stats.endurance >= 5}✓{/if}
                         </span>
                     </div>
                 </div>

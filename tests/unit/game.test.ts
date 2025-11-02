@@ -45,7 +45,7 @@ describe('Game', () => {
 			const game = createTestGame();
 
 			expect(game.stats.strength).toBe(1);
-			expect(game.stats.dexterity).toBe(1);
+			expect(game.stats.agility).toBe(1);
 			expect(game.stats.intelligence).toBe(1);
 			expect(game.stats.wisdom).toBe(1);
 		});
@@ -55,7 +55,7 @@ describe('Game', () => {
 
 			expect(game.trainingActions['practice-osmosis']).toBeDefined();
 			expect(game.trainingActions['train-strength']).toBeDefined();
-			expect(game.trainingActions['train-dexterity']).toBeDefined();
+			expect(game.trainingActions['train-agility']).toBeDefined();
 			expect(game.trainingActions['train-intelligence']).toBeDefined();
 			expect(game.trainingActions['train-wisdom']).toBeDefined();
 		});
@@ -515,7 +515,7 @@ describe('Game', () => {
 					.withLevel(5)
 					.withUpgrade('click-strength', 10)
 					.withUpgrade('discipline', 2)
-					.withStats({ strength: 5, dexterity: 3 })
+					.withStats({ strength: 5, agility: 3 })
 					.build();
 
 				const saveData = original.exportSave();
@@ -529,7 +529,7 @@ describe('Game', () => {
 					original.upgrades['click-strength'].currentLevel
 				);
 				expect(loaded.stats.strength).toBe(original.stats.strength);
-				expect(loaded.stats.dexterity).toBe(original.stats.dexterity);
+				expect(loaded.stats.agility).toBe(original.stats.agility);
 			});
 		});
 	});
@@ -548,7 +548,7 @@ describe('Game', () => {
 			const game = createTestGame();
 
 			expect(game.trainingActions['train-strength'].trainsStat).toBe('strength');
-			expect(game.trainingActions['train-dexterity'].trainsStat).toBe('dexterity');
+			expect(game.trainingActions['train-agility'].trainsStat).toBe('agility');
 			expect(game.trainingActions['train-intelligence'].trainsStat).toBe('intelligence');
 			expect(game.trainingActions['train-wisdom'].trainsStat).toBe('wisdom');
 		});
@@ -779,28 +779,28 @@ describe('Game', () => {
 		describe('showMeditation', () => {
 			it('should return false when stats < 5', () => {
 				const game = new GameBuilder()
-					.withStats({ strength: 4, dexterity: 4, intelligence: 4, wisdom: 4 })
+					.withStats({ strength: 4, agility: 4, intelligence: 4, wisdom: 4 })
 					.build();
 				expect(game.showMeditation()).toBe(false);
 			});
 
 			it('should return false when only some stats >= 5', () => {
 				const game = new GameBuilder()
-					.withStats({ strength: 5, dexterity: 5, intelligence: 4, wisdom: 3 })
+					.withStats({ strength: 5, agility: 5, intelligence: 4, wisdom: 3 })
 					.build();
 				expect(game.showMeditation()).toBe(false);
 			});
 
 			it('should return true when all stats >= 5', () => {
 				const game = new GameBuilder()
-					.withStats({ strength: 5, dexterity: 5, intelligence: 5, wisdom: 5 })
+					.withStats({ strength: 5, agility: 5, intelligence: 5, wisdom: 5 })
 					.build();
 				expect(game.showMeditation()).toBe(true);
 			});
 
 			it('should return true when all stats > 5', () => {
 				const game = new GameBuilder()
-					.withStats({ strength: 10, dexterity: 8, intelligence: 6, wisdom: 5 })
+					.withStats({ strength: 10, agility: 8, intelligence: 6, wisdom: 5 })
 					.build();
 				expect(game.showMeditation()).toBe(true);
 			});
@@ -938,7 +938,7 @@ describe('Game', () => {
 				.withExp(1000000)
 				.withLifetimeExp(1000000)
 				.withUpgrade('discipline', 3)
-				.withStats({ strength: 10, dexterity: 8, intelligence: 6, wisdom: 4 })
+				.withStats({ strength: 10, agility: 8, intelligence: 6, wisdom: 4 })
 				.build();
 
 			game.adventureModeUnlocked = true;
@@ -952,7 +952,7 @@ describe('Game', () => {
 			expect(game.level).toBe(1);
 			expect(game.clickMultiplier).toBe(1.0);
 			expect(game.stats.strength).toBe(1);
-			expect(game.stats.dexterity).toBe(1);
+			expect(game.stats.agility).toBe(1);
 			expect(game.stats.intelligence).toBe(1);
 			expect(game.stats.wisdom).toBe(1);
 			expect(game.adventureModeUnlocked).toBe(false);

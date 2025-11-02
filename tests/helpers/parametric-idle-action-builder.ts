@@ -65,11 +65,15 @@ export class ParametricIdleActionBuilder {
 	// Current state of stats and stat EXP
 	private statLevels: Stats = {
 		strength: 1,
-		dexterity: 1,
+		agility: 1,
+		willpower: 1,
+		endurance: 1,
 		intelligence: 1,
 		wisdom: 1,
 		strengthExp: 0,
-		dexterityExp: 0,
+		agilityExp: 0,
+		willpowerExp: 0,
+		enduranceExp: 0,
 		intelligenceExp: 0,
 		wisdomExp: 0
 	};

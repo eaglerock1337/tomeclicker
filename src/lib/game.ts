@@ -9,6 +9,9 @@ import {
 	calculateStatExpRequired,
 	calculateStatTrainingCost,
 	calculateMaxStatLevel,
+	calculateClickMultiplierPercent,
+	calculateClickCritChance,
+	calculateClickCritDamage,
 	calculateRuminateMultiplierPercent,
 	calculateRuminateCritChance,
 	calculateRuminateCritDamage,
@@ -43,17 +46,27 @@ import {
 
 /**
  * Represents RPG-style player stats with EXP-based leveling
+ * v0.1.5: Physical stats (Strength, Agility, Willpower, Endurance) available now
+ * Magic stats (Intelligence, Wisdom) will unlock later with meditation/magic system
  */
 export interface Stats {
-	// Stat levels (display values)
+	// Physical stat levels (available now)
 	strength: number;
-	dexterity: number;
+	agility: number;
+	willpower: number;
+	endurance: number;
+
+	// Magic stat levels (locked - future meditation/magic unlock)
 	intelligence: number;
 	wisdom: number;
 
-	// Stat EXP tracking (v0.1.5+ EXP-based progression)
+	// Physical stat EXP tracking (v0.1.5+ EXP-based progression)
 	strengthExp: number;
-	dexterityExp: number;
+	agilityExp: number;
+	willpowerExp: number;
+	enduranceExp: number;
+
+	// Magic stat EXP tracking (locked - future)
 	intelligenceExp: number;
 	wisdomExp: number;
 }
@@ -206,31 +219,37 @@ export class Game {
 	}
 
 	/**
-	 * Recalculates the click multiplier based on current upgrades and level
-	 * Uses a hybrid additive+multiplicative system:
-	 * - Most upgrades add to base multiplier (additive)
-	 * - Level bonuses multiply by 10^(level-1)
-	 * - Discipline multiplies by 5^(discipline_level)
+	 * Recalculates the click multiplier based on current upgrades and level (v0.1.5+)
+	 * Hybrid system:
+	 * 1. Flat bonuses: Click Power (+1 per level)
+	 * 2. Percentage bonuses: Click Mastery (+5% per level)
+	 * 3. Level multipliers: 10^(level-1)
+	 * 4. Discipline multiplier: 5^(discipline_level)
 	 */
 	recalculateClickMultiplier(): void {
+		// Start with base 1.0
 		this.clickMultiplier = 1.0;
 
-		// Add additive upgrades first
+		// Add flat bonuses from Click Power
 		for (const upgrade of Object.values(this.upgrades)) {
-			if (upgrade.effectType === 'clickMultiplier' && upgrade.id !== 'discipline') {
+			if (upgrade.effectType === 'clickMultiplier') {
 				this.clickMultiplier += upgrade.effectValue * upgrade.currentLevel;
 			}
 		}
 
-		// Apply multiplicative level bonuses (10x per level after 1)
+		// Apply percentage multipliers (Click Mastery)
+		const percentMultiplier = calculateClickMultiplierPercent(this.upgrades);
+		this.clickMultiplier *= percentMultiplier;
+
+		// Apply level multipliers (10x per level after 1)
 		if (this.level > 1) {
 			this.clickMultiplier *= Math.pow(10, this.level - 1);
 		}
 
-		// Apply multiplicative Discipline (5x per level)
+		// Apply Discipline multiplier (2x per level)
 		const discipline = this.upgrades['discipline'];
 		if (discipline && discipline.currentLevel > 0) {
-			this.clickMultiplier *= Math.pow(5, discipline.currentLevel);
+			this.clickMultiplier *= Math.pow(2, discipline.currentLevel);
 		}
 
 		// Recalculate idle EXP rate
@@ -238,22 +257,27 @@ export class Game {
 	}
 
 	/**
-	 * Recalculates the idle EXP rate based on current upgrades
+	 * Recalculates the idle EXP rate based on current upgrades (v0.1.5+)
+	 * Pure multiplicative system:
+	 * Base 10 EXP/tick × percentage bonuses × level mult × discipline mult
 	 */
 	recalculateIdleExpRate(): void {
-		this.idleExpRate = 0;
+		// Start with base ruminate reward (10 EXP per tick)
+		const baseReward = 10; // OSMOSIS_BASE_REWARD
 
-		// Add idle EXP upgrades (v0.1.5+: from ruminate power upgrades)
-		for (const upgrade of Object.values(this.upgrades)) {
-			if (upgrade.effectType === 'ruminatePower') {
-				this.idleExpRate += upgrade.effectValue * upgrade.currentLevel;
-			}
+		// Apply percentage multiplier from Ruminate Power + Ruminate Mastery
+		const percentMultiplier = calculateRuminateMultiplierPercent(this.upgrades);
+		this.idleExpRate = baseReward * percentMultiplier;
+
+		// Apply level multipliers (10x per level after 1)
+		if (this.level > 1) {
+			this.idleExpRate *= Math.pow(10, this.level - 1);
 		}
 
-		// Apply Discipline multiplier (5x per level)
+		// Apply Discipline multiplier (2x per level)
 		const discipline = this.upgrades['discipline'];
 		if (discipline && discipline.currentLevel > 0) {
-			this.idleExpRate *= Math.pow(5, discipline.currentLevel);
+			this.idleExpRate *= Math.pow(2, discipline.currentLevel);
 		}
 
 		// Recalculate crit stats
@@ -264,18 +288,12 @@ export class Game {
 	 * Recalculates crit chance and crit damage based on upgrades
 	 */
 	recalculateCritStats(): void {
-		this.critChance = 0.0; // Base 0% character crit
-		this.critDamage = BASE_CRIT_DAMAGE; // Base +50%
-		this.trainingCritChance = calculateTrainingCritChance(this.upgrades); // Calculate from upgrades
+		// Calculate click crit stats from upgrades
+		this.critChance = calculateClickCritChance(this.upgrades);
+		this.critDamage = calculateClickCritDamage(this.upgrades);
 
-		for (const upgrade of Object.values(this.upgrades)) {
-			if (upgrade.effectType === 'clickCrit') {
-				this.critChance += upgrade.effectValue * upgrade.currentLevel;
-			} else if (upgrade.effectType === 'clickCritDamage') {
-				this.critDamage += upgrade.effectValue * upgrade.currentLevel;
-			}
-			// trainingCrit is now calculated via calculateTrainingCritChance above
-		}
+		// Calculate training crit chance from upgrades
+		this.trainingCritChance = calculateTrainingCritChance(this.upgrades);
 	}
 
 	/**
@@ -296,14 +314,14 @@ export class Game {
 
 	/**
 	 * Gets the Discipline multiplier for all EXP gains
-	 * @returns Discipline multiplier (5^level)
+	 * @returns Discipline multiplier (2^level)
 	 */
 	getDisciplineMultiplier(): number {
 		const discipline = this.upgrades['discipline'];
 		if (!discipline || discipline.currentLevel === 0) {
 			return 1.0;
 		}
-		return Math.pow(5, discipline.currentLevel);
+		return Math.pow(2, discipline.currentLevel);
 	}
 
 	/**
@@ -445,7 +463,7 @@ export class Game {
 	 * @returns Current stat EXP
 	 */
 	getStatExp(
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): number {
 		return this.statsManager.getStatExp(stat);
 	}
@@ -456,7 +474,7 @@ export class Game {
 	 * @returns Stat EXP required for next level
 	 */
 	getStatExpRequired(
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): number {
 		return this.statsManager.getStatExpRequired(stat);
 	}
@@ -467,7 +485,7 @@ export class Game {
 	 * @returns Character EXP cost to start training
 	 */
 	getStatTrainingCost(
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): number {
 		return this.statsManager.getStatTrainingCost(stat);
 	}
@@ -478,7 +496,7 @@ export class Game {
 	 * @returns Maximum stat level allowed
 	 */
 	getMaxStatLevel(
-		stat: keyof Pick<Stats, 'strength' | 'dexterity' | 'intelligence' | 'wisdom'>
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): number {
 		return this.statsManager.getMaxStatLevel(stat);
 	}
@@ -639,9 +657,9 @@ export class Game {
 	showMeditation(): boolean {
 		return (
 			this.stats.strength >= 5 &&
-			this.stats.dexterity >= 5 &&
-			this.stats.intelligence >= 5 &&
-			this.stats.wisdom >= 5
+			this.stats.agility >= 5 &&
+			this.stats.willpower >= 5 &&
+			this.stats.endurance >= 5
 		);
 	}
 
@@ -845,15 +863,22 @@ export class Game {
 		// Load stats into StatsManager with migration for v0.1.5+ stat EXP system
 		const loadedStats = state.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
 
-		// Migrate old saves: add stat EXP fields if missing
+		// Migrate old saves: map old stat names to new names, add stat EXP fields if missing
 		const migratedStats: Stats = {
+			// Physical stats (map old names to new names for backwards compatibility)
 			strength: loadedStats.strength || 1,
-			dexterity: loadedStats.dexterity || 1,
-			intelligence: loadedStats.intelligence || 1,
-			wisdom: loadedStats.wisdom || 1,
-			// Default to 0 stat EXP for migrated saves
+			agility: (loadedStats as any).agility || (loadedStats as any).dexterity || 1,
+			willpower: (loadedStats as any).willpower || (loadedStats as any).intelligence || 1,
+			endurance: (loadedStats as any).endurance || (loadedStats as any).wisdom || 1,
+			// Magic stats (will be unlocked later)
+			intelligence: (loadedStats as any).intelligence || 1,
+			wisdom: (loadedStats as any).wisdom || 1,
+			// Physical stat EXP (default to 0 for migrated saves)
 			strengthExp: (loadedStats as any).strengthExp ?? 0,
-			dexterityExp: (loadedStats as any).dexterityExp ?? 0,
+			agilityExp: (loadedStats as any).agilityExp ?? (loadedStats as any).dexterityExp ?? 0,
+			willpowerExp: (loadedStats as any).willpowerExp ?? (loadedStats as any).intelligenceExp ?? 0,
+			enduranceExp: (loadedStats as any).enduranceExp ?? (loadedStats as any).wisdomExp ?? 0,
+			// Magic stat EXP (default to 0)
 			intelligenceExp: (loadedStats as any).intelligenceExp ?? 0,
 			wisdomExp: (loadedStats as any).wisdomExp ?? 0
 		};
