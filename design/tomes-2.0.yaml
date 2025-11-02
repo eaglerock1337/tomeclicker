@@ -271,28 +271,42 @@ tomes:
     chapters:
       - 1: The Elements of Magic
         type: concept
+        story: "This book is going to be all about the elements. They're all different from each other, but are fundamentally tied together."
       - 2: Elements in Nature
         type: concept
+        story: 'This chapter really goes into the natural origins of the elements. I can tell whoever wrote this was a big tree-hugger.'
       - 3: Harnessing the Elements
         type: concept
+        story: "This goes into how to get the most out of the elements. It's all about using the right element for the right job."
       - 4: Fire Magic Principles
         type: concept
+        story: "Fire magic is all about chaos, destruction and raw power. It's the most agressive of the elements for sure."
       - 5: Fire Magic Applications
         type: concept
+        story: "Fire magic's chaos overwhelms Frost magic's order, but is weak against the adaptability of Shock magic."
       - 6: Frost Magic Principles
         type: concept
+        story: "Frost magic is for the orderly type. It's all about control, slowing things down, and keeping the situation in your favor."
       - 7: Frost Magic Applications
         type: concept
+        story: "Frost magic's order keeps control over Shock magic, but is vulnerable to the chaos and raw power of Fire magic."
       - 8: Shock Magic Principles
         type: concept
+        story: "Shock magic is all about speed and adaptability. It's the most versatile of the elements and for the trickier type."
       - 9: Shock Magic Applications
         type: concept
+        story: "Shock magic's adaptability overcomes Fire magic's chaos, but is easily controlled by the power of Frost magic."
       - 10: Feeling the Elements
         type: concept
+        story: "I'm starting to get why they're making such a fuss over my choice. You can more quickly unlock the power of the element that fits you."
       - 11: Choosing Your Element
         type: technique
+        unlocks: 'Choose an element to specialize in: Fire, Frost, or Shock.'
+        effect: +1% spell damage for your chosen element per level
+        story: "Choosing an element feels like a big step to me. I should make this decision once I'm good and ready."
       - 12: Pursuing Your Element
         type: concept
+        story: 'Once I choose the element that fits me best, I can best advance my understanding my magic by focusing on it.'
   - 8: Tome of Alignment
     tier: 3
     prereqs: 6
