@@ -357,58 +357,101 @@ tomes:
     chapters:
       - 1: Applying Fire Magic
         type: concept
+        story: "Now we're finally getting into working with Fire magic. I'm ready to start turning up the heat in my battles."
       - 2: Fire Orb Crafting
         type: technique
+        effect: +1% fire spell damage per level
+        story: "It's more practice with creating fire orbs, but the more I do it, the more I feel the fire inside me."
       - 3: Fire Hand
         type: spell
         stance: attack
         form: touch
         subtype: melee
+        cost: 10 mana
+        effect: 10 fire damage
+        mastery: +1% fire hand damage per level
+        story: "Fire Hand is a simple spell, but it's a good way to deal some damage to enemies that are too close for comfort."
       - 4: Fire Ball
         type: spell
         stance: attack
         form: object
         subtype: short-range
+        cost: 15 mana
+        effect: 15 fire damage
+        mastery: +1% fire ball damage per level
+        story: 'Fire Ball is an intuitive spell. Throw the red ball at your enemy and watch them burn. Simple enough for me.'
       - 5: Fire Burst
         type: spell
         stance: attack
         form: projectile
         subtype: short-range
+        cost: 20 mana
+        effect: 10 fire damage to all targets
+        mastery: +1% fire burst damage per level
+        story: 'Fire Burst is a bit more advanced. It shoots out a burst of fire that hits everyone in the area.'
       - 6: Fire Schrapnel
         type: spell
         stance: attack
         form: projectile
         subtype: long-range
+        cost: 25 mana
+        effect: 10 fire damage to all targets
+        mastery: +1% fire schrapnel damage per level
+        story: 'Fire Schrapnel is a long-range spell that shoots out shrapnel to your enemeies before they can even get close.'
       - 7: Blaze
         type: spell
         stance: attack
         form: object
         subtype: area
+        cost: 30 mana
+        effect: 5 fire damage over time to targets in range
+        mastery: +1% blaze damage per level
+        story: "Blaze is an area-of-effect spell that sets the ground on fire. It's great for controlling space in a fight."
       - 8: Fire Shield
         type: spell
         stance: defense
         form: object
         subtype: shield
+        cost: 20 mana
+        effect: blocks 25 physical or magic damage
+        mastery: +1% fire shield effectiveness per level
+        story: "Fire Shield is a defensive spell that creates a literal shield of fire. Surprisingly, it's not hot to the touch."
       - 9: Fire Absorber
         type: spell
         stance: defense
         form: object
         subtype: absorber
+        cost: 40 mana
+        effect: absorbs 50 fire or frost damage
+        mastery: +1% fire absorber effectiveness per level
+        story: "Fire Absorber is a powerful defensive spell that soaks up fire and frost damage. It's way better than the shield at blocking magic."
       - 10: Fire Object Counter
         type: spell
         stance: defense
         form: object
         subtype: counter
+        cost: 20 mana
+        effect: nullifies a fire or frost object spell
+        mastery: +1% fire object counter effectiveness per level
+        story: "Fire Object Counter is a spell that cancels out a fire or frost object spell. It's a very useful defensive tool."
       - 11: Fire Projectile Counter
         type: spell
         stance: defense
         form: projectile
         subtype: counter
+        cost: 20 mana
+        effect: nullifies a fire or frost projectile spell
+        mastery: +1% fire projectile counter effectiveness per level
+        story: "Fire Projectile Counter is a spell that cancels out a fire or frost projectile spell. It's a great way to avoid those attacks."
       - 12: Fire Mirror
         type: spell
         stance: defense
         form: object
         subtype: mirror
+        cost: 50 mana
+        effect: reflects 50 fire or frost damage
+        mastery: +1% fire mirror effectiveness per level
+        story: 'Fire Mirror is a powerful defensive spell that reflects fire and frost spells back at the caster.'
   - 10: Tome of Frost Magic
     tier: 4
     element: frost
