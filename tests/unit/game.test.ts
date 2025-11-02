@@ -108,7 +108,7 @@ describe('Game', () => {
 				const game = createGameAtLevel(2);
 				const cost = game.getLevelUpCost();
 
-				expect(cost).toBe(1000000); // 10000 * 100^(2-1) = 1000000
+				expect(cost).toBe(10000000); // 10000 * 1000^(2-1) = 10000000
 			});
 
 			it('should increase exponentially', () => {
@@ -120,8 +120,8 @@ describe('Game', () => {
 				game.level = 3;
 				const cost3 = game.getLevelUpCost(); // Level 3 -> 4
 
-				expect(cost2).toBe(cost1 * 100);
-				expect(cost3).toBe(cost2 * 100);
+				expect(cost2).toBe(cost1 * 1000);
+				expect(cost3).toBe(cost2 * 1000);
 			});
 		});
 
@@ -219,8 +219,8 @@ describe('Game', () => {
 				expect(game.getUpgradeCost('discipline')).toBe(baseCost);
 
 				game.upgrades['discipline'].currentLevel = 1;
-				// Discipline uses 100x multiplier
-				expect(game.getUpgradeCost('discipline')).toBe(baseCost * 100);
+				// Discipline uses 10x multiplier
+				expect(game.getUpgradeCost('discipline')).toBe(baseCost * 10);
 			});
 		});
 
@@ -649,7 +649,7 @@ describe('Game', () => {
 			it('should work for higher levels', () => {
 				const game = new GameBuilder()
 					.withLevel(3)
-					.withExp(100000000) // Cost for level 4
+					.withExp(10000000000000) // Cost for level 4
 					.build();
 
 				expect(game.canLevelUp()).toBe(true);
@@ -988,7 +988,7 @@ describe('Game', () => {
 			expect(game.upgrades['discipline'].currentLevel).toBe(0);
 
 			// Should be able to purchase upgrades (managers working)
-			game.exp = 1000;
+			game.exp = 100000;
 			const result = game.purchaseUpgrade('discipline');
 			expect(result).toBe(true);
 			expect(game.upgrades['discipline'].currentLevel).toBe(1);

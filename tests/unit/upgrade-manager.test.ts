@@ -118,8 +118,8 @@ describe('UpgradeManager', () => {
 			expect(discipline?.name).toBe('Discipline');
 			expect(discipline?.effectType).toBe('discipline');
 			expect(discipline?.effectValue).toBe(5.0); // 5x multiplier
-			expect(discipline?.baseCost).toBe(1000);
-			expect(discipline?.costMultiplier).toBe(100); // Very expensive
+			expect(discipline?.baseCost).toBe(100000);
+			expect(discipline?.costMultiplier).toBe(10); // Very expensive
 			expect(discipline?.maxLevel).toBe(10);
 			expect(discipline?.minLevel).toBe(1);
 		});
@@ -161,17 +161,17 @@ describe('UpgradeManager', () => {
 
 		it('should calculate discipline costs correctly (expensive)', () => {
 			const cost0 = manager.getUpgradeCost('discipline');
-			expect(cost0).toBe(1000); // Base cost
+			expect(cost0).toBe(100000); // Base cost
 
 			const upgrades = manager.getUpgrades();
 			upgrades['discipline'].currentLevel = 1;
 			const cost1 = manager.getUpgradeCost('discipline');
-			// 1000 * 100^1 = 100,000
-			expect(cost1).toBe(100000);
+			// 100000 * 10^1 = 1,000,000
+			expect(cost1).toBe(1000000);
 
 			upgrades['discipline'].currentLevel = 2;
 			const cost2 = manager.getUpgradeCost('discipline');
-			// 1000 * 100^2 = 10,000,000
+			// 100000 * 10^2 = 10,000,000
 			expect(cost2).toBe(10000000);
 		});
 	});
@@ -439,7 +439,7 @@ describe('UpgradeManager', () => {
 			expect(manager.getUpgradeCost('perfect-form')).toBe(3000);
 
 			// Discipline
-			expect(manager.getUpgradeCost('discipline')).toBe(1000);
+			expect(manager.getUpgradeCost('discipline')).toBe(100000);
 		});
 
 		it('should handle max level upgrades correctly', () => {

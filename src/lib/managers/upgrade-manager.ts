@@ -242,7 +242,7 @@ export class UpgradeManager {
 				description: 'Unified focus accelerates ALL forms of progress',
 				effect: '5x all EXP gain per level',
 				baseCost: UPGRADE_DISCIPLINE_BASE_COST,
-				costMultiplier: 100,
+				costMultiplier: 10, // 10x per level: 100k, 1M, 10M, 100M...
 				maxLevel: UPGRADE_MAX_DISCIPLINE,
 				currentLevel: 0,
 				category: 'special',

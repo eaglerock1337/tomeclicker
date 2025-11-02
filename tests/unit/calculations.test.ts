@@ -18,17 +18,17 @@ describe('Level Calculations', () => {
 		});
 
 		it('should calculate cost for level 2', () => {
-			expect(calculateLevelUpCost(2)).toBe(1000000);
+			expect(calculateLevelUpCost(2)).toBe(10000000);
 		});
 
 		it('should calculate cost for level 3', () => {
-			expect(calculateLevelUpCost(3)).toBe(100000000);
+			expect(calculateLevelUpCost(3)).toBe(10000000000);
 		});
 
-		it('should use exponential scaling with base 100', () => {
-			// Formula: 10,000 * 100^(level-1)
+		it('should use exponential scaling with base 1000', () => {
+			// Formula: 10,000 * 1000^(level-1)
 			for (let level = 1; level <= 5; level++) {
-				const expected = 10000 * Math.pow(100, level - 1);
+				const expected = 10000 * Math.pow(1000, level - 1);
 				expect(calculateLevelUpCost(level)).toBe(expected);
 			}
 		});
@@ -122,8 +122,8 @@ describe('Upgrade Calculations', () => {
 				name: 'Discipline',
 				description: 'Test',
 				effect: 'Test',
-				baseCost: 1000,
-				costMultiplier: 100,
+				baseCost: 100000,
+				costMultiplier: 10,
 				maxLevel: 10,
 				currentLevel: 1,
 				effectType: 'clickMultiplier',
@@ -131,8 +131,8 @@ describe('Upgrade Calculations', () => {
 				category: 'click'
 			};
 
-			// 1000 * 100^1 = 100,000 (no floor)
-			expect(calculateUpgradeCost(discipline)).toBe(100000);
+			// 100000 * 10^1 = 1,000,000 (no floor)
+			expect(calculateUpgradeCost(discipline)).toBe(1000000);
 		});
 
 		it('should handle Discipline at level 2', () => {
@@ -141,8 +141,8 @@ describe('Upgrade Calculations', () => {
 				name: 'Discipline',
 				description: 'Test',
 				effect: 'Test',
-				baseCost: 1000,
-				costMultiplier: 100,
+				baseCost: 100000,
+				costMultiplier: 10,
 				maxLevel: 10,
 				currentLevel: 2,
 				effectType: 'clickMultiplier',
@@ -150,7 +150,7 @@ describe('Upgrade Calculations', () => {
 				category: 'click'
 			};
 
-			// 1000 * 100^2 = 10,000,000
+			// 100000 * 10^2 = 10,000,000
 			expect(calculateUpgradeCost(discipline)).toBe(10000000);
 		});
 

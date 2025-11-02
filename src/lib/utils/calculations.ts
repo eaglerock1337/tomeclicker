@@ -20,8 +20,8 @@ import {
  *
  * @example
  * calculateLevelUpCost(1) // 10,000
- * calculateLevelUpCost(2) // 1,000,000
- * calculateLevelUpCost(3) // 100,000,000
+ * calculateLevelUpCost(2) // 10,000,000
+ * calculateLevelUpCost(3) // 10,000,000,000
  */
 export function calculateLevelUpCost(currentLevel: number): number {
 	return BASE_LEVEL_COST * Math.pow(LEVEL_COST_MULTIPLIER, currentLevel - 1);
@@ -41,8 +41,8 @@ export function calculateLevelUpCost(currentLevel: number): number {
  * const focusedPractice = { baseCost: 50, costMultiplier: 1.15, currentLevel: 0, id: 'focused-practice' }
  * calculateUpgradeCost(focusedPractice) // 50
  *
- * const discipline = { baseCost: 1000, costMultiplier: 100, currentLevel: 1, id: 'discipline' }
- * calculateUpgradeCost(discipline) // 100,000
+ * const discipline = { baseCost: 100000, costMultiplier: 10, currentLevel: 1, id: 'discipline' }
+ * calculateUpgradeCost(discipline) // 1,000,000
  */
 export function calculateUpgradeCost(upgrade: Upgrade): number {
 	// Special handling for Discipline (multiplicative cost like level ups)
