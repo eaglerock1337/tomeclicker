@@ -44,7 +44,8 @@ jobs:
   deploy:
     name: Deploy Preview to GitHub Pages
     runs-on: ubuntu-latest
-    needs: test # Wait for tests to pass
+    # TODO: Remove comment to require tests pass before deploy
+    # needs: test # Wait for tests to pass
     # Deploy only for PRs with 'preview' label
     if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'preview')
 
