@@ -34,11 +34,11 @@ export class ParametricIdleActionBuilder {
 	private deps: IdleActionDependencies = {
 		getTrainingSpeedMultiplier: () => 1.0,
 		getTrainingCostMultiplier: () => 1.0,
-		getOsmosisExpBonus: () => 0,
+		getRuminateExpBonus: () => 0,
 		getDisciplineMultiplier: () => 1.0,
 		getCurrentLevel: () => 1,
 		getGlobalIdleSpeedMultiplier: () => 1.0,
-		getOsmosisSpeedMultiplier: () => 1.0,
+		getRuminateSpeedMultiplier: () => 1.0,
 		getStatLevelCost: () => 100, // Legacy - kept for migration compatibility
 		getStatTrainingCost: () => 10,
 		addStatExp: () => ({ success: true, leveledUp: false, newLevel: 1 }),
@@ -181,10 +181,10 @@ export class ParametricIdleActionBuilder {
 	}
 
 	/**
-	 * Set osmosis EXP bonus from upgrades
+	 * Set ruminate EXP bonus from upgrades
 	 */
-	withOsmosisBonus(bonus: number): this {
-		this.deps.getOsmosisExpBonus = () => bonus;
+	withRuminateBonus(bonus: number): this {
+		this.deps.getRuminateExpBonus = () => bonus;
 		return this;
 	}
 
@@ -197,10 +197,10 @@ export class ParametricIdleActionBuilder {
 	}
 
 	/**
-	 * Set osmosis-specific speed multiplier
+	 * Set ruminate-specific speed multiplier
 	 */
-	withOsmosisSpeed(multiplier: number): this {
-		this.deps.getOsmosisSpeedMultiplier = () => multiplier;
+	withRuminateSpeed(multiplier: number): this {
+		this.deps.getRuminateSpeedMultiplier = () => multiplier;
 		return this;
 	}
 
@@ -320,11 +320,11 @@ export class IdleActionManagerBuilder {
 	private deps: IdleActionDependencies = {
 		getTrainingSpeedMultiplier: () => 1.0,
 		getTrainingCostMultiplier: () => 1.0,
-		getOsmosisExpBonus: () => 0,
+		getRuminateExpBonus: () => 0,
 		getDisciplineMultiplier: () => 1.0,
 		getCurrentLevel: () => 1,
 		getGlobalIdleSpeedMultiplier: () => 1.0,
-		getOsmosisSpeedMultiplier: () => 1.0,
+		getRuminateSpeedMultiplier: () => 1.0,
 		getStatLevelCost: () => 100,
 		getStatTrainingCost: () => 10,
 		addStatExp: () => ({ success: true, leveledUp: false, newLevel: 1 }),
@@ -348,13 +348,13 @@ export class IdleActionManagerBuilder {
 		return this;
 	}
 
-	withOsmosisSpeed(multiplier: number): this {
-		this.deps.getOsmosisSpeedMultiplier = () => multiplier;
+	withRuminateSpeed(multiplier: number): this {
+		this.deps.getRuminateSpeedMultiplier = () => multiplier;
 		return this;
 	}
 
-	withOsmosisBonus(bonus: number): this {
-		this.deps.getOsmosisExpBonus = () => bonus;
+	withRuminateBonus(bonus: number): this {
+		this.deps.getRuminateExpBonus = () => bonus;
 		return this;
 	}
 

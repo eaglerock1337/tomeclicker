@@ -75,7 +75,7 @@ export const TRAINING_REWARD = 10;
  * Base EXP gained per ruminate cycle completion
  * Modified by ruminate upgrade bonuses
  */
-export const OSMOSIS_BASE_REWARD = 10;
+export const RUMINATE_BASE_REWARD = 10;
 
 // ============================================================================
 // COMBAT & CRITICAL HITS
@@ -116,7 +116,7 @@ export const TRAINING_BASE_DURATION = 15000;
  * Ruminate is the free idle action available early game
  * Modified by ruminate speed and global idle speed upgrades
  */
-export const OSMOSIS_BASE_DURATION = 15000;
+export const RUMINATE_BASE_DURATION = 15000;
 
 /**
  * Base duration for "Meditate on Your Future" action in milliseconds
@@ -151,7 +151,7 @@ export const MEDITATION_DISASSOCIATE_COST = 100;
 export const UPGRADE_COST_TIER_1 = 50;
 
 /**
- * Base cost for mid-tier upgrades (osmosis, training related)
+ * Base cost for mid-tier upgrades (ruminate, training related)
  * Scales with 1.18-1.2x multipliers
  */
 export const UPGRADE_COST_TIER_2 = 100;

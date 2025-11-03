@@ -3,8 +3,8 @@ import {
 	TRAINING_BASE_COST,
 	TRAINING_REWARD,
 	TRAINING_CRIT_MULTIPLIER,
-	OSMOSIS_BASE_REWARD,
-	OSMOSIS_BASE_DURATION,
+	RUMINATE_BASE_REWARD,
+	RUMINATE_BASE_DURATION,
 	TRAINING_BASE_DURATION,
 	MEDITATION_FUTURE_DURATION,
 	MEDITATION_FUTURE_COST,
@@ -76,16 +76,16 @@ export interface IdleActionDependencies {
 	getTrainingSpeedMultiplier: () => number;
 	/** Get training cost multiplier from upgrades */
 	getTrainingCostMultiplier: () => number;
-	/** Get osmosis EXP bonus from upgrades */
-	getOsmosisExpBonus: () => number;
+	/** Get ruminate EXP bonus from upgrades */
+	getRuminateExpBonus: () => number;
 	/** Get Discipline multiplier for all EXP gains */
 	getDisciplineMultiplier: () => number;
 	/** Get current character level */
 	getCurrentLevel: () => number;
 	/** Get global idle speed multiplier from upgrades */
 	getGlobalIdleSpeedMultiplier: () => number;
-	/** Get osmosis-specific speed multiplier */
-	getOsmosisSpeedMultiplier: () => number;
+	/** Get ruminate-specific speed multiplier */
+	getRuminateSpeedMultiplier: () => number;
 	/** Get EXP cost to level up a specific stat (legacy - kept for migration) */
 	getStatLevelCost: (stat: keyof Stats) => number;
 	/** Get character EXP cost to start training a specific stat (v0.1.5+) */
@@ -117,7 +117,7 @@ export interface IdleActionDependencies {
 
 /**
  * Manages all idle action state and lifecycle
- * Handles training, meditation, and osmosis actions
+ * Handles training, meditation, and ruminate actions
  */
 export class IdleActionManager {
 	private trainingActions: { [key: string]: IdleAction };
@@ -133,13 +133,13 @@ export class IdleActionManager {
 	 */
 	private initializeTrainingActions(): { [key: string]: IdleAction } {
 		return {
-			'practice-osmosis': {
-				id: 'practice-osmosis',
+			'practice-ruminate': {
+				id: 'practice-ruminate',
 				name: 'Ruminate',
 				description: 'Learn through observation and reflection',
 				progress: 0,
-				baseDuration: OSMOSIS_BASE_DURATION,
-				duration: OSMOSIS_BASE_DURATION,
+				baseDuration: RUMINATE_BASE_DURATION,
+				duration: RUMINATE_BASE_DURATION,
 				expCost: 0, // Free to use!
 				isActive: false,
 				lastUpdate: Date.now()
@@ -315,7 +315,7 @@ export class IdleActionManager {
 		if (action.oneTime && action.completed) return false;
 
 		// For stat training (v0.1.5+): Check character EXP cost and charge upfront
-		if (action.trainsStat && actionId !== 'practice-osmosis') {
+		if (action.trainsStat && actionId !== 'practice-ruminate') {
 			const stat = action.trainsStat;
 			const cost = this.deps.getStatTrainingCost(stat);
 			const currentExp = this.deps.getCurrentExp();
@@ -343,11 +343,11 @@ export class IdleActionManager {
 		action.lastUpdate = Date.now();
 
 		// Apply speed multipliers based on action type
-		if (actionId === 'practice-osmosis') {
-			// Osmosis gets both osmosis-specific and global idle speed bonuses
-			const osmosisSpeed = this.deps.getOsmosisSpeedMultiplier();
+		if (actionId === 'practice-ruminate') {
+			// Ruminate gets both ruminate-specific and global idle speed bonuses
+			const ruminateSpeed = this.deps.getRuminateSpeedMultiplier();
 			const globalSpeed = this.deps.getGlobalIdleSpeedMultiplier();
-			const combinedSpeed = osmosisSpeed * globalSpeed;
+			const combinedSpeed = ruminateSpeed * globalSpeed;
 			action.duration = Math.floor(action.baseDuration / combinedSpeed);
 		} else if (action.trainsStat) {
 			// Stat training gets training speed and global idle speed
@@ -424,8 +424,8 @@ export class IdleActionManager {
 	 */
 	getTrainingCost(actionId: string): number {
 		const action = this.trainingActions[actionId];
-		if (!action || !action.trainsStat || actionId === 'practice-osmosis') {
-			return 0; // Osmosis is free, non-training actions have no cost
+		if (!action || !action.trainsStat || actionId === 'practice-ruminate') {
+			return 0; // Ruminate is free, non-training actions have no cost
 		}
 
 		return this.deps.getStatTrainingCost(action.trainsStat);
@@ -438,8 +438,8 @@ export class IdleActionManager {
 	 */
 	canStartTraining(actionId: string): boolean {
 		const action = this.trainingActions[actionId];
-		if (!action || !action.trainsStat || actionId === 'practice-osmosis') {
-			return true; // Osmosis and non-training actions can always be started
+		if (!action || !action.trainsStat || actionId === 'practice-ruminate') {
+			return true; // Ruminate and non-training actions can always be started
 		}
 
 		const cost = this.getTrainingCost(actionId);
@@ -454,9 +454,9 @@ export class IdleActionManager {
 		const action = this.trainingActions[actionId];
 		if (!action || !action.isActive) return null;
 
-		// Handle ruminate (osmosis) completion
-		if (actionId === 'practice-osmosis') {
-			const bonus = this.deps.getOsmosisExpBonus();
+		// Handle ruminate completion
+		if (actionId === 'practice-ruminate') {
+			const bonus = this.deps.getRuminateExpBonus();
 			const level = this.deps.getCurrentLevel();
 			const disciplineMult = this.deps.getDisciplineMultiplier();
 			const percentMult = this.deps.getRuminateMultiplierPercent();
@@ -464,7 +464,7 @@ export class IdleActionManager {
 			const critDamage = this.deps.getRuminateCritDamage();
 
 			// Apply formula: (base + bonus) × percentage_mult × 10^(level-1) × 5^(discipline_level)
-			let baseReward = OSMOSIS_BASE_REWARD + bonus;
+			let baseReward = RUMINATE_BASE_REWARD + bonus;
 			baseReward *= percentMult; // Apply percentage multiplier
 
 			// Check for crit
