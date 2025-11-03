@@ -462,9 +462,7 @@ export class Game {
 	 * @param stat - The stat to check
 	 * @returns Current stat EXP
 	 */
-	getStatExp(
-		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
-	): number {
+	getStatExp(stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>): number {
 		return this.statsManager.getStatExp(stat);
 	}
 

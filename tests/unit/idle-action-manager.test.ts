@@ -93,14 +93,14 @@ describe('IdleActionManager', () => {
 			expect(actions['train-strength'].trainsStat).toBe('strength');
 			expect(actions['train-strength'].expCost).toBe(10);
 
-			expect(actions['train-dexterity']).toBeDefined();
-			expect(actions['train-dexterity'].trainsStat).toBe('dexterity');
+			expect(actions['train-agility']).toBeDefined();
+			expect(actions['train-agility'].trainsStat).toBe('agility');
 
-			expect(actions['train-intelligence']).toBeDefined();
-			expect(actions['train-intelligence'].trainsStat).toBe('intelligence');
+			expect(actions['train-willpower']).toBeDefined();
+			expect(actions['train-willpower'].trainsStat).toBe('willpower');
 
-			expect(actions['train-wisdom']).toBeDefined();
-			expect(actions['train-wisdom'].trainsStat).toBe('wisdom');
+			expect(actions['train-endurance']).toBeDefined();
+			expect(actions['train-endurance'].trainsStat).toBe('endurance');
 		});
 
 		it('should initialize meditation actions with correct defaults', () => {
@@ -455,9 +455,9 @@ describe('IdleActionManager', () => {
 
 			// Train each stat 5 times (50 stat EXP each = level up)
 			const stats = [
-				{ action: 'train-dexterity', stat: 'dexterity' },
-				{ action: 'train-intelligence', stat: 'intelligence' },
-				{ action: 'train-wisdom', stat: 'wisdom' }
+				{ action: 'train-agility', stat: 'agility' },
+				{ action: 'train-willpower', stat: 'willpower' },
+				{ action: 'train-endurance', stat: 'endurance' }
 			];
 
 			for (const { action: actionName, stat } of stats) {
@@ -584,9 +584,9 @@ describe('IdleActionManager', () => {
 			const actions = manager.getTrainingActions();
 			expect(actions['practice-osmosis']).toBeDefined();
 			expect(actions['train-strength']).toBeDefined();
-			expect(actions['train-dexterity']).toBeDefined();
-			expect(actions['train-intelligence']).toBeDefined();
-			expect(actions['train-wisdom']).toBeDefined();
+			expect(actions['train-agility']).toBeDefined();
+			expect(actions['train-willpower']).toBeDefined();
+			expect(actions['train-endurance']).toBeDefined();
 		});
 	});
 

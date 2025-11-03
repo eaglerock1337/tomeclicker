@@ -56,8 +56,8 @@ describe('Game', () => {
 			expect(game.trainingActions['practice-osmosis']).toBeDefined();
 			expect(game.trainingActions['train-strength']).toBeDefined();
 			expect(game.trainingActions['train-agility']).toBeDefined();
-			expect(game.trainingActions['train-intelligence']).toBeDefined();
-			expect(game.trainingActions['train-wisdom']).toBeDefined();
+			expect(game.trainingActions['train-willpower']).toBeDefined();
+			expect(game.trainingActions['train-endurance']).toBeDefined();
 		});
 	});
 
@@ -197,19 +197,19 @@ describe('Game', () => {
 		describe('getUpgradeCost', () => {
 			it('should return base cost for level 0 upgrade', () => {
 				const game = createTestGame();
-				const upgrade = game.upgrades['click-strength'];
-				const cost = game.getUpgradeCost('click-strength');
+				const upgrade = game.upgrades['click-power'];
+				const cost = game.getUpgradeCost('click-power');
 
 				expect(cost).toBe(upgrade.baseCost);
 			});
 
 			it('should scale cost for purchased upgrades', () => {
-				const game = new GameBuilder().withUpgrade('click-strength', 1).build();
+				const game = new GameBuilder().withUpgrade('click-power', 1).build();
 
-				const upgrade = game.upgrades['click-strength'];
+				const upgrade = game.upgrades['click-power'];
 				const expectedCost = getExpectedUpgradeCost(upgrade.baseCost, upgrade.costMultiplier, 1);
 
-				expect(game.getUpgradeCost('click-strength')).toBe(expectedCost);
+				expect(game.getUpgradeCost('click-power')).toBe(expectedCost);
 			});
 
 			it('should use exponential scaling for Discipline', () => {
@@ -228,13 +228,13 @@ describe('Game', () => {
 			it('should return true when exp >= cost', () => {
 				const game = new GameBuilder().withExp(100).build();
 
-				expect(game.canAffordUpgrade('click-strength')).toBe(true);
+				expect(game.canAffordUpgrade('click-power')).toBe(true);
 			});
 
 			it('should return false when exp < cost', () => {
 				const game = new GameBuilder().withExp(49).build();
 
-				expect(game.canAffordUpgrade('click-strength')).toBe(false);
+				expect(game.canAffordUpgrade('click-power')).toBe(false);
 			});
 		});
 
@@ -242,22 +242,22 @@ describe('Game', () => {
 			it('should return true when affordable and not maxed', () => {
 				const game = new GameBuilder().withExp(100).build();
 
-				expect(game.canPurchaseUpgrade('click-strength')).toBe(true);
+				expect(game.canPurchaseUpgrade('click-power')).toBe(true);
 			});
 
 			it('should return false when maxed', () => {
 				const game = new GameBuilder()
 					.withRichState()
-					.withUpgrade('click-strength', 100) // Max level
+					.withUpgrade('click-power', 100) // Max level
 					.build();
 
-				expect(game.canPurchaseUpgrade('click-strength')).toBe(false);
+				expect(game.canPurchaseUpgrade('click-power')).toBe(false);
 			});
 
 			it('should return false when not affordable', () => {
 				const game = new GameBuilder().withExp(10).build();
 
-				expect(game.canPurchaseUpgrade('click-strength')).toBe(false);
+				expect(game.canPurchaseUpgrade('click-power')).toBe(false);
 			});
 		});
 
@@ -265,15 +265,15 @@ describe('Game', () => {
 			it('should increase upgrade level', () => {
 				const game = createRichGame();
 
-				game.purchaseUpgrade('click-strength');
-				expect(game.upgrades['click-strength'].currentLevel).toBe(1);
+				game.purchaseUpgrade('click-power');
+				expect(game.upgrades['click-power'].currentLevel).toBe(1);
 			});
 
 			it('should deduct cost from exp', () => {
 				const game = new GameBuilder().withExp(100).build();
 
-				const cost = game.getUpgradeCost('click-strength');
-				game.purchaseUpgrade('click-strength');
+				const cost = game.getUpgradeCost('click-power');
+				game.purchaseUpgrade('click-power');
 
 				expect(game.exp).toBe(100 - cost);
 			});
@@ -281,7 +281,7 @@ describe('Game', () => {
 			it('should not deduct from lifetime exp', () => {
 				const game = new GameBuilder().withExp(100).build();
 
-				game.purchaseUpgrade('click-strength');
+				game.purchaseUpgrade('click-power');
 				expect(game.lifetimeExp).toBe(100);
 			});
 
@@ -289,7 +289,7 @@ describe('Game', () => {
 				const game = createRichGame();
 				const oldMultiplier = game.clickMultiplier;
 
-				game.purchaseUpgrade('click-strength');
+				game.purchaseUpgrade('click-power');
 
 				// Focused practice adds +1.0 to multiplier
 				expect(game.clickMultiplier).toBe(oldMultiplier + 1.0);
@@ -298,16 +298,16 @@ describe('Game', () => {
 			it('should fail if insufficient exp', () => {
 				const game = new GameBuilder().withExp(10).build();
 
-				const result = game.purchaseUpgrade('click-strength');
+				const result = game.purchaseUpgrade('click-power');
 
 				expect(result).toBe(false);
-				expect(game.upgrades['click-strength'].currentLevel).toBe(0);
+				expect(game.upgrades['click-power'].currentLevel).toBe(0);
 			});
 
 			it('should fail if upgrade is maxed', () => {
-				const game = new GameBuilder().withRichState().withUpgrade('click-strength', 100).build();
+				const game = new GameBuilder().withRichState().withUpgrade('click-power', 100).build();
 
-				const result = game.purchaseUpgrade('click-strength');
+				const result = game.purchaseUpgrade('click-power');
 
 				expect(result).toBe(false);
 			});
@@ -315,7 +315,7 @@ describe('Game', () => {
 			it('should return true on success', () => {
 				const game = createRichGame();
 
-				const result = game.purchaseUpgrade('click-strength');
+				const result = game.purchaseUpgrade('click-power');
 				expect(result).toBe(true);
 			});
 		});
@@ -328,7 +328,7 @@ describe('Game', () => {
 		});
 
 		it('should add additive upgrades', () => {
-			const game = new GameBuilder().withUpgrade('click-strength', 3).build();
+			const game = new GameBuilder().withUpgrade('click-power', 3).build();
 
 			// Focused Practice: +1.0 per level, additive
 			expect(game.clickMultiplier).toBe(1.0 + 3.0);
@@ -341,22 +341,22 @@ describe('Game', () => {
 			expect(game.clickMultiplier).toBe(100.0);
 		});
 
-		it('should apply Discipline multiplier (5x per level)', () => {
+		it('should apply Discipline multiplier (2x per level)', () => {
 			const game = new GameBuilder().withUpgrade('discipline', 1).build();
 
-			// 1.0 * 5^1 = 5.0
-			expect(game.clickMultiplier).toBe(5.0);
+			// 1.0 * 2^1 = 2.0
+			expect(game.clickMultiplier).toBe(2.0);
 		});
 
 		it('should combine all multipliers correctly', () => {
 			const game = new GameBuilder()
 				.withLevel(2) // 10x from level
-				.withUpgrade('click-strength', 2) // +2.0 additive
-				.withUpgrade('discipline', 1) // 5x multiplicative
+				.withUpgrade('click-power', 2) // +2.0 additive
+				.withUpgrade('discipline', 1) // 2x multiplicative
 				.build();
 
-			// (1.0 + 2.0) * 10 * 5 = 3.0 * 10 * 5 = 150.0
-			expect(game.clickMultiplier).toBe(150.0);
+			// (1.0 + 2.0) * 10 * 2 = 3.0 * 10 * 2 = 60.0
+			expect(game.clickMultiplier).toBe(60.0);
 		});
 	});
 
@@ -374,8 +374,8 @@ describe('Game', () => {
 		it('should increase crit chance with upgrade', () => {
 			const game = new GameBuilder().withUpgrade('critical-clicks', 10).build();
 
-			// v0.1.5: Base 0% + (10 * 2%) = 20%
-			expect(game.critChance).toBeCloseTo(0.2, 2);
+			// v0.1.5: Base 0% + (10 * 0.5%) = 5%
+			expect(game.critChance).toBeCloseTo(0.05, 2);
 		});
 
 		// v0.1.5: Crit damage is no longer upgradeable (fixed 2x multiplier)
@@ -389,7 +389,7 @@ describe('Game', () => {
 			});
 
 			it('should scale with upgrades', () => {
-				const game = new GameBuilder().withUpgrade('click-strength', 5).build();
+				const game = new GameBuilder().withUpgrade('click-power', 5).build();
 
 				const value = game.getClickValue();
 				expect(value).toBe(game.clickMultiplier);
@@ -403,7 +403,7 @@ describe('Game', () => {
 				const game = new GameBuilder()
 					.withExp(500)
 					.withLevel(2)
-					.withUpgrade('click-strength', 3)
+					.withUpgrade('click-power', 3)
 					.build();
 
 				const saveData = game.exportSave();
@@ -434,7 +434,7 @@ describe('Game', () => {
 				const originalGame = new GameBuilder()
 					.withExp(1000)
 					.withLevel(2)
-					.withUpgrade('click-strength', 5)
+					.withUpgrade('click-power', 5)
 					.build();
 
 				const saveData = originalGame.exportSave();
@@ -444,14 +444,11 @@ describe('Game', () => {
 
 				expect(newGame.exp).toBe(1000);
 				expect(newGame.level).toBe(2);
-				expect(newGame.upgrades['click-strength'].currentLevel).toBe(5);
+				expect(newGame.upgrades['click-power'].currentLevel).toBe(5);
 			});
 
 			it('should recalculate multipliers after load', () => {
-				const originalGame = new GameBuilder()
-					.withLevel(3)
-					.withUpgrade('click-strength', 2)
-					.build();
+				const originalGame = new GameBuilder().withLevel(3).withUpgrade('click-power', 2).build();
 
 				const saveData = originalGame.exportSave();
 
@@ -473,8 +470,8 @@ describe('Game', () => {
 					level: 1,
 					clickMultiplier: 1,
 					upgrades: {
-						'click-strength': {
-							id: 'click-strength',
+						'click-power': {
+							id: 'click-power',
 							currentLevel: 2
 						}
 					}
@@ -483,7 +480,7 @@ describe('Game', () => {
 				game.importSave(JSON.stringify(oldSave));
 
 				// Should have all current upgrades
-				expect(game.upgrades['click-strength']).toBeDefined();
+				expect(game.upgrades['click-power']).toBeDefined();
 				expect(game.upgrades['discipline']).toBeDefined();
 				expect(game.upgrades['critical-clicks']).toBeDefined();
 			});
@@ -513,7 +510,7 @@ describe('Game', () => {
 					.withExp(12345)
 					.withLifetimeExp(50000)
 					.withLevel(5)
-					.withUpgrade('click-strength', 10)
+					.withUpgrade('click-power', 10)
 					.withUpgrade('discipline', 2)
 					.withStats({ strength: 5, agility: 3 })
 					.build();
@@ -525,8 +522,8 @@ describe('Game', () => {
 				expect(loaded.exp).toBe(original.exp);
 				expect(loaded.lifetimeExp).toBe(original.lifetimeExp);
 				expect(loaded.level).toBe(original.level);
-				expect(loaded.upgrades['click-strength'].currentLevel).toBe(
-					original.upgrades['click-strength'].currentLevel
+				expect(loaded.upgrades['click-power'].currentLevel).toBe(
+					original.upgrades['click-power'].currentLevel
 				);
 				expect(loaded.stats.strength).toBe(original.stats.strength);
 				expect(loaded.stats.agility).toBe(original.stats.agility);
@@ -549,8 +546,8 @@ describe('Game', () => {
 
 			expect(game.trainingActions['train-strength'].trainsStat).toBe('strength');
 			expect(game.trainingActions['train-agility'].trainsStat).toBe('agility');
-			expect(game.trainingActions['train-intelligence'].trainsStat).toBe('intelligence');
-			expect(game.trainingActions['train-wisdom'].trainsStat).toBe('wisdom');
+			expect(game.trainingActions['train-willpower'].trainsStat).toBe('willpower');
+			expect(game.trainingActions['train-endurance'].trainsStat).toBe('endurance');
 		});
 
 		describe('getStatLevelCost', () => {
@@ -666,11 +663,11 @@ describe('Game', () => {
 
 			it('should return upgraded click multiplier', () => {
 				const game = new GameBuilder()
-					.withUpgrade('discipline', 1) // 5x multiplier
+					.withUpgrade('discipline', 1) // 2x multiplier
 					.build();
 
 				const value = game.getClickValue();
-				expect(value).toBe(5.0);
+				expect(value).toBe(2.0);
 			});
 
 			it('should return click multiplier with level bonuses', () => {
@@ -685,12 +682,12 @@ describe('Game', () => {
 			it('should combine upgrade and level multipliers', () => {
 				const game = new GameBuilder()
 					.withLevel(2) // 10x
-					.withUpgrade('discipline', 1) // *5
+					.withUpgrade('discipline', 1) // *2
 					.build();
 
 				const value = game.getClickValue();
-				// Base 1.0 * 10 (level) * 5 (discipline) = 50.0
-				expect(value).toBe(50.0);
+				// Base 1.0 * 10 (level) * 2 (discipline) = 20.0
+				expect(value).toBe(20.0);
 			});
 		});
 	});
@@ -779,28 +776,80 @@ describe('Game', () => {
 		describe('showMeditation', () => {
 			it('should return false when stats < 5', () => {
 				const game = new GameBuilder()
-					.withStats({ strength: 4, agility: 4, intelligence: 4, wisdom: 4 })
+					.withStats({
+						strength: 4,
+						agility: 4,
+						willpower: 4,
+						endurance: 4,
+						intelligence: 1,
+						wisdom: 1,
+						strengthExp: 0,
+						agilityExp: 0,
+						willpowerExp: 0,
+						enduranceExp: 0,
+						intelligenceExp: 0,
+						wisdomExp: 0
+					})
 					.build();
 				expect(game.showMeditation()).toBe(false);
 			});
 
 			it('should return false when only some stats >= 5', () => {
 				const game = new GameBuilder()
-					.withStats({ strength: 5, agility: 5, intelligence: 4, wisdom: 3 })
+					.withStats({
+						strength: 5,
+						agility: 5,
+						willpower: 4,
+						endurance: 3,
+						intelligence: 1,
+						wisdom: 1,
+						strengthExp: 0,
+						agilityExp: 0,
+						willpowerExp: 0,
+						enduranceExp: 0,
+						intelligenceExp: 0,
+						wisdomExp: 0
+					})
 					.build();
 				expect(game.showMeditation()).toBe(false);
 			});
 
 			it('should return true when all stats >= 5', () => {
 				const game = new GameBuilder()
-					.withStats({ strength: 5, agility: 5, intelligence: 5, wisdom: 5 })
+					.withStats({
+						strength: 5,
+						agility: 5,
+						willpower: 5,
+						endurance: 5,
+						intelligence: 1,
+						wisdom: 1,
+						strengthExp: 0,
+						agilityExp: 0,
+						willpowerExp: 0,
+						enduranceExp: 0,
+						intelligenceExp: 0,
+						wisdomExp: 0
+					})
 					.build();
 				expect(game.showMeditation()).toBe(true);
 			});
 
 			it('should return true when all stats > 5', () => {
 				const game = new GameBuilder()
-					.withStats({ strength: 10, agility: 8, intelligence: 6, wisdom: 5 })
+					.withStats({
+						strength: 10,
+						agility: 8,
+						willpower: 6,
+						endurance: 5,
+						intelligence: 1,
+						wisdom: 1,
+						strengthExp: 0,
+						agilityExp: 0,
+						willpowerExp: 0,
+						enduranceExp: 0,
+						intelligenceExp: 0,
+						wisdomExp: 0
+					})
 					.build();
 				expect(game.showMeditation()).toBe(true);
 			});

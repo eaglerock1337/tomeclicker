@@ -146,9 +146,7 @@ export class StatsManager {
 	 * Get the current EXP for a specific stat
 	 * @param stat - The stat to query (only the base stat names)
 	 */
-	getStatExp(
-		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
-	): number {
+	getStatExp(stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>): number {
 		const expKey = `${stat}Exp` as keyof Stats;
 		return this.stats[expKey] as number;
 	}

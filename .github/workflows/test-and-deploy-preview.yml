@@ -46,11 +46,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: test # Wait for tests to pass
     # Deploy only for PRs with 'preview' label
-    if: ${{ always() && github.event_name == 'pull_request' && 
+    if: ${{ always() && github.event_name == 'pull_request' &&
       contains(github.event.pull_request.labels.*.name, 'preview') &&
       (
-        needs.test.result == 'success' ||
-        contains(github.event.pull_request.labels.*.name, 'crash-override')
+      needs.test.result == 'success' ||
+      contains(github.event.pull_request.labels.*.name, 'crash-override')
       ) }}
 
     steps:

@@ -174,14 +174,14 @@ export class UpgradeManager {
 				id: 'ruminate-power',
 				name: 'Ruminate Power',
 				description: 'Increases EXP gained from each rumination thought',
-				effect: '+1% EXP per thought per level',
+				effect: '+10 EXP per thought per level',
 				baseCost: 500,
 				costMultiplier: 1.5,
 				maxLevel: 50,
 				currentLevel: 0,
 				category: 'ruminate',
-				effectType: 'ruminateMultiplierPercent',
-				effectValue: 0.05,
+				effectType: 'ruminatePower',
+				effectValue: 10,
 				minLevel: 2
 			},
 			'ruminate-speed': {
