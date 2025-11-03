@@ -134,7 +134,7 @@ describe('UpgradeManager', () => {
 	describe('Upgrade Costs', () => {
 		it('should calculate correct cost for level 0 upgrade', () => {
 			const cost = manager.getUpgradeCost('click-power');
-			expect(cost).toBe(100); // Base cost
+			expect(cost).toBe(50); // Base cost
 		});
 
 		it('should calculate correct cost for level 1 upgrade', () => {
@@ -142,8 +142,8 @@ describe('UpgradeManager', () => {
 			upgrades['click-power'].currentLevel = 1;
 
 			const cost = manager.getUpgradeCost('click-power');
-			// Base cost 100, multiplier 1.5: 100 * 1.5^1 = 150
-			expect(cost).toBe(150);
+			// Base cost 50, multiplier 1.5: 50 * 1.5^1 = 75
+			expect(cost).toBe(75);
 		});
 
 		it('should calculate correct cost for level 5 upgrade', () => {
@@ -151,8 +151,7 @@ describe('UpgradeManager', () => {
 			upgrades['click-power'].currentLevel = 5;
 
 			const cost = manager.getUpgradeCost('click-power');
-			// Base cost 100, multiplier 1.5: 100 * 1.5^5 = 100 * 7.59375 = 759.375, floored to 759
-			expect(cost).toBe(759);
+			expect(cost).toBe(379);
 		});
 
 		it('should return 0 for non-existent upgrade', () => {
@@ -181,13 +180,13 @@ describe('UpgradeManager', () => {
 		it('should return true when player can afford upgrade', () => {
 			const manager = new UpgradeManagerBuilder().withCurrentExp(1000).build();
 
-			expect(manager.canAffordUpgrade('click-power')).toBe(true); // Cost 100
+			expect(manager.canAffordUpgrade('click-power')).toBe(true); // Cost 50
 		});
 
 		it('should return false when player cannot afford upgrade', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(50).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(40).build();
 
-			expect(manager.canAffordUpgrade('click-power')).toBe(false); // Cost 100
+			expect(manager.canAffordUpgrade('click-power')).toBe(false); // Cost 50
 		});
 
 		it('should return false for non-existent upgrade', () => {
@@ -195,17 +194,17 @@ describe('UpgradeManager', () => {
 		});
 
 		it('should check affordability correctly with current level', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(200).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(100).build();
 			const upgrades = manager.getUpgrades();
 
-			// Level 0: cost 100, can afford
+			// Level 0: cost 50, can afford
 			expect(manager.canAffordUpgrade('click-power')).toBe(true);
 
-			// Level 1: cost 150, can afford
+			// Level 1: cost 75, can afford
 			upgrades['click-power'].currentLevel = 1;
 			expect(manager.canAffordUpgrade('click-power')).toBe(true);
 
-			// Level 2: cost 225, cannot afford (we have 200)
+			// Level 2: cost 112, cannot afford (we have 200)
 			upgrades['click-power'].currentLevel = 2;
 			expect(manager.canAffordUpgrade('click-power')).toBe(false);
 		});
@@ -219,7 +218,7 @@ describe('UpgradeManager', () => {
 		});
 
 		it('should return false when upgrade is not affordable', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(50).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(40).build();
 
 			expect(manager.canPurchaseUpgrade('click-power')).toBe(false);
 		});
@@ -244,7 +243,7 @@ describe('UpgradeManager', () => {
 			const result = manager.purchaseUpgrade('click-power');
 
 			expect(result.success).toBe(true);
-			expect(result.expCost).toBe(100);
+			expect(result.expCost).toBe(50);
 			expect(result.newLevel).toBe(1);
 
 			// Check upgrade level increased
@@ -253,7 +252,7 @@ describe('UpgradeManager', () => {
 		});
 
 		it('should fail to purchase when not affordable', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(50).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(30).build();
 
 			const result = manager.purchaseUpgrade('click-power');
 
@@ -309,15 +308,15 @@ describe('UpgradeManager', () => {
 
 			// First purchase: base cost 100
 			const result1 = manager.purchaseUpgrade('click-power');
-			expect(result1.expCost).toBe(100);
+			expect(result1.expCost).toBe(50);
 
 			// Second purchase: 100 * 1.5^1 = 150
 			const result2 = manager.purchaseUpgrade('click-power');
-			expect(result2.expCost).toBe(150);
+			expect(result2.expCost).toBe(75);
 
 			// Third purchase: 100 * 1.5^2 = 225
 			const result3 = manager.purchaseUpgrade('click-power');
-			expect(result3.expCost).toBe(225);
+			expect(result3.expCost).toBe(112);
 		});
 	});
 
@@ -345,7 +344,7 @@ describe('UpgradeManager', () => {
 			const upgrade = manager.getUpgrade('click-power');
 			expect(upgrade?.currentLevel).toBe(25); // Preserved from save
 			expect(upgrade?.name).toBe('Click Power'); // Updated to new definition
-			expect(upgrade?.baseCost).toBe(100); // Updated to new balance
+			expect(upgrade?.baseCost).toBe(50); // Updated to new balance
 			expect(upgrade?.maxLevel).toBe(50); // Updated to new balance
 		});
 
@@ -409,13 +408,13 @@ describe('UpgradeManager', () => {
 			const result = manager.purchaseUpgrade('click-power'); // Cost 100
 
 			expect(result.success).toBe(true);
-			expect(result.expCost).toBe(100);
+			expect(result.expCost).toBe(50);
 		});
 
 		it('should handle purchasing with EXP amount one less than cost', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(99).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(49).build();
 
-			const result = manager.purchaseUpgrade('click-power'); // Cost 100
+			const result = manager.purchaseUpgrade('click-power'); // Cost 50
 
 			expect(result.success).toBe(false);
 			expect(result.reason).toBe('cannot_afford');
@@ -425,7 +424,7 @@ describe('UpgradeManager', () => {
 			const manager = new UpgradeManagerBuilder().withCurrentExp(10000).build();
 
 			// Click upgrades
-			expect(manager.getUpgradeCost('click-power')).toBe(100);
+			expect(manager.getUpgradeCost('click-power')).toBe(50);
 			expect(manager.getUpgradeCost('critical-clicks')).toBe(200);
 
 			// Ruminate upgrades
