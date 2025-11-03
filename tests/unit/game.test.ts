@@ -101,14 +101,14 @@ describe('Game', () => {
 				const game = createTestGame();
 				const cost = game.getLevelUpCost();
 
-				expect(cost).toBe(10000); // 10000 * 100^(1-1) = 10000
+				expect(cost).toBe(1000); // 1000 * 100^(1-1) = 1000
 			});
 
 			it('should return correct cost for level 2 -> 3', () => {
 				const game = createGameAtLevel(2);
 				const cost = game.getLevelUpCost();
 
-				expect(cost).toBe(10000000); // 10000 * 1000^(2-1) = 10000000
+				expect(cost).toBe(1000000); // 1000 * 1000^(2-1) = 1000000
 			});
 
 			it('should increase exponentially', () => {
@@ -127,13 +127,13 @@ describe('Game', () => {
 
 		describe('canLevelUp', () => {
 			it('should return true when exp >= cost', () => {
-				const game = new GameBuilder().withExp(10000).build();
+				const game = new GameBuilder().withExp(1000).build();
 
 				expect(game.canLevelUp()).toBe(true);
 			});
 
 			it('should return false when exp < cost', () => {
-				const game = new GameBuilder().withExp(9999).build();
+				const game = new GameBuilder().withExp(999).build();
 
 				expect(game.canLevelUp()).toBe(false);
 			});
@@ -148,10 +148,10 @@ describe('Game', () => {
 			});
 
 			it('should deduct level up cost from exp', () => {
-				const game = new GameBuilder().withExp(15000).build();
+				const game = new GameBuilder().withExp(1500).build();
 
 				game.levelUp();
-				expect(game.exp).toBe(5000); // 15000 - 10000
+				expect(game.exp).toBe(500); // 1500 - 1000
 			});
 
 			it('should not deduct from lifetime exp', () => {
@@ -175,13 +175,13 @@ describe('Game', () => {
 			});
 
 			it('should fail if insufficient exp', () => {
-				const game = new GameBuilder().withExp(5000).build();
+				const game = new GameBuilder().withExp(500).build();
 
 				const result = game.levelUp();
 
 				expect(result).toBe(false);
 				expect(game.level).toBe(1);
-				expect(game.exp).toBe(5000); // Unchanged
+				expect(game.exp).toBe(500); // Unchanged
 			});
 
 			it('should return true on success', () => {
@@ -637,7 +637,7 @@ describe('Game', () => {
 			it('should return false when exp < level up cost', () => {
 				const game = new GameBuilder()
 					.withLevel(1)
-					.withExp(5000) // Not enough
+					.withExp(500) // Not enough
 					.build();
 
 				expect(game.canLevelUp()).toBe(false);
