@@ -43,7 +43,7 @@
             requiredExp: game.getStatExpRequired('strength'),
             maxLevel: game.getMaxStatLevel('strength'),
             trainingCost: game.getStatTrainingCost('strength'),
-            effect: 'Physical Power',
+            effect: 'Attack',
             color: 'var(--red)',
             available: game.level >= 3,
             atCap: game.stats.strength >= game.getMaxStatLevel('strength')
@@ -57,7 +57,7 @@
             requiredExp: game.getStatExpRequired('agility'),
             maxLevel: game.getMaxStatLevel('agility'),
             trainingCost: game.getStatTrainingCost('agility'),
-            effect: 'Speed & Reflexes',
+            effect: 'Attack Speed',
             color: 'var(--green)',
             available: game.level >= 3,
             atCap: game.stats.agility >= game.getMaxStatLevel('agility')
@@ -71,7 +71,7 @@
             requiredExp: game.getStatExpRequired('willpower'),
             maxLevel: game.getMaxStatLevel('willpower'),
             trainingCost: game.getStatTrainingCost('willpower'),
-            effect: 'Mental Fortitude',
+            effect: 'Defense',
             color: 'var(--blue)',
             available: game.level >= 3,
             atCap: game.stats.willpower >= game.getMaxStatLevel('willpower')
@@ -85,7 +85,7 @@
             requiredExp: game.getStatExpRequired('endurance'),
             maxLevel: game.getMaxStatLevel('endurance'),
             trainingCost: game.getStatTrainingCost('endurance'),
-            effect: 'Stamina & Resilience',
+            effect: 'HP',
             color: 'var(--yellow)',
             available: game.level >= 3,
             atCap: game.stats.endurance >= game.getMaxStatLevel('endurance')
@@ -106,6 +106,10 @@
         <div class="info-row highlight">
             <span class="info-label">Level:</span>
             <span class="info-value level">{game.level}</span>
+        </div>
+        <div class="info-row highlight">
+            <span class="info-label">HP:</span>
+            <span class="info-value level">{game.level * 5}</span>
         </div>
         <div class="info-row">
             <span class="info-label">Current EXP:</span>
@@ -130,8 +134,8 @@
                             <span class="stat-effect">+{stat.effect}</span>
                         </div>
                         <div class="stat-values">
-                            <span class="stat-level">Lv.{stat.level}/{stat.maxLevel}</span>
                             <span class="stat-value" style="color: {stat.color}">{stat.level}</span>
+                            <span class="stat-level">Lv.{stat.level}/{stat.maxLevel}</span>
                         </div>
                     </div>
                     <!-- Stat EXP Progress Bar (v0.1.5+) -->
