@@ -278,37 +278,6 @@ export function calculateMaxStatLevel(characterLevel: number): number {
 }
 
 /**
- * Calculates the ruminate efficiency multiplier from upgrades (v0.1.5+)
- * Multiplicative bonus to all rumination EXP gain
- *
- * @param upgrades - Map of all upgrades
- * @returns Multiplier for ruminate EXP (higher is more EXP)
- *
- * @example
- * // No upgrades: 1.0 (100% EXP)
- * calculateRuminateEfficiencyMultiplier({})
- *
- * // 10 levels of +2% efficiency: 1.2 (120% EXP)
- * calculateRuminateEfficiencyMultiplier({
- *   'ruminate-efficiency': { effectType: 'ruminateEfficiency', effectValue: 0.02, currentLevel: 10 }
- * })
- */
-export function calculateRuminateEfficiencyMultiplier(upgrades: {
-	[key: string]: Upgrade;
-}): number {
-	let multiplier = 1.0;
-
-	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'ruminateEfficiency') {
-			// v0.1.5+: +2% ruminate EXP gain per level (multiplicative)
-			multiplier += upgrade.effectValue * upgrade.currentLevel;
-		}
-	}
-
-	return multiplier;
-}
-
-/**
  * Calculates the stat gain bonus from upgrades (v0.1.5+ training system)
  * Additional stat EXP gained per training completion
  *

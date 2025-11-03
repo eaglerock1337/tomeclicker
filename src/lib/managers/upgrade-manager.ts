@@ -45,7 +45,6 @@ export interface Upgrade {
 		| 'clickMultiplierPercent'
 		| 'ruminateSpeed'
 		| 'ruminatePower'
-		| 'ruminateEfficiency'
 		| 'ruminateCrit'
 		| 'ruminateCritDamage'
 		| 'ruminateMultiplierPercent'
@@ -151,7 +150,7 @@ export class UpgradeManager {
 				category: 'click',
 				effectType: 'clickCritDamage',
 				effectValue: 0.02,
-				minLevel: 2
+				minLevel: 3
 			},
 			'click-mastery': {
 				id: 'click-mastery',
@@ -165,7 +164,7 @@ export class UpgradeManager {
 				category: 'click',
 				effectType: 'clickMultiplierPercent',
 				effectValue: 0.05,
-				minLevel: 3
+				minLevel: 4
 			},
 
 			// === RUMINATE CATEGORY (Level 2-4) ===
@@ -198,9 +197,9 @@ export class UpgradeManager {
 				effectValue: 0.1,
 				minLevel: 2
 			},
-			'ruminate-crit': {
-				id: 'ruminate-crit',
-				name: 'Ruminate Crit',
+			'focus-flow': {
+				id: 'focus-flow',
+				name: 'Focus Flow',
 				description: 'Increases chance for rumination to critically strike for bonus EXP',
 				effect: '+0.5% ruminate crit chance per level',
 				baseCost: 800,
@@ -212,9 +211,9 @@ export class UpgradeManager {
 				effectValue: 0.005,
 				minLevel: 3
 			},
-			'devastating-ruminate': {
-				id: 'devastating-ruminate',
-				name: 'Devastating Ruminate',
+			'intense-thoughts': {
+				id: 'intense-thoughts',
+				name: 'Intense Thoughts',
 				description: 'Increases the bonus EXP multiplier when rumination critically strikes',
 				effect: '+2% ruminate crit damage per level',
 				baseCost: 1000,
@@ -239,20 +238,6 @@ export class UpgradeManager {
 				effectType: 'ruminateMultiplierPercent',
 				effectValue: 0.1,
 				minLevel: 4
-			},
-			'ruminate-efficiency': {
-				id: 'ruminate-efficiency',
-				name: 'Ruminate Efficiency',
-				description: 'Reduces character EXP cost to start rumination',
-				effect: '-1% ruminate cost per level',
-				baseCost: 1200,
-				costMultiplier: 1.5,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'ruminate',
-				effectType: 'ruminateEfficiency',
-				effectValue: 0.01,
-				minLevel: 99
 			},
 
 			// === TRAINING CATEGORY (Level 3-4) ===
