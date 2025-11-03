@@ -29,10 +29,13 @@
 
     export let game: Game;
 
-    // Check if any upgrades are affordable or level up is available
+    // Check if any unlocked upgrades are affordable or level up is available
     $: hasAvailableUpgrades = game && (
         game.canLevelUp() ||
-        Object.values(game.upgrades).some(upgrade => game.canAffordUpgrade(upgrade.id))
+        Object.values(game.upgrades).some(upgrade =>
+            (!upgrade.minLevel || upgrade.minLevel <= game.level) &&
+            game.canAffordUpgrade(upgrade.id)
+        )
     );
 </script>
 
