@@ -113,7 +113,7 @@ export class UpgradeManager {
 				name: 'Click Power',
 				description: 'Baseline clicking strength increases with practice',
 				effect: '+1 EXP per click per level',
-				baseCost: 100,
+				baseCost: 50,
 				costMultiplier: 1.5,
 				maxLevel: 50,
 				currentLevel: 0,
