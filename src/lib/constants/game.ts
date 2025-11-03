@@ -35,11 +35,11 @@ export const UPGRADES_UNLOCK_THRESHOLD = 50;
  * Base EXP cost for the first level up (Level 1 → Level 2)
  * Scaling formula: BASE_LEVEL_COST * LEVEL_COST_MULTIPLIER^(currentLevel-1)
  */
-export const BASE_LEVEL_COST = 10000;
+export const BASE_LEVEL_COST = 1000;
 
 /**
  * Exponential multiplier for level up costs
- * Results in: 10k, 10M, 10B, 10T... (1000x per level)
+ * Results in: 1k, 1M, 1B, 1T... (1000x per level)
  */
 export const LEVEL_COST_MULTIPLIER = 1000;
 
@@ -175,10 +175,10 @@ export const UPGRADE_COST_TIER_5 = 500;
 
 /**
  * Base cost for Discipline upgrade (special multiplicative upgrade)
- * Starts at 100k (10x from level 2), then scales with 10x multiplier per level
+ * Starts at 10k (10x from level 2), then scales with 10x multiplier per level
  * Creates "checkpoint" moments between the massive 1000x level gaps
  */
-export const UPGRADE_DISCIPLINE_BASE_COST = 100000;
+export const UPGRADE_DISCIPLINE_BASE_COST = 10000;
 
 /**
  * Base cost for training speed upgrades (Efficient Training)

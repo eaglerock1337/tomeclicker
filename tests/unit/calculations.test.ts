@@ -14,21 +14,21 @@ import type { Upgrade } from '$lib/game';
 describe('Level Calculations', () => {
 	describe('calculateLevelUpCost', () => {
 		it('should calculate cost for level 1', () => {
-			expect(calculateLevelUpCost(1)).toBe(10000);
+			expect(calculateLevelUpCost(1)).toBe(1000);
 		});
 
 		it('should calculate cost for level 2', () => {
-			expect(calculateLevelUpCost(2)).toBe(10000000);
+			expect(calculateLevelUpCost(2)).toBe(1000000);
 		});
 
 		it('should calculate cost for level 3', () => {
-			expect(calculateLevelUpCost(3)).toBe(10000000000);
+			expect(calculateLevelUpCost(3)).toBe(1000000000);
 		});
 
 		it('should use exponential scaling with base 1000', () => {
-			// Formula: 10,000 * 1000^(level-1)
+			// Formula: 1,000 * 1000^(level-1)
 			for (let level = 1; level <= 5; level++) {
-				const expected = 10000 * Math.pow(1000, level - 1);
+				const expected = 1000 * Math.pow(1000, level - 1);
 				expect(calculateLevelUpCost(level)).toBe(expected);
 			}
 		});
