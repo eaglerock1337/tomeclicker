@@ -3,9 +3,9 @@ import {
 	calculateStatLevelCost,
 	calculateTrainingSpeedMultiplier,
 	calculateTrainingCostMultiplier,
-	calculateOsmosisExpBonus,
+	calculateRuminateExpBonus,
 	calculateGlobalIdleSpeedMultiplier,
-	calculateOsmosisSpeedMultiplier,
+	calculateRuminateSpeedMultiplier,
 	calculateStatExpRequired,
 	calculateStatTrainingCost,
 	calculateMaxStatLevel,
@@ -141,11 +141,11 @@ export class Game {
 		this.idleActionManager = new IdleActionManager({
 			getTrainingSpeedMultiplier: () => this.getTrainingSpeedMultiplier(),
 			getTrainingCostMultiplier: () => this.getTrainingCostMultiplier(),
-			getOsmosisExpBonus: () => this.getOsmosisExpBonus(),
+			getRuminateExpBonus: () => this.getRuminateExpBonus(),
 			getDisciplineMultiplier: () => this.getDisciplineMultiplier(),
 			getCurrentLevel: () => this.level,
 			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
-			getOsmosisSpeedMultiplier: () => this.getOsmosisSpeedMultiplier(),
+			getRuminateSpeedMultiplier: () => this.getRuminateSpeedMultiplier(),
 			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
 			getStatTrainingCost: (stat) => this.statsManager.getStatTrainingCost(stat),
 			addStatExp: (stat, amount) => this.statsManager.addStatExp(stat, amount),
@@ -263,7 +263,7 @@ export class Game {
 	 */
 	recalculateIdleExpRate(): void {
 		// Start with base ruminate reward (10 EXP per tick)
-		const baseReward = 10; // OSMOSIS_BASE_REWARD
+		const baseReward = 10; // RUMINATE_BASE_REWARD
 
 		// Apply percentage multiplier from Ruminate Power + Ruminate Mastery
 		const percentMultiplier = calculateRuminateMultiplierPercent(this.upgrades);
@@ -325,21 +325,21 @@ export class Game {
 	}
 
 	/**
-	 * Gets the osmosis EXP bonus from upgrades
-	 * @returns Additional EXP gained per osmosis completion
+	 * Gets the ruminate EXP bonus from upgrades
+	 * @returns Additional EXP gained per ruminate completion
 	 */
-	getOsmosisExpBonus(): number {
-		return calculateOsmosisExpBonus(this.upgrades);
+	getRuminateExpBonus(): number {
+		return calculateRuminateExpBonus(this.upgrades);
 	}
 
 	/**
-	 * Gets the full Ruminate (osmosis) reward with all multipliers applied
+	 * Gets the full Ruminate reward with all multipliers applied
 	 * Formula: (base + bonus) × 10^(level-1) × 5^(discipline_level)
 	 * @returns Total EXP that will be gained from completing Ruminate
 	 */
 	getRuminateReward(): number {
-		const baseReward = 10; // OSMOSIS_BASE_REWARD
-		const bonus = this.getOsmosisExpBonus();
+		const baseReward = 10; // RUMINATE_BASE_REWARD
+		const bonus = this.getRuminateExpBonus();
 		const levelMult = this.level > 1 ? Math.pow(10, this.level - 1) : 1;
 		const disciplineMult = this.getDisciplineMultiplier();
 
@@ -355,11 +355,11 @@ export class Game {
 	}
 
 	/**
-	 * Gets the osmosis-specific speed multiplier
-	 * @returns Speed multiplier for osmosis actions (higher is faster)
+	 * Gets the ruminate-specific speed multiplier
+	 * @returns Speed multiplier for ruminate actions (higher is faster)
 	 */
-	getOsmosisSpeedMultiplier(): number {
-		return calculateOsmosisSpeedMultiplier(this.upgrades);
+	getRuminateSpeedMultiplier(): number {
+		return calculateRuminateSpeedMultiplier(this.upgrades);
 	}
 
 	/**
@@ -433,10 +433,10 @@ export class Game {
 		if (!action) return 0;
 
 		// Calculate bonused duration (same logic as startIdleAction)
-		if (actionId === 'practice-osmosis') {
-			const osmosisSpeed = this.getOsmosisSpeedMultiplier();
+		if (actionId === 'practice-ruminate') {
+			const ruminateSpeed = this.getRuminateSpeedMultiplier();
 			const globalSpeed = this.getGlobalIdleSpeedMultiplier();
-			const combinedSpeed = osmosisSpeed * globalSpeed;
+			const combinedSpeed = ruminateSpeed * globalSpeed;
 			return Math.floor(action.baseDuration / combinedSpeed);
 		} else if (action.trainsStat) {
 			const trainingSpeed = this.getTrainingSpeedMultiplier();
@@ -593,7 +593,7 @@ export class Game {
 			}
 		}
 
-		// For meditation actions or free training (osmosis), no cost
+		// For meditation actions or free training (ruminate), no cost
 		return this.idleActionManager.startIdleAction(actionMap, actionId);
 	}
 
@@ -606,7 +606,7 @@ export class Game {
 
 		// Apply completion results
 		for (const result of results) {
-			// Add EXP gained (mainly from osmosis)
+			// Add EXP gained (mainly from ruminate)
 			if (result.expGained > 0) {
 				this.addExp(result.expGained);
 			}
@@ -634,7 +634,7 @@ export class Game {
 
 	/**
 	 * Determines if Training page should be accessible
-	 * @returns True if player is Level 2+ (for osmosis and stat training)
+	 * @returns True if player is Level 2+ (for ruminate and stat training)
 	 */
 	showTraining(): boolean {
 		return this.level >= 2;
@@ -1031,11 +1031,11 @@ export class Game {
 		this.idleActionManager = new IdleActionManager({
 			getTrainingSpeedMultiplier: () => this.getTrainingSpeedMultiplier(),
 			getTrainingCostMultiplier: () => this.getTrainingCostMultiplier(),
-			getOsmosisExpBonus: () => this.getOsmosisExpBonus(),
+			getRuminateExpBonus: () => this.getRuminateExpBonus(),
 			getDisciplineMultiplier: () => this.getDisciplineMultiplier(),
 			getCurrentLevel: () => this.level,
 			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
-			getOsmosisSpeedMultiplier: () => this.getOsmosisSpeedMultiplier(),
+			getRuminateSpeedMultiplier: () => this.getRuminateSpeedMultiplier(),
 			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
 			getStatTrainingCost: (stat) => this.statsManager.getStatTrainingCost(stat),
 			addStatExp: (stat, amount) => this.statsManager.addStatExp(stat, amount),

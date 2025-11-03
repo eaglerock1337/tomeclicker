@@ -132,21 +132,21 @@ export function calculateTrainingCostMultiplier(upgrades: { [key: string]: Upgra
 }
 
 /**
- * Calculates the osmosis EXP bonus from upgrades
+ * Calculates the ruminate EXP bonus from upgrades
  *
  * @param upgrades - Map of all upgrades
- * @returns Additional EXP gained per osmosis completion
+ * @returns Additional EXP gained per ruminate completion
  *
  * @example
  * // No upgrades: 0 bonus EXP
- * calculateOsmosisExpBonus({})
+ * calculateRuminateExpBonus({})
  *
  * // 5 levels of +1 EXP: 5 bonus EXP
- * calculateOsmosisExpBonus({
- *   'osmotic-absorption': { effectType: 'osmosisExp', effectValue: 1, currentLevel: 5 }
+ * calculateRuminateExpBonus({
+ *   'ruminate-power': { effectType: 'ruminatePower', effectValue: 1, currentLevel: 5 }
  * })
  */
-export function calculateOsmosisExpBonus(upgrades: { [key: string]: Upgrade }): number {
+export function calculateRuminateExpBonus(upgrades: { [key: string]: Upgrade }): number {
 	let bonus = 0;
 
 	for (const upgrade of Object.values(upgrades)) {
@@ -188,22 +188,22 @@ export function calculateGlobalIdleSpeedMultiplier(upgrades: { [key: string]: Up
 }
 
 /**
- * Calculates the osmosis-specific speed multiplier
- * Higher multiplier = faster osmosis
+ * Calculates the ruminate-specific speed multiplier
+ * Higher multiplier = faster ruminate
  *
  * @param upgrades - Map of all upgrades
- * @returns Speed multiplier for osmosis actions (higher is faster)
+ * @returns Speed multiplier for ruminate actions (higher is faster)
  *
  * @example
  * // No upgrades: 1.0 (100% speed)
- * calculateOsmosisSpeedMultiplier({})
+ * calculateRuminateSpeedMultiplier({})
  *
  * // 5 levels of +2% speed: 1.1 (110% speed)
- * calculateOsmosisSpeedMultiplier({
- *   'flow-state': { effectType: 'osmosisSpeed', effectValue: 0.02, currentLevel: 5 }
+ * calculateRuminateSpeedMultiplier({
+ *   'ruminate-speed': { effectType: 'ruminateSpeed', effectValue: 0.02, currentLevel: 5 }
  * })
  */
-export function calculateOsmosisSpeedMultiplier(upgrades: { [key: string]: Upgrade }): number {
+export function calculateRuminateSpeedMultiplier(upgrades: { [key: string]: Upgrade }): number {
 	let multiplier = 1.0;
 
 	for (const upgrade of Object.values(upgrades)) {

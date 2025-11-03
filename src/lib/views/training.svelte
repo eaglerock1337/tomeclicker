@@ -9,7 +9,7 @@
     }
 
     function getActionCost(action: any): number {
-        if (action.id === 'practice-osmosis') return 0;
+        if (action.id === 'practice-ruminate') return 0;
         if (action.trainsStat) {
             return game.getStatTrainingCost(action.trainsStat);
         }
@@ -17,7 +17,7 @@
     }
 
     function canAffordAction(action: any): boolean {
-        if (action.id === 'practice-osmosis') return true;
+        if (action.id === 'practice-ruminate') return true;
         if (action.trainsStat) {
             return game.exp >= game.getStatTrainingCost(action.trainsStat);
         }
@@ -45,7 +45,7 @@
 
     // Filter actions by level
     $: availableActions = Object.values(game.trainingActions).filter(action => {
-        if (action.id === 'practice-osmosis') return game.level >= 2;
+        if (action.id === 'practice-ruminate') return game.level >= 2;
         if (action.trainsStat) return game.level >= 3;
         return false;
     });
@@ -131,7 +131,7 @@
                     <div class="detail-row">
                         <div class="detail-half">
                             <span class="detail-label">Reward:</span>
-                            {#if action.id === 'practice-osmosis'}
+                            {#if action.id === 'practice-ruminate'}
                                 <span class="detail-value reward-value">
                                     +{game.getRuminateReward()} EXP
                                 </span>

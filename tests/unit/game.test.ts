@@ -53,7 +53,7 @@ describe('Game', () => {
 		it('should initialize training actions', () => {
 			const game = createTestGame();
 
-			expect(game.trainingActions['practice-osmosis']).toBeDefined();
+			expect(game.trainingActions['practice-ruminate']).toBeDefined();
 			expect(game.trainingActions['train-strength']).toBeDefined();
 			expect(game.trainingActions['train-agility']).toBeDefined();
 			expect(game.trainingActions['train-willpower']).toBeDefined();
@@ -534,7 +534,7 @@ describe('Game', () => {
 	describe('Training System', () => {
 		it('should initialize Ruminate action', () => {
 			const game = createTestGame();
-			const ruminate = game.trainingActions['practice-osmosis'];
+			const ruminate = game.trainingActions['practice-ruminate'];
 
 			expect(ruminate).toBeDefined();
 			expect(ruminate.name).toBe('Ruminate');

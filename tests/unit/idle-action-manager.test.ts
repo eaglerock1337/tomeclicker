@@ -14,11 +14,11 @@ class IdleActionManagerBuilder {
 	private deps: IdleActionDependencies = {
 		getTrainingSpeedMultiplier: () => 1.0,
 		getTrainingCostMultiplier: () => 1.0,
-		getOsmosisExpBonus: () => 0,
+		getRuminateExpBonus: () => 0,
 		getDisciplineMultiplier: () => 1.0,
 		getCurrentLevel: () => 1,
 		getGlobalIdleSpeedMultiplier: () => 1.0,
-		getOsmosisSpeedMultiplier: () => 1.0,
+		getRuminateSpeedMultiplier: () => 1.0,
 		getStatLevelCost: () => 100,
 		getStatTrainingCost: () => 100,
 		addStatExp: () => ({ success: true, leveledUp: false, newLevel: 1 }),
@@ -42,13 +42,13 @@ class IdleActionManagerBuilder {
 		return this;
 	}
 
-	withOsmosisSpeed(multiplier: number): this {
-		this.deps.getOsmosisSpeedMultiplier = () => multiplier;
+	withRuminateSpeed(multiplier: number): this {
+		this.deps.getRuminateSpeedMultiplier = () => multiplier;
 		return this;
 	}
 
-	withOsmosisBonus(bonus: number): this {
-		this.deps.getOsmosisExpBonus = () => bonus;
+	withRuminateBonus(bonus: number): this {
+		this.deps.getRuminateExpBonus = () => bonus;
 		return this;
 	}
 
@@ -83,11 +83,11 @@ describe('IdleActionManager', () => {
 		it('should initialize training actions with correct defaults', () => {
 			const actions = manager.getTrainingActions();
 
-			expect(actions['practice-osmosis']).toBeDefined();
-			expect(actions['practice-osmosis'].name).toBe('Ruminate');
-			expect(actions['practice-osmosis'].expCost).toBe(0); // Free!
-			expect(actions['practice-osmosis'].isActive).toBe(false);
-			expect(actions['practice-osmosis'].progress).toBe(0);
+			expect(actions['practice-ruminate']).toBeDefined();
+			expect(actions['practice-ruminate'].name).toBe('Ruminate');
+			expect(actions['practice-ruminate'].expCost).toBe(0); // Free!
+			expect(actions['practice-ruminate'].isActive).toBe(false);
+			expect(actions['practice-ruminate'].progress).toBe(0);
 
 			expect(actions['train-strength']).toBeDefined();
 			expect(actions['train-strength'].trainsStat).toBe('strength');
@@ -117,9 +117,9 @@ describe('IdleActionManager', () => {
 		});
 
 		it('should allow getting individual actions', () => {
-			const osmosis = manager.getTrainingAction('practice-osmosis');
-			expect(osmosis).toBeDefined();
-			expect(osmosis?.name).toBe('Ruminate');
+			const ruminate = manager.getTrainingAction('practice-ruminate');
+			expect(ruminate).toBeDefined();
+			expect(ruminate?.name).toBe('Ruminate');
 
 			const meditation = manager.getMeditationAction('meditate-future');
 			expect(meditation).toBeDefined();
@@ -134,34 +134,34 @@ describe('IdleActionManager', () => {
 
 	describe('Action Lifecycle', () => {
 		it('should start an action and set it as active', () => {
-			const result = manager.startIdleAction('training', 'practice-osmosis');
+			const result = manager.startIdleAction('training', 'practice-ruminate');
 
 			expect(result).toBe(true);
-			const action = manager.getTrainingAction('practice-osmosis');
+			const action = manager.getTrainingAction('practice-ruminate');
 			expect(action?.isActive).toBe(true);
 			expect(action?.progress).toBe(0);
 		});
 
 		it('should stop other actions when starting a new one', () => {
 			// Start first action
-			manager.startIdleAction('training', 'practice-osmosis');
-			expect(manager.getTrainingAction('practice-osmosis')?.isActive).toBe(true);
+			manager.startIdleAction('training', 'practice-ruminate');
+			expect(manager.getTrainingAction('practice-ruminate')?.isActive).toBe(true);
 
 			// Start second action
 			manager.startIdleAction('training', 'train-strength');
 
 			// First action should be stopped
-			expect(manager.getTrainingAction('practice-osmosis')?.isActive).toBe(false);
+			expect(manager.getTrainingAction('practice-ruminate')?.isActive).toBe(false);
 			expect(manager.getTrainingAction('train-strength')?.isActive).toBe(true);
 		});
 
 		it('should allow stopping an active action', () => {
-			manager.startIdleAction('training', 'practice-osmosis');
-			expect(manager.getTrainingAction('practice-osmosis')?.isActive).toBe(true);
+			manager.startIdleAction('training', 'practice-ruminate');
+			expect(manager.getTrainingAction('practice-ruminate')?.isActive).toBe(true);
 
-			manager.stopIdleAction('training', 'practice-osmosis');
+			manager.stopIdleAction('training', 'practice-ruminate');
 
-			const action = manager.getTrainingAction('practice-osmosis');
+			const action = manager.getTrainingAction('practice-ruminate');
 			expect(action?.isActive).toBe(false);
 			expect(action?.progress).toBe(0);
 		});
@@ -215,15 +215,15 @@ describe('IdleActionManager', () => {
 			expect(action?.duration).toBe(6000);
 		});
 
-		it('should apply osmosis-specific and global speed multipliers', () => {
+		it('should apply ruminate-specific and global speed multipliers', () => {
 			const manager = new IdleActionManagerBuilder()
-				.withOsmosisSpeed(1.5) // 1.5x faster
+				.withRuminateSpeed(1.5) // 1.5x faster
 				.withGlobalIdleSpeed(2.0) // 2x faster
 				.build();
 
-			manager.startIdleAction('training', 'practice-osmosis');
+			manager.startIdleAction('training', 'practice-ruminate');
 
-			const action = manager.getTrainingAction('practice-osmosis');
+			const action = manager.getTrainingAction('practice-ruminate');
 			// 15000 / (1.5 * 2.0) = 15000 / 3.0 = 5000
 			expect(action?.duration).toBe(5000);
 		});
@@ -234,8 +234,8 @@ describe('IdleActionManager', () => {
 			vi.useFakeTimers();
 			const startTime = Date.now();
 
-			manager.startIdleAction('training', 'practice-osmosis');
-			const action = manager.getTrainingAction('practice-osmosis');
+			manager.startIdleAction('training', 'practice-ruminate');
+			const action = manager.getTrainingAction('practice-ruminate');
 
 			// Advance time by half the duration
 			vi.advanceTimersByTime(action!.duration / 2);
@@ -250,10 +250,10 @@ describe('IdleActionManager', () => {
 		it('should complete action when progress >= 1.0', () => {
 			vi.useFakeTimers();
 
-			const manager = new IdleActionManagerBuilder().withOsmosisBonus(5).build();
+			const manager = new IdleActionManagerBuilder().withRuminateBonus(5).build();
 
-			manager.startIdleAction('training', 'practice-osmosis');
-			const action = manager.getTrainingAction('practice-osmosis');
+			manager.startIdleAction('training', 'practice-ruminate');
+			const action = manager.getTrainingAction('practice-ruminate');
 
 			// Advance time to complete the action
 			vi.advanceTimersByTime(action!.duration + 100);
@@ -264,7 +264,7 @@ describe('IdleActionManager', () => {
 			expect(results[0].expGained).toBe(15); // 10 base + 5 bonus
 			expect(results[0].shouldContinue).toBe(true);
 
-			// Osmosis should restart
+			// Ruminate should restart
 			expect(action?.isActive).toBe(true);
 			expect(action?.progress).toBe(0);
 
@@ -274,10 +274,10 @@ describe('IdleActionManager', () => {
 		it('should handle multiple completions in one update', () => {
 			vi.useFakeTimers();
 
-			manager.startIdleAction('training', 'practice-osmosis');
+			manager.startIdleAction('training', 'practice-ruminate');
 			manager.startIdleAction('meditation', 'disassociate');
 
-			const trainingAction = manager.getTrainingAction('practice-osmosis');
+			const trainingAction = manager.getTrainingAction('practice-ruminate');
 			const meditationAction = manager.getMeditationAction('disassociate');
 
 			// Advance time to complete both
@@ -293,12 +293,12 @@ describe('IdleActionManager', () => {
 		});
 	});
 
-	describe('Osmosis Completion', () => {
-		it('should award base EXP on osmosis completion', () => {
+	describe('Ruminate Completion', () => {
+		it('should award base EXP on ruminate completion', () => {
 			vi.useFakeTimers();
 
-			manager.startIdleAction('training', 'practice-osmosis');
-			const action = manager.getTrainingAction('practice-osmosis');
+			manager.startIdleAction('training', 'practice-ruminate');
+			const action = manager.getTrainingAction('practice-ruminate');
 
 			vi.advanceTimersByTime(action!.duration + 100);
 
@@ -311,13 +311,13 @@ describe('IdleActionManager', () => {
 			vi.useRealTimers();
 		});
 
-		it('should add osmosis bonus to EXP reward', () => {
+		it('should add ruminate bonus to EXP reward', () => {
 			vi.useFakeTimers();
 
-			const manager = new IdleActionManagerBuilder().withOsmosisBonus(25).build();
+			const manager = new IdleActionManagerBuilder().withRuminateBonus(25).build();
 
-			manager.startIdleAction('training', 'practice-osmosis');
-			const action = manager.getTrainingAction('practice-osmosis');
+			manager.startIdleAction('training', 'practice-ruminate');
+			const action = manager.getTrainingAction('practice-ruminate');
 
 			vi.advanceTimersByTime(action!.duration + 100);
 
@@ -328,11 +328,11 @@ describe('IdleActionManager', () => {
 			vi.useRealTimers();
 		});
 
-		it('should automatically restart osmosis after completion', () => {
+		it('should automatically restart ruminate after completion', () => {
 			vi.useFakeTimers();
 
-			manager.startIdleAction('training', 'practice-osmosis');
-			const action = manager.getTrainingAction('practice-osmosis');
+			manager.startIdleAction('training', 'practice-ruminate');
+			const action = manager.getTrainingAction('practice-ruminate');
 
 			vi.advanceTimersByTime(action!.duration + 100);
 			manager.updateIdleActions();
@@ -517,8 +517,8 @@ describe('IdleActionManager', () => {
 	describe('Migration', () => {
 		it('should migrate training actions and preserve progress', () => {
 			const savedActions: { [key: string]: IdleAction } = {
-				'practice-osmosis': {
-					id: 'practice-osmosis',
+				'practice-ruminate': {
+					id: 'practice-ruminate',
 					name: 'Old Name',
 					description: 'Old description',
 					progress: 0.75,
@@ -532,7 +532,7 @@ describe('IdleActionManager', () => {
 
 			manager.migrateTrainingActions(savedActions);
 
-			const action = manager.getTrainingAction('practice-osmosis');
+			const action = manager.getTrainingAction('practice-ruminate');
 			expect(action?.progress).toBe(0.75); // Preserved
 			expect(action?.isActive).toBe(true); // Preserved
 			expect(action?.lastUpdate).toBe(12345); // Preserved
@@ -565,8 +565,8 @@ describe('IdleActionManager', () => {
 
 		it('should add new actions during migration', () => {
 			const savedActions: { [key: string]: IdleAction } = {
-				'practice-osmosis': {
-					id: 'practice-osmosis',
+				'practice-ruminate': {
+					id: 'practice-ruminate',
 					name: 'Ruminate',
 					description: 'Learn through observation',
 					progress: 0,
@@ -582,7 +582,7 @@ describe('IdleActionManager', () => {
 
 			// Should have all actions, including new ones
 			const actions = manager.getTrainingActions();
-			expect(actions['practice-osmosis']).toBeDefined();
+			expect(actions['practice-ruminate']).toBeDefined();
 			expect(actions['train-strength']).toBeDefined();
 			expect(actions['train-agility']).toBeDefined();
 			expect(actions['train-willpower']).toBeDefined();
@@ -603,8 +603,8 @@ describe('IdleActionManager', () => {
 		it('should handle very high speed multipliers', () => {
 			const manager = new IdleActionManagerBuilder().withGlobalIdleSpeed(1000).build();
 
-			manager.startIdleAction('training', 'practice-osmosis');
-			const action = manager.getTrainingAction('practice-osmosis');
+			manager.startIdleAction('training', 'practice-ruminate');
+			const action = manager.getTrainingAction('practice-ruminate');
 
 			// Should result in very short duration
 			expect(action?.duration).toBe(15);
@@ -613,8 +613,8 @@ describe('IdleActionManager', () => {
 		it('should not update inactive actions', () => {
 			vi.useFakeTimers();
 
-			manager.startIdleAction('training', 'practice-osmosis');
-			manager.stopIdleAction('training', 'practice-osmosis');
+			manager.startIdleAction('training', 'practice-ruminate');
+			manager.stopIdleAction('training', 'practice-ruminate');
 
 			vi.advanceTimersByTime(100000); // Long time
 

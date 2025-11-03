@@ -58,8 +58,6 @@ export interface Upgrade {
 		| 'discipline'
 		| 'critChance'
 		| 'critDamage'
-		| 'osmosisExp'
-		| 'osmosisSpeed'
 		| 'globalIdleSpeed'
 		| 'idleExp'
 		| 'trainingCost';
