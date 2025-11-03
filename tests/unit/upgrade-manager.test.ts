@@ -41,10 +41,9 @@ describe('UpgradeManager', () => {
 			expect(upgrades['click-mastery']).toBeDefined();
 			expect(upgrades['ruminate-speed']).toBeDefined();
 			expect(upgrades['ruminate-power']).toBeDefined();
-			expect(upgrades['ruminate-crit']).toBeDefined();
-			expect(upgrades['devastating-ruminate']).toBeDefined();
+			expect(upgrades['focus-flow']).toBeDefined();
+			expect(upgrades['intense-thoughts']).toBeDefined();
 			expect(upgrades['ruminate-mastery']).toBeDefined();
-			expect(upgrades['ruminate-efficiency']).toBeDefined();
 			expect(upgrades['training-speed']).toBeDefined();
 			expect(upgrades['training-efficiency']).toBeDefined();
 			expect(upgrades['training-power']).toBeDefined();
@@ -77,7 +76,6 @@ describe('UpgradeManager', () => {
 		it('should initialize ruminate upgrades correctly', () => {
 			const ruminateSpeed = manager.getUpgrade('ruminate-speed');
 			const ruminatePower = manager.getUpgrade('ruminate-power');
-			const ruminateEff = manager.getUpgrade('ruminate-efficiency');
 
 			expect(ruminateSpeed?.effectType).toBe('ruminateSpeed');
 			expect(ruminateSpeed?.effectValue).toBe(0.1);
@@ -86,10 +84,6 @@ describe('UpgradeManager', () => {
 			expect(ruminatePower?.effectType).toBe('ruminatePower');
 			expect(ruminatePower?.effectValue).toBe(10);
 			expect(ruminatePower?.minLevel).toBe(2);
-
-			expect(ruminateEff?.effectType).toBe('ruminateEfficiency');
-			expect(ruminateEff?.effectValue).toBe(0.01);
-			expect(ruminateEff?.minLevel).toBe(99); // Locked upgrade
 		});
 
 		it('should initialize training upgrades correctly', () => {
@@ -437,7 +431,6 @@ describe('UpgradeManager', () => {
 			// Ruminate upgrades
 			expect(manager.getUpgradeCost('ruminate-speed')).toBe(100);
 			expect(manager.getUpgradeCost('ruminate-power')).toBe(500);
-			expect(manager.getUpgradeCost('ruminate-efficiency')).toBe(1200);
 
 			// Training upgrades
 			expect(manager.getUpgradeCost('training-speed')).toBe(500);

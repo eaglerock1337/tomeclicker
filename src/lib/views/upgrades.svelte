@@ -191,8 +191,6 @@
                                             +{(upgrade.effectValue * 100).toFixed(1)}% ruminate crit per level
                                         {:else if upgrade.effectType === 'ruminateCritDamage'}
                                             +{(upgrade.effectValue * 100).toFixed(0)}% ruminate crit damage per level
-                                        {:else if upgrade.effectType === 'ruminateEfficiency'}
-                                            -{(upgrade.effectValue * 100).toFixed(0)}% ruminate cost per level
                                         {:else if upgrade.effectType === 'statGainPercent'}
                                             +{(upgrade.effectValue * 100).toFixed(0)}% stat EXP per level
                                         {:else if upgrade.effectType === 'trainingSpeed'}
