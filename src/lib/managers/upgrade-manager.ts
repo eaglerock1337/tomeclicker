@@ -120,7 +120,7 @@ export class UpgradeManager {
 				category: 'click',
 				effectType: 'clickMultiplier',
 				effectValue: 1,
-				minLevel: 2
+				minLevel: 1
 			},
 			'critical-clicks': {
 				id: 'critical-clicks',
@@ -134,7 +134,7 @@ export class UpgradeManager {
 				category: 'click',
 				effectType: 'clickCrit',
 				effectValue: 0.005,
-				minLevel: 2
+				minLevel: 1
 			},
 			'devastating-click': {
 				id: 'devastating-click',
@@ -148,7 +148,7 @@ export class UpgradeManager {
 				category: 'click',
 				effectType: 'clickCritDamage',
 				effectValue: 0.02,
-				minLevel: 3
+				minLevel: 2
 			},
 			'click-mastery': {
 				id: 'click-mastery',
@@ -162,7 +162,7 @@ export class UpgradeManager {
 				category: 'click',
 				effectType: 'clickMultiplierPercent',
 				effectValue: 0.05,
-				minLevel: 4
+				minLevel: 3
 			},
 
 			// === RUMINATE CATEGORY (Level 2-4) ===
