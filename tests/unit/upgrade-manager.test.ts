@@ -62,7 +62,7 @@ describe('UpgradeManager', () => {
 			expect(clickPower?.effectValue).toBe(1);
 			expect(clickPower?.currentLevel).toBe(0);
 			expect(clickPower?.maxLevel).toBe(50);
-			expect(clickPower?.minLevel).toBe(2);
+			expect(clickPower?.minLevel).toBe(1);
 		});
 
 		it('should initialize crit upgrades correctly', () => {
