@@ -292,7 +292,7 @@ describe('Upgrade Effect Calculations', () => {
 		});
 	});
 
-	describe.skip('calculateRuminateExpBonus', () => {
+	describe('calculateRuminateExpBonus', () => {
 		it('should return 0 with no upgrades', () => {
 			expect(calculateRuminateExpBonus({})).toBe(0);
 		});
@@ -406,39 +406,54 @@ describe('Upgrade Effect Calculations', () => {
 		});
 	});
 
-	describe.skip('calculateRuminateSpeedMultiplier', () => {
+	describe('calculateRuminateSpeedMultiplier', () => {
 		it('should return 1.0 with no upgrades', () => {
 			expect(calculateRuminateSpeedMultiplier({})).toBe(1.0);
 		});
 
 		it('should calculate multiplier for single upgrade level', () => {
 			const upgrades = {
-				'flow-state': {
-					id: 'flow-state',
+				'ruminate-speed': {
+					id: 'ruminate-speed',
 					effectType: 'ruminateSpeed',
-					effectValue: 0.02,
+					effectValue: 0.1, // -0.1s per level
 					currentLevel: 1,
-					category: 'click'
+					category: 'ruminate'
 				} as Upgrade
 			};
 
-			// 1.0 + (0.02 * 1) = 1.02
-			expect(calculateRuminateSpeedMultiplier(upgrades)).toBe(1.02);
+			// Base 10s - 0.1s = 9.9s, so multiplier = 10/9.9 = 1.0101...
+			expect(calculateRuminateSpeedMultiplier(upgrades)).toBeCloseTo(1.0101, 4);
 		});
 
 		it('should calculate multiplier for multiple upgrade levels', () => {
 			const upgrades = {
-				'flow-state': {
-					id: 'flow-state',
+				'ruminate-speed': {
+					id: 'ruminate-speed',
 					effectType: 'ruminateSpeed',
-					effectValue: 0.02,
-					currentLevel: 5,
-					category: 'click'
+					effectValue: 0.1, // -0.1s per level
+					currentLevel: 10,
+					category: 'ruminate'
 				} as Upgrade
 			};
 
-			// 1.0 + (0.02 * 5) = 1.1
-			expect(calculateRuminateSpeedMultiplier(upgrades)).toBeCloseTo(1.1, 5);
+			// Base 10s - 1.0s = 9.0s, so multiplier = 10/9 = 1.1111...
+			expect(calculateRuminateSpeedMultiplier(upgrades)).toBeCloseTo(1.1111, 4);
+		});
+
+		it('should handle near-zero duration with safety limit', () => {
+			const upgrades = {
+				'ruminate-speed': {
+					id: 'ruminate-speed',
+					effectType: 'ruminateSpeed',
+					effectValue: 0.1,
+					currentLevel: 100, // Would be -0.1s without limit
+					category: 'ruminate'
+				} as Upgrade
+			};
+
+			// Max reduction, should cap at 0.1s minimum: 10/0.1 = 100x speed
+			expect(calculateRuminateSpeedMultiplier(upgrades)).toBe(100);
 		});
 	});
 });
