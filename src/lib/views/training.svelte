@@ -81,8 +81,9 @@
                 <div class="action-header">
                     <div class="action-name">{action.name}</div>
                     {#if action.trainsStat}
-                        <div class="stat-level">
-                            Level {statLevel}/{maxStatLevel}
+                        <div class="stat-info">
+                            <div class="stat-name">{action.trainsStat.charAt(0).toUpperCase() + action.trainsStat.slice(1)}</div>
+                            <div class="stat-level">Level {statLevel}/{maxStatLevel}</div>
                         </div>
                     {/if}
                 </div>
@@ -222,7 +223,8 @@
 
     .action-card:hover:not(:disabled):not(.active) .action-name,
     .action-card:hover:not(:disabled):not(.active) .action-description,
-    .action-card:hover:not(:disabled):not(.active) .stat-level {
+    .action-card:hover:not(:disabled):not(.active) .stat-level,
+    .action-card:hover:not(:disabled):not(.active) .stat-name {
         color: var(--bg);
     }
 
@@ -234,7 +236,8 @@
 
     .action-card.active .action-name,
     .action-card.active .action-description,
-    .action-card.active .stat-level {
+    .action-card.active .stat-level,
+    .action-card.active .stat-name {
         color: var(--bg);
     }
 
@@ -262,6 +265,22 @@
         transition: color 0.2s;
     }
 
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.25rem;
+    }
+
+    .stat-name {
+        color: var(--text);
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 400;
+        font-size: 0.9rem;
+        opacity: 0.8;
+        transition: color 0.2s;
+    }
+
     .stat-level {
         color: var(--blue);
         font-family: 'JetBrains Mono', monospace;
@@ -271,7 +290,8 @@
         transition: color 0.2s;
     }
 
-    .action-card.active .stat-level {
+    .action-card.active .stat-level,
+    .action-card.active .stat-name {
         color: var(--bg);
     }
 
