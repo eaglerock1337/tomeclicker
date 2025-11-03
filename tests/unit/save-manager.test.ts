@@ -48,11 +48,15 @@ class SaveManagerBuilder {
 		upgrades: {},
 		stats: {
 			strength: 1,
-			dexterity: 1,
+			agility: 1,
+			willpower: 1,
+			endurance: 1,
 			intelligence: 1,
 			wisdom: 1,
 			strengthExp: 0,
-			dexterityExp: 0,
+			agilityExp: 0,
+			willpowerExp: 0,
+			enduranceExp: 0,
 			intelligenceExp: 0,
 			wisdomExp: 0
 		},
@@ -172,11 +176,15 @@ describe('SaveManager', () => {
 				.withLevel(5)
 				.withStats({
 					strength: 10,
-					dexterity: 8,
-					intelligence: 6,
-					wisdom: 4,
+					agility: 8,
+					willpower: 6,
+					endurance: 4,
+					intelligence: 1,
+					wisdom: 1,
 					strengthExp: 0,
-					dexterityExp: 0,
+					agilityExp: 0,
+					willpowerExp: 0,
+					enduranceExp: 0,
 					intelligenceExp: 0,
 					wisdomExp: 0
 				})
@@ -219,11 +227,15 @@ describe('SaveManager', () => {
 				.withLevel(10)
 				.withStats({
 					strength: 20,
-					dexterity: 15,
-					intelligence: 12,
-					wisdom: 8,
+					agility: 15,
+					willpower: 12,
+					endurance: 8,
+					intelligence: 1,
+					wisdom: 1,
 					strengthExp: 0,
-					dexterityExp: 0,
+					agilityExp: 0,
+					willpowerExp: 0,
+					enduranceExp: 0,
 					intelligenceExp: 0,
 					wisdomExp: 0
 				})
@@ -277,11 +289,11 @@ describe('SaveManager', () => {
 				upgrades: {},
 				stats: {
 					strength: 1,
-					dexterity: 1,
+					agility: 1,
 					intelligence: 1,
 					wisdom: 1,
 					strengthExp: 0,
-					dexterityExp: 0,
+					agilityExp: 0,
 					intelligenceExp: 0,
 					wisdomExp: 0
 				},
@@ -335,7 +347,20 @@ describe('SaveManager', () => {
 				level: 2,
 				clickMultiplier: 1.5,
 				upgrades: { discipline: 1 },
-				stats: { strength: 2, dexterity: 2, intelligence: 2, wisdom: 2 },
+				stats: {
+					strength: 2,
+					agility: 2,
+					willpower: 2,
+					endurance: 2,
+					intelligence: 1,
+					wisdom: 1,
+					strengthExp: 0,
+					agilityExp: 0,
+					willpowerExp: 0,
+					enduranceExp: 0,
+					intelligenceExp: 0,
+					wisdomExp: 0
+				},
 				trainingActions: {},
 				meditationActions: {},
 				critChance: 0.05,
@@ -401,11 +426,11 @@ describe('SaveManager', () => {
 					upgrades: {},
 					stats: {
 						strength: 1,
-						dexterity: 1,
+						agility: 1,
 						intelligence: 1,
 						wisdom: 1,
 						strengthExp: 0,
-						dexterityExp: 0,
+						agilityExp: 0,
 						intelligenceExp: 0,
 						wisdomExp: 0
 					},
@@ -441,11 +466,11 @@ describe('SaveManager', () => {
 					upgrades: {},
 					stats: {
 						strength: 1,
-						dexterity: 1,
+						agility: 1,
 						intelligence: 1,
 						wisdom: 1,
 						strengthExp: 0,
-						dexterityExp: 0,
+						agilityExp: 0,
 						intelligenceExp: 0,
 						wisdomExp: 0
 					},

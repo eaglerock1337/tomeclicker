@@ -34,37 +34,44 @@ describe('UpgradeManager', () => {
 		it('should initialize all upgrades with correct defaults', () => {
 			const upgrades = manager.getUpgrades();
 
-			// Check that all expected upgrades exist
-			expect(upgrades['click-strength']).toBeDefined();
+			// Check that all expected upgrades exist (v0.1.5)
+			expect(upgrades['click-power']).toBeDefined();
 			expect(upgrades['critical-clicks']).toBeDefined();
+			expect(upgrades['devastating-click']).toBeDefined();
+			expect(upgrades['click-mastery']).toBeDefined();
 			expect(upgrades['ruminate-speed']).toBeDefined();
 			expect(upgrades['ruminate-power']).toBeDefined();
+			expect(upgrades['ruminate-crit']).toBeDefined();
+			expect(upgrades['devastating-ruminate']).toBeDefined();
+			expect(upgrades['ruminate-mastery']).toBeDefined();
 			expect(upgrades['ruminate-efficiency']).toBeDefined();
 			expect(upgrades['training-speed']).toBeDefined();
 			expect(upgrades['training-efficiency']).toBeDefined();
-			expect(upgrades['stat-gain']).toBeDefined();
+			expect(upgrades['training-power']).toBeDefined();
 			expect(upgrades['perfect-form']).toBeDefined();
+			expect(upgrades['devastating-training']).toBeDefined();
+			expect(upgrades['training-mastery']).toBeDefined();
 			expect(upgrades['discipline']).toBeDefined();
 		});
 
 		it('should initialize click multiplier upgrades correctly', () => {
-			const clickStrength = manager.getUpgrade('click-strength');
+			const clickPower = manager.getUpgrade('click-power');
 
-			expect(clickStrength).toBeDefined();
-			expect(clickStrength?.name).toBe('Click Strength');
-			expect(clickStrength?.effectType).toBe('clickMultiplier');
-			expect(clickStrength?.effectValue).toBe(1);
-			expect(clickStrength?.currentLevel).toBe(0);
-			expect(clickStrength?.maxLevel).toBe(50);
-			expect(clickStrength?.minLevel).toBe(1);
+			expect(clickPower).toBeDefined();
+			expect(clickPower?.name).toBe('Click Power');
+			expect(clickPower?.effectType).toBe('clickMultiplier');
+			expect(clickPower?.effectValue).toBe(1);
+			expect(clickPower?.currentLevel).toBe(0);
+			expect(clickPower?.maxLevel).toBe(50);
+			expect(clickPower?.minLevel).toBe(2);
 		});
 
 		it('should initialize crit upgrades correctly', () => {
 			const critClicks = manager.getUpgrade('critical-clicks');
 
 			expect(critClicks?.effectType).toBe('clickCrit');
-			expect(critClicks?.effectValue).toBe(0.02); // 2% per level
-			expect(critClicks?.maxLevel).toBe(25);
+			expect(critClicks?.effectValue).toBe(0.005); // 0.5% per level
+			expect(critClicks?.maxLevel).toBe(50);
 		});
 
 		it('should initialize ruminate upgrades correctly', () => {
@@ -77,22 +84,22 @@ describe('UpgradeManager', () => {
 			expect(ruminateSpeed?.minLevel).toBe(2);
 
 			expect(ruminatePower?.effectType).toBe('ruminatePower');
-			expect(ruminatePower?.effectValue).toBe(1);
+			expect(ruminatePower?.effectValue).toBe(10);
 			expect(ruminatePower?.minLevel).toBe(2);
 
 			expect(ruminateEff?.effectType).toBe('ruminateEfficiency');
-			expect(ruminateEff?.effectValue).toBe(0.02);
-			expect(ruminateEff?.minLevel).toBe(3);
+			expect(ruminateEff?.effectValue).toBe(0.01);
+			expect(ruminateEff?.minLevel).toBe(99); // Locked upgrade
 		});
 
 		it('should initialize training upgrades correctly', () => {
 			const trainingSpeed = manager.getUpgrade('training-speed');
 			const trainingEff = manager.getUpgrade('training-efficiency');
-			const statGain = manager.getUpgrade('stat-gain');
+			const trainingPower = manager.getUpgrade('training-power');
 			const perfectForm = manager.getUpgrade('perfect-form');
 
 			expect(trainingSpeed?.effectType).toBe('trainingSpeed');
-			expect(trainingSpeed?.effectValue).toBe(0.5);
+			expect(trainingSpeed?.effectValue).toBe(0.1);
 			expect(trainingSpeed?.maxLevel).toBe(50);
 			expect(trainingSpeed?.minLevel).toBe(3);
 
@@ -101,14 +108,14 @@ describe('UpgradeManager', () => {
 			expect(trainingEff?.maxLevel).toBe(50);
 			expect(trainingEff?.minLevel).toBe(3);
 
-			expect(statGain?.effectType).toBe('statGain');
-			expect(statGain?.effectValue).toBe(1);
-			expect(statGain?.maxLevel).toBe(50);
-			expect(statGain?.minLevel).toBe(3);
+			expect(trainingPower?.effectType).toBe('statGainPercent');
+			expect(trainingPower?.effectValue).toBe(0.01);
+			expect(trainingPower?.maxLevel).toBe(50);
+			expect(trainingPower?.minLevel).toBe(3);
 
 			expect(perfectForm?.effectType).toBe('trainingCrit');
-			expect(perfectForm?.effectValue).toBe(0.02);
-			expect(perfectForm?.maxLevel).toBe(25);
+			expect(perfectForm?.effectValue).toBe(0.005);
+			expect(perfectForm?.maxLevel).toBe(50);
 			expect(perfectForm?.minLevel).toBe(4);
 		});
 
@@ -117,10 +124,10 @@ describe('UpgradeManager', () => {
 
 			expect(discipline?.name).toBe('Discipline');
 			expect(discipline?.effectType).toBe('discipline');
-			expect(discipline?.effectValue).toBe(5.0); // 5x multiplier
+			expect(discipline?.effectValue).toBe(2.0); // 2x multiplier per level
 			expect(discipline?.baseCost).toBe(100000);
 			expect(discipline?.costMultiplier).toBe(10); // Very expensive
-			expect(discipline?.maxLevel).toBe(10);
+			expect(discipline?.maxLevel).toBe(100);
 			expect(discipline?.minLevel).toBe(1);
 		});
 
@@ -132,26 +139,26 @@ describe('UpgradeManager', () => {
 
 	describe('Upgrade Costs', () => {
 		it('should calculate correct cost for level 0 upgrade', () => {
-			const cost = manager.getUpgradeCost('click-strength');
-			expect(cost).toBe(50); // Base cost
+			const cost = manager.getUpgradeCost('click-power');
+			expect(cost).toBe(100); // Base cost
 		});
 
 		it('should calculate correct cost for level 1 upgrade', () => {
 			const upgrades = manager.getUpgrades();
-			upgrades['click-strength'].currentLevel = 1;
+			upgrades['click-power'].currentLevel = 1;
 
-			const cost = manager.getUpgradeCost('click-strength');
-			// Base cost 50, multiplier 1.5: 50 * 1.5^1 = 75
-			expect(cost).toBe(75);
+			const cost = manager.getUpgradeCost('click-power');
+			// Base cost 100, multiplier 1.5: 100 * 1.5^1 = 150
+			expect(cost).toBe(150);
 		});
 
 		it('should calculate correct cost for level 5 upgrade', () => {
 			const upgrades = manager.getUpgrades();
-			upgrades['click-strength'].currentLevel = 5;
+			upgrades['click-power'].currentLevel = 5;
 
-			const cost = manager.getUpgradeCost('click-strength');
-			// Base cost 50, multiplier 1.5: 50 * 1.5^5 = 50 * 7.59375 = 379.6875, floored to 379
-			expect(cost).toBe(379);
+			const cost = manager.getUpgradeCost('click-power');
+			// Base cost 100, multiplier 1.5: 100 * 1.5^5 = 100 * 7.59375 = 759.375, floored to 759
+			expect(cost).toBe(759);
 		});
 
 		it('should return 0 for non-existent upgrade', () => {
@@ -180,13 +187,13 @@ describe('UpgradeManager', () => {
 		it('should return true when player can afford upgrade', () => {
 			const manager = new UpgradeManagerBuilder().withCurrentExp(1000).build();
 
-			expect(manager.canAffordUpgrade('click-strength')).toBe(true); // Cost 50
+			expect(manager.canAffordUpgrade('click-power')).toBe(true); // Cost 100
 		});
 
 		it('should return false when player cannot afford upgrade', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(25).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(50).build();
 
-			expect(manager.canAffordUpgrade('click-strength')).toBe(false); // Cost 50
+			expect(manager.canAffordUpgrade('click-power')).toBe(false); // Cost 100
 		});
 
 		it('should return false for non-existent upgrade', () => {
@@ -194,19 +201,19 @@ describe('UpgradeManager', () => {
 		});
 
 		it('should check affordability correctly with current level', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(100).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(200).build();
 			const upgrades = manager.getUpgrades();
 
-			// Level 0: cost 50, can afford
-			expect(manager.canAffordUpgrade('click-strength')).toBe(true);
+			// Level 0: cost 100, can afford
+			expect(manager.canAffordUpgrade('click-power')).toBe(true);
 
-			// Level 1: cost 75, can afford
-			upgrades['click-strength'].currentLevel = 1;
-			expect(manager.canAffordUpgrade('click-strength')).toBe(true);
+			// Level 1: cost 150, can afford
+			upgrades['click-power'].currentLevel = 1;
+			expect(manager.canAffordUpgrade('click-power')).toBe(true);
 
-			// Level 2: cost 112.5 -> 112, cannot afford (we have 100)
-			upgrades['click-strength'].currentLevel = 2;
-			expect(manager.canAffordUpgrade('click-strength')).toBe(false);
+			// Level 2: cost 225, cannot afford (we have 200)
+			upgrades['click-power'].currentLevel = 2;
+			expect(manager.canAffordUpgrade('click-power')).toBe(false);
 		});
 	});
 
@@ -214,21 +221,21 @@ describe('UpgradeManager', () => {
 		it('should return true when upgrade is affordable and not maxed', () => {
 			const manager = new UpgradeManagerBuilder().withCurrentExp(1000).build();
 
-			expect(manager.canPurchaseUpgrade('click-strength')).toBe(true);
+			expect(manager.canPurchaseUpgrade('click-power')).toBe(true);
 		});
 
 		it('should return false when upgrade is not affordable', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(25).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(50).build();
 
-			expect(manager.canPurchaseUpgrade('click-strength')).toBe(false);
+			expect(manager.canPurchaseUpgrade('click-power')).toBe(false);
 		});
 
 		it('should return false when upgrade is at max level', () => {
 			const manager = new UpgradeManagerBuilder().withCurrentExp(999999).build();
 			const upgrades = manager.getUpgrades();
-			upgrades['click-strength'].currentLevel = 100; // Max level
+			upgrades['click-power'].currentLevel = 50; // Max level
 
-			expect(manager.canPurchaseUpgrade('click-strength')).toBe(false);
+			expect(manager.canPurchaseUpgrade('click-power')).toBe(false);
 		});
 
 		it('should return false for non-existent upgrade', () => {
@@ -240,21 +247,21 @@ describe('UpgradeManager', () => {
 		it('should successfully purchase upgrade when affordable', () => {
 			const manager = new UpgradeManagerBuilder().withCurrentExp(1000).build();
 
-			const result = manager.purchaseUpgrade('click-strength');
+			const result = manager.purchaseUpgrade('click-power');
 
 			expect(result.success).toBe(true);
-			expect(result.expCost).toBe(50);
+			expect(result.expCost).toBe(100);
 			expect(result.newLevel).toBe(1);
 
 			// Check upgrade level increased
-			const upgrade = manager.getUpgrade('click-strength');
+			const upgrade = manager.getUpgrade('click-power');
 			expect(upgrade?.currentLevel).toBe(1);
 		});
 
 		it('should fail to purchase when not affordable', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(25).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(50).build();
 
-			const result = manager.purchaseUpgrade('click-strength');
+			const result = manager.purchaseUpgrade('click-power');
 
 			expect(result.success).toBe(false);
 			expect(result.reason).toBe('cannot_afford');
@@ -262,22 +269,22 @@ describe('UpgradeManager', () => {
 			expect(result.newLevel).toBeUndefined();
 
 			// Check upgrade level unchanged
-			const upgrade = manager.getUpgrade('click-strength');
+			const upgrade = manager.getUpgrade('click-power');
 			expect(upgrade?.currentLevel).toBe(0);
 		});
 
 		it('should fail to purchase when at max level', () => {
 			const manager = new UpgradeManagerBuilder().withCurrentExp(999999).build();
 			const upgrades = manager.getUpgrades();
-			upgrades['click-strength'].currentLevel = 100; // Max level
+			upgrades['click-power'].currentLevel = 50; // Max level
 
-			const result = manager.purchaseUpgrade('click-strength');
+			const result = manager.purchaseUpgrade('click-power');
 
 			expect(result.success).toBe(false);
 			expect(result.reason).toBe('max_level');
 
 			// Check upgrade level unchanged
-			expect(upgrades['click-strength'].currentLevel).toBe(100);
+			expect(upgrades['click-power'].currentLevel).toBe(50);
 		});
 
 		it('should fail to purchase non-existent upgrade', () => {
@@ -288,16 +295,16 @@ describe('UpgradeManager', () => {
 		});
 
 		it('should allow multiple purchases until max level', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(999999999).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(Number.MAX_SAFE_INTEGER).build();
 
-			// Purchase critical-clicks up to max level (25)
-			for (let i = 0; i < 25; i++) {
-				const result = manager.purchaseUpgrade('critical-clicks'); // Max level 25
+			// Purchase critical-clicks up to max level (50)
+			for (let i = 0; i < 50; i++) {
+				const result = manager.purchaseUpgrade('critical-clicks'); // Max level 50
 				expect(result.success).toBe(true);
 				expect(result.newLevel).toBe(i + 1);
 			}
 
-			// 26th purchase should fail (max level reached)
+			// 51st purchase should fail (max level reached)
 			const failResult = manager.purchaseUpgrade('critical-clicks');
 			expect(failResult.success).toBe(false);
 			expect(failResult.reason).toBe('max_level');
@@ -306,25 +313,25 @@ describe('UpgradeManager', () => {
 		it('should calculate correct costs for sequential purchases', () => {
 			const manager = new UpgradeManagerBuilder().withCurrentExp(999999).build();
 
-			// First purchase: base cost 50
-			const result1 = manager.purchaseUpgrade('click-strength');
-			expect(result1.expCost).toBe(50);
+			// First purchase: base cost 100
+			const result1 = manager.purchaseUpgrade('click-power');
+			expect(result1.expCost).toBe(100);
 
-			// Second purchase: 50 * 1.5^1 = 75
-			const result2 = manager.purchaseUpgrade('click-strength');
-			expect(result2.expCost).toBe(75);
+			// Second purchase: 100 * 1.5^1 = 150
+			const result2 = manager.purchaseUpgrade('click-power');
+			expect(result2.expCost).toBe(150);
 
-			// Third purchase: 50 * 1.5^2 = 112.5 -> 112
-			const result3 = manager.purchaseUpgrade('click-strength');
-			expect(result3.expCost).toBe(112);
+			// Third purchase: 100 * 1.5^2 = 225
+			const result3 = manager.purchaseUpgrade('click-power');
+			expect(result3.expCost).toBe(225);
 		});
 	});
 
 	describe('Migration', () => {
 		it('should migrate upgrades and preserve levels', () => {
 			const savedUpgrades: { [key: string]: Upgrade } = {
-				'click-strength': {
-					id: 'click-strength',
+				'click-power': {
+					id: 'click-power',
 					name: 'Old Name',
 					description: 'Old description',
 					effect: 'Old effect',
@@ -341,27 +348,27 @@ describe('UpgradeManager', () => {
 
 			manager.migrateUpgrades(savedUpgrades);
 
-			const upgrade = manager.getUpgrade('click-strength');
+			const upgrade = manager.getUpgrade('click-power');
 			expect(upgrade?.currentLevel).toBe(25); // Preserved from save
-			expect(upgrade?.name).toBe('Click Strength'); // Updated to new definition
-			expect(upgrade?.baseCost).toBe(50); // Updated to new balance
+			expect(upgrade?.name).toBe('Click Power'); // Updated to new definition
+			expect(upgrade?.baseCost).toBe(100); // Updated to new balance
 			expect(upgrade?.maxLevel).toBe(50); // Updated to new balance
 		});
 
 		it('should add new upgrades during migration', () => {
 			const savedUpgrades: { [key: string]: Upgrade } = {
-				'click-strength': {
-					id: 'click-strength',
-					name: 'Focused Practice',
+				'click-power': {
+					id: 'click-power',
+					name: 'Click Power',
 					description: 'Desc',
 					effect: 'Effect',
-					baseCost: 50,
-					costMultiplier: 1.15,
-					maxLevel: 100,
+					baseCost: 100,
+					costMultiplier: 1.5,
+					maxLevel: 50,
 					currentLevel: 10,
 					effectType: 'clickMultiplier',
 					effectValue: 1.0,
-					minLevel: 1,
+					minLevel: 2,
 					category: 'click'
 				}
 				// Note: saved game doesn't have 'critical-clicks' yet
@@ -370,7 +377,7 @@ describe('UpgradeManager', () => {
 			manager.migrateUpgrades(savedUpgrades);
 
 			const upgrades = manager.getUpgrades();
-			expect(upgrades['click-strength'].currentLevel).toBe(10); // Preserved
+			expect(upgrades['click-power'].currentLevel).toBe(10); // Preserved
 			expect(upgrades['critical-clicks'].currentLevel).toBe(0); // New upgrade added
 			expect(upgrades['discipline'].currentLevel).toBe(0); // New upgrade added
 		});
@@ -380,7 +387,7 @@ describe('UpgradeManager', () => {
 
 			const upgrades = manager.getUpgrades();
 			// All upgrades should exist with level 0
-			expect(upgrades['click-strength'].currentLevel).toBe(0);
+			expect(upgrades['click-power'].currentLevel).toBe(0);
 			expect(upgrades['discipline'].currentLevel).toBe(0);
 		});
 
@@ -388,14 +395,14 @@ describe('UpgradeManager', () => {
 			const savedUpgrades = manager.getUpgrades();
 
 			// Set some levels
-			savedUpgrades['click-strength'].currentLevel = 15;
+			savedUpgrades['click-power'].currentLevel = 15;
 			savedUpgrades['critical-clicks'].currentLevel = 8;
 			savedUpgrades['discipline'].currentLevel = 2;
 
 			manager.migrateUpgrades(savedUpgrades);
 
 			const upgrades = manager.getUpgrades();
-			expect(upgrades['click-strength'].currentLevel).toBe(15);
+			expect(upgrades['click-power'].currentLevel).toBe(15);
 			expect(upgrades['critical-clicks'].currentLevel).toBe(8);
 			expect(upgrades['discipline'].currentLevel).toBe(2);
 		});
@@ -403,18 +410,18 @@ describe('UpgradeManager', () => {
 
 	describe('Edge Cases', () => {
 		it('should handle purchasing with exact EXP amount', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(50).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(100).build();
 
-			const result = manager.purchaseUpgrade('click-strength'); // Cost 50
+			const result = manager.purchaseUpgrade('click-power'); // Cost 100
 
 			expect(result.success).toBe(true);
-			expect(result.expCost).toBe(50);
+			expect(result.expCost).toBe(100);
 		});
 
 		it('should handle purchasing with EXP amount one less than cost', () => {
-			const manager = new UpgradeManagerBuilder().withCurrentExp(49).build();
+			const manager = new UpgradeManagerBuilder().withCurrentExp(99).build();
 
-			const result = manager.purchaseUpgrade('click-strength'); // Cost 50
+			const result = manager.purchaseUpgrade('click-power'); // Cost 100
 
 			expect(result.success).toBe(false);
 			expect(result.reason).toBe('cannot_afford');
@@ -424,18 +431,18 @@ describe('UpgradeManager', () => {
 			const manager = new UpgradeManagerBuilder().withCurrentExp(10000).build();
 
 			// Click upgrades
-			expect(manager.getUpgradeCost('click-strength')).toBe(50);
+			expect(manager.getUpgradeCost('click-power')).toBe(100);
 			expect(manager.getUpgradeCost('critical-clicks')).toBe(200);
 
 			// Ruminate upgrades
 			expect(manager.getUpgradeCost('ruminate-speed')).toBe(100);
 			expect(manager.getUpgradeCost('ruminate-power')).toBe(500);
-			expect(manager.getUpgradeCost('ruminate-efficiency')).toBe(1000);
+			expect(manager.getUpgradeCost('ruminate-efficiency')).toBe(1200);
 
 			// Training upgrades
 			expect(manager.getUpgradeCost('training-speed')).toBe(500);
 			expect(manager.getUpgradeCost('training-efficiency')).toBe(1000);
-			expect(manager.getUpgradeCost('stat-gain')).toBe(2000);
+			expect(manager.getUpgradeCost('training-power')).toBe(2000);
 			expect(manager.getUpgradeCost('perfect-form')).toBe(3000);
 
 			// Discipline
@@ -454,20 +461,20 @@ describe('UpgradeManager', () => {
 			upgrades['training-speed'].currentLevel = 50;
 			expect(manager.canPurchaseUpgrade('training-speed')).toBe(false);
 
-			// Critical clicks: max level 25
-			upgrades['critical-clicks'].currentLevel = 25;
+			// Critical clicks: max level 50
+			upgrades['critical-clicks'].currentLevel = 50;
 			expect(manager.canPurchaseUpgrade('critical-clicks')).toBe(false);
 
-			// Click strength: max level 50
-			upgrades['click-strength'].currentLevel = 50;
-			expect(manager.canPurchaseUpgrade('click-strength')).toBe(false);
+			// Click power: max level 50
+			upgrades['click-power'].currentLevel = 50;
+			expect(manager.canPurchaseUpgrade('click-power')).toBe(false);
 
-			// Perfect form: max level 25
-			upgrades['perfect-form'].currentLevel = 25;
+			// Perfect form: max level 50
+			upgrades['perfect-form'].currentLevel = 50;
 			expect(manager.canPurchaseUpgrade('perfect-form')).toBe(false);
 
-			// Discipline: max level 10
-			upgrades['discipline'].currentLevel = 10;
+			// Discipline: max level 100
+			upgrades['discipline'].currentLevel = 100;
 			expect(manager.canPurchaseUpgrade('discipline')).toBe(false);
 		});
 	});
