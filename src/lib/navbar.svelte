@@ -62,11 +62,6 @@
                 <p class:red="{game.menu === 'training'}"><Dumbbell size={24}/></p>
             </button>
         {/if}
-        {#if game.showStats()}
-            <button on:click="{() => game.menu = 'stats'}">
-                <p class:red="{game.menu === 'stats'}"><BarChart3 size={24}/></p>
-            </button>
-        {/if}
         {#if game.showMeditation()}
             <button on:click="{() => game.menu = 'meditation'}">
                 <p class:red="{game.menu === 'meditation'}"><Brain size={24}/></p>
@@ -83,6 +78,11 @@
         <button on:click="{() => game.menu = 'help'}">
             <p class:red="{game.menu === 'help'}"><HelpCircle size={24}/></p>
         </button>
+        {#if game.showStats()}
+            <button on:click="{() => game.menu = 'stats'}">
+                <p class:red="{game.menu === 'stats'}"><BarChart3 size={24}/></p>
+            </button>
+        {/if}
         <button on:click="{() => game.menu = 'saves'}">
             <p class:red="{game.menu === 'saves'}"><Save size={24}/></p>
         </button>
