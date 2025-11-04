@@ -226,7 +226,7 @@
                 <div class="details-body">
                     <div class="details-content">
                         <p class="description">Advance to the next level and unlock greater power</p>
-                        <p class="effect"><strong>Effect:</strong> 10x multiplier to all EXP gains</p>
+                        <p class="effect"><strong>Effect:</strong> 8x multiplier to all EXP gains</p>
                         <p class="cost"><strong>Cost:</strong> {formatCost(game.getLevelUpCost())} EXP</p>
                         <p class="level"><strong>Current Level:</strong> {game.level}</p>
                     </div>
