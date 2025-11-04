@@ -142,8 +142,8 @@ describe('UpgradeManager', () => {
 			upgrades['click-power'].currentLevel = 1;
 
 			const cost = manager.getUpgradeCost('click-power');
-			// Base cost 50, multiplier 1.5: 50 * 1.5^1 = 75
-			expect(cost).toBe(75);
+			// Base cost 50, multiplier 1.4: 50 * 1.4^1 = 70
+			expect(cost).toBe(70);
 		});
 
 		it('should calculate correct cost for level 5 upgrade', () => {
@@ -151,7 +151,7 @@ describe('UpgradeManager', () => {
 			upgrades['click-power'].currentLevel = 5;
 
 			const cost = manager.getUpgradeCost('click-power');
-			expect(cost).toBe(379);
+			expect(cost).toBe(268);
 		});
 
 		it('should return 0 for non-existent upgrade', () => {
@@ -200,12 +200,16 @@ describe('UpgradeManager', () => {
 			// Level 0: cost 50, can afford
 			expect(manager.canAffordUpgrade('click-power')).toBe(true);
 
-			// Level 1: cost 75, can afford
+			// Level 1: cost 70, can afford
 			upgrades['click-power'].currentLevel = 1;
 			expect(manager.canAffordUpgrade('click-power')).toBe(true);
 
-			// Level 2: cost 112, cannot afford (we have 200)
+			// Level 2: cost 98, can afford
 			upgrades['click-power'].currentLevel = 2;
+			expect(manager.canAffordUpgrade('click-power')).toBe(true);
+
+			// Level 3: cost 137, cannot afford (we have 100)
+			upgrades['click-power'].currentLevel = 3;
 			expect(manager.canAffordUpgrade('click-power')).toBe(false);
 		});
 	});
@@ -306,17 +310,17 @@ describe('UpgradeManager', () => {
 		it('should calculate correct costs for sequential purchases', () => {
 			const manager = new UpgradeManagerBuilder().withCurrentExp(999999).build();
 
-			// First purchase: base cost 100
+			// First purchase: base cost 50
 			const result1 = manager.purchaseUpgrade('click-power');
 			expect(result1.expCost).toBe(50);
 
-			// Second purchase: 100 * 1.5^1 = 150
+			// Second purchase: 50 * 1.4^1 = 70
 			const result2 = manager.purchaseUpgrade('click-power');
-			expect(result2.expCost).toBe(75);
+			expect(result2.expCost).toBe(70);
 
-			// Third purchase: 100 * 1.5^2 = 225
+			// Third purchase: floor(50 * 1.4^2) = floor(97.999...) = 97
 			const result3 = manager.purchaseUpgrade('click-power');
-			expect(result3.expCost).toBe(112);
+			expect(result3.expCost).toBe(97);
 		});
 	});
 
@@ -428,14 +432,14 @@ describe('UpgradeManager', () => {
 			expect(manager.getUpgradeCost('critical-clicks')).toBe(200);
 
 			// Ruminate upgrades
-			expect(manager.getUpgradeCost('ruminate-speed')).toBe(100);
+			expect(manager.getUpgradeCost('ruminate-speed')).toBe(800);
 			expect(manager.getUpgradeCost('ruminate-power')).toBe(500);
 
 			// Training upgrades
-			expect(manager.getUpgradeCost('training-speed')).toBe(500);
-			expect(manager.getUpgradeCost('training-efficiency')).toBe(1000);
+			expect(manager.getUpgradeCost('training-speed')).toBe(2500);
+			expect(manager.getUpgradeCost('training-efficiency')).toBe(3000);
 			expect(manager.getUpgradeCost('training-power')).toBe(2000);
-			expect(manager.getUpgradeCost('perfect-form')).toBe(3000);
+			expect(manager.getUpgradeCost('perfect-form')).toBe(4000);
 
 			// Discipline
 			expect(manager.getUpgradeCost('discipline')).toBe(10000);
