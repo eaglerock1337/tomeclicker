@@ -17,11 +17,12 @@
     }
 </script>
 
+<div class="adventure-view">
 <div class="adventure-container">
     {#if !isUnlocked}
         <!-- Locked State -->
         <div class="locked-content">
-            <h2>Adventure Mode</h2>
+            <h2>Adventure</h2>
             <p class="locked-message">
                 The path to adventure is not yet clear. Train all your stats to level 5 to unlock
                 this path.
@@ -66,7 +67,7 @@
                             <em>All stat requirements met! You are ready to begin your adventure.</em>
                         </p>
                         <button class="unlock-button" on:click={unlockAdventure}>
-                            Unlock Adventure Mode
+                            Unlock Adventure
                         </button>
                     </div>
                 {:else}
@@ -81,7 +82,7 @@
     {:else}
         <!-- Unlocked State -->
         <div class="unlocked-content">
-            <h2>Adventure Mode Unlocked!</h2>
+            <h2>Adventure Unlocked!</h2>
             <div class="demo-message">
                 <h3>Congratulations!</h3>
                 <p>You've unlocked everything in the current demo of TomeClicker.</p>
@@ -119,10 +120,19 @@
         </div>
     {/if}
 </div>
+</div>
 
 <style>
+    .adventure-view {
+        height: 100%;
+        width: 100%;
+        background-color: var(--bg);
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
     .adventure-container {
-        padding: 2rem;
+        padding: 1rem;
         max-width: 800px;
         margin: 0 auto;
     }
@@ -131,14 +141,16 @@
         color: var(--text);
         font-family: Lato, sans-serif;
         font-weight: 300;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
+        font-size: 1.5rem;
     }
 
     h3 {
         color: var(--blue);
         font-family: Lato, sans-serif;
         font-weight: 400;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
+        font-size: 1.1rem;
     }
 
     /* Locked State Styles */
@@ -146,37 +158,38 @@
         background: var(--alt-bg);
         border: 1px solid var(--text);
         border-radius: 8px;
-        padding: 2rem;
+        padding: 1.25rem;
     }
 
     .locked-message {
         color: var(--text);
         font-family: Lato, sans-serif;
-        font-size: 1.1rem;
-        line-height: 1.6;
-        margin-bottom: 2rem;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        margin-bottom: 1rem;
         text-align: center;
     }
 
     .requirements-section {
-        margin-top: 2rem;
+        margin-top: 1rem;
     }
 
     .requirements-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
     }
 
     .requirement-item {
         display: flex;
         justify-content: space-between;
-        padding: 0.75rem;
+        padding: 0.5rem;
         background: var(--bg);
         border: 2px solid var(--red);
         border-radius: 4px;
         transition: border-color 0.3s;
+        font-size: 0.9rem;
     }
 
     .requirement-item.met {
@@ -204,8 +217,8 @@
         background: var(--bg);
         border: 1px solid var(--blue);
         border-radius: 4px;
-        padding: 1rem;
-        margin-top: 1rem;
+        padding: 0.75rem;
+        margin-top: 0.75rem;
     }
 
     .unlock-ready {
@@ -217,7 +230,8 @@
     .training-hint p {
         color: var(--blue);
         font-family: Lato, sans-serif;
-        margin: 0 0 1rem 0;
+        margin: 0 0 0.75rem 0;
+        font-size: 0.9rem;
     }
 
     .unlock-ready p {
@@ -228,9 +242,9 @@
         background: var(--green);
         color: var(--bg);
         border: none;
-        padding: 0.75rem 2rem;
+        padding: 0.625rem 1.5rem;
         font-family: Lato, sans-serif;
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 700;
         border-radius: 4px;
         cursor: pointer;
@@ -315,12 +329,20 @@
 
     /* Mobile optimizations */
     @media (max-width: 768px) {
-        .adventure-container {
+        .requirements-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .locked-content {
             padding: 1rem;
         }
 
-        .requirements-grid {
-            grid-template-columns: 1fr;
+        h2 {
+            font-size: 1.25rem;
+        }
+
+        h3 {
+            font-size: 1rem;
         }
     }
 </style>
