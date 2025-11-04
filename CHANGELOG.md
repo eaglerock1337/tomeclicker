@@ -1,3 +1,19 @@
+## [0.2.1](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.0...v0.2.1) (2025-11-04)
+
+### Bug Fixes
+
+- adventure mode lock page ([cecb6c0](https://github.com/eaglerock1337/tomeclicker/commit/cecb6c045c67469c315a9c17585b10eb03a7d2d4))
+- click upgrade levels ([0e7b519](https://github.com/eaglerock1337/tomeclicker/commit/0e7b519d20c8e60b965149c0529a7da1691f97a0))
+- double-clicks on mobile ([6126886](https://github.com/eaglerock1337/tomeclicker/commit/61268864e256795b682debcb26374b102424893d))
+- lowercase headings ([b806186](https://github.com/eaglerock1337/tomeclicker/commit/b806186012f3d741e8fbcabb246370aabcd63511))
+- more game balancing ([72e57b8](https://github.com/eaglerock1337/tomeclicker/commit/72e57b8430aaf05e40ea90887001a0baa4a74806))
+- scrolling issues on mobile ([bea5c2a](https://github.com/eaglerock1337/tomeclicker/commit/bea5c2a2e9d59ae28272aa2b6547bcd9b9438409))
+- some visuals and adventure mode window ([85aff38](https://github.com/eaglerock1337/tomeclicker/commit/85aff3867512549588d834354caf3d6c34b740d3))
+- touch scrolling ([c5baf7a](https://github.com/eaglerock1337/tomeclicker/commit/c5baf7a0545b16fcde620394f3695ea00ebac7cb))
+- tweak first click upgrades ([317e62d](https://github.com/eaglerock1337/tomeclicker/commit/317e62daf6a580ac067e0faeddb88880f9140321))
+- tweak level/discipline costs ([62bb6ee](https://github.com/eaglerock1337/tomeclicker/commit/62bb6eee375a272aba5235c9ad8904e4b85ba710))
+- upgrade indicator how is green only for unlocked upgrades ([ff2ac8f](https://github.com/eaglerock1337/tomeclicker/commit/ff2ac8ff7d49f4a90e56d42ff3f969a12cd4d742))
+
 # [0.2.0](https://github.com/eaglerock1337/tomeclicker/compare/v0.1.4...v0.2.0) (2025-11-03)
 
 ### Bug Fixes
