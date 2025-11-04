@@ -28,7 +28,7 @@
 </script>
 
 <div class="meditation-container">
-    <h2>Meditation</h2>
+    <h2>meditation</h2>
     <p class="description">Meditate on the mysteries of the Tomes</p>
 
     {#if availableActions.length === 0}

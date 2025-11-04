@@ -22,7 +22,7 @@
     {#if !isUnlocked}
         <!-- Locked State -->
         <div class="locked-content">
-            <h2>Adventure</h2>
+            <h2>adventure</h2>
             <p class="locked-message">
                 The path to adventure is not yet clear. Train all your stats to level 5 to unlock
                 this path.
