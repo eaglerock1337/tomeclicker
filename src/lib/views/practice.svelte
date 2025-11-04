@@ -101,6 +101,8 @@
         flex-direction: column;
         padding: 0;
         box-sizing: border-box;
+        /* Prevent any touch gestures from being interpreted as scrolling */
+        touch-action: none;
     }
 
     /* The Button */
@@ -125,7 +127,7 @@
         justify-content: center;
         text-align: center;
         font-size: 1em;
-        touch-action: manipulation;
+        touch-action: none;
         transition: color 1s cubic-bezier(0,.5,0,1),
                     background-color 1s cubic-bezier(0,.5,0,1);
         /* Prevent text selection during rapid clicking */
