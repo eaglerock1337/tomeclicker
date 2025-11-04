@@ -663,10 +663,29 @@ export class Game {
 
 	/**
 	 * Determines if Adventure page should be accessible
-	 * @returns True if Adventure Mode has been unlocked
+	 * @returns True if player has reached level 4
 	 */
 	showAdventure(): boolean {
-		return this.adventureModeUnlocked;
+		return this.level >= 4;
+	}
+
+	/**
+	 * Unlocks Adventure Mode when stat requirements are met
+	 * Requires all four stats (Strength, Agility, Willpower, Endurance) at level 5+
+	 * @returns True if unlock succeeded, false if requirements not met
+	 */
+	unlockAdventureMode(): boolean {
+		// Check if all stats are level 5 or higher
+		const meetsRequirements =
+			this.stats.strength >= 5 &&
+			this.stats.agility >= 5 &&
+			this.stats.willpower >= 5 &&
+			this.stats.endurance >= 5;
+
+		if (!meetsRequirements) return false;
+
+		this.adventureModeUnlocked = true;
+		return true;
 	}
 
 	/** Integrity Monitoring */

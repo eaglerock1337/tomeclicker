@@ -856,14 +856,18 @@ describe('Game', () => {
 		});
 
 		describe('showAdventure', () => {
-			it('should return false when adventure mode not unlocked', () => {
-				const game = createTestGame();
+			it('should return false when level < 4', () => {
+				const game = new GameBuilder().withLevel(3).build();
 				expect(game.showAdventure()).toBe(false);
 			});
 
-			it('should return true when adventure mode unlocked', () => {
-				const game = createTestGame();
-				game.adventureModeUnlocked = true;
+			it('should return true when level >= 4', () => {
+				const game = new GameBuilder().withLevel(4).build();
+				expect(game.showAdventure()).toBe(true);
+			});
+
+			it('should return true for higher levels', () => {
+				const game = new GameBuilder().withLevel(5).build();
 				expect(game.showAdventure()).toBe(true);
 			});
 		});

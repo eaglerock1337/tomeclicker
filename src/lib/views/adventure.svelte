@@ -9,6 +9,12 @@
         game.stats.agility >= 5 &&
         game.stats.willpower >= 5 &&
         game.stats.endurance >= 5;
+
+    function unlockAdventure() {
+        if (game.unlockAdventureMode()) {
+            game = game; // Force reactivity
+        }
+    }
 </script>
 
 <div class="adventure-container">
@@ -17,7 +23,7 @@
         <div class="locked-content">
             <h2>Adventure Mode</h2>
             <p class="locked-message">
-                The path to adventure is not yet clear. You must train your stats and meditate to unlock
+                The path to adventure is not yet clear. Train all your stats to level 5 to unlock
                 this path.
             </p>
 
@@ -55,13 +61,13 @@
                 </div>
 
                 {#if meetsStatRequirements}
-                    <div class="meditation-hint">
+                    <div class="unlock-ready">
                         <p>
-                            <em
-                                >Your stats are sufficient. Complete the "Meditate on Your Future" meditation to
-                                unlock Adventure Mode.</em
-                            >
+                            <em>All stat requirements met! You are ready to begin your adventure.</em>
                         </p>
+                        <button class="unlock-button" on:click={unlockAdventure}>
+                            Unlock Adventure Mode
+                        </button>
                     </div>
                 {:else}
                     <div class="training-hint">
@@ -193,7 +199,7 @@
         color: var(--green);
     }
 
-    .meditation-hint,
+    .unlock-ready,
     .training-hint {
         background: var(--bg);
         border: 1px solid var(--blue);
@@ -202,11 +208,42 @@
         margin-top: 1rem;
     }
 
-    .meditation-hint p,
+    .unlock-ready {
+        border-color: var(--green);
+        text-align: center;
+    }
+
+    .unlock-ready p,
     .training-hint p {
         color: var(--blue);
         font-family: Lato, sans-serif;
-        margin: 0;
+        margin: 0 0 1rem 0;
+    }
+
+    .unlock-ready p {
+        color: var(--green);
+    }
+
+    .unlock-button {
+        background: var(--green);
+        color: var(--bg);
+        border: none;
+        padding: 0.75rem 2rem;
+        font-family: Lato, sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .unlock-button:hover {
+        background: var(--blue);
+        transform: scale(1.05);
+    }
+
+    .unlock-button:active {
+        transform: scale(0.95);
     }
 
     /* Unlocked State Styles */
