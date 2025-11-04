@@ -56,7 +56,7 @@
 
 <div class="training-view">
 <div class="training-container">
-    <h2>Training</h2>
+    <h2>training</h2>
 
     <div class="actions-grid">
         {#each availableActions as action (action.id)}

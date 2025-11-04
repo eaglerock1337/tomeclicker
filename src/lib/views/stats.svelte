@@ -95,7 +95,7 @@
 
 <div class="stats-view">
 <div class="stats-container">
-    <h2>Statistics</h2>
+    <h2>statistics</h2>
 
     <!-- Player Information - Compact single column -->
     <div class="info-section">
