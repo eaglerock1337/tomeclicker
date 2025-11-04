@@ -171,7 +171,7 @@ describe('Game', () => {
 				// Note: levelUp doesn't auto-recalculate multipliers
 				// Multipliers are recalculated on next upgrade purchase or manual call
 				game.recalculateClickMultiplier();
-				expect(game.clickMultiplier).toBe(5.0); // Level 2 = 5x
+				expect(game.clickMultiplier).toBe(8.0); // Level 2 = 8x
 			});
 
 			it('should fail if insufficient exp', () => {
@@ -334,11 +334,11 @@ describe('Game', () => {
 			expect(game.clickMultiplier).toBe(1.0 + 3.0);
 		});
 
-		it('should apply level multiplier (5x per level after 1)', () => {
+		it('should apply level multiplier (8x per level after 1)', () => {
 			const game = createGameAtLevel(3);
 
-			// Level 3: 1.0 * 5^(3-1) = 1.0 * 25 = 25.0
-			expect(game.clickMultiplier).toBe(25.0);
+			// Level 3: 1.0 * 8^(3-1) = 1.0 * 64 = 64.0
+			expect(game.clickMultiplier).toBe(64.0);
 		});
 
 		it('should apply Discipline multiplier (2x per level)', () => {
@@ -350,13 +350,13 @@ describe('Game', () => {
 
 		it('should combine all multipliers correctly', () => {
 			const game = new GameBuilder()
-				.withLevel(2) // 5x from level
+				.withLevel(2) // 8x from level
 				.withUpgrade('click-power', 2) // +2.0 additive
 				.withUpgrade('discipline', 1) // 2x multiplicative
 				.build();
 
-			// (1.0 + 2.0) * 5 * 2 = 3.0 * 5 * 2 = 30.0
-			expect(game.clickMultiplier).toBe(30.0);
+			// (1.0 + 2.0) * 8 * 2 = 3.0 * 8 * 2 = 48.0
+			expect(game.clickMultiplier).toBe(48.0);
 		});
 	});
 
@@ -672,22 +672,22 @@ describe('Game', () => {
 
 			it('should return click multiplier with level bonuses', () => {
 				const game = new GameBuilder()
-					.withLevel(2) // 5x multiplier for level 2
+					.withLevel(2) // 8x multiplier for level 2
 					.build();
 
 				const value = game.getClickValue();
-				expect(value).toBe(5.0); // Base 1.0 * 5 (level)
+				expect(value).toBe(8.0); // Base 1.0 * 8 (level)
 			});
 
 			it('should combine upgrade and level multipliers', () => {
 				const game = new GameBuilder()
-					.withLevel(2) // 5x
+					.withLevel(2) // 8x
 					.withUpgrade('discipline', 1) // *2
 					.build();
 
 				const value = game.getClickValue();
-				// Base 1.0 * 5 (level) * 2 (discipline) = 10.0
-				expect(value).toBe(10.0);
+				// Base 1.0 * 8 (level) * 2 (discipline) = 16.0
+				expect(value).toBe(16.0);
 			});
 		});
 	});

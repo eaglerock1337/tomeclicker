@@ -241,9 +241,9 @@ export class Game {
 		const percentMultiplier = calculateClickMultiplierPercent(this.upgrades);
 		this.clickMultiplier *= percentMultiplier;
 
-		// Apply level multipliers (5x per level after 1)
+		// Apply level multipliers (8x per level after 1)
 		if (this.level > 1) {
-			this.clickMultiplier *= Math.pow(5, this.level - 1);
+			this.clickMultiplier *= Math.pow(8, this.level - 1);
 		}
 
 		// Apply Discipline multiplier (2x per level)
@@ -269,9 +269,9 @@ export class Game {
 		const percentMultiplier = calculateRuminateMultiplierPercent(this.upgrades);
 		this.idleExpRate = baseReward * percentMultiplier;
 
-		// Apply level multipliers (5x per level after 1)
+		// Apply level multipliers (8x per level after 1)
 		if (this.level > 1) {
-			this.idleExpRate *= Math.pow(5, this.level - 1);
+			this.idleExpRate *= Math.pow(8, this.level - 1);
 		}
 
 		// Apply Discipline multiplier (2x per level)
@@ -334,13 +334,13 @@ export class Game {
 
 	/**
 	 * Gets the full Ruminate reward with all multipliers applied
-	 * Formula: (base + bonus) × 5^(level-1) × 2^(discipline_level)
+	 * Formula: (base + bonus) × 8^(level-1) × 2^(discipline_level)
 	 * @returns Total EXP that will be gained from completing Ruminate
 	 */
 	getRuminateReward(): number {
 		const baseReward = 10; // RUMINATE_BASE_REWARD
 		const bonus = this.getRuminateExpBonus();
-		const levelMult = this.level > 1 ? Math.pow(5, this.level - 1) : 1;
+		const levelMult = this.level > 1 ? Math.pow(8, this.level - 1) : 1;
 		const disciplineMult = this.getDisciplineMultiplier();
 
 		return Math.floor((baseReward + bonus) * levelMult * disciplineMult);
