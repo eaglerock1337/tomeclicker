@@ -41,7 +41,6 @@
     <div class="thebutton">
         <button
             onclick={clickMe}
-            ontouchstart={clickMe}
             aria-label="Practice to gain experience points"
         >
             <div class="icon-container">
