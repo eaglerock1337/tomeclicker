@@ -15,6 +15,9 @@
     let showCrit = $state(false);
     let critAmount = $state(0);
     let showCritAmount = $state(false);
+    let autoClickInterval = $state<number | null>(null);
+    let clickCounter = $state(0);
+    let isAutoClicking = $state(false);
 
     function clickMe() {
         if (!game) return;
@@ -35,19 +38,45 @@
         game.addExp(clickValue);
         game = game;
     }
+
+    function startAutoClick() {
+        // Clear any existing interval
+        if (autoClickInterval !== null) {
+            clearInterval(autoClickInterval);
+        }
+
+        isAutoClicking = true;
+        // Start auto-clicking at 5 times per second (200ms)
+        autoClickInterval = setInterval(() => {
+            clickMe();
+            // Increment counter to trigger animation restart
+            clickCounter++;
+        }, 200) as unknown as number;
+    }
+
+    function stopAutoClick() {
+        if (autoClickInterval !== null) {
+            clearInterval(autoClickInterval);
+            autoClickInterval = null;
+        }
+        isAutoClicking = false;
+    }
 </script>
 
 <div class="practice-container">
     <div class="thebutton">
         <button
             onclick={clickMe}
+            onpointerdown={startAutoClick}
+            onpointerup={stopAutoClick}
+            onpointerleave={stopAutoClick}
             aria-label="Practice to gain experience points"
         >
             <div class="icon-container">
                 {#if showCrit}
                     <div class="crit-text">CRIT!</div>
                 {/if}
-                <div class="item">
+                <div class="item" class:auto-clicking={isAutoClicking} style="--click-counter: {clickCounter}">
                     <MousePointer size={48}/>
                     <div class="click-text" class:crit-active={showCritAmount && !game.canLevelUp()} class:level-up-available={game.canLevelUp()}>
                         {#if game.canLevelUp()}
@@ -139,8 +168,17 @@
         scale: 0.95;
     }
 
-    .thebutton button:active .item {
-        scale: 0.95;
+    .item.auto-clicking {
+        animation: autoClickPulse 0.2s ease-in-out infinite;
+    }
+
+    @keyframes autoClickPulse {
+        0%, 100% {
+            scale: 1;
+        }
+        50% {
+            scale: 0.95;
+        }
     }
 
     .click-text {
