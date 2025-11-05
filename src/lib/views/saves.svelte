@@ -191,8 +191,6 @@
         <div class="save-section">
             <h2>Save Status</h2>
             <div class="status-info">
-                <p><strong>Save Integrity:</strong> {game.saveIntegrity}</p>
-                <p><strong>Last Validation:</strong> {new Date(game.lastValidation).toLocaleString()}</p>
                 <p><strong>Current EXP:</strong> {game.exp.toLocaleString()}</p>
                 <p><strong>Lifetime EXP:</strong> {game.lifetimeExp.toLocaleString()}</p>
             </div>

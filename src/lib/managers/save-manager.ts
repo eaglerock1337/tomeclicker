@@ -19,8 +19,6 @@ export interface GameState {
 	idleExpRate: number;
 	adventureModeUnlocked: boolean;
 	meditationUnlocked: boolean;
-	saveIntegrity: string;
-	lastValidation: number;
 }
 
 /**
@@ -124,12 +122,11 @@ export class CookieStorageBackend implements StorageBackend {
 
 /**
  * Manages game save/load operations with support for multiple storage backends
- * Handles serialization, migration from old encrypted format, and validation
+ * Handles serialization and validation
  */
 export class SaveManager {
 	private static readonly STORAGE_KEY = 'tomeclicker_save';
 	private static readonly CURRENT_VERSION = '0.2.0';
-	private static readonly XOR_KEY = 'tomeclicker-save-key'; // For legacy save migration
 
 	constructor(
 		private deps: SaveManagerDependencies,
@@ -152,33 +149,21 @@ export class SaveManager {
 
 	/**
 	 * Import save from JSON string
-	 * Supports both new JSON format and legacy encrypted format
 	 * @param saveString - JSON save data
 	 * @returns Load result with success status and optional warning/error
 	 */
 	importSave(saveString: string): LoadResult {
 		try {
-			// Try parsing as new JSON format first
 			const parsed = JSON.parse(saveString);
 
-			// Check if it's new format (has version field at top level)
+			// Check if it's valid format (has version field and gameState)
 			if (parsed.version && parsed.gameState) {
 				return this.loadNewFormat(parsed);
 			}
 
-			// Check if it's legacy encrypted format
-			if (parsed.encrypted === true && parsed.data) {
-				return this.migrateFromEncrypted(parsed);
-			}
-
-			// Check if it's legacy unencrypted format (deprecated)
-			if (parsed.encrypted === false) {
-				return this.loadLegacyUnencrypted(parsed);
-			}
-
 			return {
 				success: false,
-				error: 'Invalid save format. Expected new JSON format or legacy encrypted format.'
+				error: 'Invalid save format. Expected JSON with version and gameState fields.'
 			};
 		} catch (error) {
 			return {
@@ -250,7 +235,7 @@ export class SaveManager {
 	// Private helper methods
 
 	/**
-	 * Load save data in new JSON format
+	 * Load save data in JSON format
 	 */
 	private loadNewFormat(data: SaveData): LoadResult {
 		if (!this.validateSaveData(data.gameState)) {
@@ -264,83 +249,6 @@ export class SaveManager {
 			success: true,
 			state: data.gameState
 		};
-	}
-
-	/**
-	 * Migrate from legacy encrypted format to new JSON format
-	 */
-	private migrateFromEncrypted(saveWrapper: any): LoadResult {
-		try {
-			const decryptedData = this.decryptLegacySave(saveWrapper.data);
-			const gameState = JSON.parse(decryptedData);
-
-			if (!this.validateSaveData(gameState)) {
-				return {
-					success: false,
-					error: 'Decrypted save data validation failed'
-				};
-			}
-
-			return {
-				success: true,
-				state: gameState,
-				warning: 'Migrated from legacy encrypted format. Save will use new format going forward.'
-			};
-		} catch (error) {
-			return {
-				success: false,
-				error: `Failed to migrate encrypted save: ${error}`
-			};
-		}
-	}
-
-	/**
-	 * Load legacy unencrypted format (deprecated)
-	 */
-	private loadLegacyUnencrypted(saveData: any): LoadResult {
-		if (!this.validateSaveData(saveData)) {
-			return {
-				success: false,
-				error: 'Legacy unencrypted save validation failed'
-			};
-		}
-
-		// Mark integrity as compromised for legacy unencrypted saves
-		saveData.saveIntegrity = 'unencrypted-import';
-
-		return {
-			success: true,
-			state: saveData,
-			warning:
-				'Loaded legacy unencrypted save. This save is not eligible for leaderboard participation.'
-		};
-	}
-
-	/**
-	 * Decrypt legacy XOR-encrypted save data
-	 * Only used for migration from old save format
-	 */
-	private decryptLegacySave(encryptedData: string): string {
-		try {
-			// Decode base64
-			let encrypted: string;
-			if (typeof atob === 'undefined') {
-				// Fallback for server-side rendering
-				encrypted = Buffer.from(encryptedData, 'base64').toString();
-			} else {
-				encrypted = atob(encryptedData);
-			}
-
-			// XOR decrypt
-			const key = SaveManager.XOR_KEY;
-			let decrypted = '';
-			for (let i = 0; i < encrypted.length; i++) {
-				decrypted += String.fromCharCode(encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length));
-			}
-			return decrypted;
-		} catch (error) {
-			throw new Error(`Invalid encrypted save data: ${error}`);
-		}
 	}
 
 	/**
