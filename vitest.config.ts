@@ -1,8 +1,9 @@
 import { defineConfig } from 'vitest/config';
 import { sveltekit } from '@sveltejs/kit/vite';
+import yaml from '@rollup/plugin-yaml';
 
 export default defineConfig({
-	plugins: [sveltekit()],
+	plugins: [sveltekit(), yaml()],
 	test: {
 		include: ['tests/**/*.{test,spec}.{js,ts}'],
 		environment: 'happy-dom',
