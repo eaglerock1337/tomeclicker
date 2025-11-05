@@ -1,19 +1,5 @@
 import { calculateUpgradeCost } from '../utils/calculations';
-import {
-	UPGRADE_COST_TIER_1,
-	UPGRADE_COST_TIER_2,
-	UPGRADE_COST_TIER_3,
-	UPGRADE_COST_TIER_4,
-	UPGRADE_COST_TIER_5,
-	UPGRADE_DISCIPLINE_BASE_COST,
-	UPGRADE_TRAINING_SPEED_COST,
-	UPGRADE_TRAINING_COST_REDUCTION,
-	UPGRADE_MAX_STANDARD,
-	UPGRADE_MAX_CRIT,
-	UPGRADE_MAX_TRAINING,
-	UPGRADE_MAX_COST_REDUCTION,
-	UPGRADE_MAX_DISCIPLINE
-} from '../constants/game';
+import { loadUpgrades, type UpgradeConfig } from '../config/config-loader';
 
 /**
  * Represents an upgrade that can be purchased with EXP
@@ -101,246 +87,24 @@ export class UpgradeManager {
 	}
 
 	/**
-	 * Initializes all available upgrades with default values (v0.1.5+ multi-level system)
+	 * Initializes all available upgrades from YAML configuration
+	 * Sets currentLevel to 0 for all upgrades (will be restored from save)
 	 * @returns Object map of upgrade ID to upgrade definition
 	 */
 	private initializeUpgrades(): { [key: string]: Upgrade } {
-		return {
-			// === CLICK CATEGORY (Level 2) ===
-			// Standardized: Power (+1), Crit (+0.5%), Crit Damage (+2%), Mastery (+5%)
-			'click-power': {
-				id: 'click-power',
-				name: 'Click Power',
-				description: 'Baseline clicking strength increases with practice',
-				effect: '+1 EXP per click per level',
-				baseCost: 50,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'click',
-				effectType: 'clickMultiplier',
-				effectValue: 1,
-				minLevel: 1
-			},
-			'critical-clicks': {
-				id: 'critical-clicks',
-				name: 'Critical Clicks',
-				description: 'Increases chance for clicks to critically strike for bonus EXP',
-				effect: '+0.5% crit chance per level',
-				baseCost: 200,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'click',
-				effectType: 'clickCrit',
-				effectValue: 0.005,
-				minLevel: 1
-			},
-			'devastating-click': {
-				id: 'devastating-click',
-				name: 'Devastating Click',
-				description: 'Increases the bonus EXP multiplier when clicks critically strike',
-				effect: '+2% crit damage per level',
-				baseCost: 500,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'click',
-				effectType: 'clickCritDamage',
-				effectValue: 0.02,
-				minLevel: 2
-			},
-			'click-mastery': {
-				id: 'click-mastery',
-				name: 'Click Mastery',
-				description: 'Multiplicative bonus to all click EXP gains',
-				effect: '+5% EXP per click per level',
-				baseCost: 1200,
-				costMultiplier: 2,
-				maxLevel: 20,
-				currentLevel: 0,
-				category: 'click',
-				effectType: 'clickMultiplierPercent',
-				effectValue: 0.05,
-				minLevel: 3
-			},
+		// Load upgrade definitions from YAML
+		const upgradeConfigs = loadUpgrades();
 
-			// === RUMINATE CATEGORY (Level 2-4) ===
-			// Power/Speed/Efficiency at L2, Crit/Mastery at L3, Crit Damage at L4
-			'ruminate-power': {
-				id: 'ruminate-power',
-				name: 'Ruminate Power',
-				description: 'Increases EXP gained from each rumination thought',
-				effect: '+10 EXP per thought per level',
-				baseCost: 500,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'ruminate',
-				effectType: 'ruminatePower',
-				effectValue: 10,
-				minLevel: 2
-			},
-			'ruminate-speed': {
-				id: 'ruminate-speed',
-				name: 'Ruminate Speed',
-				description: 'Reduces time between rumination thoughts',
-				effect: '-0.1s per thought per level',
-				baseCost: 800,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'ruminate',
-				effectType: 'ruminateSpeed',
-				effectValue: 0.1,
-				minLevel: 2
-			},
-			'focus-flow': {
-				id: 'focus-flow',
-				name: 'Focus Flow',
-				description: 'Increases chance for rumination to critically strike for bonus EXP',
-				effect: '+0.5% ruminate crit chance per level',
-				baseCost: 1200,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'ruminate',
-				effectType: 'ruminateCrit',
-				effectValue: 0.005,
-				minLevel: 3
-			},
-			'intense-thoughts': {
-				id: 'intense-thoughts',
-				name: 'Intense Thoughts',
-				description: 'Increases the bonus EXP multiplier when rumination critically strikes',
-				effect: '+2% ruminate crit damage per level',
-				baseCost: 2000,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'ruminate',
-				effectType: 'ruminateCritDamage',
-				effectValue: 0.02,
-				minLevel: 4
-			},
-			'ruminate-mastery': {
-				id: 'ruminate-mastery',
-				name: 'Ruminate Mastery',
-				description: 'Multiplicative bonus to all rumination EXP gains',
-				effect: '+10% ruminate EXP per level',
-				baseCost: 2500,
-				costMultiplier: 2,
-				maxLevel: 20,
-				currentLevel: 0,
-				category: 'ruminate',
-				effectType: 'ruminateMultiplierPercent',
-				effectValue: 0.1,
-				minLevel: 4
-			},
+		// Convert UpgradeConfig to Upgrade (add currentLevel)
+		const upgrades: { [key: string]: Upgrade } = {};
+		for (const [id, config] of Object.entries(upgradeConfigs)) {
+			upgrades[id] = {
+				...config,
+				currentLevel: 0
+			};
+		}
 
-			// === TRAINING CATEGORY (Level 3-4) ===
-			// Power/Speed/Efficiency at L3, Crit/Crit Damage/Mastery at L4
-			'training-power': {
-				id: 'training-power',
-				name: 'Training Power',
-				description: 'Increases stat EXP gained from each training completion',
-				effect: '+1% stat EXP per training per level',
-				baseCost: 2000,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'training',
-				effectType: 'statGainPercent',
-				effectValue: 0.01,
-				minLevel: 3
-			},
-			'training-speed': {
-				id: 'training-speed',
-				name: 'Training Speed',
-				description: 'Reduces time required to complete stat training exercises',
-				effect: '-0.1s per training per level',
-				baseCost: 2500,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'training',
-				effectType: 'trainingSpeed',
-				effectValue: 0.1,
-				minLevel: 3
-			},
-			'training-efficiency': {
-				id: 'training-efficiency',
-				name: 'Training Efficiency',
-				description: 'Reduces character EXP cost to start training',
-				effect: '-1% training cost per level',
-				baseCost: 3000,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'training',
-				effectType: 'trainingEfficiency',
-				effectValue: 0.01,
-				minLevel: 3
-			},
-			'perfect-form': {
-				id: 'perfect-form',
-				name: 'Perfect Form',
-				description: 'Increases chance for training to critically strike for bonus stat EXP',
-				effect: '+0.5% training crit chance per level',
-				baseCost: 4000,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'training',
-				effectType: 'trainingCrit',
-				effectValue: 0.005,
-				minLevel: 4
-			},
-			'devastating-training': {
-				id: 'devastating-training',
-				name: 'Devastating Training',
-				description: 'Increases the bonus stat EXP multiplier when training critically strikes',
-				effect: '+2% training crit damage per level',
-				baseCost: 5000,
-				costMultiplier: 1.4,
-				maxLevel: 50,
-				currentLevel: 0,
-				category: 'training',
-				effectType: 'trainingCritDamage',
-				effectValue: 0.02,
-				minLevel: 4
-			},
-			'training-mastery': {
-				id: 'training-mastery',
-				name: 'Training Mastery',
-				description: 'Multiplicative bonus to all stat EXP gains from training',
-				effect: '+5% stat EXP per training per level',
-				baseCost: 7500,
-				costMultiplier: 2,
-				maxLevel: 20,
-				currentLevel: 0,
-				category: 'training',
-				effectType: 'statGainPercent',
-				effectValue: 0.05,
-				minLevel: 4
-			},
-
-			// === SPECIAL CATEGORY ===
-			discipline: {
-				id: 'discipline',
-				name: 'Discipline',
-				description: 'Unified focus accelerates ALL forms of progress',
-				effect: '2x all EXP gain per level',
-				baseCost: UPGRADE_DISCIPLINE_BASE_COST,
-				costMultiplier: 10, // 10x per level: 100k, 1M, 10M, 100M...
-				maxLevel: UPGRADE_MAX_DISCIPLINE,
-				currentLevel: 0,
-				category: 'special',
-				effectType: 'discipline',
-				effectValue: 2.0,
-				minLevel: 1
-			}
-		};
+		return upgrades;
 	}
 
 	/**
