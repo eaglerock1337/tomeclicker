@@ -64,9 +64,7 @@ class SaveManagerBuilder {
 		meditationActions: {},
 		idleExpRate: 0,
 		adventureModeUnlocked: false,
-		meditationUnlocked: false,
-		saveIntegrity: 'valid',
-		lastValidation: Date.now()
+		meditationUnlocked: false
 	};
 
 	private storage: StorageBackend = new MockStorageBackend();
@@ -277,114 +275,6 @@ describe('SaveManager', () => {
 		});
 	});
 
-	describe('Import Save (Legacy Encrypted Format)', () => {
-		it('should migrate from legacy encrypted format', () => {
-			// Create a legacy encrypted save (simulated)
-			const legacyGameState = {
-				name: 'Legacy Player',
-				exp: 100,
-				lifetimeExp: 100,
-				level: 1,
-				clickMultiplier: 1.0,
-				upgrades: {},
-				stats: {
-					strength: 1,
-					agility: 1,
-					intelligence: 1,
-					wisdom: 1,
-					strengthExp: 0,
-					agilityExp: 0,
-					intelligenceExp: 0,
-					wisdomExp: 0
-				},
-				trainingActions: {},
-				meditationActions: {},
-				critChance: 0.0,
-				critDamage: 1.5,
-				idleExpRate: 0,
-				adventureModeUnlocked: false,
-				meditationUnlocked: false,
-				saveIntegrity: 'valid',
-				lastValidation: Date.now(),
-				version: '0.1.0',
-				timestamp: Date.now()
-			};
-
-			// XOR encrypt the data (legacy format)
-			const jsonData = JSON.stringify(legacyGameState);
-			const key = 'tomeclicker-save-key';
-			let encrypted = '';
-			for (let i = 0; i < jsonData.length; i++) {
-				encrypted += String.fromCharCode(jsonData.charCodeAt(i) ^ key.charCodeAt(i % key.length));
-			}
-			const encryptedData = btoa(encrypted);
-
-			const legacySave = JSON.stringify({
-				encrypted: true,
-				data: encryptedData,
-				hash: 'legacy-hash',
-				version: '0.1.0'
-			});
-
-			const builder = new SaveManagerBuilder();
-			const manager = builder.build();
-
-			const result = manager.importSave(legacySave);
-
-			expect(result.success).toBe(true);
-			expect(result.warning).toContain('Migrated from legacy encrypted format');
-			expect(result.state?.name).toBe('Legacy Player');
-		});
-	});
-
-	describe('Import Save (Legacy Unencrypted Format)', () => {
-		it('should load legacy unencrypted format with warning', () => {
-			const legacyUnencrypted = JSON.stringify({
-				encrypted: false,
-				name: 'Unencrypted Player',
-				exp: 200,
-				lifetimeExp: 200,
-				level: 2,
-				clickMultiplier: 1.5,
-				upgrades: { discipline: 1 },
-				stats: {
-					strength: 2,
-					agility: 2,
-					willpower: 2,
-					endurance: 2,
-					intelligence: 1,
-					wisdom: 1,
-					strengthExp: 0,
-					agilityExp: 0,
-					willpowerExp: 0,
-					enduranceExp: 0,
-					intelligenceExp: 0,
-					wisdomExp: 0
-				},
-				trainingActions: {},
-				meditationActions: {},
-				critChance: 0.05,
-				critDamage: 1.5,
-				idleExpRate: 0,
-				adventureModeUnlocked: false,
-				meditationUnlocked: false,
-				saveIntegrity: 'valid',
-				lastValidation: Date.now(),
-				warning: 'This save is not eligible for leaderboard participation'
-			});
-
-			const builder = new SaveManagerBuilder();
-			const manager = builder.build();
-
-			const result = manager.importSave(legacyUnencrypted);
-
-			expect(result.success).toBe(true);
-			expect(result.warning).toContain('not eligible for leaderboard');
-			expect(result.state?.name).toBe('Unencrypted Player');
-			expect(result.state?.saveIntegrity).toBe('unencrypted-import');
-		});
-	});
-
 	describe('Validation', () => {
 		it('should reject invalid JSON', () => {
 			const manager = new SaveManagerBuilder().build();
@@ -440,9 +330,7 @@ describe('SaveManager', () => {
 					critDamage: 1.5,
 					idleExpRate: 0,
 					adventureModeUnlocked: false,
-					meditationUnlocked: false,
-					saveIntegrity: 'valid',
-					lastValidation: Date.now()
+					meditationUnlocked: false
 				}
 			});
 
@@ -480,9 +368,7 @@ describe('SaveManager', () => {
 					critDamage: 1.5,
 					idleExpRate: 0,
 					adventureModeUnlocked: false,
-					meditationUnlocked: false,
-					saveIntegrity: 'valid',
-					lastValidation: Date.now()
+					meditationUnlocked: false
 				}
 			});
 

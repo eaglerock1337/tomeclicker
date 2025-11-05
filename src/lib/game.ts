@@ -87,9 +87,6 @@ export class Game {
 	public critChance: number; // Character EXP crit chance (clicking)
 	public critDamage: number; // Character EXP crit damage multiplier
 	public trainingCritChance: number; // Stat EXP training crit chance
-	public saveIntegrity: string;
-	public lastValidation: number;
-	private _validationKey: string;
 
 	// New RPG and idle systems
 	public idleExpRate: number;
@@ -118,9 +115,6 @@ export class Game {
 		this.critChance = 0.0; // Start with 0% character crit chance
 		this.critDamage = BASE_CRIT_DAMAGE; // Crits do +50% damage (1.5x total)
 		this.trainingCritChance = 0.0; // Start with 0% training crit chance
-		this.saveIntegrity = 'valid';
-		this.lastValidation = Date.now();
-		this._validationKey = this.generateValidationKey();
 
 		// Initialize new systems
 		this.idleExpRate = 0;
@@ -688,20 +682,6 @@ export class Game {
 		return true;
 	}
 
-	/** Integrity Monitoring */
-
-	private generateValidationKey(): string {
-		if (typeof btoa === 'undefined') {
-			// Fallback for server-side rendering
-			return (
-				Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-			);
-		}
-		return btoa(
-			Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-		);
-	}
-
 	/**
 	 * Adds experience points to both current and lifetime totals
 	 * @param amount - Amount of EXP to add
@@ -859,9 +839,7 @@ export class Game {
 			meditationActions: this.idleActionManager.getMeditationActions(),
 			idleExpRate: this.idleExpRate,
 			adventureModeUnlocked: this.adventureModeUnlocked,
-			meditationUnlocked: this.meditationUnlocked,
-			saveIntegrity: this.saveIntegrity,
-			lastValidation: this.lastValidation
+			meditationUnlocked: this.meditationUnlocked
 		};
 	}
 
@@ -916,8 +894,6 @@ export class Game {
 		this.idleExpRate = state.idleExpRate || 0;
 		this.adventureModeUnlocked = state.adventureModeUnlocked || false;
 		this.meditationUnlocked = state.meditationUnlocked || false;
-		this.saveIntegrity = state.saveIntegrity || 'valid';
-		this.lastValidation = Date.now();
 
 		// Recalculate derived values
 		this.recalculateClickMultiplier();
@@ -1034,9 +1010,6 @@ export class Game {
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
 		this.meditationUnlocked = false;
-		this.saveIntegrity = 'valid';
-		this.lastValidation = Date.now();
-		this._validationKey = this.generateValidationKey();
 
 		// Reinitialize managers
 		this.statsManager = new StatsManager(undefined, {
