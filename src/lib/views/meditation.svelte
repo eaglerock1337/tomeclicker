@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Game } from '$lib/game';
+    import ViewLayout from '$lib/components/ViewLayout.svelte';
 
     export let game: Game;
 
@@ -27,8 +28,7 @@
     $: isCompleted = currentAction?.oneTime && currentAction?.completed;
 </script>
 
-<div class="meditation-container">
-    <h2>meditation</h2>
+<ViewLayout title="meditation" maxWidth="800px">
     <p class="description">Meditate on the mysteries of the Tomes</p>
 
     {#if availableActions.length === 0}
@@ -108,22 +108,9 @@
             </div>
         {/if}
     {/if}
-</div>
+</ViewLayout>
 
 <style>
-    .meditation-container {
-        padding: 2rem;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
-    h2 {
-        color: var(--text);
-        font-family: Lato, sans-serif;
-        font-weight: 300;
-        margin-bottom: 0.5rem;
-    }
-
     .description {
         color: var(--text);
         font-family: Lato, sans-serif;
@@ -336,10 +323,6 @@
 
     /* Mobile optimizations */
     @media (max-width: 768px) {
-        .meditation-container {
-            padding: 1rem;
-        }
-
         button {
             width: 100%;
         }

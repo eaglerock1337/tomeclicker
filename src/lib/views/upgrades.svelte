@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import type { Game, Upgrade } from '$lib/game';
     import type { Config } from '$lib/config';
+    import ViewLayout from '$lib/components/ViewLayout.svelte';
 
     export let game: Game;
     export let config: Config;
@@ -103,10 +104,7 @@
     config;
 </script>
 
-<div class="upgrades-view">
-<div class="upgrades">
-    <h1>upgrades</h1>
-
+<ViewLayout title="upgrades" maxWidth="1200px">
     <div class="upgrades-layout">
         <div class="upgrade-grid">
         <!-- Level Up Button -->
@@ -280,35 +278,9 @@
             {/if}
         </div>
     </div>
-</div>
-</div>
+</ViewLayout>
 
 <style>
-    .upgrades-view {
-        height: 100%;
-        width: 100%;
-        background-color: var(--bg);
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
-    }
-    .upgrades {
-        color: var(--text);
-        font-size: 1em;
-        font-family: JetBrains Mono, monospace;
-        font-weight: 300;
-        padding: 2rem 1rem;
-        text-align: center;
-        box-sizing: border-box;
-        transition: color 1s cubic-bezier(0,.5,0,1);
-    }
-
-    h1 {
-        font-family: Lato, sans-serif;
-        font-weight: 300;
-        margin-bottom: 1rem;
-    }
-
     h2 {
         font-family: Lato, sans-serif;
         font-weight: 300;

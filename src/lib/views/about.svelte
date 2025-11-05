@@ -3,6 +3,7 @@
 	import type { Config } from '$lib/config';
 	import type { Game } from '$lib/game';
 	import { version } from '$app/environment';
+	import ViewLayout from '$lib/components/ViewLayout.svelte';
 
 	interface Props {
 		game: Game;
@@ -12,11 +13,8 @@
 	let { game = $bindable(), config = $bindable() }: Props = $props();
 </script>
 
-<div class="about">
-	<h1>about</h1>
-
-	<div class="about-content">
-		<!-- Game Info Section -->
+<ViewLayout title="about" maxWidth="800px">
+	<!-- Game Info Section -->
 		<section class="about-section">
 			<div class="section-header">
 				<Info size={24} />
@@ -123,36 +121,9 @@
 				</p>
 			</div>
 		</section>
-	</div>
-</div>
+</ViewLayout>
 
 <style>
-	.about {
-		color: var(--text);
-		background-color: var(--bg);
-		font-size: 1em;
-		font-family: JetBrains Mono, monospace;
-		font-weight: 300;
-		height: 100%;
-		padding: 2rem 1rem;
-		transition: color 1s cubic-bezier(0, 0.5, 0, 1),
-			background-color 1s cubic-bezier(0, 0.5, 0, 1);
-		box-sizing: border-box;
-		overflow-y: auto;
-	}
-
-	.about-content {
-		max-width: 800px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		font-family: Lato, sans-serif;
-		font-weight: 300;
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
 	h2 {
 		font-family: Lato, sans-serif;
 		font-weight: 300;
@@ -279,10 +250,6 @@
 
 	/* Mobile Responsiveness */
 	@media (max-width: 768px) {
-		.about {
-			padding: 1rem 0.5rem;
-		}
-
 		.about-section {
 			padding: 1rem;
 		}
