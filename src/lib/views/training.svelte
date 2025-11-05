@@ -1,5 +1,7 @@
 <script lang="ts">
     import type { Game } from '$lib/game';
+    import ViewLayout from '$lib/components/ViewLayout.svelte';
+    import { formatNumber, formatDuration } from '$lib/utils/format';
 
     export let game: Game;
 
@@ -24,25 +26,6 @@
         return true;
     }
 
-    function formatNumber(num: number): string {
-        if (num >= 1_000_000) return (num / 1_000_000).toFixed(2) + 'M';
-        if (num >= 1_000) return (num / 1_000).toFixed(2) + 'K';
-        return Math.floor(num).toString();
-    }
-
-    function formatDuration(ms: number): string {
-        const totalSeconds = ms / 1000;
-        if (totalSeconds >= 60) {
-            const mins = Math.floor(totalSeconds / 60);
-            const secs = totalSeconds % 60;
-            // Show decimal if not a whole number
-            const secsStr = secs % 1 === 0 ? Math.floor(secs).toString() : secs.toFixed(1);
-            return `${mins}m ${secsStr}s`;
-        }
-        // Show decimal if not a whole number
-        return totalSeconds % 1 === 0 ? `${Math.floor(totalSeconds)}s` : `${totalSeconds.toFixed(1)}s`;
-    }
-
     // Filter actions by level
     $: availableActions = Object.values(game.trainingActions).filter(action => {
         if (action.id === 'practice-ruminate') return game.level >= 2;
@@ -54,9 +37,7 @@
     $: statExpGain = game.getStatExpGainPerTraining();
 </script>
 
-<div class="training-view">
-<div class="training-container">
-    <h2>training</h2>
+<ViewLayout title="training" maxWidth="1200px">
 
     <div class="actions-grid">
         {#each availableActions as action (action.id)}
@@ -161,32 +142,9 @@
             </button>
         {/each}
     </div>
-</div>
-</div>
+</ViewLayout>
 
 <style>
-    .training-view {
-        height: 100%;
-        width: 100%;
-        background-color: var(--bg);
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
-    }
-    .training-container {
-        color: var(--text);
-        padding: 2rem;
-        box-sizing: border-box;
-        transition: color 1s cubic-bezier(0,.5,0,1);
-    }
-
-    h2 {
-        color: var(--text);
-        font-family: Lato, sans-serif;
-        font-weight: 300;
-        margin-bottom: 2rem;
-    }
-
     .actions-grid {
         display: grid;
         grid-template-columns: 1fr;
@@ -457,10 +415,6 @@
 
     /* Mobile optimizations */
     @media (max-width: 768px) {
-        .training-container {
-            padding: 1rem;
-        }
-
         .action-card {
             padding: 1rem;
             min-height: 220px;

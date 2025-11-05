@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Game } from '$lib/game';
+    import ViewLayout from '$lib/components/ViewLayout.svelte';
 
     export let game: Game;
 
@@ -17,12 +18,10 @@
     }
 </script>
 
-<div class="adventure-view">
-<div class="adventure-container">
+<ViewLayout title="adventure" maxWidth="800px">
     {#if !isUnlocked}
         <!-- Locked State -->
         <div class="locked-content">
-            <h2>adventure</h2>
             <p class="locked-message">
                 The path to adventure is not yet clear. Train all your stats to level 5 to unlock
                 this path.
@@ -119,24 +118,9 @@
             </div>
         </div>
     {/if}
-</div>
-</div>
+</ViewLayout>
 
 <style>
-    .adventure-view {
-        height: 100%;
-        width: 100%;
-        background-color: var(--bg);
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
-    }
-    .adventure-container {
-        padding: 1rem;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
     h2 {
         color: var(--text);
         font-family: Lato, sans-serif;
