@@ -2,6 +2,7 @@
 	import type { Config, DisplayMode } from '$lib/config';
 	import type { Game } from '$lib/game';
 	import { getThemeNames, getThemeDisplayName } from '$lib/constants/themes';
+	import ViewLayout from '$lib/components/ViewLayout.svelte';
 
 	interface Props {
 		game: Game;
@@ -13,10 +14,7 @@
 	const availableThemes = getThemeNames();
 </script>
 
-<div class="settings">
-	<h1>settings</h1>
-
-	<div class="settings-content">
+<ViewLayout title="settings" maxWidth="800px">
 		<!-- Game Info Section -->
 		<section class="settings-section">
 			<h2>game information</h2>
@@ -100,37 +98,9 @@
 				</div>
 			</div>
 		</section>
-	</div>
-
-</div>
+</ViewLayout>
 
 <style>
-	.settings {
-		color: var(--text);
-		background-color: var(--bg);
-		font-size: 1em;
-		font-family: JetBrains Mono, monospace;
-		font-weight: 300;
-		height: 100%;
-		padding: 2rem 1rem;
-		transition: color 1s cubic-bezier(0, 0.5, 0, 1),
-			background-color 1s cubic-bezier(0, 0.5, 0, 1);
-		box-sizing: border-box;
-		overflow-y: auto;
-	}
-
-	.settings-content {
-		max-width: 800px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		font-family: Lato, sans-serif;
-		font-weight: 300;
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
 	h2 {
 		font-family: Lato, sans-serif;
 		font-weight: 300;
@@ -249,10 +219,6 @@
 
 	/* Mobile Responsiveness */
 	@media (max-width: 768px) {
-		.settings {
-			padding: 1rem 0.5rem;
-		}
-
 		.settings-section {
 			padding: 1rem;
 		}

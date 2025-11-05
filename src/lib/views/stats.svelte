@@ -1,20 +1,9 @@
 <script lang="ts">
     import type { Game } from '$lib/game';
+    import ViewLayout from '$lib/components/ViewLayout.svelte';
+    import { formatNumber } from '$lib/utils/format';
 
     export let game: Game;
-
-    function formatNumber(num: number): string {
-        if (num >= 1_000_000_000_000) {
-            return (num / 1_000_000_000_000).toFixed(2) + 'T';
-        } else if (num >= 1_000_000_000) {
-            return (num / 1_000_000_000).toFixed(2) + 'B';
-        } else if (num >= 1_000_000) {
-            return (num / 1_000_000).toFixed(2) + 'M';
-        } else if (num >= 1_000) {
-            return (num / 1_000).toFixed(2) + 'K';
-        }
-        return num.toFixed(2);
-    }
 
     // Define all 4 physical stats with their effects (v0.1.5+ stat system)
     // Magic stats (INT/WIS) will be unlocked later through meditation
@@ -93,10 +82,7 @@
     ] as StatDisplay[];
 </script>
 
-<div class="stats-view">
-<div class="stats-container">
-    <h2>statistics</h2>
-
+<ViewLayout title="statistics" maxWidth="700px">
     <!-- Player Information - Compact single column -->
     <div class="info-section">
         <div class="info-row">
@@ -203,34 +189,9 @@
             <div class="empty-message">No upgrades purchased yet</div>
         {/if}
     </div>
-</div>
-</div>
+</ViewLayout>
 
 <style>
-    .stats-view {
-        height: 100%;
-        width: 100%;
-        background-color: var(--bg);
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .stats-container {
-        padding: 0.75rem;
-        max-width: 700px;
-        margin: 0 auto;
-        font-family: 'JetBrains Mono', monospace;
-    }
-
-    h2 {
-        color: var(--text);
-        font-family: Lato, sans-serif;
-        font-weight: 300;
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        text-align: center;
-    }
-
     /* Section Headers */
     .section-header {
         color: var(--blue);
@@ -473,15 +434,6 @@
 
     /* Mobile optimizations */
     @media (max-width: 768px) {
-        .stats-container {
-            padding: 0.5rem;
-        }
-
-        h2 {
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
-        }
-
         .section-header {
             font-size: 1rem;
             margin-top: 1rem;

@@ -2,6 +2,7 @@
     import { Download, Upload, Save, AlertTriangle, CheckCircle } from 'lucide-svelte';
     import type { Game } from '$lib/game';
     import type { Config } from '$lib/config';
+    import ViewLayout from '$lib/components/ViewLayout.svelte';
 
     interface Props {
         game: Game;
@@ -132,9 +133,7 @@
     }, 30000);
 </script>
 
-<div class="saves">
-    <h1>saves</h1>
-
+<ViewLayout title="saves" maxWidth="1200px">
     {#if showMessage}
         <div class="message {messageType}">
             {#if messageType === 'success'}
@@ -226,29 +225,9 @@
             </div>
         </div>
     {/if}
-</div>
+</ViewLayout>
 
 <style>
-    .saves {
-        color: var(--text);
-        background-color: var(--bg);
-        font-size: 1em;
-        font-family: JetBrains Mono, monospace;
-        font-weight: 300;
-        padding: 1rem;
-        text-align: center;
-        height: 100%;
-        overflow-y: auto;
-        transition: color 1s cubic-bezier(0,.5,0,1),
-                    background-color 1s cubic-bezier(0,.5,0,1);
-    }
-
-    h1 {
-        font-family: Lato, sans-serif;
-        font-weight: 300;
-        margin-bottom: 1rem;
-    }
-
     h2 {
         font-family: Lato, sans-serif;
         font-weight: 300;
