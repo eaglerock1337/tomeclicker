@@ -1,3 +1,5 @@
+## [0.2.2](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.1...v0.2.2) (2025-11-05)
+
 ## [0.2.1](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.0...v0.2.1) (2025-11-04)
 
 ### Bug Fixes
