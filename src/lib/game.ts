@@ -435,7 +435,8 @@ export class Game {
 		} else if (action.trainsStat) {
 			const trainingSpeed = this.getTrainingSpeedMultiplier();
 			const globalSpeed = this.getGlobalIdleSpeedMultiplier();
-			return Math.floor((action.baseDuration * trainingSpeed) / globalSpeed);
+			const combinedSpeed = trainingSpeed * globalSpeed;
+			return Math.floor(action.baseDuration / combinedSpeed);
 		} else {
 			const globalSpeed = this.getGlobalIdleSpeedMultiplier();
 			return Math.floor(action.baseDuration / globalSpeed);
