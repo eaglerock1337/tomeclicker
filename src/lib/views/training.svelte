@@ -171,6 +171,8 @@
         gap: 0.75rem;
         min-height: 240px;
         font-family: inherit;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .action-card:hover:not(:disabled):not(.active) {
@@ -213,6 +215,8 @@
         justify-content: space-between;
         align-items: start;
         gap: 1rem;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .action-name {
@@ -221,8 +225,9 @@
         font-weight: 400;
         font-size: 1.1rem;
         transition: color 0.2s;
-        flex: 1;
+        flex: 1 1 auto;
         min-width: 0;
+        word-wrap: break-word;
     }
 
     .stat-info {
@@ -262,6 +267,8 @@
         font-size: 0.9rem;
         opacity: 0.8;
         transition: color 0.2s;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     /* Stat EXP Progress Bar */
@@ -270,6 +277,8 @@
         flex-direction: column;
         gap: 0.25rem;
         padding: 0.5rem 0;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .stat-exp-progress.capped {
@@ -283,6 +292,7 @@
         background-color: rgba(0, 0, 0, 0.2);
         border-radius: 3px;
         overflow: hidden;
+        box-sizing: border-box;
     }
 
     .stat-exp-bar {
@@ -322,6 +332,8 @@
         margin-top: auto;
         padding-top: 0.5rem;
         border-top: 1px solid rgba(128, 128, 128, 0.2);
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .detail-row {
@@ -329,13 +341,14 @@
         justify-content: space-between;
         align-items: center;
         gap: 0.75rem;
+        width: 100%;
     }
 
     .detail-half {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        flex: 1;
+        flex: 1 1 0%;
         min-width: 0; /* Allow flex items to shrink */
     }
 
@@ -398,6 +411,7 @@
         border-radius: 4px;
         overflow: hidden;
         margin-top: 0.5rem;
+        box-sizing: border-box;
     }
 
     .progress-bar {
