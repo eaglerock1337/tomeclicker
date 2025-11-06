@@ -170,10 +170,8 @@
 						</option>
 					{/each}
 				</select>
-			</section>
 
-			<section class="settings-card">
-				<h2>display mode</h2>
+				<h2 style="margin-top: 1.5rem;">display mode</h2>
 				<div class="mode-selector">
 					<button
 						class="mode-btn"
@@ -229,12 +227,24 @@
 						<span class="label">Total EXP:</span>
 						<span class="value">{Math.floor(game.lifetimeExp).toLocaleString()}</span>
 					</div>
-					<div class="info-row">
-						<span class="label">Stats:</span>
-						<span class="value">
-							Str {game.stats.strength} / Agi {game.stats.agility} / Will {game.stats.willpower} / End {game.stats.endurance}
-						</span>
-					</div>
+					{#if game.level >= 3}
+						<div class="info-row">
+							<span class="label">STR:</span>
+							<span class="value">{game.stats.strength}</span>
+						</div>
+						<div class="info-row">
+							<span class="label">AGI:</span>
+							<span class="value">{game.stats.agility}</span>
+						</div>
+						<div class="info-row">
+							<span class="label">WIL:</span>
+							<span class="value">{game.stats.willpower}</span>
+						</div>
+						<div class="info-row">
+							<span class="label">END:</span>
+							<span class="value">{game.stats.endurance}</span>
+						</div>
+					{/if}
 				</div>
 				<p class="description">Download your save file to backup or transfer between devices.</p>
 				<button class="export-btn" onclick={exportSaveData}>
