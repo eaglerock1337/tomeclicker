@@ -24,11 +24,13 @@
         if (isLevelUpSelected) {
             // Handle level up
             if (game.levelUp()) {
+                game = game; // Force reactive update across all components
                 game.autoSave();
             }
         } else if (selectedUpgrade && game.purchaseUpgrade(selectedUpgrade.id)) {
             // Refresh the selected upgrade data
             selectedUpgrade = game.upgrades[selectedUpgrade.id];
+            game = game; // Force reactive update across all components
             // Save progress
             game.autoSave();
         }
@@ -96,6 +98,7 @@
 
     function levelUp() {
         if (game.levelUp()) {
+            game = game; // Force reactive update across all components
             game.autoSave(); // Save progress
         }
     }
