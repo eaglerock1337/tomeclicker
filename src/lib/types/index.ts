@@ -14,4 +14,14 @@ export type DeviceCategory = 'mobile' | 'tablet' | 'desktop';
 /**
  * Menu/View identifiers
  */
-export type MenuView = 'practice' | 'upgrades' | 'story' | 'help' | 'saves' | 'settings' | 'about';
+export type MenuView =
+	| 'practice'
+	| 'upgrades'
+	| 'training'
+	| 'meditation'
+	| 'adventure'
+	| 'story'
+	| 'help'
+	| 'stats'
+	| 'settings'
+	| 'about';

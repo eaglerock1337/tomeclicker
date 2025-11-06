@@ -19,7 +19,6 @@
         Workflow,
         Trophy,
         TrendingUp,
-        Save,
         Dumbbell,
         Brain,
         Compass
@@ -83,9 +82,6 @@
                 <p class:red="{game.menu === 'stats'}"><BarChart3 size={24}/></p>
             </button>
         {/if}
-        <button on:click="{() => game.menu = 'saves'}">
-            <p class:red="{game.menu === 'saves'}"><Save size={24}/></p>
-        </button>
         <button on:click="{() => game.menu = 'settings'}">
             <p class:red="{game.menu === 'settings'}"><Settings size={24}/></p>
         </button>
