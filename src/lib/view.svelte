@@ -5,7 +5,6 @@
     import Stats from '$lib/views/stats.svelte';
     import Meditation from '$lib/views/meditation.svelte';
     import Adventure from '$lib/views/adventure.svelte';
-    import Saves from '$lib/views/saves.svelte';
     import Settings from '$lib/views/settings.svelte';
     import Story from '$lib/views/story.svelte';
     import About from '$lib/views/about.svelte';
@@ -34,8 +33,6 @@
         <Meditation bind:game/>
     {:else if game && game.menu === "adventure"}
         <Adventure bind:game/>
-    {:else if game && game.menu === "saves"}
-        <Saves bind:config bind:game/>
     {:else if game && game.menu === "story"}
         <Story bind:game/>
     {:else if game && game.menu === "settings"}
