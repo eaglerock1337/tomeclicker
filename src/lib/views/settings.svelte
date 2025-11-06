@@ -74,6 +74,41 @@
 		}
 	}
 
+	function handleFileSelect(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const file = target.files?.[0];
+
+		if (!file) {
+			return;
+		}
+
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			const content = e.target?.result as string;
+			if (content) {
+				const result = game.importSave(content.trim());
+
+				if (result.success) {
+					showMessageFor(
+						result.warning || 'Save file imported successfully!',
+						result.warning ? 'warning' : 'success'
+					);
+					game = game; // Force reactivity to update UI
+					game.autoSave(); // Auto-save after successful import
+				} else {
+					showMessageFor(result.error || 'Failed to import save file', 'error');
+				}
+			}
+		};
+		reader.onerror = () => {
+			showMessageFor('Failed to read file', 'error');
+		};
+		reader.readAsText(file);
+
+		// Clear the input so the same file can be selected again
+		target.value = '';
+	}
+
 	function confirmHardReset() {
 		showResetConfirm = true;
 	}
@@ -196,14 +231,29 @@
 		<!-- Import -->
 		<div class="save-action">
 			<h3>Import Save</h3>
-			<p>Paste save data below to import from a file or another device.</p>
+			<p>Upload a save file or paste save data below.</p>
+
+			<!-- File upload option -->
+			<input
+				type="file"
+				accept=".json,application/json"
+				onchange={handleFileSelect}
+				style="display: none;"
+				id="save-file-input"
+			/>
+			<label for="save-file-input" class="file-upload-label">
+				<Upload size={20} /> Select Save File
+			</label>
+
+			<!-- Or paste option -->
+			<p class="or-divider">or paste save data:</p>
 			<textarea
 				bind:value={importText}
 				placeholder="Paste your save data here..."
 				rows="6"
 			></textarea>
 			<button class="import-btn" onclick={importSave} disabled={!importText.trim()}>
-				<Upload size={20} /> Import Save
+				<Upload size={20} /> Import from Text
 			</button>
 		</div>
 	</section>
@@ -424,6 +474,39 @@
 	.import-btn:not(:disabled):hover {
 		background-color: var(--green);
 		border-color: var(--green);
+	}
+
+	.file-upload-label {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		font-family: JetBrains Mono, monospace;
+		font-weight: 400;
+		padding: 0.75rem 1rem;
+		border: 2px solid;
+		border-radius: 8px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		width: 100%;
+		margin-top: 0.75rem;
+		background-color: var(--blue);
+		color: var(--bg);
+		border-color: var(--blue);
+		box-sizing: border-box;
+	}
+
+	.file-upload-label:hover {
+		background-color: var(--text);
+		border-color: var(--text);
+	}
+
+	.or-divider {
+		text-align: center;
+		opacity: 0.6;
+		font-style: italic;
+		margin: 1rem 0 0.5rem 0;
+		font-size: 0.9em;
 	}
 
 	textarea {
