@@ -103,7 +103,7 @@
                         <div class="detail-half">
                             <span class="detail-label">Duration:</span>
                             <span class="detail-value">
-                                {formatDuration(duration)}
+                                {formatDuration(duration / 1000)}
                             </span>
                         </div>
                     </div>
