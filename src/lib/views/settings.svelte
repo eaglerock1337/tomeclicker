@@ -158,105 +158,129 @@
 		</div>
 	{/if}
 
-	<div class="settings-grid">
-		<!-- Theme Selector Card -->
-		<section class="settings-card">
-			<h2>color theme</h2>
-			<select id="theme-select" class="theme-select" bind:value={config.theme}>
-				{#each availableThemes as themeName}
-					<option value={themeName}>
-						{getThemeDisplayName(themeName)}
-					</option>
-				{/each}
-			</select>
-		</section>
+	<div class="settings-container">
+		<!-- Left Column: Settings -->
+		<div class="settings-column">
+			<section class="settings-card">
+				<h2>color theme</h2>
+				<select id="theme-select" class="theme-select" bind:value={config.theme}>
+					{#each availableThemes as themeName}
+						<option value={themeName}>
+							{getThemeDisplayName(themeName)}
+						</option>
+					{/each}
+				</select>
+			</section>
 
-		<!-- Display Mode Card -->
-		<section class="settings-card">
-			<h2>display mode</h2>
-			<div class="mode-selector">
-				<button
-					class="mode-btn"
-					class:active={config.displayMode === 'light'}
-					onclick={() => {
-						config.setDisplayMode('light');
-						config = config; // Force Svelte reactivity
-					}}
-					aria-label="Light mode"
-				>
-					Light
+			<section class="settings-card">
+				<h2>display mode</h2>
+				<div class="mode-selector">
+					<button
+						class="mode-btn"
+						class:active={config.displayMode === 'light'}
+						onclick={() => {
+							config.setDisplayMode('light');
+							config = config; // Force Svelte reactivity
+						}}
+						aria-label="Light mode"
+					>
+						Light
+					</button>
+					<button
+						class="mode-btn"
+						class:active={config.displayMode === 'system'}
+						onclick={() => {
+							config.setDisplayMode('system');
+							config = config; // Force Svelte reactivity
+						}}
+						aria-label="System preference"
+					>
+						System
+					</button>
+					<button
+						class="mode-btn"
+						class:active={config.displayMode === 'dark'}
+						onclick={() => {
+							config.setDisplayMode('dark');
+							config = config; // Force Svelte reactivity
+						}}
+						aria-label="Dark mode"
+					>
+						Dark
+					</button>
+				</div>
+			</section>
+		</div>
+
+		<!-- Middle Column: Export Save -->
+		<div class="settings-column">
+			<section class="settings-card export-card">
+				<h2>export save</h2>
+				<div class="save-info">
+					<div class="info-row">
+						<span class="label">Character:</span>
+						<span class="value">{game.name}</span>
+					</div>
+					<div class="info-row">
+						<span class="label">Level:</span>
+						<span class="value">{game.level}</span>
+					</div>
+					<div class="info-row">
+						<span class="label">Total EXP:</span>
+						<span class="value">{Math.floor(game.lifetimeExp).toLocaleString()}</span>
+					</div>
+					<div class="info-row">
+						<span class="label">Stats:</span>
+						<span class="value">
+							Str {game.stats.strength} / Agi {game.stats.agility} / Will {game.stats.willpower} / End {game.stats.endurance}
+						</span>
+					</div>
+				</div>
+				<p class="description">Download your save file to backup or transfer between devices.</p>
+				<button class="export-btn" onclick={exportSaveData}>
+					<Download size={20} /> Export Save
 				</button>
-				<button
-					class="mode-btn"
-					class:active={config.displayMode === 'system'}
-					onclick={() => {
-						config.setDisplayMode('system');
-						config = config; // Force Svelte reactivity
-					}}
-					aria-label="System preference"
-				>
-					System
+			</section>
+		</div>
+
+		<!-- Right Column: Import & Danger Zone -->
+		<div class="settings-column">
+			<section class="settings-card import-card">
+				<h2>import save</h2>
+				<p>Upload a save file or paste save data below.</p>
+
+				<!-- File upload option -->
+				<input
+					type="file"
+					accept=".json,application/json"
+					onchange={handleFileSelect}
+					style="display: none;"
+					id="save-file-input"
+				/>
+				<label for="save-file-input" class="file-upload-label">
+					<Upload size={20} /> Select Save File
+				</label>
+
+				<!-- Or paste option -->
+				<p class="or-divider">or paste save data:</p>
+				<textarea
+					bind:value={importText}
+					placeholder="Paste your save data here..."
+					rows="4"
+				></textarea>
+				<button class="import-btn" onclick={importSave} disabled={!importText.trim()}>
+					<Upload size={20} /> Import from Text
 				</button>
-				<button
-					class="mode-btn"
-					class:active={config.displayMode === 'dark'}
-					onclick={() => {
-						config.setDisplayMode('dark');
-						config = config; // Force Svelte reactivity
-					}}
-					aria-label="Dark mode"
-				>
-					Dark
+			</section>
+
+			<section class="settings-card danger-card">
+				<h2>danger zone</h2>
+				<p>Permanently delete all progress and start over from the beginning.</p>
+				<button class="danger-btn" onclick={confirmHardReset}>
+					<AlertTriangle size={20} /> Hard Reset
 				</button>
-			</div>
-		</section>
-
-		<!-- Export Save Card -->
-		<section class="settings-card">
-			<h2>export save</h2>
-			<p>Download your save file to backup or transfer between devices.</p>
-			<button class="export-btn" onclick={exportSaveData}>
-				<Download size={20} /> Export Save
-			</button>
-		</section>
-
-		<!-- Import Save Card -->
-		<section class="settings-card import-card">
-			<h2>import save</h2>
-			<p>Upload a save file or paste save data below.</p>
-
-			<!-- File upload option -->
-			<input
-				type="file"
-				accept=".json,application/json"
-				onchange={handleFileSelect}
-				style="display: none;"
-				id="save-file-input"
-			/>
-			<label for="save-file-input" class="file-upload-label">
-				<Upload size={20} /> Select Save File
-			</label>
-
-			<!-- Or paste option -->
-			<p class="or-divider">or paste save data:</p>
-			<textarea
-				bind:value={importText}
-				placeholder="Paste your save data here..."
-				rows="6"
-			></textarea>
-			<button class="import-btn" onclick={importSave} disabled={!importText.trim()}>
-				<Upload size={20} /> Import from Text
-			</button>
-		</section>
-
-		<!-- Hard Reset Card -->
-		<section class="settings-card danger-card">
-			<h2>danger zone</h2>
-			<p>Permanently delete all progress and start over from the beginning.</p>
-			<button class="danger-btn" onclick={confirmHardReset}>
-				<AlertTriangle size={20} /> Hard Reset
-			</button>
-		</section>
+			</section>
+		</div>
 	</div>
 
 	{#if showResetConfirm}
@@ -290,25 +314,30 @@
 		font-size: 1.2rem;
 	}
 
-	/* Responsive Grid Layout */
-	.settings-grid {
-		display: grid;
-		grid-template-columns: 1fr; /* 1 column on mobile */
-		gap: 1rem;
+	/* 3-Column Layout Container */
+	.settings-container {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
 	}
 
-	/* 2 columns on tablet */
-	@media (min-width: 768px) {
-		.settings-grid {
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
-
-	/* 3 columns on desktop */
+	/* Desktop: 3 columns side by side */
 	@media (min-width: 1024px) {
-		.settings-grid {
-			grid-template-columns: repeat(3, 1fr);
+		.settings-container {
+			flex-direction: row;
+			align-items: flex-start;
 		}
+
+		.settings-column {
+			flex: 1;
+			min-width: 0; /* Allow flex items to shrink below content size */
+		}
+	}
+
+	.settings-column {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 	}
 
 	.settings-card {
@@ -328,18 +357,55 @@
 		font-size: 0.95rem;
 	}
 
-	/* Import card spans 2 columns on tablet+ */
-	@media (min-width: 768px) {
-		.import-card {
-			grid-column: span 2;
-		}
+	.description {
+		margin-top: 0.5rem;
+		font-size: 0.9rem;
 	}
 
-	/* Import card spans all 3 columns on desktop */
-	@media (min-width: 1024px) {
-		.import-card {
-			grid-column: span 3;
-		}
+	/* Export Card Save Info */
+	.export-card {
+		min-height: auto;
+	}
+
+	.save-info {
+		background-color: var(--bg);
+		border: 1px solid var(--text);
+		border-radius: 8px;
+		padding: 1rem;
+		margin-bottom: 1rem;
+		font-family: JetBrains Mono, monospace;
+		font-size: 0.9rem;
+	}
+
+	.info-row {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+		gap: 1rem;
+	}
+
+	.info-row:last-child {
+		margin-bottom: 0;
+	}
+
+	.info-row .label {
+		opacity: 0.7;
+		flex-shrink: 0;
+	}
+
+	.info-row .value {
+		text-align: right;
+		font-weight: 500;
+		word-break: break-word;
+	}
+
+	/* Import/Danger cards in right column */
+	.import-card {
+		flex: 1;
+	}
+
+	.danger-card {
+		min-height: auto;
 	}
 
 	/* Message Display */
