@@ -144,7 +144,7 @@
 	}
 </script>
 
-<ViewLayout title="settings" maxWidth="800px">
+<ViewLayout title="settings" maxWidth="1200px">
 	{#if showMessage}
 		<div class="message {messageType}">
 			{#if messageType === 'success'}
@@ -158,13 +158,10 @@
 		</div>
 	{/if}
 
-	<!-- Appearance Settings -->
-	<section class="settings-section">
-		<h2>appearance</h2>
-
-		<!-- Theme Selector -->
-		<div class="setting-row">
-			<label for="theme-select">Color Theme</label>
+	<div class="settings-grid">
+		<!-- Theme Selector Card -->
+		<section class="settings-card">
+			<h2>color theme</h2>
 			<select id="theme-select" class="theme-select" bind:value={config.theme}>
 				{#each availableThemes as themeName}
 					<option value={themeName}>
@@ -172,11 +169,11 @@
 					</option>
 				{/each}
 			</select>
-		</div>
+		</section>
 
-		<!-- Display Mode Selector -->
-		<div class="setting-row">
-			<label for="display-mode">Display Mode</label>
+		<!-- Display Mode Card -->
+		<section class="settings-card">
+			<h2>display mode</h2>
 			<div class="mode-selector">
 				<button
 					class="mode-btn"
@@ -212,25 +209,20 @@
 					Dark
 				</button>
 			</div>
-		</div>
-	</section>
+		</section>
 
-	<!-- Save Management -->
-	<section class="settings-section">
-		<h2>save file</h2>
-
-		<!-- Export -->
-		<div class="save-action">
-			<h3>Export Save</h3>
+		<!-- Export Save Card -->
+		<section class="settings-card">
+			<h2>export save</h2>
 			<p>Download your save file to backup or transfer between devices.</p>
 			<button class="export-btn" onclick={exportSaveData}>
 				<Download size={20} /> Export Save
 			</button>
-		</div>
+		</section>
 
-		<!-- Import -->
-		<div class="save-action">
-			<h3>Import Save</h3>
+		<!-- Import Save Card -->
+		<section class="settings-card import-card">
+			<h2>import save</h2>
 			<p>Upload a save file or paste save data below.</p>
 
 			<!-- File upload option -->
@@ -255,17 +247,17 @@
 			<button class="import-btn" onclick={importSave} disabled={!importText.trim()}>
 				<Upload size={20} /> Import from Text
 			</button>
-		</div>
-	</section>
+		</section>
 
-	<!-- Danger Zone -->
-	<section class="settings-section danger-section">
-		<h2>danger zone</h2>
-		<p>Permanently delete all progress and start over from the beginning.</p>
-		<button class="danger-btn" onclick={confirmHardReset}>
-			<AlertTriangle size={20} /> Hard Reset
-		</button>
-	</section>
+		<!-- Hard Reset Card -->
+		<section class="settings-card danger-card">
+			<h2>danger zone</h2>
+			<p>Permanently delete all progress and start over from the beginning.</p>
+			<button class="danger-btn" onclick={confirmHardReset}>
+				<AlertTriangle size={20} /> Hard Reset
+			</button>
+		</section>
+	</div>
 
 	{#if showResetConfirm}
 		<div class="modal-overlay">
@@ -298,30 +290,56 @@
 		font-size: 1.2rem;
 	}
 
-	h3 {
-		font-family: Lato, sans-serif;
-		font-weight: 400;
-		font-size: 1rem;
-		margin-bottom: 0.5rem;
-		margin-top: 1rem;
+	/* Responsive Grid Layout */
+	.settings-grid {
+		display: grid;
+		grid-template-columns: 1fr; /* 1 column on mobile */
+		gap: 1rem;
 	}
 
-	h3:first-of-type {
-		margin-top: 0;
+	/* 2 columns on tablet */
+	@media (min-width: 768px) {
+		.settings-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
 	}
 
-	.settings-section {
+	/* 3 columns on desktop */
+	@media (min-width: 1024px) {
+		.settings-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	.settings-card {
 		background-color: var(--alt-bg);
 		border: 2px solid var(--text);
 		border-radius: 10px;
 		padding: 1.5rem;
-		margin-bottom: 1.5rem;
+		display: flex;
+		flex-direction: column;
+		min-height: 180px;
 	}
 
-	.settings-section p {
+	.settings-card p {
 		margin: 0.5rem 0;
 		opacity: 0.9;
 		line-height: 1.5;
+		font-size: 0.95rem;
+	}
+
+	/* Import card spans 2 columns on tablet+ */
+	@media (min-width: 768px) {
+		.import-card {
+			grid-column: span 2;
+		}
+	}
+
+	/* Import card spans all 3 columns on desktop */
+	@media (min-width: 1024px) {
+		.import-card {
+			grid-column: span 3;
+		}
 	}
 
 	/* Message Display */
@@ -347,23 +365,6 @@
 	.message.error {
 		background-color: var(--red);
 		color: var(--bg);
-	}
-
-	/* Appearance Settings */
-	.setting-row {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: 1rem;
-		margin-bottom: 1rem;
-	}
-
-	.setting-row:last-child {
-		margin-bottom: 0;
-	}
-
-	.setting-row label {
-		font-size: 1.1rem;
 	}
 
 	/* Theme Selector */
@@ -406,12 +407,14 @@
 		font-family: JetBrains Mono, monospace;
 		font-weight: 400;
 		font-size: 0.9rem;
-		padding: 0.5rem 1rem;
+		padding: 0.5rem 0.875rem; /* Adjusted for better proportions */
 		border: none;
 		border-radius: 8px;
 		cursor: pointer;
 		transition: all 0.3s ease;
 		min-width: 70px;
+		line-height: 1; /* Match text size */
+		flex: 1; /* Equal width buttons */
 	}
 
 	.mode-btn:hover {
@@ -424,15 +427,7 @@
 		font-weight: 500;
 	}
 
-	/* Save Management */
-	.save-action {
-		margin-top: 1.5rem;
-	}
-
-	.save-action:first-of-type {
-		margin-top: 0;
-	}
-
+	/* Action Buttons */
 	button {
 		display: flex;
 		align-items: center;
@@ -446,7 +441,7 @@
 		cursor: pointer;
 		transition: all 0.3s ease;
 		width: 100%;
-		margin-top: 0.75rem;
+		margin-top: auto; /* Push to bottom of card */
 	}
 
 	.export-btn {
@@ -525,11 +520,11 @@
 	}
 
 	/* Danger Zone */
-	.danger-section {
+	.danger-card {
 		border-color: var(--red) !important;
 	}
 
-	.danger-section h2 {
+	.danger-card h2 {
 		color: var(--red);
 	}
 
@@ -615,23 +610,12 @@
 
 	/* Mobile Responsiveness */
 	@media (max-width: 768px) {
-		.settings-section {
+		.settings-card {
 			padding: 1rem;
-		}
-
-		.setting-row {
-			/* Keep horizontal layout on mobile for better use of space */
-			flex-direction: row;
-			align-items: center;
-			justify-content: space-between;
-		}
-
-		.setting-row label {
-			font-size: 1rem;
+			min-height: 150px;
 		}
 
 		.theme-select {
-			min-width: 150px;
 			font-size: 0.9rem;
 		}
 
@@ -642,8 +626,9 @@
 
 		.mode-btn {
 			font-size: 0.85rem;
-			padding: 0.4rem 0.6rem;
+			padding: 0.4rem 0.5rem; /* Compact but proportional on mobile */
 			min-width: 60px;
+			line-height: 1;
 		}
 
 		.modal {
