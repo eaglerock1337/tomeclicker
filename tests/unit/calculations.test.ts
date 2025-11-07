@@ -192,8 +192,8 @@ describe('Upgrade Effect Calculations', () => {
 				} as Upgrade
 			};
 
-			// (15 - 0.5) / 15 = 0.9667...
-			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(0.9667, 4);
+			// 15 / (15 - 0.5) = 15 / 14.5 = 1.0345
+			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(1.0345, 4);
 		});
 
 		it('should calculate multiplier for multiple upgrade levels', () => {
@@ -207,8 +207,8 @@ describe('Upgrade Effect Calculations', () => {
 				} as Upgrade
 			};
 
-			// (15 - (0.5 * 2)) / 15 = 14 / 15 = 0.9333...
-			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(0.9333, 4);
+			// 15 / (15 - (0.5 * 2)) = 15 / 14 = 1.0714
+			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(1.0714, 4);
 		});
 
 		it('should stack multiple different upgrades', () => {
@@ -229,8 +229,8 @@ describe('Upgrade Effect Calculations', () => {
 				} as Upgrade
 			};
 
-			// v0.1.5: (15 - 1) / 15 * (15 - 2) / 15 = 0.9333 * 0.8667 = 0.8089
-			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(0.8089, 4);
+			// v0.1.5: 15 / (15 - 1) * 15 / (15 - 2) = 1.0714 * 1.1538 = 1.2363
+			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(1.2363, 4);
 		});
 
 		it('should ignore non-trainingSpeed upgrades', () => {
@@ -251,8 +251,8 @@ describe('Upgrade Effect Calculations', () => {
 				} as Upgrade
 			};
 
-			// v0.1.5: (15 - 1) / 15 = 0.9333 (only training-speed affects this)
-			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(0.9333, 4);
+			// v0.1.5: 15 / (15 - 1) = 1.0714 (only training-speed affects this)
+			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(1.0714, 4);
 		});
 	});
 

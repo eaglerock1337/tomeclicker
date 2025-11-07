@@ -91,11 +91,11 @@ export function calculateTrainingSpeedMultiplier(upgrades: { [key: string]: Upgr
 	for (const upgrade of Object.values(upgrades)) {
 		if (upgrade.effectType === 'trainingSpeed') {
 			// v0.1.5+: -0.1s per level from 15s base
-			// Convert seconds reduction to multiplier: (15 - (0.1 * level)) / 15
+			// Convert seconds reduction to multiplier: 15 / (15 - (0.1 * level))
 			const secondsReduced = upgrade.effectValue * upgrade.currentLevel; // 0.1s * level
 			const baseDuration = 15; // 15 second base training time
 			const newDuration = Math.max(1, baseDuration - secondsReduced); // Min 1 second
-			multiplier *= newDuration / baseDuration;
+			multiplier *= baseDuration / newDuration;
 		}
 	}
 
