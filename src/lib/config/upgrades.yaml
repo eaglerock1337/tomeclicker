@@ -51,7 +51,7 @@ click-mastery:
   name: Click Mastery
   description: Multiplicative bonus to all click EXP gains
   effect: '+5% EXP per click per level'
-  baseCost: 1200
+  baseCost: 10000
   costMultiplier: 2
   maxLevel: 20
   category: click
@@ -68,13 +68,13 @@ ruminate-power:
   id: ruminate-power
   name: Ruminate Power
   description: Increases EXP gained from each rumination thought
-  effect: '+10 EXP per thought per level'
+  effect: '+25 EXP per thought per level'
   baseCost: 500
   costMultiplier: 1.4
   maxLevel: 50
   category: ruminate
   effectType: ruminatePower
-  effectValue: 10
+  effectValue: 25
   minLevel: 2
 
 ruminate-speed:
@@ -120,13 +120,13 @@ ruminate-mastery:
   id: ruminate-mastery
   name: Ruminate Mastery
   description: Multiplicative bonus to all rumination EXP gains
-  effect: '+10% ruminate EXP per level'
-  baseCost: 2500
+  effect: '+20% ruminate EXP per level'
+  baseCost: 25000
   costMultiplier: 2
   maxLevel: 20
   category: ruminate
   effectType: ruminateMultiplierPercent
-  effectValue: 0.1
+  effectValue: 0.2
   minLevel: 4
 
 # ============================================================================

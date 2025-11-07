@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Game } from '$lib/game';
     import ViewLayout from '$lib/components/ViewLayout.svelte';
-    import { formatNumber, formatDuration } from '$lib/utils/format';
+    import { formatNumber, formatDuration, formatCompact } from '$lib/utils/format';
 
     export let game: Game;
 
@@ -55,9 +55,9 @@
             <button
                 class="action-card"
                 class:active={isActive}
-                class:blocked={!canAfford && !isActive}
+                class:blocked={(!canAfford || atCap) && !isActive}
                 on:click={() => startAction(action.id)}
-                disabled={isActive}
+                disabled={isActive || !canAfford || atCap}
             >
                 <div class="action-header">
                     <div class="action-name">{action.name}</div>
@@ -100,7 +100,7 @@
                             <span class="detail-label">Cost:</span>
                             {#if cost > 0}
                                 <span class="detail-value cost-value" class:cannot-afford={!canAfford}>
-                                    {formatNumber(cost)} EXP
+                                    {formatCompact(cost, 1)} EXP
                                 </span>
                             {:else}
                                 <span class="detail-value">Free</span>
