@@ -170,8 +170,8 @@ export class IdleActionManager {
 			},
 			'train-willpower': {
 				id: 'train-willpower',
-				name: 'Mental Conditioning',
-				description: 'Strengthen resolve and focus',
+				name: 'Defensive Awareness',
+				description: 'Develop instincts to protect yourself',
 				progress: 0,
 				baseDuration: TRAINING_BASE_DURATION,
 				duration: TRAINING_BASE_DURATION,

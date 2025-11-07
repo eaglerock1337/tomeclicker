@@ -222,7 +222,7 @@ export function calculateRuminateSpeedMultiplier(upgrades: { [key: string]: Upgr
 
 /**
  * Calculates the stat EXP required to reach the next level (v0.1.5+ stat system)
- * Uses the formula: 100 × (1.5 ^ (statLevel - 1)), rounded to nearest 5
+ * Uses the formula: 100 × (1.5 ^ statLevel), rounded to nearest 5
  *
  * Special case: Level 0 → 1 requires exactly 100 stat EXP to unlock
  *
@@ -231,10 +231,10 @@ export function calculateRuminateSpeedMultiplier(upgrades: { [key: string]: Upgr
  *
  * @example
  * calculateStatExpRequired(0) // 100 (Level 0 → 1, unlock stat)
- * calculateStatExpRequired(1) // 100 (Level 1 → 2)
- * calculateStatExpRequired(2) // 150 (Level 2 → 3)
- * calculateStatExpRequired(3) // 225 (Level 3 → 4)
- * calculateStatExpRequired(10) // 3,885 (Level 10 → 11)
+ * calculateStatExpRequired(1) // 150 (Level 1 → 2)
+ * calculateStatExpRequired(2) // 225 (Level 2 → 3)
+ * calculateStatExpRequired(3) // 340 (Level 3 → 4)
+ * calculateStatExpRequired(10) // 5,830 (Level 10 → 11)
  */
 export function calculateStatExpRequired(currentStatLevel: number): number {
 	// Special case: Level 0 → 1 requires 100 EXP to unlock
@@ -242,7 +242,9 @@ export function calculateStatExpRequired(currentStatLevel: number): number {
 		return 100;
 	}
 
-	const rawCost = 100 * Math.pow(1.5, currentStatLevel - 1);
+	// Level 1+: Exponential scaling with base 1.5
+	// Level 1 → 2: 150, Level 2 → 3: 225, Level 3 → 4: 340, etc.
+	const rawCost = 100 * Math.pow(1.5, currentStatLevel);
 	// Round to nearest 5 as specified in design document
 	return Math.round(rawCost / 5) * 5;
 }

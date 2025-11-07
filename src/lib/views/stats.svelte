@@ -98,10 +98,30 @@
             <span class="info-label">Level:</span>
             <span class="info-value level">{game.level}</span>
         </div>
-        <div class="info-row highlight">
-            <span class="info-label">HP:</span>
-            <span class="info-value level">{game.level * 5}</span>
-        </div>
+        {#if !game.isStatLocked('endurance')}
+            <div class="info-row highlight">
+                <span class="info-label">HP:</span>
+                <span class="info-value level">{game.stats.endurance * 5}</span>
+            </div>
+        {/if}
+        {#if !game.isStatLocked('strength')}
+            <div class="info-row">
+                <span class="info-label">Attack:</span>
+                <span class="info-value">{game.stats.strength}</span>
+            </div>
+        {/if}
+        {#if !game.isStatLocked('willpower')}
+            <div class="info-row">
+                <span class="info-label">Defense:</span>
+                <span class="info-value">{game.stats.willpower}</span>
+            </div>
+        {/if}
+        {#if !game.isStatLocked('agility')}
+            <div class="info-row">
+                <span class="info-label">Attack Speed:</span>
+                <span class="info-value">{game.stats.agility}</span>
+            </div>
+        {/if}
         <div class="info-row">
             <span class="info-label">Current EXP:</span>
             <span class="info-value">{formatNumber(game.exp)}</span>

@@ -85,9 +85,11 @@
         <button on:click="{() => game.menu = 'story'}">
             <p class:red="{game.menu === 'story'}"><Edit size={24}/></p>
         </button>
+        <!-- Temporarily hidden until fleshed out
         <button on:click="{() => game.menu = 'help'}">
             <p class:red="{game.menu === 'help'}"><HelpCircle size={24}/></p>
         </button>
+        -->
         {#if game.showStats()}
             <button on:click="{() => game.menu = 'stats'}">
                 <p class:red="{game.menu === 'stats'}"><BarChart3 size={24}/></p>
