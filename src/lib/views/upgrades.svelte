@@ -144,7 +144,7 @@
         <!-- Categorized Upgrades -->
         {#each visibleCategories.filter(cat => cat !== 'special') as category (category)}
             {@const categoryUpgrades = game.getUpgradesByCategory(category).filter(u => !u.minLevel || u.minLevel <= game.level)}
-            {#if categoryUpgrades.length > 0}
+            {#if categoryUpgrades.length > 0 && (category !== 'training' || game.areAllStatsUnlocked())}
                 <div class="category-section">
                     <button
                         class="category-header"

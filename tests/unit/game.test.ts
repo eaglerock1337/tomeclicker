@@ -728,7 +728,7 @@ describe('Game', () => {
 				expect(game.showUpgrades()).toBe(false);
 			});
 
-			it('should return true when lifetimeExp >= 50 and all stats unlocked', () => {
+			it('should return true when lifetimeExp >= 50 (stat status does not affect page visibility)', () => {
 				const game = new GameBuilder()
 					.withLifetimeExp(50)
 					.withStats({ strength: 1, agility: 1, willpower: 1, endurance: 1 })
@@ -736,9 +736,9 @@ describe('Game', () => {
 				expect(game.showUpgrades()).toBe(true);
 			});
 
-			it('should return false when lifetimeExp >= 50 but stats are locked', () => {
+			it('should return true when lifetimeExp >= 50 even with stats locked', () => {
 				const game = new GameBuilder().withLifetimeExp(50).build();
-				expect(game.showUpgrades()).toBe(false);
+				expect(game.showUpgrades()).toBe(true);
 			});
 		});
 

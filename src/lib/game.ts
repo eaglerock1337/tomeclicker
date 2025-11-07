@@ -578,8 +578,8 @@ export class Game {
 			return 'level up available';
 		}
 
-		// Show click me only at the very beginning
-		if (this.lifetimeExp === 0) {
+		// Show "click me" until the header bar appears
+		if (this.lifetimeExp < HEADER_UNLOCK_THRESHOLD) {
 			return 'click me';
 		}
 
@@ -863,11 +863,11 @@ export class Game {
 
 	/**
 	 * Determines if Upgrades page should be accessible
-	 * Requires lifetime exp threshold AND all stats unlocked (level 1+)
-	 * @returns True if player meets both requirements
+	 * Unlock threshold: UPGRADES_UNLOCK_THRESHOLD lifetime EXP
+	 * @returns True if player has earned enough lifetime EXP
 	 */
 	showUpgrades(): boolean {
-		return this.lifetimeExp >= UPGRADES_UNLOCK_THRESHOLD && this.areAllStatsUnlocked();
+		return this.lifetimeExp >= UPGRADES_UNLOCK_THRESHOLD;
 	}
 
 	/** Save/Load System */
