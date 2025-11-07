@@ -3,6 +3,7 @@
     import type { Game, Upgrade } from '$lib/game';
     import type { Config } from '$lib/config';
     import ViewLayout from '$lib/components/ViewLayout.svelte';
+    import { formatCompact } from '$lib/utils/format';
 
     export let game: Game;
     export let config: Config;
@@ -37,7 +38,7 @@
     }
 
     function formatCost(cost: number): string {
-        return cost.toLocaleString();
+        return formatCompact(cost, 1);
     }
 
     $: visibleCategories = game.getVisibleUpgradeCategories();
