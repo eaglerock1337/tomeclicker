@@ -111,6 +111,8 @@ export interface IdleActionDependencies {
 	getStatGainBonus: () => number;
 	/** Get stat gain percentage multiplier from upgrades */
 	getStatGainMultiplierPercent: () => number;
+	/** Get training crit chance from upgrades */
+	getTrainingCritChance: () => number;
 	/** Get training crit damage multiplier from upgrades */
 	getTrainingCritDamage: () => number;
 }
@@ -170,7 +172,7 @@ export class IdleActionManager {
 			},
 			'train-willpower': {
 				id: 'train-willpower',
-				name: 'Defensive Awareness',
+				name: 'Situational Awareness',
 				description: 'Develop instincts to protect yourself',
 				progress: 0,
 				baseDuration: TRAINING_BASE_DURATION,
@@ -491,7 +493,7 @@ export class IdleActionManager {
 			const stat = action.trainsStat;
 			const statGainBonus = this.deps.getStatGainBonus();
 			const statGainPercent = this.deps.getStatGainMultiplierPercent();
-			const critChance = this.deps.getCritChance();
+			const critChance = this.deps.getTrainingCritChance();
 			const critDamage = this.deps.getTrainingCritDamage();
 
 			// Calculate stat EXP gained: (base + bonus) × percentage_mult × crit_mult

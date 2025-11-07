@@ -29,6 +29,7 @@ class IdleActionManagerBuilder {
 		getRuminateCritDamage: () => 0.5,
 		getStatGainBonus: () => 0,
 		getStatGainMultiplierPercent: () => 1.0,
+		getTrainingCritChance: () => 0.0,
 		getTrainingCritDamage: () => 0.5
 	};
 
@@ -59,6 +60,11 @@ class IdleActionManagerBuilder {
 
 	withCritChance(chance: number): this {
 		this.deps.getCritChance = () => chance;
+		return this;
+	}
+
+	withTrainingCritChance(chance: number): this {
+		this.deps.getTrainingCritChance = () => chance;
 		return this;
 	}
 
@@ -421,7 +427,7 @@ describe('IdleActionManager', () => {
 				.withTrainingRewardOf(10) // 10 base stat EXP
 				.withTrainingCritDamage(1.0) // +100% damage = 2x total on crit
 				.withStatLevelCostOf(1, 60) // Need 60 EXP to level
-				.withCritChance(1.0) // 100% crit chance
+				.withTrainingCritChance(1.0) // 100% training crit chance
 				.withCurrentExp(500)
 				.build();
 

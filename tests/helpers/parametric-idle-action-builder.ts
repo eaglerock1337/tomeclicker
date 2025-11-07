@@ -49,6 +49,7 @@ export class ParametricIdleActionBuilder {
 		getRuminateCritDamage: () => 0.5,
 		getStatGainBonus: () => 0,
 		getStatGainMultiplierPercent: () => 1.0,
+		getTrainingCritChance: () => 0.0,
 		getTrainingCritDamage: () => 0.5
 	};
 
@@ -213,6 +214,14 @@ export class ParametricIdleActionBuilder {
 	}
 
 	/**
+	 * Set training crit chance (0.0 to 1.0)
+	 */
+	withTrainingCritChance(chance: number): this {
+		this.deps.getTrainingCritChance = () => chance;
+		return this;
+	}
+
+	/**
 	 * Set training crit damage bonus (0.5 to 1.5, meaning 1.5x to 2.5x total)
 	 */
 	withTrainingCritDamage(damage: number): this {
@@ -335,6 +344,7 @@ export class IdleActionManagerBuilder {
 		getRuminateCritDamage: () => 0.5,
 		getStatGainBonus: () => 0,
 		getStatGainMultiplierPercent: () => 1.0,
+		getTrainingCritChance: () => 0.0,
 		getTrainingCritDamage: () => 0.5
 	};
 

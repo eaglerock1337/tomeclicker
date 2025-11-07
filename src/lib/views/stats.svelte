@@ -105,21 +105,21 @@
             </div>
         {/if}
         {#if !game.isStatLocked('strength')}
-            <div class="info-row">
+            <div class="info-row highlight">
                 <span class="info-label">Attack:</span>
-                <span class="info-value">{game.stats.strength}</span>
+                <span class="info-value level">{game.stats.strength}</span>
             </div>
         {/if}
         {#if !game.isStatLocked('willpower')}
-            <div class="info-row">
+            <div class="info-row highlight">
                 <span class="info-label">Defense:</span>
-                <span class="info-value">{game.stats.willpower}</span>
+                <span class="info-value level">{game.stats.willpower}</span>
             </div>
         {/if}
         {#if !game.isStatLocked('agility')}
-            <div class="info-row">
+            <div class="info-row highlight">
                 <span class="info-label">Attack Speed:</span>
-                <span class="info-value">{game.stats.agility}</span>
+                <span class="info-value level">{game.stats.agility}</span>
             </div>
         {/if}
         <div class="info-row">

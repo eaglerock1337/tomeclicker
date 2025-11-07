@@ -150,6 +150,7 @@ export class Game {
 			getRuminateCritDamage: () => this.getRuminateCritDamage(),
 			getStatGainBonus: () => this.getStatGainBonus(),
 			getStatGainMultiplierPercent: () => this.getStatGainMultiplierPercent(),
+			getTrainingCritChance: () => this.getTrainingCritChance(),
 			getTrainingCritDamage: () => this.getTrainingCritDamage()
 		});
 
@@ -394,6 +395,14 @@ export class Game {
 	 */
 	getStatGainMultiplierPercent(): number {
 		return calculateStatGainMultiplierPercent(this.upgrades);
+	}
+
+	/**
+	 * Gets the training crit chance from upgrades
+	 * @returns Crit chance percentage (0.0 to 1.0)
+	 */
+	getTrainingCritChance(): number {
+		return this.trainingCritChance;
 	}
 
 	/**
@@ -1090,6 +1099,7 @@ export class Game {
 			getRuminateCritDamage: () => this.getRuminateCritDamage(),
 			getStatGainBonus: () => this.getStatGainBonus(),
 			getStatGainMultiplierPercent: () => this.getStatGainMultiplierPercent(),
+			getTrainingCritChance: () => this.getTrainingCritChance(),
 			getTrainingCritDamage: () => this.getTrainingCritDamage()
 		});
 
