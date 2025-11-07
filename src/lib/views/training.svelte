@@ -368,6 +368,10 @@
         min-width: 0; /* Allow flex items to shrink */
     }
 
+    .detail-half:first-child {
+        flex: 1.3 1 0%; /* Give cost side more space */
+    }
+
     .detail-label {
         font-family: Lato, sans-serif;
         font-size: 0.85rem;
