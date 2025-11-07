@@ -1,3 +1,12 @@
+## [0.2.3](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.2...v0.2.3) (2025-11-07)
+
+### Bug Fixes
+
+- convert training duration from milliseconds to seconds ([11791f9](https://github.com/eaglerock1337/tomeclicker/commit/11791f9163463d422744b3e57376d6aaad89b5ce))
+- correct training duration calculation and mobile layout ([1d89290](https://github.com/eaglerock1337/tomeclicker/commit/1d89290906cf2d9c924b64f809e09c2fb75e91b7))
+- force reactive updates after levelUp and purchaseUpgrade ([2acd741](https://github.com/eaglerock1337/tomeclicker/commit/2acd741a00e56f1ddefb1139070269abd713dcdc))
+- improve training page mobile layout and contrast ([a20fe27](https://github.com/eaglerock1337/tomeclicker/commit/a20fe275e5622f3e7177149eb7d90975c8c3d95f))
+
 ## [0.2.2](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.1...v0.2.2) (2025-11-05)
 
 ## [0.2.1](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.0...v0.2.1) (2025-11-04)
