@@ -20,64 +20,69 @@
         color: string;
         available: boolean;
         atCap: boolean;
+        isLocked: boolean;
     }
 
     $: rpgStats = [
         {
             id: 'strength' as const,
-            name: 'Strength',
-            shortName: 'STR',
+            name: game.isStatLocked('strength') ? '???' : 'Strength',
+            shortName: game.isStatLocked('strength') ? '???' : 'STR',
             level: game.stats.strength,
             currentExp: game.getStatExp('strength'),
             requiredExp: game.getStatExpRequired('strength'),
             maxLevel: game.getMaxStatLevel('strength'),
             trainingCost: game.getStatTrainingCost('strength'),
-            effect: 'Attack',
+            effect: game.isStatLocked('strength') ? '???' : 'Attack',
             color: 'var(--red)',
             available: game.level >= 3,
-            atCap: game.stats.strength >= game.getMaxStatLevel('strength')
+            atCap: game.stats.strength >= game.getMaxStatLevel('strength'),
+            isLocked: game.isStatLocked('strength')
         },
         {
             id: 'agility' as const,
-            name: 'Agility',
-            shortName: 'AGI',
+            name: game.isStatLocked('agility') ? '???' : 'Agility',
+            shortName: game.isStatLocked('agility') ? '???' : 'AGI',
             level: game.stats.agility,
             currentExp: game.getStatExp('agility'),
             requiredExp: game.getStatExpRequired('agility'),
             maxLevel: game.getMaxStatLevel('agility'),
             trainingCost: game.getStatTrainingCost('agility'),
-            effect: 'Attack Speed',
+            effect: game.isStatLocked('agility') ? '???' : 'Attack Speed',
             color: 'var(--green)',
             available: game.level >= 3,
-            atCap: game.stats.agility >= game.getMaxStatLevel('agility')
+            atCap: game.stats.agility >= game.getMaxStatLevel('agility'),
+            isLocked: game.isStatLocked('agility')
         },
         {
             id: 'willpower' as const,
-            name: 'Willpower',
-            shortName: 'WIL',
+            name: game.isStatLocked('willpower') ? '???' : 'Willpower',
+            shortName: game.isStatLocked('willpower') ? '???' : 'WIL',
             level: game.stats.willpower,
             currentExp: game.getStatExp('willpower'),
             requiredExp: game.getStatExpRequired('willpower'),
             maxLevel: game.getMaxStatLevel('willpower'),
             trainingCost: game.getStatTrainingCost('willpower'),
-            effect: 'Defense',
+            effect: game.isStatLocked('willpower') ? '???' : 'Defense',
             color: 'var(--blue)',
             available: game.level >= 3,
-            atCap: game.stats.willpower >= game.getMaxStatLevel('willpower')
+            atCap: game.stats.willpower >= game.getMaxStatLevel('willpower'),
+            isLocked: game.isStatLocked('willpower')
         },
         {
             id: 'endurance' as const,
-            name: 'Endurance',
-            shortName: 'END',
+            name: game.isStatLocked('endurance') ? '???' : 'Endurance',
+            shortName: game.isStatLocked('endurance') ? '???' : 'END',
             level: game.stats.endurance,
             currentExp: game.getStatExp('endurance'),
             requiredExp: game.getStatExpRequired('endurance'),
             maxLevel: game.getMaxStatLevel('endurance'),
             trainingCost: game.getStatTrainingCost('endurance'),
-            effect: 'HP',
+            effect: game.isStatLocked('endurance') ? '???' : 'HP',
             color: 'var(--yellow)',
             available: game.level >= 3,
-            atCap: game.stats.endurance >= game.getMaxStatLevel('endurance')
+            atCap: game.stats.endurance >= game.getMaxStatLevel('endurance'),
+            isLocked: game.isStatLocked('endurance')
         }
     ] as StatDisplay[];
 </script>
@@ -112,22 +117,28 @@
         <div class="section-header">RPG Statistics</div>
         <div class="rpg-stats">
             {#each rpgStats as stat (stat.id)}
-                <div class="stat-row" class:locked={!stat.available}>
+                <div class="stat-row" class:locked={!stat.available || stat.isLocked}>
                     <div class="stat-main">
                         <div class="stat-name-group">
-                            <span class="stat-short" style="color: {stat.color}">{stat.shortName}</span>
-                            <span class="stat-name">{stat.name}</span>
-                            <span class="stat-effect">+{stat.effect}</span>
+                            <span class="stat-short" class:mystery={stat.isLocked} style="color: {stat.isLocked ? 'var(--text)' : stat.color}">{stat.shortName}</span>
+                            <span class="stat-name" class:mystery={stat.isLocked}>{stat.name}</span>
+                            <span class="stat-effect" class:mystery={stat.isLocked}>+{stat.effect}</span>
                         </div>
                         <div class="stat-values">
-                            <span class="stat-value" style="color: {stat.color}">{stat.level}</span>
-                            <span class="stat-level">Lv.{stat.level}/{stat.maxLevel}</span>
+                            <span class="stat-value" class:mystery={stat.isLocked} style="color: {stat.isLocked ? 'var(--text)' : stat.color}">
+                                {stat.isLocked ? '?' : stat.level}
+                            </span>
+                            <span class="stat-level" class:mystery={stat.isLocked}>
+                                {stat.isLocked ? 'Locked' : `Lv.${stat.level}/${stat.maxLevel}`}
+                            </span>
                         </div>
                     </div>
                     <!-- Stat EXP Progress Bar (v0.1.5+) -->
                     <div class="stat-progress">
                         <div class="progress-bar-container">
-                            {#if stat.available && !stat.atCap}
+                            {#if stat.isLocked}
+                                <div class="progress-bar" style="width: {Math.min(100, (stat.currentExp / stat.requiredExp) * 100)}%; background-color: var(--text); opacity: 0.3;"></div>
+                            {:else if stat.available && !stat.atCap}
                                 <div class="progress-bar" style="width: {Math.min(100, (stat.currentExp / stat.requiredExp) * 100)}%; background-color: {stat.color}"></div>
                             {:else if stat.atCap}
                                 <div class="progress-bar" style="width: 100%; background-color: var(--yellow)"></div>
@@ -138,6 +149,8 @@
                         <div class="progress-info">
                             {#if !stat.available}
                                 <span class="progress-text locked-text">Unlock at Level 3</span>
+                            {:else if stat.isLocked}
+                                <span class="progress-text locked-text">Train to unlock (0 / {formatNumber(stat.requiredExp)} EXP)</span>
                             {:else if stat.atCap}
                                 <span class="progress-text capped-text">Max Level (Character Level {game.level})</span>
                             {:else}
@@ -290,6 +303,15 @@
         color: var(--text);
         font-size: 0.85rem;
         font-weight: 400;
+    }
+
+    .stat-short.mystery,
+    .stat-name.mystery,
+    .stat-effect.mystery,
+    .stat-value.mystery,
+    .stat-level.mystery {
+        opacity: 0.3;
+        font-style: italic;
     }
 
     .stat-effect {

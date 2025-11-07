@@ -41,13 +41,13 @@ describe('Game', () => {
 			}
 		});
 
-		it('should initialize stats at level 1', () => {
+		it('should initialize stats at level 0 (locked)', () => {
 			const game = createTestGame();
 
-			expect(game.stats.strength).toBe(1);
-			expect(game.stats.agility).toBe(1);
-			expect(game.stats.intelligence).toBe(1);
-			expect(game.stats.wisdom).toBe(1);
+			expect(game.stats.strength).toBe(0);
+			expect(game.stats.agility).toBe(0);
+			expect(game.stats.intelligence).toBe(0);
+			expect(game.stats.wisdom).toBe(0);
 		});
 
 		it('should initialize training actions', () => {
@@ -552,7 +552,7 @@ describe('Game', () => {
 
 		describe('getStatLevelCost', () => {
 			it('should return base cost for level 1 stat', () => {
-				const game = createTestGame();
+				const game = new GameBuilder().withStats({ strength: 1 }).build();
 				const cost = game.getStatLevelCost('strength');
 
 				// Base: 100 * 1.5^(1-1) = 100
@@ -728,9 +728,17 @@ describe('Game', () => {
 				expect(game.showUpgrades()).toBe(false);
 			});
 
-			it('should return true when lifetimeExp >= 50', () => {
-				const game = new GameBuilder().withLifetimeExp(50).build();
+			it('should return true when lifetimeExp >= 50 and all stats unlocked', () => {
+				const game = new GameBuilder()
+					.withLifetimeExp(50)
+					.withStats({ strength: 1, agility: 1, willpower: 1, endurance: 1 })
+					.build();
 				expect(game.showUpgrades()).toBe(true);
+			});
+
+			it('should return false when lifetimeExp >= 50 but stats are locked', () => {
+				const game = new GameBuilder().withLifetimeExp(50).build();
+				expect(game.showUpgrades()).toBe(false);
 			});
 		});
 
@@ -861,13 +869,24 @@ describe('Game', () => {
 				expect(game.showAdventure()).toBe(false);
 			});
 
-			it('should return true when level >= 4', () => {
-				const game = new GameBuilder().withLevel(4).build();
+			it('should return true when level >= 4 and all stats unlocked', () => {
+				const game = new GameBuilder()
+					.withLevel(4)
+					.withStats({ strength: 1, agility: 1, willpower: 1, endurance: 1 })
+					.build();
 				expect(game.showAdventure()).toBe(true);
 			});
 
-			it('should return true for higher levels', () => {
-				const game = new GameBuilder().withLevel(5).build();
+			it('should return false when level >= 4 but stats are locked', () => {
+				const game = new GameBuilder().withLevel(4).build();
+				expect(game.showAdventure()).toBe(false);
+			});
+
+			it('should return true for higher levels with all stats unlocked', () => {
+				const game = new GameBuilder()
+					.withLevel(5)
+					.withStats({ strength: 1, agility: 1, willpower: 1, endurance: 1 })
+					.build();
 				expect(game.showAdventure()).toBe(true);
 			});
 		});
@@ -1004,10 +1023,10 @@ describe('Game', () => {
 			expect(game.lifetimeExp).toBe(0);
 			expect(game.level).toBe(1);
 			expect(game.clickMultiplier).toBe(1.0);
-			expect(game.stats.strength).toBe(1);
-			expect(game.stats.agility).toBe(1);
-			expect(game.stats.intelligence).toBe(1);
-			expect(game.stats.wisdom).toBe(1);
+			expect(game.stats.strength).toBe(0);
+			expect(game.stats.agility).toBe(0);
+			expect(game.stats.intelligence).toBe(0);
+			expect(game.stats.wisdom).toBe(0);
 			expect(game.adventureModeUnlocked).toBe(false);
 			expect(game.meditationUnlocked).toBe(false);
 			expect(game.upgrades['discipline'].currentLevel).toBe(0);

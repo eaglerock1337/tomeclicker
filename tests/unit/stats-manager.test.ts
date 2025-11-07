@@ -75,14 +75,14 @@ class StatsManagerBuilder {
 
 describe('StatsManager', () => {
 	describe('Initialization', () => {
-		it('should create StatsManager with default stats (all 1s)', () => {
+		it('should create StatsManager with default stats (all 0s - locked)', () => {
 			const manager = new StatsManager();
 			const stats = manager.getStats();
 
-			expect(stats.strength).toBe(1);
-			expect(stats.agility).toBe(1);
-			expect(stats.intelligence).toBe(1);
-			expect(stats.wisdom).toBe(1);
+			expect(stats.strength).toBe(0);
+			expect(stats.agility).toBe(0);
+			expect(stats.intelligence).toBe(0);
+			expect(stats.wisdom).toBe(0);
 		});
 
 		it('should create StatsManager with custom stats', () => {
@@ -134,19 +134,24 @@ describe('StatsManager', () => {
 			expect(manager.getStatLevel('wisdom')).toBe(5);
 		});
 
-		it('should return 1 for default stats', () => {
+		it('should return 0 for default stats (locked)', () => {
 			const manager = new StatsManager();
 
-			expect(manager.getStatLevel('strength')).toBe(1);
-			expect(manager.getStatLevel('agility')).toBe(1);
-			expect(manager.getStatLevel('intelligence')).toBe(1);
-			expect(manager.getStatLevel('wisdom')).toBe(1);
+			expect(manager.getStatLevel('strength')).toBe(0);
+			expect(manager.getStatLevel('agility')).toBe(0);
+			expect(manager.getStatLevel('intelligence')).toBe(0);
+			expect(manager.getStatLevel('wisdom')).toBe(0);
 		});
 	});
 
 	describe('Get Stat Level Cost', () => {
-		it('should calculate cost for stat level 1 (starting stat)', () => {
-			const manager = new StatsManager();
+		it('should calculate cost for stat level 1 (unlocked)', () => {
+			const manager = new StatsManagerBuilder()
+				.withStrength(1)
+				.withAgility(1)
+				.withIntelligence(1)
+				.withWisdom(1)
+				.build();
 
 			// From calculations.ts: level 1 should cost 100 EXP
 			expect(manager.getStatLevelCost('strength')).toBe(100);
@@ -218,13 +223,13 @@ describe('StatsManager', () => {
 			expect(manager.getStatLevel('wisdom')).toBe(10); // Unchanged
 		});
 
-		it('should handle increasing from level 1', () => {
+		it('should handle increasing from level 0 (locked)', () => {
 			const manager = new StatsManager();
 
 			const result = manager.increaseStat('strength', 1);
 
 			expect(result.success).toBe(true);
-			expect(result.newLevel).toBe(2);
+			expect(result.newLevel).toBe(1);
 		});
 
 		it('should allow large increases', () => {
@@ -263,14 +268,14 @@ describe('StatsManager', () => {
 			expect(manager.getStatLevel('strength')).toBe(50);
 		});
 
-		it('should enforce minimum value of 1', () => {
+		it('should enforce minimum value of 0', () => {
 			const manager = new StatsManagerBuilder().withAgility(20).build();
 
 			manager.setStat('agility', 0);
-			expect(manager.getStatLevel('agility')).toBe(1);
+			expect(manager.getStatLevel('agility')).toBe(0);
 
 			manager.setStat('agility', -10);
-			expect(manager.getStatLevel('agility')).toBe(1);
+			expect(manager.getStatLevel('agility')).toBe(0);
 		});
 
 		it('should allow setting stat to any positive value', () => {
@@ -456,7 +461,7 @@ describe('StatsManager', () => {
 				manager.increaseStat('strength', 1);
 			}
 
-			expect(manager.getStatLevel('strength')).toBe(11);
+			expect(manager.getStatLevel('strength')).toBe(10);
 		});
 
 		it('should handle zero amount increase', () => {

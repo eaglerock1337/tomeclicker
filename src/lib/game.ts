@@ -495,6 +495,36 @@ export class Game {
 	}
 
 	/**
+	 * Checks if a stat is locked (level 0)
+	 * @param stat - The stat to check
+	 * @returns True if stat is at level 0 (locked/hidden)
+	 */
+	isStatLocked(
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
+	): boolean {
+		return this.statsManager.isStatLocked(stat);
+	}
+
+	/**
+	 * Checks if all physical stats are unlocked (level 1+)
+	 * @returns True if all 4 physical stats are at level 1 or higher
+	 */
+	areAllStatsUnlocked(): boolean {
+		return this.statsManager.areAllPhysicalStatsUnlocked();
+	}
+
+	/**
+	 * Gets the display name for a stat (??? if locked, stat name if unlocked)
+	 * @param stat - The stat to get display name for
+	 * @returns Display name for the stat
+	 */
+	getStatDisplayName(
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
+	): string {
+		return this.statsManager.getStatDisplayName(stat);
+	}
+
+	/**
 	 * Checks if a training action can be started (has enough character EXP)
 	 * @param actionId - ID of the training action
 	 * @returns True if the action can be started
@@ -510,6 +540,32 @@ export class Game {
 	 */
 	getTrainingCost(actionId: string): number {
 		return this.idleActionManager.getTrainingCost(actionId);
+	}
+
+	/**
+	 * Checks if any active stat training is blocked (at cap or can't afford)
+	 * Used for navbar notification
+	 * @returns True if training is blocked
+	 */
+	hasBlockedTraining(): boolean {
+		// Find any active stat training
+		const activeTraining = Object.values(this.trainingActions).find(
+			(action) => action.isActive && action.trainsStat
+		);
+
+		if (!activeTraining || !activeTraining.trainsStat) {
+			return false; // No active stat training
+		}
+
+		const stat = activeTraining.trainsStat;
+		const statLevel = this.stats[stat];
+		const maxLevel = this.getMaxStatLevel(stat);
+		const atCap = statLevel >= maxLevel;
+		const cost = this.getStatTrainingCost(stat);
+		const canAfford = this.exp >= cost;
+
+		// Blocked if at cap OR can't afford to restart
+		return atCap || !canAfford;
 	}
 
 	/**
@@ -648,20 +704,15 @@ export class Game {
 	 * @returns True if all stats are at least 5
 	 */
 	showMeditation(): boolean {
-		return (
-			this.stats.strength >= 5 &&
-			this.stats.agility >= 5 &&
-			this.stats.willpower >= 5 &&
-			this.stats.endurance >= 5
-		);
+		return this.statsManager.areAllPhysicalStatsAtLevel(5);
 	}
 
 	/**
 	 * Determines if Adventure page should be accessible
-	 * @returns True if player has reached level 4
+	 * @returns True if player has reached level 4 AND all stats are unlocked (level 1+)
 	 */
 	showAdventure(): boolean {
-		return this.level >= 4;
+		return this.level >= 4 && this.areAllStatsUnlocked();
 	}
 
 	/**
@@ -811,12 +862,12 @@ export class Game {
 	}
 
 	/**
-	 * Determines if the upgrades page should be accessible
-	 * Unlock threshold: UPGRADES_UNLOCK_THRESHOLD lifetime EXP (same as menu)
-	 * @returns True if player has earned enough lifetime EXP
+	 * Determines if Upgrades page should be accessible
+	 * Requires lifetime exp threshold AND all stats unlocked (level 1+)
+	 * @returns True if player meets both requirements
 	 */
 	showUpgrades(): boolean {
-		return this.lifetimeExp >= UPGRADES_UNLOCK_THRESHOLD;
+		return this.lifetimeExp >= UPGRADES_UNLOCK_THRESHOLD && this.areAllStatsUnlocked();
 	}
 
 	/** Save/Load System */

@@ -61,10 +61,14 @@
             >
                 <div class="action-header">
                     <div class="action-name">{action.name}</div>
-                    {#if action.trainsStat}
+                    {#if action.trainsStat && !game.isStatLocked(action.trainsStat)}
                         <div class="stat-info">
-                            <div class="stat-name">{action.trainsStat.charAt(0).toUpperCase() + action.trainsStat.slice(1)}</div>
-                            <div class="stat-level">Level {statLevel}/{maxStatLevel}</div>
+                            <div class="stat-name">
+                                {game.getStatDisplayName(action.trainsStat)}
+                            </div>
+                            <div class="stat-level">
+                                Level {statLevel}/{maxStatLevel}
+                            </div>
                         </div>
                     {/if}
                 </div>
@@ -83,7 +87,9 @@
                     </div>
                 {:else if atCap}
                     <div class="stat-exp-progress capped">
-                        <div class="stat-exp-text capped-text">Max Level Reached</div>
+                        <div class="stat-exp-text capped-text">
+                            Max Level (Reach Character Level {game.level + 1} to continue)
+                        </div>
                     </div>
                 {/if}
 
@@ -116,13 +122,17 @@
                                 <span class="detail-value reward-value">
                                     +{game.getRuminateReward()} EXP
                                 </span>
-                            {:else if action.trainsStat}
+                            {:else if action.trainsStat && !game.isStatLocked(action.trainsStat)}
                                 <span class="detail-value reward-value">
                                     +{statExpGain} {action.trainsStat.toUpperCase().slice(0, 3)} EXP
                                 </span>
+                            {:else if action.trainsStat}
+                                <span class="detail-value reward-value mystery">
+                                    ???
+                                </span>
                             {/if}
                         </div>
-                        {#if action.trainsStat && game.trainingCritChance > 0}
+                        {#if action.trainsStat && !game.isStatLocked(action.trainsStat) && game.trainingCritChance > 0}
                             <div class="detail-half">
                                 <span class="detail-label">Crit:</span>
                                 <span class="detail-value crit-value">
@@ -259,6 +269,12 @@
     .action-card.active .stat-level,
     .action-card.active .stat-name {
         color: var(--bg);
+    }
+
+    .reward-value.mystery {
+        color: var(--text);
+        opacity: 0.3;
+        font-style: italic;
     }
 
     .action-description {

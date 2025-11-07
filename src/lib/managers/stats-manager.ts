@@ -46,19 +46,19 @@ export class StatsManager {
 
 	/**
 	 * Creates a new StatsManager with default or provided stats
-	 * @param initialStats - Starting stat values (defaults to all 1s with 0 EXP)
+	 * @param initialStats - Starting stat values (defaults to all 0s with 0 EXP)
 	 * @param deps - Dependencies for character level checks
 	 */
 	constructor(initialStats?: Stats, deps?: StatsManagerDependencies) {
 		this.stats = initialStats || {
-			// Physical stat levels (start at 1)
-			strength: 1,
-			agility: 1,
-			willpower: 1,
-			endurance: 1,
-			// Magic stat levels (locked, start at 1 for future use)
-			intelligence: 1,
-			wisdom: 1,
+			// Physical stat levels (start at 0, unlock at 100 stat EXP)
+			strength: 0,
+			agility: 0,
+			willpower: 0,
+			endurance: 0,
+			// Magic stat levels (locked, start at 0 for future use)
+			intelligence: 0,
+			wisdom: 0,
 			// Physical stat EXP (start at 0)
 			strengthExp: 0,
 			agilityExp: 0,
@@ -127,8 +127,8 @@ export class StatsManager {
 	 * @param value - The new value
 	 */
 	setStat(stat: keyof Stats, value: number): void {
-		if (value < 1) {
-			this.stats[stat] = 1; // Minimum stat value is 1
+		if (value < 0) {
+			this.stats[stat] = 0; // Minimum stat value is 0
 		} else {
 			this.stats[stat] = value;
 		}
@@ -253,6 +253,61 @@ export class StatsManager {
 			newLevel,
 			newStatExp: this.stats[expKey] as number
 		};
+	}
+
+	/**
+	 * Check if a stat is locked (level 0)
+	 * @param stat - The stat to check
+	 * @returns True if stat is at level 0 (locked)
+	 */
+	isStatLocked(
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
+	): boolean {
+		return this.getStatLevel(stat) === 0;
+	}
+
+	/**
+	 * Check if all physical stats are at least the specified level
+	 * @param minLevel - Minimum level required for all stats
+	 * @returns True if all physical stats meet the minimum level
+	 */
+	areAllPhysicalStatsAtLevel(minLevel: number): boolean {
+		return (
+			this.stats.strength >= minLevel &&
+			this.stats.agility >= minLevel &&
+			this.stats.willpower >= minLevel &&
+			this.stats.endurance >= minLevel
+		);
+	}
+
+	/**
+	 * Check if all physical stats are unlocked (level 1+)
+	 * @returns True if all physical stats are at level 1 or higher
+	 */
+	areAllPhysicalStatsUnlocked(): boolean {
+		return this.areAllPhysicalStatsAtLevel(1);
+	}
+
+	/**
+	 * Get the display name for a stat (??? if locked, stat name if unlocked)
+	 * @param stat - The stat to get display name for
+	 * @returns Display name for the stat
+	 */
+	getStatDisplayName(
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
+	): string {
+		if (this.isStatLocked(stat)) {
+			return '???';
+		}
+
+		const names: Record<string, string> = {
+			strength: 'Strength',
+			agility: 'Agility',
+			willpower: 'Willpower',
+			endurance: 'Endurance'
+		};
+
+		return names[stat] || stat;
 	}
 
 	/**

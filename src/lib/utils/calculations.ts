@@ -224,16 +224,24 @@ export function calculateRuminateSpeedMultiplier(upgrades: { [key: string]: Upgr
  * Calculates the stat EXP required to reach the next level (v0.1.5+ stat system)
  * Uses the formula: 100 × (1.5 ^ (statLevel - 1)), rounded to nearest 5
  *
+ * Special case: Level 0 → 1 requires exactly 100 stat EXP to unlock
+ *
  * @param currentStatLevel - The current level of the stat
  * @returns Stat EXP required to reach the next level
  *
  * @example
+ * calculateStatExpRequired(0) // 100 (Level 0 → 1, unlock stat)
  * calculateStatExpRequired(1) // 100 (Level 1 → 2)
  * calculateStatExpRequired(2) // 150 (Level 2 → 3)
  * calculateStatExpRequired(3) // 225 (Level 3 → 4)
  * calculateStatExpRequired(10) // 3,885 (Level 10 → 11)
  */
 export function calculateStatExpRequired(currentStatLevel: number): number {
+	// Special case: Level 0 → 1 requires 100 EXP to unlock
+	if (currentStatLevel === 0) {
+		return 100;
+	}
+
 	const rawCost = 100 * Math.pow(1.5, currentStatLevel - 1);
 	// Round to nearest 5 as specified in design document
 	return Math.round(rawCost / 5) * 5;
@@ -243,16 +251,24 @@ export function calculateStatExpRequired(currentStatLevel: number): number {
  * Calculates the character EXP cost to start stat training (v0.1.5+ training economy)
  * Uses the formula: 100 × (statLevel ^ 1.3)
  *
+ * Special case: Level 0 training costs 100 character EXP (unlock cost)
+ *
  * @param currentStatLevel - The current level of the stat being trained
  * @returns Character EXP cost to start training this stat
  *
  * @example
+ * calculateStatTrainingCost(0) // 100 (Train to unlock stat at level 1)
  * calculateStatTrainingCost(1) // 100 (Train Strength 1→2)
  * calculateStatTrainingCost(5) // 900 (Train Strength 5→6)
  * calculateStatTrainingCost(10) // 2,800 (Train Strength 10→11)
  * calculateStatTrainingCost(20) // 13,000 (Train Strength 20→21)
  */
 export function calculateStatTrainingCost(currentStatLevel: number): number {
+	// Special case: Level 0 training costs 100 character EXP
+	if (currentStatLevel === 0) {
+		return 100;
+	}
+
 	return Math.floor(100 * Math.pow(currentStatLevel, 1.3));
 }
 

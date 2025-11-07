@@ -36,6 +36,9 @@
             game.canAffordUpgrade(upgrade.id)
         )
     );
+
+    // Check if active training is blocked (at cap or can't afford)
+    $: hasBlockedTraining = game && game.hasBlockedTraining();
 </script>
 
 <div class="navbar">
@@ -58,7 +61,15 @@
         {/if}
         {#if game.showTraining()}
             <button on:click="{() => game.menu = 'training'}">
-                <p class:red="{game.menu === 'training'}"><Dumbbell size={24}/></p>
+                <p
+                    class:red="{game.menu === 'training'}"
+                    class:yellow="{game.menu !== 'training' && hasBlockedTraining}"
+                >
+                    <Dumbbell size={24}/>
+                    {#if hasBlockedTraining && game.menu !== 'training'}
+                        <span class="notification-badge">!</span>
+                    {/if}
+                </p>
             </button>
         {/if}
         {#if game.showMeditation()}
@@ -152,6 +163,7 @@
     p {
         padding: 0px 0px;
         margin: 4px 2px;
+        position: relative;
     }
 
     .red {
@@ -164,6 +176,30 @@
         color: var(--green);
         font-weight: 700;
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
+    }
+
+    .yellow {
+        color: var(--yellow);
+        font-weight: 700;
+        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
+        position: relative;
+    }
+
+    .notification-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 16px;
+        height: 16px;
+        background-color: var(--yellow);
+        color: var(--bg);
+        border-radius: 50%;
+        font-size: 0.65rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--bg);
     }
 
 </style>
