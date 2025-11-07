@@ -204,7 +204,7 @@ training-mastery:
   name: Training Mastery
   description: Multiplicative bonus to all stat EXP gains from training
   effect: '+5% stat EXP per training per level'
-  baseCost: 7500
+  baseCost: 50000
   costMultiplier: 2
   maxLevel: 20
   category: training

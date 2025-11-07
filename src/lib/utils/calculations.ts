@@ -251,27 +251,27 @@ export function calculateStatExpRequired(currentStatLevel: number): number {
 
 /**
  * Calculates the character EXP cost to start stat training (v0.1.5+ training economy)
- * Uses the formula: 100 × (statLevel ^ 1.3)
+ * Uses the formula: 100,000 × (statLevel ^ 1.3)
  *
- * Special case: Level 0 training costs 100 character EXP (unlock cost)
+ * Special case: Level 0 training costs 100,000 character EXP (unlock cost)
  *
  * @param currentStatLevel - The current level of the stat being trained
  * @returns Character EXP cost to start training this stat
  *
  * @example
- * calculateStatTrainingCost(0) // 100 (Train to unlock stat at level 1)
- * calculateStatTrainingCost(1) // 100 (Train Strength 1→2)
- * calculateStatTrainingCost(5) // 900 (Train Strength 5→6)
- * calculateStatTrainingCost(10) // 2,800 (Train Strength 10→11)
- * calculateStatTrainingCost(20) // 13,000 (Train Strength 20→21)
+ * calculateStatTrainingCost(0) // 100,000 (Train to unlock stat at level 1)
+ * calculateStatTrainingCost(1) // 100,000 (Train Strength 1→2)
+ * calculateStatTrainingCost(5) // 900,000 (Train Strength 5→6)
+ * calculateStatTrainingCost(10) // 2,800,000 (Train Strength 10→11)
+ * calculateStatTrainingCost(20) // 13,000,000 (Train Strength 20→21)
  */
 export function calculateStatTrainingCost(currentStatLevel: number): number {
-	// Special case: Level 0 training costs 100 character EXP
+	// Special case: Level 0 training costs 100,000 character EXP
 	if (currentStatLevel === 0) {
-		return 100;
+		return 100000;
 	}
 
-	return Math.floor(100 * Math.pow(currentStatLevel, 1.3));
+	return Math.floor(100000 * Math.pow(currentStatLevel, 1.3));
 }
 
 /**
