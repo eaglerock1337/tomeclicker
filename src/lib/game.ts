@@ -414,15 +414,15 @@ export class Game {
 	}
 
 	/**
-	 * Gets the base stat EXP gain per training completion (v0.1.5+)
-	 * Includes bonuses from stat-gain upgrade
+	 * Gets the stat EXP gain per training completion (v0.1.5+)
+	 * Includes bonuses from all stat gain upgrades (before crit)
 	 * @returns Stat EXP gained per training (before crit)
 	 */
 	getStatExpGainPerTraining(): number {
 		const baseReward = 10; // TRAINING_REWARD constant
-		const statGainUpgrade = this.upgrades['stat-gain'];
-		const bonus = statGainUpgrade ? statGainUpgrade.currentLevel * statGainUpgrade.effectValue : 0;
-		return baseReward + bonus;
+		const flatBonus = this.getStatGainBonus(); // Flat bonuses from upgrades
+		const percentMultiplier = this.getStatGainMultiplierPercent(); // Percentage multipliers
+		return Math.floor((baseReward + flatBonus) * percentMultiplier);
 	}
 
 	/**

@@ -82,7 +82,7 @@ describe('UpgradeManager', () => {
 			expect(ruminateSpeed?.minLevel).toBe(2);
 
 			expect(ruminatePower?.effectType).toBe('ruminatePower');
-			expect(ruminatePower?.effectValue).toBe(10);
+			expect(ruminatePower?.effectValue).toBe(25);
 			expect(ruminatePower?.minLevel).toBe(2);
 		});
 
