@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Game } from '$lib/game';
     import ViewLayout from '$lib/components/ViewLayout.svelte';
+    import { formatCompact } from '$lib/utils/format';
 
     export let game: Game;
 
@@ -90,23 +91,11 @@
                     <p>Your journey so far:</p>
                     <ul>
                         <li>Level {game.level} adventurer</li>
-                        <li>{game.lifetimeExp.toFixed(0)} lifetime EXP earned</li>
+                        <li>{formatCompact(game.lifetimeExp, 1)} lifetime EXP earned</li>
                         <li>
-                            {Object.values(game.upgrades).filter((u) => u.currentLevel > 0).length} upgrades purchased
+                            {Object.values(game.upgrades).reduce((sum, u) => sum + u.currentLevel, 0)} total upgrades
                         </li>
-                        <li>All stats trained to {Math.min(...Object.values(game.stats))}+</li>
-                    </ul>
-                </div>
-
-                <div class="coming-soon">
-                    <h3>Coming Soon</h3>
-                    <p>Future updates will include:</p>
-                    <ul>
-                        <li>Adventure zones with unique challenges</li>
-                        <li>Equipment and loot systems</li>
-                        <li>More meditation techniques</li>
-                        <li>Tome discovery and magic systems</li>
-                        <li>Story progression and world-building</li>
+                        <li>{game.stats.strength + game.stats.agility + game.stats.willpower + game.stats.endurance} total RPG levels</li>
                     </ul>
                 </div>
 
@@ -272,25 +261,14 @@
         text-align: left;
     }
 
-    .demo-stats ul,
-    .coming-soon ul {
+    .demo-stats ul {
         margin: 1rem 0;
         padding-left: 1.5rem;
     }
 
-    .demo-stats li,
-    .coming-soon li {
+    .demo-stats li {
         margin-bottom: 0.5rem;
         color: var(--text);
-    }
-
-    .coming-soon {
-        background: var(--bg);
-        border: 1px solid var(--blue);
-        border-radius: 4px;
-        padding: 1.5rem;
-        margin: 1.5rem 0;
-        text-align: left;
     }
 
     .thank-you {
