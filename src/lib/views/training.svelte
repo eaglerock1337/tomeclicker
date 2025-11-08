@@ -51,10 +51,12 @@
             {@const statLevel = action.trainsStat ? game.stats[action.trainsStat] : 0}
             {@const maxStatLevel = action.trainsStat ? game.getMaxStatLevel(action.trainsStat) : 0}
             {@const atCap = action.trainsStat ? statLevel >= maxStatLevel : false}
+            {@const isBlocked = isActive && progress >= 0.99 && (!canAfford || atCap)}
 
             <button
                 class="action-card"
-                class:active={isActive}
+                class:active={isActive && !isBlocked}
+                class:blocked-active={isBlocked}
                 class:blocked={(!canAfford || atCap) && !isActive}
                 on:click={() => startAction(action.id)}
                 disabled={isActive || !canAfford || atCap}
@@ -114,13 +116,13 @@
                         </div>
                     </div>
 
-                    <!-- Row 2: Reward + Crit -->
+                    <!-- Row 2: Reward -->
                     <div class="detail-row">
                         <div class="detail-half">
                             <span class="detail-label">Reward:</span>
                             {#if action.id === 'practice-ruminate'}
                                 <span class="detail-value reward-value">
-                                    +{game.getRuminateReward()} EXP
+                                    +{formatCompact(game.getRuminateReward(), 1)} EXP
                                 </span>
                             {:else if action.trainsStat && !game.isStatLocked(action.trainsStat)}
                                 <span class="detail-value reward-value">
@@ -132,15 +134,19 @@
                                 </span>
                             {/if}
                         </div>
-                        {#if action.trainsStat && !game.isStatLocked(action.trainsStat) && game.trainingCritChance > 0}
-                            <div class="detail-half">
+                    </div>
+
+                    <!-- Row 3: Crit (if applicable) -->
+                    {#if action.trainsStat && !game.isStatLocked(action.trainsStat) && game.trainingCritChance > 0}
+                        <div class="detail-row">
+                            <div class="detail-full">
                                 <span class="detail-label">Crit:</span>
                                 <span class="detail-value crit-value">
-                                    {(game.trainingCritChance * 100).toFixed(0)}% for 2x
+                                    {(game.trainingCritChance * 100).toFixed(0)}% chance for {(1 + game.getTrainingCritDamage()).toFixed(1)}x
                                 </span>
                             </div>
-                        {/if}
-                    </div>
+                        </div>
+                    {/if}
                 </div>
 
                 {#if isActive}
@@ -208,6 +214,32 @@
     .action-card.active .action-description,
     .action-card.active .stat-level,
     .action-card.active .stat-name {
+        color: var(--bg);
+    }
+
+    .action-card.blocked-active {
+        background-color: var(--blue);
+        border-color: var(--red);
+        border-width: 3px;
+        cursor: default;
+        animation: pulse-border 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-border {
+        0%, 100% {
+            border-color: var(--red);
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+        }
+        50% {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(255, 0, 0, 0);
+        }
+    }
+
+    .action-card.blocked-active .action-name,
+    .action-card.blocked-active .action-description,
+    .action-card.blocked-active .stat-level,
+    .action-card.blocked-active .stat-name {
         color: var(--bg);
     }
 
@@ -321,6 +353,10 @@
         background-color: var(--bg);
     }
 
+    .action-card.blocked-active .stat-exp-bar {
+        background-color: var(--bg);
+    }
+
     .stat-exp-text {
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.75rem;
@@ -336,6 +372,11 @@
     }
 
     .action-card.active .stat-exp-text {
+        color: var(--bg);
+        opacity: 0.9;
+    }
+
+    .action-card.blocked-active .stat-exp-text {
         color: var(--bg);
         opacity: 0.9;
     }
@@ -372,6 +413,13 @@
         flex: 1.3 1 0%; /* Give cost side more space */
     }
 
+    .detail-full {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
     .detail-label {
         font-family: Lato, sans-serif;
         font-size: 0.85rem;
@@ -383,6 +431,12 @@
     }
 
     .action-card.active .detail-label {
+        color: var(--alt-bg);
+        opacity: 1;
+        font-weight: 500;
+    }
+
+    .action-card.blocked-active .detail-label {
         color: var(--alt-bg);
         opacity: 1;
         font-weight: 500;
@@ -409,6 +463,11 @@
         font-weight: 700;
     }
 
+    .action-card.blocked-active .detail-value {
+        color: var(--yellow);
+        font-weight: 700;
+    }
+
     .action-card:hover:not(:disabled):not(.active) .detail-value {
         color: var(--bg);
     }
@@ -421,6 +480,12 @@
     .action-card.active .cost-value.cannot-afford {
         color: var(--green);
         opacity: 0.7;
+    }
+
+    .action-card.blocked-active .cost-value.cannot-afford {
+        color: var(--red);
+        opacity: 1;
+        font-weight: 700;
     }
 
     .progress-container {
