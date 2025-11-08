@@ -1,3 +1,14 @@
+## [0.2.7](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.6...v0.2.7) (2025-11-08)
+
+### Bug Fixes
+
+- improve reactivity for navbar warnings and stat-based multipliers ([5b63a14](https://github.com/eaglerock1337/tomeclicker/commit/5b63a14edac01673eab8a71442559b7aae46d92b))
+- linting errors ([4224504](https://github.com/eaglerock1337/tomeclicker/commit/4224504d2e67e7aaf091084d1da3bdcb6c42eaba))
+- make deploy job non-blocking for PR mergeability ([28a5f3e](https://github.com/eaglerock1337/tomeclicker/commit/28a5f3e3bcb6ce8a6d004a656fa6d724411d631c))
+- show training durations in tenths of seconds under 30s ([ebbfae6](https://github.com/eaglerock1337/tomeclicker/commit/ebbfae616b2e891431980bb44121eac33a90ca13))
+- show training durations in tenths of seconds under 30s ([12009b0](https://github.com/eaglerock1337/tomeclicker/commit/12009b0d70a45c2e578eb3139f24c2557c2e8f97))
+- simplify RPG stat display to current/max format ([1b138f5](https://github.com/eaglerock1337/tomeclicker/commit/1b138f5517578c32e2514cf3d82b3a444f5037a0))
+
 ## [0.2.6](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.5...v0.2.6) (2025-11-08)
 
 ### Bug Fixes
