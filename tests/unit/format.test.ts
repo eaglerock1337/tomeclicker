@@ -253,8 +253,8 @@ describe('Percent Formatting', () => {
 
 describe('Duration Formatting', () => {
 	describe('formatDuration', () => {
-		it('should format 0 seconds as 0s', () => {
-			expect(formatDuration(0)).toBe('0s');
+		it('should format 0 seconds as 0.0s', () => {
+			expect(formatDuration(0)).toBe('0.0s');
 		});
 
 		it('should format seconds only', () => {
@@ -326,7 +326,7 @@ describe('Duration Formatting', () => {
 		});
 
 		it('should handle 1 second', () => {
-			expect(formatDuration(1)).toBe('1s');
+			expect(formatDuration(1)).toBe('1.0s');
 		});
 
 		it('should handle 1 minute exactly', () => {
@@ -334,7 +334,7 @@ describe('Duration Formatting', () => {
 		});
 
 		it('should include seconds even when 0 if no minutes or hours', () => {
-			expect(formatDuration(0)).toBe('0s');
+			expect(formatDuration(0)).toBe('0.0s');
 		});
 
 		it('should correctly handle 2 hours 30 minutes', () => {
