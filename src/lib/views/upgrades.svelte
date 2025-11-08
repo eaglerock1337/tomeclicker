@@ -436,56 +436,6 @@
         margin-top: 0.25rem;
     }
 
-    /* Coming Soon Section */
-    .coming-soon-section {
-        grid-column: 1 / -1;
-        margin-top: 2rem;
-        padding: 1.5rem;
-        background-color: var(--alt-bg);
-        border: 2px dashed var(--text);
-        border-radius: 10px;
-        opacity: 0.7;
-    }
-
-    .coming-soon-section h3 {
-        font-family: Lato, sans-serif;
-        font-weight: 300;
-        margin-bottom: 1rem;
-        opacity: 0.8;
-    }
-
-    .coming-soon-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-
-    @media (max-width: 768px) {
-        .coming-soon-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .coming-soon-item {
-        padding: 1rem;
-        background-color: var(--bg);
-        border: 1px solid var(--text);
-        border-radius: 8px;
-        opacity: 0.6;
-    }
-
-    .coming-soon-item .upgrade-name {
-        font-size: 1em;
-        font-weight: 400;
-        margin-bottom: 0.5rem;
-    }
-
-    .coming-soon-item .upgrade-description {
-        font-size: 0.8em;
-        opacity: 0.8;
-        font-style: italic;
-    }
-
     .upgrade-details {
         background-color: var(--alt-bg);
         border: 2px solid var(--text);

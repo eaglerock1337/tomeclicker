@@ -112,7 +112,7 @@
 
                 <p class="thank-you">
                     Thank you for playing! Keep an eye on
-                    <a href="https://github.com/eaglerock/tomeclicker" target="_blank">GitHub</a>
+                    <a href="https://github.com/eaglerock1337/tomeclicker" target="_blank">GitHub</a>
                     for updates.
                 </p>
             </div>

@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Game } from '$lib/game';
     import ViewLayout from '$lib/components/ViewLayout.svelte';
-    import { formatNumber } from '$lib/utils/format';
+    import { formatNumber, formatCompact } from '$lib/utils/format';
 
     export let game: Game;
 
@@ -124,11 +124,11 @@
         {/if}
         <div class="info-row">
             <span class="info-label">Current EXP:</span>
-            <span class="info-value">{formatNumber(game.exp)}</span>
+            <span class="info-value">{formatCompact(game.exp, 1)}</span>
         </div>
         <div class="info-row">
             <span class="info-label">Lifetime EXP:</span>
-            <span class="info-value">{formatNumber(game.lifetimeExp)}</span>
+            <span class="info-value">{formatCompact(game.lifetimeExp, 1)}</span>
         </div>
     </div>
 
@@ -210,7 +210,7 @@
     </div>
 
     <!-- Upgrades Owned - Condensed -->
-    <div class="section-header">Upgrades Owned ({Object.values(game.upgrades).filter(u => u.currentLevel > 0).length})</div>
+    <div class="section-header">Upgrades Owned ({Object.values(game.upgrades).reduce((sum, u) => sum + u.currentLevel, 0)} total)</div>
     <div class="upgrades-section">
         {#each Object.values(game.upgrades).filter(u => u.currentLevel > 0) as upgrade}
             <div class="upgrade-row">
