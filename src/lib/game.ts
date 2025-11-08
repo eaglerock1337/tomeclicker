@@ -662,6 +662,27 @@ export class Game {
 	 * Should be called regularly (e.g., from game loop)
 	 */
 	updateIdleActions(): void {
+		// Check if any active stat training is blocked (can't afford or at cap)
+		// If so, auto-stop it before updating progress
+		const activeTraining = Object.values(this.trainingActions).find(
+			(action) => action.isActive && action.trainsStat
+		);
+
+		if (activeTraining && activeTraining.trainsStat) {
+			const stat = activeTraining.trainsStat;
+			const statLevel = this.stats[stat];
+			const maxLevel = this.getMaxStatLevel(stat);
+			const atCap = statLevel >= maxLevel;
+			const cost = this.getStatTrainingCost(stat);
+			const canAfford = this.exp >= cost;
+
+			// Stop training if at cap or can't afford to restart
+			if (atCap || !canAfford) {
+				this.stopIdleAction('training', activeTraining.id);
+				return; // Don't process completions if we just stopped
+			}
+		}
+
 		const results = this.idleActionManager.updateIdleActions();
 
 		// Apply completion results
