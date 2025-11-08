@@ -669,6 +669,8 @@ export class Game {
 	updateIdleActions(): void {
 		const results = this.idleActionManager.updateIdleActions();
 
+		let anyStatLeveledUp = false;
+
 		// Apply completion results
 		for (const result of results) {
 			// Add EXP gained (mainly from ruminate)
@@ -684,10 +686,20 @@ export class Game {
 			// Note: stat gains are now handled internally by StatsManager.addStatExp()
 			// called directly from the IdleActionManager during training completion
 
+			// Track if any stats leveled up to recalculate multipliers
+			if (result.statGained) {
+				anyStatLeveledUp = true;
+			}
+
 			// Apply unlocks
 			if (result.unlocks?.adventureMode) {
 				this.adventureModeUnlocked = true;
 			}
+		}
+
+		// Recalculate click multiplier if any stats leveled up (stats affect click power)
+		if (anyStatLeveledUp) {
+			this.recalculateClickMultiplier();
 		}
 	}
 

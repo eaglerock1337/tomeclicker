@@ -29,7 +29,8 @@
     export let game: Game;
 
     // Check if any unlocked upgrades are affordable or level up is available
-    $: hasAvailableUpgrades = game && (
+    // Force re-evaluation by accessing game properties directly
+    $: hasAvailableUpgrades = game && game.exp >= 0 && (
         game.canLevelUp() ||
         Object.values(game.upgrades).some(upgrade =>
             (!upgrade.minLevel || upgrade.minLevel <= game.level) &&
@@ -38,7 +39,8 @@
     );
 
     // Check if active training is blocked (at cap or can't afford)
-    $: hasBlockedTraining = game && game.hasBlockedTraining();
+    // Force re-evaluation by accessing game properties directly
+    $: hasBlockedTraining = game && game.exp >= 0 && game.hasBlockedTraining();
 </script>
 
 <div class="navbar">
