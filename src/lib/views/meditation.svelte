@@ -4,7 +4,7 @@
 
     export let game: Game;
 
-    let selectedAction = 'meditate-future';
+    let selectedAction = 'disassociate';
 
     function startMeditation() {
         if (game.startIdleAction('meditation', selectedAction)) {

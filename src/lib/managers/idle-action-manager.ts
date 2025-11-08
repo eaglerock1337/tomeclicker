@@ -210,19 +210,6 @@ export class IdleActionManager {
 	 */
 	private initializeMeditationActions(): { [key: string]: IdleAction } {
 		return {
-			'meditate-future': {
-				id: 'meditate-future',
-				name: 'Meditate on Your Future',
-				description: 'Unlock the path to adventure',
-				progress: 0,
-				baseDuration: MEDITATION_FUTURE_DURATION,
-				duration: MEDITATION_FUTURE_DURATION,
-				expCost: MEDITATION_FUTURE_COST,
-				isActive: false,
-				lastUpdate: Date.now(),
-				oneTime: true,
-				completed: false
-			},
 			disassociate: {
 				id: 'disassociate',
 				name: 'Disassociate',
@@ -579,11 +566,7 @@ export class IdleActionManager {
 		};
 
 		// Handle specific meditation rewards
-		if (actionId === 'meditate-future') {
-			result.unlocks = { adventureMode: true };
-			action.completed = true;
-		}
-		// Disassociate increases offline progress time (handled elsewhere)
+		// (Adventure mode unlock removed - unlocked through stats instead)
 
 		// Reset action
 		action.isActive = false;
