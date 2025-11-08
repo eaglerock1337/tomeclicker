@@ -485,13 +485,16 @@ export class Game {
 
 	/**
 	 * Gets the character EXP cost to start training a specific stat (v0.1.5+)
+	 * Applies training cost multiplier from upgrades
 	 * @param stat - The stat to check
-	 * @returns Character EXP cost to start training
+	 * @returns Character EXP cost to start training (with multipliers applied)
 	 */
 	getStatTrainingCost(
 		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): number {
-		return this.statsManager.getStatTrainingCost(stat);
+		const baseCost = this.statsManager.getStatTrainingCost(stat);
+		const multiplier = this.getTrainingCostMultiplier();
+		return Math.floor(baseCost * multiplier);
 	}
 
 	/**

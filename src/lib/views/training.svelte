@@ -10,30 +10,14 @@
         game = game;
     }
 
-    function getActionCost(action: any): number {
-        if (action.id === 'practice-ruminate') return 0;
-        if (action.trainsStat) {
-            return game.getStatTrainingCost(action.trainsStat);
-        }
-        return 0;
-    }
-
-    function canAffordAction(action: any): boolean {
-        if (action.id === 'practice-ruminate') return true;
-        if (action.trainsStat) {
-            return game.exp >= game.getStatTrainingCost(action.trainsStat);
-        }
-        return true;
-    }
-
-    // Filter actions by level
+    // Filter actions by level - reactive to game.level changes
     $: availableActions = Object.values(game.trainingActions).filter(action => {
         if (action.id === 'practice-ruminate') return game.level >= 2;
         if (action.trainsStat) return game.level >= 3;
         return false;
     });
 
-    // Get dynamic stat EXP gain with bonuses
+    // Get dynamic stat EXP gain with bonuses - reactive to upgrade changes
     $: statExpGain = game.getStatExpGainPerTraining();
 </script>
 
@@ -41,9 +25,10 @@
 
     <div class="actions-grid">
         {#each availableActions as action (action.id)}
+            <!-- Reactive calculations that update when game state changes -->
             {@const isActive = action.isActive}
-            {@const canAfford = canAffordAction(action)}
-            {@const cost = getActionCost(action)}
+            {@const cost = action.id === 'practice-ruminate' ? 0 : (action.trainsStat ? game.getStatTrainingCost(action.trainsStat) : 0)}
+            {@const canAfford = action.id === 'practice-ruminate' || (action.trainsStat ? game.exp >= cost : true)}
             {@const progress = isActive ? action.progress : 0}
             {@const duration = game.getTrainingDuration(action.id)}
             {@const currentStatExp = action.trainsStat ? game.getStatExp(action.trainsStat) : 0}
