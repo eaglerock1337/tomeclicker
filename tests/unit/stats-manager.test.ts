@@ -54,13 +54,13 @@ class StatsManagerBuilder {
 		return this;
 	}
 
-	withIntelligence(level: number): this {
-		this.stats.intelligence = level;
+	withWillpower(level: number): this {
+		this.stats.willpower = level;
 		return this;
 	}
 
-	withWisdom(level: number): this {
-		this.stats.wisdom = level;
+	withEndurance(level: number): this {
+		this.stats.endurance = level;
 		return this;
 	}
 
@@ -79,8 +79,12 @@ describe('StatsManager', () => {
 			const manager = new StatsManager();
 			const stats = manager.getStats();
 
+			// Active stats (strength, agility, willpower, endurance)
 			expect(stats.strength).toBe(0);
 			expect(stats.agility).toBe(0);
+			expect(stats.willpower).toBe(0);
+			expect(stats.endurance).toBe(0);
+			// Future stats (intelligence, wisdom)
 			expect(stats.intelligence).toBe(0);
 			expect(stats.wisdom).toBe(0);
 		});
@@ -89,10 +93,10 @@ describe('StatsManager', () => {
 			const customStats = {
 				strength: 10,
 				agility: 5,
-				willpower: 1,
-				endurance: 1,
-				intelligence: 8,
-				wisdom: 3,
+				willpower: 8,
+				endurance: 3,
+				intelligence: 0,
+				wisdom: 0,
 				strengthExp: 0,
 				agilityExp: 0,
 				willpowerExp: 0,
@@ -105,8 +109,8 @@ describe('StatsManager', () => {
 
 			expect(stats.strength).toBe(10);
 			expect(stats.agility).toBe(5);
-			expect(stats.intelligence).toBe(8);
-			expect(stats.wisdom).toBe(3);
+			expect(stats.willpower).toBe(8);
+			expect(stats.endurance).toBe(3);
 		});
 
 		it('should return a copy of stats (not a reference)', () => {
@@ -120,25 +124,29 @@ describe('StatsManager', () => {
 	});
 
 	describe('Get Stat Level', () => {
-		it('should get individual stat levels', () => {
+		it('should get individual stat levels for active stats', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(15)
 				.withAgility(10)
-				.withIntelligence(20)
-				.withWisdom(5)
+				.withWillpower(20)
+				.withEndurance(5)
 				.build();
 
 			expect(manager.getStatLevel('strength')).toBe(15);
 			expect(manager.getStatLevel('agility')).toBe(10);
-			expect(manager.getStatLevel('intelligence')).toBe(20);
-			expect(manager.getStatLevel('wisdom')).toBe(5);
+			expect(manager.getStatLevel('willpower')).toBe(20);
+			expect(manager.getStatLevel('endurance')).toBe(5);
 		});
 
 		it('should return 0 for default stats (locked)', () => {
 			const manager = new StatsManager();
 
+			// Active stats
 			expect(manager.getStatLevel('strength')).toBe(0);
 			expect(manager.getStatLevel('agility')).toBe(0);
+			expect(manager.getStatLevel('willpower')).toBe(0);
+			expect(manager.getStatLevel('endurance')).toBe(0);
+			// Future stats
 			expect(manager.getStatLevel('intelligence')).toBe(0);
 			expect(manager.getStatLevel('wisdom')).toBe(0);
 		});
@@ -149,15 +157,15 @@ describe('StatsManager', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(1)
 				.withAgility(1)
-				.withIntelligence(1)
-				.withWisdom(1)
+				.withWillpower(1)
+				.withEndurance(1)
 				.build();
 
 			// From calculations.ts: level 1 should cost 100 EXP
 			expect(manager.getStatLevelCost('strength')).toBe(100);
 			expect(manager.getStatLevelCost('agility')).toBe(100);
-			expect(manager.getStatLevelCost('intelligence')).toBe(100);
-			expect(manager.getStatLevelCost('wisdom')).toBe(100);
+			expect(manager.getStatLevelCost('willpower')).toBe(100);
+			expect(manager.getStatLevelCost('endurance')).toBe(100);
 		});
 
 		it('should calculate increasing cost for higher stat levels', () => {
@@ -171,15 +179,15 @@ describe('StatsManager', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(1)
 				.withAgility(10)
-				.withIntelligence(20)
+				.withWillpower(20)
 				.build();
 
 			const costStr = manager.getStatLevelCost('strength');
-			const costDex = manager.getStatLevelCost('agility');
-			const costInt = manager.getStatLevelCost('intelligence');
+			const costAgi = manager.getStatLevelCost('agility');
+			const costWil = manager.getStatLevelCost('willpower');
 
-			expect(costDex).toBeGreaterThan(costStr);
-			expect(costInt).toBeGreaterThan(costDex);
+			expect(costAgi).toBeGreaterThan(costStr);
+			expect(costWil).toBeGreaterThan(costAgi);
 		});
 	});
 
@@ -205,22 +213,22 @@ describe('StatsManager', () => {
 		});
 
 		it('should return correct exp cost after increase', () => {
-			const manager = new StatsManagerBuilder().withIntelligence(5).build();
+			const manager = new StatsManagerBuilder().withWillpower(5).build();
 
-			const result = manager.increaseStat('intelligence', 1);
+			const result = manager.increaseStat('willpower', 1);
 
 			expect(result.success).toBe(true);
-			expect(result.expCost).toBe(manager.getStatLevelCost('intelligence'));
+			expect(result.expCost).toBe(manager.getStatLevelCost('willpower'));
 		});
 
 		it('should reject negative amount increases', () => {
-			const manager = new StatsManagerBuilder().withWisdom(10).build();
+			const manager = new StatsManagerBuilder().withEndurance(10).build();
 
-			const result = manager.increaseStat('wisdom', -5);
+			const result = manager.increaseStat('endurance', -5);
 
 			expect(result.success).toBe(false);
 			expect(result.error).toContain('negative');
-			expect(manager.getStatLevel('wisdom')).toBe(10); // Unchanged
+			expect(manager.getStatLevel('endurance')).toBe(10); // Unchanged
 		});
 
 		it('should handle increasing from level 0 (locked)', () => {
@@ -246,16 +254,16 @@ describe('StatsManager', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(10)
 				.withAgility(15)
-				.withIntelligence(20)
-				.withWisdom(25)
+				.withWillpower(20)
+				.withEndurance(25)
 				.build();
 
 			manager.increaseStat('strength', 5);
 
 			expect(manager.getStatLevel('strength')).toBe(15);
 			expect(manager.getStatLevel('agility')).toBe(15); // Unchanged
-			expect(manager.getStatLevel('intelligence')).toBe(20); // Unchanged
-			expect(manager.getStatLevel('wisdom')).toBe(25); // Unchanged
+			expect(manager.getStatLevel('willpower')).toBe(20); // Unchanged
+			expect(manager.getStatLevel('endurance')).toBe(25); // Unchanged
 		});
 	});
 
@@ -281,25 +289,25 @@ describe('StatsManager', () => {
 		it('should allow setting stat to any positive value', () => {
 			const manager = new StatsManager();
 
-			manager.setStat('intelligence', 9999);
+			manager.setStat('willpower', 9999);
 
-			expect(manager.getStatLevel('intelligence')).toBe(9999);
+			expect(manager.getStatLevel('willpower')).toBe(9999);
 		});
 
 		it('should not affect other stats', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(10)
 				.withAgility(10)
-				.withIntelligence(10)
-				.withWisdom(10)
+				.withWillpower(10)
+				.withEndurance(10)
 				.build();
 
 			manager.setStat('strength', 50);
 
 			expect(manager.getStatLevel('strength')).toBe(50);
 			expect(manager.getStatLevel('agility')).toBe(10);
-			expect(manager.getStatLevel('intelligence')).toBe(10);
-			expect(manager.getStatLevel('wisdom')).toBe(10);
+			expect(manager.getStatLevel('willpower')).toBe(10);
+			expect(manager.getStatLevel('endurance')).toBe(10);
 		});
 	});
 
@@ -309,10 +317,10 @@ describe('StatsManager', () => {
 			const newStats = {
 				strength: 25,
 				agility: 30,
-				willpower: 1,
-				endurance: 1,
-				intelligence: 35,
-				wisdom: 40,
+				willpower: 35,
+				endurance: 40,
+				intelligence: 0,
+				wisdom: 0,
 				strengthExp: 0,
 				agilityExp: 0,
 				willpowerExp: 0,
@@ -332,10 +340,10 @@ describe('StatsManager', () => {
 			const newStats = {
 				strength: 1,
 				agility: 2,
-				willpower: 1,
-				endurance: 1,
-				intelligence: 3,
-				wisdom: 4,
+				willpower: 3,
+				endurance: 4,
+				intelligence: 0,
+				wisdom: 0,
 				strengthExp: 0,
 				agilityExp: 0,
 				willpowerExp: 0,
@@ -355,10 +363,10 @@ describe('StatsManager', () => {
 			const externalStats = {
 				strength: 10,
 				agility: 10,
-				willpower: 1,
-				endurance: 1,
-				intelligence: 10,
-				wisdom: 10,
+				willpower: 10,
+				endurance: 10,
+				intelligence: 0,
+				wisdom: 0,
 				strengthExp: 0,
 				agilityExp: 0,
 				willpowerExp: 0,
@@ -379,8 +387,8 @@ describe('StatsManager', () => {
 			const originalManager = new StatsManagerBuilder()
 				.withStrength(15)
 				.withAgility(20)
-				.withIntelligence(25)
-				.withWisdom(30)
+				.withWillpower(25)
+				.withEndurance(30)
 				.build();
 
 			const savedStats = originalManager.getStats();
@@ -443,15 +451,15 @@ describe('StatsManager', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(1)
 				.withAgility(100)
-				.withIntelligence(5)
-				.withWisdom(50)
+				.withWillpower(5)
+				.withEndurance(50)
 				.build();
 
 			const stats = manager.getStats();
 			expect(stats.strength).toBe(1);
 			expect(stats.agility).toBe(100);
-			expect(stats.intelligence).toBe(5);
-			expect(stats.wisdom).toBe(50);
+			expect(stats.willpower).toBe(5);
+			expect(stats.endurance).toBe(50);
 		});
 
 		it('should handle rapid successive increases', () => {
@@ -480,15 +488,15 @@ describe('StatsManager', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(10)
 				.withAgility(20)
-				.withIntelligence(30)
-				.withWisdom(40)
+				.withWillpower(30)
+				.withEndurance(40)
 				.build();
 
 			const stats = manager.getStats();
 			expect(stats.strength).toBe(10);
 			expect(stats.agility).toBe(20);
-			expect(stats.intelligence).toBe(30);
-			expect(stats.wisdom).toBe(40);
+			expect(stats.willpower).toBe(30);
+			expect(stats.endurance).toBe(40);
 		});
 
 		it('should support withStat method', () => {
@@ -511,17 +519,17 @@ describe('StatsManager', () => {
 			const manager = new StatsManagerBuilder()
 				.withStrength(10)
 				.withAgility(20)
-				.withIntelligence(30)
-				.withWisdom(40)
+				.withWillpower(30)
+				.withEndurance(40)
 				.build();
 
 			expect(manager.getStats()).toEqual({
 				strength: 10,
 				agility: 20,
-				willpower: 1,
-				endurance: 1,
-				intelligence: 30,
-				wisdom: 40,
+				willpower: 30,
+				endurance: 40,
+				intelligence: 1,
+				wisdom: 1,
 				strengthExp: 0,
 				agilityExp: 0,
 				willpowerExp: 0,
