@@ -30,7 +30,9 @@ class IdleActionManagerBuilder {
 		getStatGainBonus: () => 0,
 		getStatGainMultiplierPercent: () => 1.0,
 		getTrainingCritChance: () => 0.0,
-		getTrainingCritDamage: () => 0.5
+		getTrainingCritDamage: () => 0.5,
+		getMaxStatLevel: () => 10,
+		getCurrentStatLevel: () => 1
 	};
 
 	withTrainingSpeed(multiplier: number): this {

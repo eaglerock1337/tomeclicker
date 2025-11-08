@@ -151,7 +151,9 @@ export class Game {
 			getStatGainBonus: () => this.getStatGainBonus(),
 			getStatGainMultiplierPercent: () => this.getStatGainMultiplierPercent(),
 			getTrainingCritChance: () => this.getTrainingCritChance(),
-			getTrainingCritDamage: () => this.getTrainingCritDamage()
+			getTrainingCritDamage: () => this.getTrainingCritDamage(),
+			getMaxStatLevel: (stat) => this.getMaxStatLevel(stat),
+			getCurrentStatLevel: (stat) => this.stats[stat]
 		});
 
 		// Initialize save manager with dependencies
@@ -662,27 +664,6 @@ export class Game {
 	 * Should be called regularly (e.g., from game loop)
 	 */
 	updateIdleActions(): void {
-		// Check if any active stat training is blocked (can't afford or at cap)
-		// If so, auto-stop it before updating progress
-		const activeTraining = Object.values(this.trainingActions).find(
-			(action) => action.isActive && action.trainsStat
-		);
-
-		if (activeTraining && activeTraining.trainsStat) {
-			const stat = activeTraining.trainsStat;
-			const statLevel = this.stats[stat];
-			const maxLevel = this.getMaxStatLevel(stat);
-			const atCap = statLevel >= maxLevel;
-			const cost = this.getStatTrainingCost(stat);
-			const canAfford = this.exp >= cost;
-
-			// Stop training if at cap or can't afford to restart
-			if (atCap || !canAfford) {
-				this.stopIdleAction('training', activeTraining.id);
-				return; // Don't process completions if we just stopped
-			}
-		}
-
 		const results = this.idleActionManager.updateIdleActions();
 
 		// Apply completion results
@@ -690,6 +671,11 @@ export class Game {
 			// Add EXP gained (mainly from ruminate)
 			if (result.expGained > 0) {
 				this.addExp(result.expGained);
+			}
+
+			// Deduct character EXP cost for training restart (v0.1.5+)
+			if (result.expCost !== undefined && result.expCost > 0) {
+				this.exp -= result.expCost;
 			}
 
 			// Note: stat gains are now handled internally by StatsManager.addStatExp()
@@ -1121,7 +1107,9 @@ export class Game {
 			getStatGainBonus: () => this.getStatGainBonus(),
 			getStatGainMultiplierPercent: () => this.getStatGainMultiplierPercent(),
 			getTrainingCritChance: () => this.getTrainingCritChance(),
-			getTrainingCritDamage: () => this.getTrainingCritDamage()
+			getTrainingCritDamage: () => this.getTrainingCritDamage(),
+			getMaxStatLevel: (stat) => this.getMaxStatLevel(stat),
+			getCurrentStatLevel: (stat) => this.stats[stat]
 		});
 
 		this.saveManager = new SaveManager({
