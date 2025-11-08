@@ -64,11 +64,11 @@
         {#if game.showTraining()}
             <button on:click="{() => game.menu = 'training'}">
                 <p
-                    class:red="{game.menu === 'training'}"
-                    class:yellow="{game.menu !== 'training' && hasBlockedTraining}"
+                    class:red="{game.menu === 'training' && !hasBlockedTraining}"
+                    class:yellow="{hasBlockedTraining}"
                 >
                     <Dumbbell size={24}/>
-                    {#if hasBlockedTraining && game.menu !== 'training'}
+                    {#if hasBlockedTraining}
                         <span class="notification-badge">!</span>
                     {/if}
                 </p>
