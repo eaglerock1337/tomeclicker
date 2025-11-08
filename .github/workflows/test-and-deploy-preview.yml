@@ -45,49 +45,65 @@ jobs:
     name: Deploy Preview to GitHub Pages
     runs-on: ubuntu-latest
     needs: test # Wait for tests to pass
-    # Deploy only for PRs with 'preview' label
-    if: ${{ always() && github.event_name == 'pull_request' &&
-      contains(github.event.pull_request.labels.*.name, 'preview') &&
-      (
-      needs.test.result == 'success' ||
-      contains(github.event.pull_request.labels.*.name, 'crash-override')
-      ) }}
+    if: always() # Always run so it doesn't block PRs
 
     steps:
+      - name: Check if deployment should proceed
+        id: should_deploy
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]] && \
+             [[ "${{ contains(github.event.pull_request.labels.*.name, 'preview') }}" == "true" ]] && \
+             ( [[ "${{ needs.test.result }}" == "success" ]] || \
+               [[ "${{ contains(github.event.pull_request.labels.*.name, 'crash-override') }}" == "true" ]] ); then
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "deploy=false" >> $GITHUB_OUTPUT
+            echo "Skipping deployment - conditions not met"
+          fi
+
       - name: Checkout code
+        if: steps.should_deploy.outputs.deploy == 'true'
         uses: actions/checkout@v4
 
       - name: Setup Node.js
+        if: steps.should_deploy.outputs.deploy == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install dependencies
+        if: steps.should_deploy.outputs.deploy == 'true'
         run: npm ci
 
       - name: Set version to git SHA
+        if: steps.should_deploy.outputs.deploy == 'true'
         id: version
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Build for GitHub Pages
+        if: steps.should_deploy.outputs.deploy == 'true'
         env:
           GITHUB_PAGES: 'true'
           APP_VERSION: ${{ steps.version.outputs.sha_short }}
         run: npm run build
 
       - name: Verify build output
+        if: steps.should_deploy.outputs.deploy == 'true'
         run: |
           ls -la docs/
           echo "Build completed, docs/ directory exists"
 
       - name: Add CNAME for custom domain
+        if: steps.should_deploy.outputs.deploy == 'true'
         run: echo "tomeclicker-dev.marks.dev" > docs/CNAME
 
       - name: Upload artifact for GitHub Pages
+        if: steps.should_deploy.outputs.deploy == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./docs
 
       - name: Deploy to GitHub Pages
+        if: steps.should_deploy.outputs.deploy == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
