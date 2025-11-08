@@ -50,7 +50,13 @@ export class ParametricIdleActionBuilder {
 		getStatGainBonus: () => 0,
 		getStatGainMultiplierPercent: () => 1.0,
 		getTrainingCritChance: () => 0.0,
-		getTrainingCritDamage: () => 0.5
+		getTrainingCritDamage: () => 0.5,
+		getMaxStatLevel: (stat) => {
+			// Default max stat level is current level + 10 (allows training to continue)
+			const currentLevel = (this.statLevels[stat as keyof Stats] as number) || 1;
+			return Math.max(10, currentLevel + 10);
+		},
+		getCurrentStatLevel: (stat) => (this.statLevels[stat as keyof Stats] as number) || 1
 	};
 
 	// Training rewards (base stat EXP per training completion)
@@ -345,7 +351,9 @@ export class IdleActionManagerBuilder {
 		getStatGainBonus: () => 0,
 		getStatGainMultiplierPercent: () => 1.0,
 		getTrainingCritChance: () => 0.0,
-		getTrainingCritDamage: () => 0.5
+		getTrainingCritDamage: () => 0.5,
+		getMaxStatLevel: () => 10,
+		getCurrentStatLevel: () => 1
 	};
 
 	withTrainingSpeed(multiplier: number): this {

@@ -115,6 +115,14 @@ export interface IdleActionDependencies {
 	getTrainingCritChance: () => number;
 	/** Get training crit damage multiplier from upgrades */
 	getTrainingCritDamage: () => number;
+	/** Get max level for a specific stat */
+	getMaxStatLevel: (
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
+	) => number;
+	/** Get current level for a specific stat */
+	getCurrentStatLevel: (
+		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
+	) => number;
 }
 
 /**
@@ -391,6 +399,21 @@ export class IdleActionManager {
 		// Update training actions
 		for (const action of Object.values(this.trainingActions)) {
 			if (action.isActive) {
+				// For stat training at completion, check if blocked before updating progress
+				// This freezes progress when player can't afford restart or stat is at cap
+				if (action.trainsStat && action.progress >= 1.0) {
+					const cost = this.deps.getStatTrainingCost(action.trainsStat);
+					const currentStatLevel = this.deps.getCurrentStatLevel(action.trainsStat);
+					const maxStatLevel = this.deps.getMaxStatLevel(action.trainsStat);
+					const canAfford = this.deps.getCurrentExp() >= cost;
+					const atCap = currentStatLevel >= maxStatLevel;
+
+					if (!canAfford || atCap) {
+						// Blocked - freeze progress at 1.0, don't update
+						continue;
+					}
+				}
+
 				const elapsed = now - action.lastUpdate;
 				action.progress += elapsed / action.duration;
 				action.lastUpdate = now;
@@ -509,20 +532,34 @@ export class IdleActionManager {
 			// Add the stat EXP and check for level up
 			const statResult = this.deps.addStatExp(stat, statExpGained);
 
-			// Training always continues (Progress Knight style)
-			action.progress = 0;
-			action.lastUpdate = Date.now();
+			// Check if player can afford AND stat not at cap to RESTART training
+			const cost = this.deps.getStatTrainingCost(stat);
+			const currentExp = this.deps.getCurrentExp();
+			const currentStatLevel = this.deps.getCurrentStatLevel(stat);
+			const maxStatLevel = this.deps.getMaxStatLevel(stat);
+			const canAfford = currentExp >= cost;
+			const atCap = currentStatLevel >= maxStatLevel;
 
-			return {
-				expGained: 0, // No character EXP gained from training completion
-				statGained: statResult.leveledUp
-					? {
-							stat,
-							amount: 1
-						}
-					: undefined,
-				shouldContinue: true
-			};
+			if (canAfford && !atCap) {
+				// Can restart - reset progress and signal to deduct cost
+				action.progress = 0;
+				action.lastUpdate = Date.now();
+
+				return {
+					expGained: 0,
+					statGained: statResult.leveledUp ? { stat, amount: 1 } : undefined,
+					expCost: cost, // Signal to game.ts to deduct this cost for restart
+					shouldContinue: true
+				};
+			} else {
+				// Can't restart (blocked) - don't reset progress
+				// Progress will stay at 1.0+ and get frozen in update loop
+				return {
+					expGained: 0,
+					statGained: statResult.leveledUp ? { stat, amount: 1 } : undefined,
+					shouldContinue: false
+				};
+			}
 		}
 
 		return null;
