@@ -1,3 +1,9 @@
+## [0.2.4](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.3...v0.2.4) (2025-11-08)
+
+### Bug Fixes
+
+- correct training crit system and polish stat UI ([62d7826](https://github.com/eaglerock1337/tomeclicker/commit/62d78269145bca21e0eb16330cff1d1947d466c5))
+
 ## [0.2.3](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.2...v0.2.3) (2025-11-06)
 
 ### Bug Fixes
