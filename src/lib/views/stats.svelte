@@ -146,10 +146,7 @@
                         </div>
                         <div class="stat-values">
                             <span class="stat-value" class:mystery={stat.isLocked} style="color: {stat.isLocked ? 'var(--text)' : stat.color}">
-                                {stat.isLocked ? '?' : stat.level}
-                            </span>
-                            <span class="stat-level" class:mystery={stat.isLocked}>
-                                {stat.isLocked ? 'Locked' : `Lv.${stat.level}/${stat.maxLevel}`}
+                                {stat.isLocked ? '?' : `${stat.level}/${stat.maxLevel}`}
                             </span>
                         </div>
                     </div>
@@ -328,8 +325,7 @@
     .stat-short.mystery,
     .stat-name.mystery,
     .stat-effect.mystery,
-    .stat-value.mystery,
-    .stat-level.mystery {
+    .stat-value.mystery {
         opacity: 0.3;
         font-style: italic;
     }
@@ -345,12 +341,6 @@
         display: flex;
         align-items: center;
         gap: 0.75rem;
-    }
-
-    .stat-level {
-        color: var(--text);
-        font-size: 0.75rem;
-        opacity: 0.7;
     }
 
     .stat-value {
