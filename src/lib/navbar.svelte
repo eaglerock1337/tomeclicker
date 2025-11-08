@@ -179,13 +179,6 @@
         transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
     }
 
-    .yellow {
-        color: var(--yellow);
-        font-weight: 700;
-        transition: color 1s cubic-bezier(0,.5,0,1), background-color 1s cubic-bezier(0,.5,0,1);
-        position: relative;
-    }
-
     .notification-badge {
         position: absolute;
         top: -6px;
