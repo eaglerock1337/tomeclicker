@@ -329,6 +329,18 @@ describe('Duration Formatting', () => {
 			expect(formatDuration(1)).toBe('1.0s');
 		});
 
+		it('should show tenths of seconds under 30s', () => {
+			expect(formatDuration(29.5)).toBe('29.5s');
+		});
+
+		it('should not show tenths of seconds at exactly 30s', () => {
+			expect(formatDuration(30)).toBe('30s');
+		});
+
+		it('should not show tenths of seconds over 30s', () => {
+			expect(formatDuration(30.9)).toBe('30s');
+		});
+
 		it('should handle 1 minute exactly', () => {
 			expect(formatDuration(60)).toBe('1m');
 		});

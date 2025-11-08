@@ -573,11 +573,7 @@
 	}
 
 	.or-divider {
-		text-align: center;
-		opacity: 0.6;
-		font-style: italic;
-		margin: 1rem 0 0.5rem 0;
-		font-size: 0.9em;
+		margin: 1.5rem 0 0 0;
 	}
 
 	textarea {
