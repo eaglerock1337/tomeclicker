@@ -24,8 +24,7 @@
         <!-- Locked State -->
         <div class="locked-content">
             <p class="locked-message">
-                The path to adventure is not yet clear. Train all your stats to level 5 to unlock
-                this path.
+                There's a whole world out there for your to explore, but you still don't feel like you're ready for action.
             </p>
 
             <div class="requirements-section">
@@ -64,7 +63,7 @@
                 {#if meetsStatRequirements}
                     <div class="unlock-ready">
                         <p>
-                            <em>All stat requirements met! You are ready to begin your adventure.</em>
+                            <em>Your training has finally paid off. You know it's time to fulfill your destiny.</em>
                         </p>
                         <button class="unlock-button" on:click={unlockAdventure}>
                             Unlock Adventure
@@ -73,7 +72,7 @@
                 {:else}
                     <div class="training-hint">
                         <p>
-                            <em>Visit the Training page to improve your stats.</em>
+                            <em>You really want to get out there, but know it's best to keep training.</em>
                         </p>
                     </div>
                 {/if}
@@ -82,10 +81,9 @@
     {:else}
         <!-- Unlocked State -->
         <div class="unlocked-content">
-            <h2>Adventure Unlocked!</h2>
+            <h2>TomeClicker Demo Complete!</h2>
             <div class="demo-message">
-                <h3>Congratulations!</h3>
-                <p>You've unlocked everything in the current demo of TomeClicker.</p>
+                <p>You're finally ready for adventure, but unfortunately, the developer isn't.</p>
 
                 <div class="demo-stats">
                     <p>Your journey so far:</p>
@@ -104,6 +102,16 @@
                     <a href="https://github.com/eaglerock1337/tomeclicker" target="_blank">GitHub</a>
                     for updates.
                 </p>
+
+                <div class="coming-up">
+                    <p>Coming up next:</p>
+                    <ul>
+                        <li>Idle combat and adventure zones</li>
+                        <li>Adventure Points and treasures</li>
+                        <li>Equipment and gear system</li>
+                        <li>The mystery of the Tomes still await...</li>
+                    </ul>
+                </div>
             </div>
         </div>
     {/if}
@@ -252,7 +260,8 @@
         margin-bottom: 1rem;
     }
 
-    .demo-stats {
+    .demo-stats,
+    .coming-up {
         background: var(--bg);
         border: 1px solid var(--text);
         border-radius: 4px;
@@ -261,12 +270,14 @@
         text-align: left;
     }
 
-    .demo-stats ul {
+    .demo-stats ul,
+    .coming-up ul {
         margin: 1rem 0;
         padding-left: 1.5rem;
     }
 
-    .demo-stats li {
+    .demo-stats li,
+    .coming-up li {
         margin-bottom: 0.5rem;
         color: var(--text);
     }
