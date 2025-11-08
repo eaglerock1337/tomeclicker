@@ -18,7 +18,7 @@
 		<section class="about-section">
 			<div class="section-header">
 				<Info size={24} />
-				<h2>TomeClicker</h2>
+				<h2>tomeclicker</h2>
 			</div>
 			<div class="section-body">
 				<p class="tagline">
@@ -52,7 +52,7 @@
 		<section class="about-section">
 			<div class="section-header">
 				<Globe size={24} />
-				<h2>Links</h2>
+				<h2>links</h2>
 			</div>
 			<div class="section-body">
 				<a
@@ -101,7 +101,7 @@
 		<!-- Credits Section -->
 		<section class="about-section">
 			<div class="section-header">
-				<h2>Credits</h2>
+				<h2>credits</h2>
 			</div>
 			<div class="section-body">
 				<p class="credits-text">

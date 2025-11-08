@@ -272,7 +272,7 @@
 				</label>
 
 				<!-- Or paste option -->
-				<p class="or-divider">or paste save data:</p>
+				<p class="or-divider"></p>
 				<textarea
 					bind:value={importText}
 					placeholder="Paste your save data here..."

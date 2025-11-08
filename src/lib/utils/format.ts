@@ -50,12 +50,20 @@ export function formatPercent(value: number, decimals: number = 0): string {
 export function formatDuration(seconds: number): string {
 	const hours = Math.floor(seconds / 3600);
 	const minutes = Math.floor((seconds % 3600) / 60);
-	const secs = Math.floor(seconds % 60);
+	const secs = seconds % 60;
 
 	const parts: string[] = [];
 	if (hours > 0) parts.push(`${hours}h`);
 	if (minutes > 0) parts.push(`${minutes}m`);
-	if (secs > 0 || parts.length === 0) parts.push(`${secs}s`);
+
+	// Show tenths of seconds only when total duration is under 30 seconds
+	if (secs > 0 || parts.length === 0) {
+		if (seconds < 30) {
+			parts.push(`${secs.toFixed(1)}s`);
+		} else {
+			parts.push(`${Math.floor(secs)}s`);
+		}
+	}
 
 	return parts.join(' ');
 }
