@@ -6,11 +6,11 @@ The whole story is going to come in small bits, small enough to fit on one scree
 
 ### First blurb at 50 EXP
 
-You feel a calling, that you are destined for greater heights. You start scratching that itch by preparing yourself for the great unknown. Practice makes perfect.
+You wake up not knowing who you are or what happened to you, but you're compelled to start practicing, as if you were destined for something greater.
 
 ### Blurb at first Discipline upgrade
 
-You're proving to yourself that you can do this. Your self-discipline is strengthening, focusing your efforts even harder. You feel more productive.
+Your practice seems to be working. Your self-discipline is strengthening, focusing your efforts even harder. You feel more productive.
 
 ### Blurb at Level 2
 
@@ -18,9 +18,13 @@ Your experience is starting to pay off. Your thoughts start ruminating in the ba
 
 ### Blurb when you reach Level 3 (you can start training RPG stats)
 
-You're making good progress, and are starting to realize your weaknesses. It's time to start focusing on your weaknesses and preparing yourself further.
+You're starting to get the hang of this. Your practice is making you realize what you need to focus on if you're ever going to venture away from home.
 
 ### Blurb when you level up your first RPG stat
+
+You're starting to see your path forwards. Focusing on different aspects of your fitness and your attack and defense skills are key to protecting yourself.
+
+### Blurb when you've unlocked RPG stat upgrades and the adventure page
 
 You're now starting to realize how far you have to go before you're ready, but know you're progressing. It's time to define your identity as an adventurer.
 
