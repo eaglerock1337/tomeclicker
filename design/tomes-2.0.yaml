@@ -368,7 +368,7 @@ tomes:
         form: touch
         subtype: melee
         cost: 10 mana
-        effect: 10 fire damage
+        effect: 15 fire damage
         mastery: +1% fire hand damage per level
         story: "Fire Hand is a simple spell, but it's a good way to deal some damage to enemies that are too close for comfort."
       - 4: Fire Ball
@@ -377,7 +377,7 @@ tomes:
         form: object
         subtype: short-range
         cost: 15 mana
-        effect: 15 fire damage
+        effect: 20 fire damage
         mastery: +1% fire ball damage per level
         story: 'Fire Ball is an intuitive spell. Throw the red ball at your enemy and watch them burn. Simple enough for me.'
       - 5: Fire Burst
@@ -386,7 +386,7 @@ tomes:
         form: projectile
         subtype: short-range
         cost: 20 mana
-        effect: 10 fire damage to all targets
+        effect: 15 fire damage to all targets
         mastery: +1% fire burst damage per level
         story: 'Fire Burst is a bit more advanced. It shoots out a burst of fire that hits everyone in the area.'
       - 6: Fire Schrapnel
@@ -395,7 +395,7 @@ tomes:
         form: projectile
         subtype: long-range
         cost: 25 mana
-        effect: 10 fire damage to all targets
+        effect: 15 fire damage to all targets
         mastery: +1% fire schrapnel damage per level
         story: 'Fire Schrapnel is a long-range spell that shoots out shrapnel to your enemeies before they can even get close.'
       - 7: Blaze
@@ -404,7 +404,7 @@ tomes:
         form: object
         subtype: area
         cost: 30 mana
-        effect: 5 fire damage over time to targets in range
+        effect: 10 fire damage over time to targets in range
         mastery: +1% blaze damage per level
         story: "Blaze is an area-of-effect spell that sets the ground on fire. It's great for controlling space in a fight."
       - 8: Fire Shield
@@ -422,7 +422,7 @@ tomes:
         form: object
         subtype: absorber
         cost: 40 mana
-        effect: absorbs 50 fire or frost damage
+        effect: absorbs 40 fire or frost damage
         mastery: +1% fire absorber effectiveness per level
         story: "Fire Absorber is a powerful defensive spell that soaks up fire and frost damage. It's way better than the shield at blocking magic."
       - 10: Fire Object Counter

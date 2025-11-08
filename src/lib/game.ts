@@ -65,7 +65,6 @@ export interface Stats {
 	agilityExp: number;
 	willpowerExp: number;
 	enduranceExp: number;
-
 	// Magic stat EXP tracking (locked - future)
 	intelligenceExp: number;
 	wisdomExp: number;
