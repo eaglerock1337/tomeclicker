@@ -115,7 +115,7 @@
                                 </span>
                             {:else if action.trainsStat}
                                 <span class="detail-value reward-value mystery">
-                                    +{statExpGain} ??? EXP
+                                    ???
                                 </span>
                             {/if}
                         </div>
