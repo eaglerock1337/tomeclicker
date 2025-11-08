@@ -932,18 +932,18 @@ export class Game {
 		this.trainingCritChance = state.trainingCritChance || 0.0;
 
 		// Load stats into StatsManager with migration for v0.1.5+ stat EXP system
-		const loadedStats = state.stats || { strength: 1, dexterity: 1, intelligence: 1, wisdom: 1 };
+		const loadedStats = state.stats || { strength: 0, dexterity: 0, intelligence: 0, wisdom: 0 };
 
 		// Migrate old saves: map old stat names to new names, add stat EXP fields if missing
 		const migratedStats: Stats = {
 			// Physical stats (map old names to new names for backwards compatibility)
-			strength: loadedStats.strength || 1,
-			agility: (loadedStats as any).agility || (loadedStats as any).dexterity || 1,
-			willpower: (loadedStats as any).willpower || (loadedStats as any).intelligence || 1,
-			endurance: (loadedStats as any).endurance || (loadedStats as any).wisdom || 1,
+			strength: loadedStats.strength ?? 0,
+			agility: (loadedStats as any).agility ?? (loadedStats as any).dexterity ?? 0,
+			willpower: (loadedStats as any).willpower ?? (loadedStats as any).intelligence ?? 0,
+			endurance: (loadedStats as any).endurance ?? (loadedStats as any).wisdom ?? 0,
 			// Magic stats (will be unlocked later)
-			intelligence: (loadedStats as any).intelligence || 1,
-			wisdom: (loadedStats as any).wisdom || 1,
+			intelligence: (loadedStats as any).intelligence ?? 0,
+			wisdom: (loadedStats as any).wisdom ?? 0,
 			// Physical stat EXP (default to 0 for migrated saves)
 			strengthExp: (loadedStats as any).strengthExp ?? 0,
 			agilityExp: (loadedStats as any).agilityExp ?? (loadedStats as any).dexterityExp ?? 0,
