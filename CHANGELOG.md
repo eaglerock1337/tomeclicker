@@ -1,3 +1,11 @@
+## [0.2.6](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.5...v0.2.6) (2025-11-08)
+
+### Bug Fixes
+
+- improve reactivity for navbar warnings and stat-based multipliers ([6eddf61](https://github.com/eaglerock1337/tomeclicker/commit/6eddf61525ffac6f2538764694de5a66bb62b4bb))
+- initialize stats at level 0 instead of level 1 ([bf88a84](https://github.com/eaglerock1337/tomeclicker/commit/bf88a84c9355459b92aaa0808d7a6feff3a68d9d))
+- typo ([54fb924](https://github.com/eaglerock1337/tomeclicker/commit/54fb924f2eda4ae47fb1dbf6a83655e98966f962))
+
 ## [0.2.5](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.4...v0.2.5) (2025-11-08)
 
 ### Bug Fixes
