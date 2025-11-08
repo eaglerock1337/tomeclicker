@@ -1,3 +1,12 @@
+## [0.2.5](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.4...v0.2.5) (2025-11-08)
+
+### Bug Fixes
+
+- apply training cost multiplier and make UI reactive ([e8516d7](https://github.com/eaglerock1337/tomeclicker/commit/e8516d7630007ecb69ca0aa4edbc37fdc81247dd))
+- auto-stop stat training when cost becomes unaffordable ([52c3884](https://github.com/eaglerock1337/tomeclicker/commit/52c38840cb4c0765bf731998395b234e0d0d7557))
+- auto-stop stat training when cost becomes unaffordable ([5dd2d5b](https://github.com/eaglerock1337/tomeclicker/commit/5dd2d5b4621b1b3a841604d3f8d05d3dfe447a9b))
+- correct training crit system and polish stat UI ([5df37ff](https://github.com/eaglerock1337/tomeclicker/commit/5df37ff2eb599900543bff85b0824ed51c510761))
+
 ## [0.2.4](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.3...v0.2.4) (2025-11-08)
 
 ### Bug Fixes
