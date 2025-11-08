@@ -77,7 +77,7 @@
 		color: var(--text);
 		background-color: var(--bg);
 		font-size: 1em;
-		font-family: Tangerine, cursive;
+		font-family: 'Caveat', cursive;
 		height: 100%;
 		padding: 2rem 1rem;
 		display: flex;
