@@ -24,7 +24,7 @@
         <!-- Locked State -->
         <div class="locked-content">
             <p class="locked-message">
-                There's a whole world out there for your to explore, but you still don't feel like you're ready for action.
+                There's a whole world out there for you to explore, but you still don't feel like you're ready for action.
             </p>
 
             <div class="requirements-section">
