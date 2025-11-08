@@ -557,9 +557,9 @@ export class Game {
 	}
 
 	/**
-	 * Checks if any active stat training is blocked (at cap or can't afford)
+	 * Checks if any active stat training is blocked (stuck at 100% progress)
 	 * Used for navbar notification
-	 * @returns True if training is blocked
+	 * @returns True if training is stuck/blocked
 	 */
 	hasBlockedTraining(): boolean {
 		// Find any active stat training
@@ -569,6 +569,11 @@ export class Game {
 
 		if (!activeTraining || !activeTraining.trainsStat) {
 			return false; // No active stat training
+		}
+
+		// Only show warning if stuck at completion (progress >= 99%)
+		if (activeTraining.progress < 0.99) {
+			return false; // Still actively running
 		}
 
 		const stat = activeTraining.trainsStat;
