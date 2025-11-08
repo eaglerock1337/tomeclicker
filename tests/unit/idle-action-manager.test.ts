@@ -114,11 +114,6 @@ describe('IdleActionManager', () => {
 		it('should initialize meditation actions with correct defaults', () => {
 			const actions = manager.getMeditationActions();
 
-			expect(actions['meditate-future']).toBeDefined();
-			expect(actions['meditate-future'].oneTime).toBe(true);
-			expect(actions['meditate-future'].completed).toBe(false);
-			expect(actions['meditate-future'].expCost).toBe(50);
-
 			expect(actions['disassociate']).toBeDefined();
 			expect(actions['disassociate'].oneTime).toBe(false);
 			expect(actions['disassociate'].expCost).toBe(100);
@@ -129,9 +124,9 @@ describe('IdleActionManager', () => {
 			expect(ruminate).toBeDefined();
 			expect(ruminate?.name).toBe('Ruminate');
 
-			const meditation = manager.getMeditationAction('meditate-future');
+			const meditation = manager.getMeditationAction('disassociate');
 			expect(meditation).toBeDefined();
-			expect(meditation?.name).toBe('Meditate on Your Future');
+			expect(meditation?.name).toBe('Disassociate');
 		});
 
 		it('should return undefined for non-existent actions', () => {
@@ -172,17 +167,6 @@ describe('IdleActionManager', () => {
 			const action = manager.getTrainingAction('practice-ruminate');
 			expect(action?.isActive).toBe(false);
 			expect(action?.progress).toBe(0);
-		});
-
-		it('should not start a completed one-time action', () => {
-			// Manually mark action as completed
-			const actions = manager.getMeditationActions();
-			actions['meditate-future'].completed = true;
-
-			const result = manager.startIdleAction('meditation', 'meditate-future');
-
-			expect(result).toBe(false);
-			expect(manager.getMeditationAction('meditate-future')?.isActive).toBe(false);
 		});
 
 		it('should return false when starting non-existent action', () => {
@@ -487,23 +471,6 @@ describe('IdleActionManager', () => {
 	});
 
 	describe('Meditation Completion', () => {
-		it('should unlock adventure mode on meditate-future completion', () => {
-			vi.useFakeTimers();
-
-			manager.startIdleAction('meditation', 'meditate-future');
-			const action = manager.getMeditationAction('meditate-future');
-
-			vi.advanceTimersByTime(action!.duration + 100);
-
-			const results = manager.updateIdleActions();
-
-			expect(results[0].unlocks?.adventureMode).toBe(true);
-			expect(action?.completed).toBe(true);
-			expect(action?.isActive).toBe(false);
-
-			vi.useRealTimers();
-		});
-
 		it('should complete disassociate meditation', () => {
 			vi.useFakeTimers();
 
@@ -545,30 +512,6 @@ describe('IdleActionManager', () => {
 			expect(action?.isActive).toBe(true); // Preserved
 			expect(action?.lastUpdate).toBe(12345); // Preserved
 			expect(action?.name).toBe('Ruminate'); // Updated to new definition
-		});
-
-		it('should migrate meditation actions and preserve completed status', () => {
-			const savedActions: { [key: string]: IdleAction } = {
-				'meditate-future': {
-					id: 'meditate-future',
-					name: 'Old Name',
-					description: 'Old description',
-					progress: 0,
-					baseDuration: 60000,
-					duration: 60000,
-					expCost: 50,
-					isActive: false,
-					lastUpdate: 12345,
-					oneTime: true,
-					completed: true
-				}
-			};
-
-			manager.migrateMeditationActions(savedActions);
-
-			const action = manager.getMeditationAction('meditate-future');
-			expect(action?.completed).toBe(true); // Preserved
-			expect(action?.name).toBe('Meditate on Your Future'); // Updated
 		});
 
 		it('should add new actions during migration', () => {

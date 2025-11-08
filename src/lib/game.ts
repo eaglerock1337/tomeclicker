@@ -720,9 +720,14 @@ export class Game {
 
 	/**
 	 * Determines if Meditation page should be accessible
-	 * @returns True if all stats are at least 5
+	 * Hidden in production until meditation features are fully implemented
+	 * @returns True if all stats are at least 5 and not in production mode
 	 */
 	showMeditation(): boolean {
+		// Hide meditation page in production builds
+		if (import.meta.env.PROD) {
+			return false;
+		}
 		return this.statsManager.areAllPhysicalStatsAtLevel(5);
 	}
 
