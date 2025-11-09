@@ -7,6 +7,9 @@
 	import Header from '$lib/header.svelte';
 	import Navbar from '$lib/navbar.svelte';
 	import View from '$lib/view.svelte';
+	import StoryModal from '$lib/components/StoryModal.svelte';
+
+	import type { StoryEntry } from '$lib/managers/story-manager';
 
 	import '$lib/styles/themes.css';
 
@@ -16,6 +19,60 @@
 
 	// Game values
 	let game: Game;
+
+	// Story modal queue
+	let storyQueue: StoryEntry[] = [];
+	let currentStory: StoryEntry | null = null;
+
+	/**
+	 * Check for newly unlocked story entries and add to queue
+	 */
+	function checkStoryUnlocks() {
+		if (!game) return;
+
+		const result = game.checkStoryUnlocks();
+
+		if (result.newlyUnlocked.length > 0) {
+			// Add newly unlocked entries to queue
+			storyQueue = [...storyQueue, ...result.newlyUnlocked];
+
+			// If no modal is currently showing, show the first one
+			if (!currentStory && storyQueue.length > 0) {
+				showNextStory();
+			}
+		}
+	}
+
+	/**
+	 * Show the next story in the queue
+	 */
+	function showNextStory() {
+		if (storyQueue.length === 0) {
+			currentStory = null;
+			return;
+		}
+
+		// Pop the first entry from the queue
+		const [next, ...remaining] = storyQueue;
+		currentStory = next;
+		storyQueue = remaining;
+	}
+
+	/**
+	 * Handle story acknowledgement (player clicked "Add to Journal")
+	 */
+	function handleStoryAcknowledge(entryId: string) {
+		if (!game) return;
+
+		// Acknowledge the entry in the game state
+		game.acknowledgeStoryEntry(entryId);
+
+		// Force reactivity
+		game = game;
+
+		// Show next story in queue (or clear modal)
+		showNextStory();
+	}
 
 	onMount(() => {
 		// Load saved config
@@ -66,6 +123,9 @@
 			if (game) {
 				game.updateIdleActions();
 				game = game; // Force Svelte reactivity
+
+				// Check for story unlocks
+				checkStoryUnlocks();
 			}
 		}, 100);
 
@@ -119,7 +179,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link
-		href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Lato:wght@100;300;400;700&family=Tangerine&display=swap"
+		href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;700&family=Lato:wght@100;300;400;700&family=Tangerine&display=swap"
 		rel="stylesheet"
 	/>
 	<meta property="og:type" content="website" />
@@ -150,6 +210,15 @@
 		<div class="loading">
 			<h1>Loading TomeClicker...</h1>
 		</div>
+	{/if}
+
+	<!-- Story Modal (overlays everything) -->
+	{#if currentStory && game}
+		<StoryModal
+			entry={currentStory}
+			playerName={game.name}
+			onAcknowledge={handleStoryAcknowledge}
+		/>
 	{/if}
 </div>
 
