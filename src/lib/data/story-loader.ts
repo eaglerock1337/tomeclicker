@@ -6,7 +6,7 @@
  */
 
 import type { StoryEntry, TriggerCondition } from '$lib/managers/story-manager';
-import storyContentYaml from './story-content.yaml?raw';
+import storyContentYaml from './story-content.yaml';
 
 /**
  * YAML structure for story content file
@@ -37,8 +37,8 @@ type TriggerYaml = Record<string, any>;
  * @returns Array of story entries with unlocked/acknowledged state initialized to false
  */
 export function loadStoryEntries(): StoryEntry[] {
-	// Parse YAML content
-	const data = parseYaml(storyContentYaml) as StoryContentYaml;
+	// Use the already-parsed YAML data from @rollup/plugin-yaml
+	const data = storyContentYaml as StoryContentYaml;
 
 	if (!data?.chapters) {
 		console.warn('No chapters found in story-content.yaml');
