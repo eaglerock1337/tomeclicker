@@ -1,0 +1,212 @@
+# Story Content for TomeClicker
+# Chapter-based narrative that unlocks as players progress through the game
+# See design/sessions/story-journal-system.md for complete implementation details
+
+chapters:
+  - id: 1
+    title: 'Awakening'
+    entries:
+      - id: ch1-awakening
+        text: "You wake up not knowing who you are or what happened to you, but you're compelled to start practicing, as if you were destined for something greater."
+        trigger:
+          type: lifetimeExp
+          threshold: 50
+
+      - id: ch1-discipline
+        text: 'Your practice seems to be working. Your self-discipline is strengthening, focusing your efforts even harder. You feel more productive.'
+        trigger:
+          type: upgradeOwned
+          upgradeId: discipline
+
+      - id: ch1-level2
+        text: 'Your experience is starting to pay off. Your thoughts start ruminating in the back of your mind, giving you even more insights as you progress.'
+        trigger:
+          type: level
+          threshold: 2
+
+      - id: ch1-level3
+        text: "You're starting to get the hang of this. Your practice is making you realize what you need to focus on if you're ever going to venture away from home."
+        trigger:
+          type: level
+          threshold: 3
+
+      - id: ch1-first-stat
+        text: "You're starting to see your path forwards. Focusing on different aspects of your fitness and your attack and defense skills are key to protecting yourself."
+        trigger:
+          type: anyStatLevel
+          level: 1
+
+      - id: ch1-stats-unlocked
+        text: "You're now starting to realize how far you have to go before you're ready, but know you're progressing. It's time to define your identity as an adventurer."
+        trigger:
+          type: adventureUnlocked
+
+      - id: ch1-name-set
+        text: 'As you keep preparing for adventure, you redefine yourself. You are now <adventurer-name>, destined for greatness. You tirelessly keep at it.'
+        trigger:
+          type: nameSet
+
+  - id: 2
+    title: 'Adventure'
+    entries:
+      - id: ch2-adventure-unlock
+        text: 'Your practice has paid off and you finally feel ready for adventure. You head out, ready to fight with nothing but your bare hands. Your destiny awaits.'
+        trigger:
+          type: adventureUnlocked
+# Future chapters (triggers defined but not implemented yet)
+# Uncomment and add when adventure/retreat/quest systems are implemented
+
+# - id: 2
+#   title: "Adventure"
+#   entries:
+#     - id: ch2-first-adventure
+#       text: "Your adventure leads you to a chest hidden in plain sight. You stare at it, wondering what treasure await you inside. It's time to open it."
+#       trigger:
+#         type: adventureCompleted
+#         count: 1
+#
+#     - id: ch2-first-chest
+#       text: "You open the treasure chest and find a piece of adventure gear. You find an old sword, ready and waiting for battle. Time to see what it can do."
+#       trigger:
+#         type: chestOpened
+#         count: 1
+#
+#     - id: ch2-first-duplicate
+#       text: "You open a treasure chest and find an extra piece of gear. You dismantle it and study it, learning how to make your gear stronger in the process."
+#       trigger:
+#         type: itemDuplicate
+#         count: 1
+#
+#     - id: ch2-max-level
+#       text: "You keep advancing and getting stronger, but are starting to feel your limits. Despite your body, however, your mind wants more. You keep going."
+#       trigger:
+#         type: maxLevelReached
+#         level: 4
+#
+#     - id: ch2-retreat-available
+#       text: "You're finally hitting roadblocks and can't seem to progress further. It's time to retreat for home, reflect on your adventures, and start fresh."
+#       trigger:
+#         type: retreatAvailable
+#
+#     - id: ch2-first-retreat
+#       text: "You head home and reflect on your learnings. You're back to square one and have to do it all over again, but know this time will be easier and you'll go farther."
+#       trigger:
+#         type: retreatCompleted
+#         count: 1
+#
+#     - id: ch2-previous-max
+#       text: "You've made it as far as you went before. You realize now you can reach a higher level and grow stronger than before. Your motivation grows."
+#       trigger:
+#         type: previousMaxReached
+
+# - id: 3
+#   title: "Questing"
+#   entries:
+#     - id: ch3-max-level-unlock
+#       text: "Your cycle of adventuring and retreating has been laborious, but you think you are finally reaching your peak performance. Time to test it out."
+#       trigger:
+#         type: level
+#         threshold: 20
+#
+#     - id: ch3-hit-max-level
+#       text: "Your body is finally catching up to your mind as if you're on another level. You feel as though your potential has been unlocked, and are eager for more."
+#       trigger:
+#         type: level
+#         threshold: 20
+#         operator: eq
+#
+#     - id: ch3-all-stats-max
+#       text: "Your adventuring has left you in peak physical and mental shape, like Adonis the Greek god. Your gear needs upgrading to keep up with your form."
+#       trigger:
+#         type: allStatsLevel
+#         level: 100
+#
+#     - id: ch3-gear-maxed
+#       text: "Your gear has finally caught up with your Adonis form. Nothing can defeat you here, so you fly headfirst into the most dangerous lands, looking for more."
+#       trigger:
+#         type: gearMaxed
+#
+#     - id: ch3-questing-unlock
+#       text: "You come across a cryptic map that leads somewhere far, but doesn't say where. You destiny awaits there, you can feel it. Time to quest for it."
+#       trigger:
+#         type: questingUnlocked
+#
+#     - id: ch3-first-quest
+#       text: "Your quest finally leads you to a cave out in the wilderness. You feel a strange energy as you stand at the entrance. Is your destiny inside?"
+#       trigger:
+#         type: questCompleted
+#         count: 1
+
+# - id: 4
+#   title: "The Tomes of Magic"
+#   entries:
+#     # Multi-step sequence (10 parts)
+#     - id: ch4-tomes-01
+#       text: "You finally reach the end of the cave riddled with magical creatures. You enter a room full of books and scrolls, clearly a wizard's lair."
+#       trigger:
+#         type: tomesUnlocked
+#       sequence: tomes-discovery
+#       sequenceOrder: 1
+#
+#     - id: ch4-tomes-02
+#       text: "On a table in the middle of the room, you find a notebook next to a mythical satchel. You approach the table and look at the notebook."
+#       trigger:
+#         type: manual
+#       sequence: tomes-discovery
+#       sequenceOrder: 2
+#
+#     - id: ch4-tomes-03
+#       text: "The notebook contains the writings of a wizard who lived in this cave as he studied the world of magic and collected all the books he could."
+#       trigger:
+#         type: manual
+#       sequence: tomes-discovery
+#       sequenceOrder: 3
+#
+#     - id: ch4-tomes-04
+#       text: "None of the books, however, could help the wizard learn magic. You start to realize he wasn't really a wizard, just another adventurer like you."
+#       trigger:
+#         type: manual
+#       sequence: tomes-discovery
+#       sequenceOrder: 4
+#
+#     - id: ch4-tomes-05
+#       text: "The adventurer described his trials and failings at learning magic, until he was came across one ancient book that changed everything."
+#       trigger:
+#         type: manual
+#       sequence: tomes-discovery
+#       sequenceOrder: 5
+#
+#     - id: ch4-tomes-06
+#       text: "This ancient book, the Tome of Magic, was the only book that helped the adventurer at all. It became his singular life focus."
+#       trigger:
+#         type: manual
+#       sequence: tomes-discovery
+#       sequenceOrder: 6
+#
+#     - id: ch4-tomes-07
+#       text: "The adventurer discovered this Tome was one of 50 Tomes, all of which appear to describe the lost world of magic in incredible detail."
+#       trigger:
+#         type: manual
+#       sequence: tomes-discovery
+#       sequenceOrder: 7
+#
+#     - id: ch4-tomes-08
+#       text: "Inside the satchel, you find the Tome of Magic itself, as well as leaves from other Tomes the adventurer started to collect."
+#       trigger:
+#         type: manual
+#       sequence: tomes-discovery
+#       sequenceOrder: 8
+#
+#     - id: ch4-tomes-09
+#       text: "You hold the Tome of Magic in your hands, finally understanding your destiny. You feel your hands pulsing as you grip the leather binding."
+#       trigger:
+#         type: manual
+#       sequence: tomes-discovery
+#       sequenceOrder: 9
+#
+#     - id: ch4-tomes-10
+#       text: "It's time to pick up where the adventurer left off. You will quest for the remaining Tomes and discover the lost world of magic."
+#       trigger:
+#         type: manual
+#       sequence: tomes-discovery
+#       sequenceOrder: 10

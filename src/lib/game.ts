@@ -33,6 +33,13 @@ import {
 	type LoadResult
 } from './managers/save-manager';
 import { StatsManager } from './managers/stats-manager';
+import {
+	StoryManager,
+	type StoryEntry,
+	type StoryCheckResult,
+	type AcknowledgeResult
+} from './managers/story-manager';
+import { loadStoryEntries } from './data/story-loader';
 
 // Re-export Upgrade type for external use
 export type { Upgrade } from './managers/upgrade-manager';
@@ -97,6 +104,7 @@ export class Game {
 	private upgradeManager: UpgradeManager;
 	private saveManager: SaveManager;
 	private statsManager: StatsManager;
+	private storyManager: StoryManager;
 
 	/**
 	 * Creates a new game instance with default values
@@ -161,6 +169,21 @@ export class Game {
 			loadGameState: (state) => this.loadFromGameState(state)
 		});
 
+		// Initialize story manager with dependencies
+		this.storyManager = new StoryManager(
+			{
+				getCurrentExp: () => this.exp,
+				getLifetimeExp: () => this.lifetimeExp,
+				getCurrentLevel: () => this.level,
+				getStats: () => this.stats,
+				getUpgrades: () => this.upgrades,
+				getPlayerName: () => this.name,
+				areAllStatsUnlocked: () => this.areAllStatsUnlocked(),
+				isAdventureModeUnlocked: () => this.adventureModeUnlocked
+			},
+			loadStoryEntries() // Load story entries from YAML
+		);
+
 		this.recalculateClickMultiplier();
 	}
 
@@ -198,6 +221,57 @@ export class Game {
 	 */
 	get upgrades(): { [key: string]: UpgradeType } {
 		return this.upgradeManager.getUpgrades();
+	}
+
+	/**
+	 * Checks for newly unlocked story entries
+	 * @returns Result with newly unlocked entries and total unread count
+	 */
+	checkStoryUnlocks(): StoryCheckResult {
+		return this.storyManager.checkForNewUnlocks();
+	}
+
+	/**
+	 * Acknowledges a story entry (marks as read)
+	 * @param entryId - ID of the story entry to acknowledge
+	 * @returns Result with remaining unread count
+	 */
+	acknowledgeStoryEntry(entryId: string): AcknowledgeResult {
+		return this.storyManager.acknowledge(entryId);
+	}
+
+	/**
+	 * Gets all story entries for a specific chapter
+	 * @param chapter - Chapter number
+	 * @returns Array of story entries in chapter
+	 */
+	getStoryChapterEntries(chapter: number): StoryEntry[] {
+		return this.storyManager.getChapterEntries(chapter);
+	}
+
+	/**
+	 * Gets all unlocked chapters
+	 * @returns Array of chapter numbers that have at least one unlocked entry
+	 */
+	getUnlockedStoryChapters(): number[] {
+		return this.storyManager.getUnlockedChapters();
+	}
+
+	/**
+	 * Gets count of unread story entries
+	 * @returns Number of unlocked but unacknowledged entries
+	 */
+	getUnreadStoryCount(): number {
+		return this.storyManager.getUnreadCount();
+	}
+
+	/**
+	 * Gets a specific story entry by ID
+	 * @param entryId - ID of the story entry
+	 * @returns Story entry or undefined if not found
+	 */
+	getStoryEntry(entryId: string): StoryEntry | undefined {
+		return this.storyManager.getEntry(entryId);
 	}
 
 	/**
@@ -931,7 +1005,8 @@ export class Game {
 			meditationActions: this.idleActionManager.getMeditationActions(),
 			idleExpRate: this.idleExpRate,
 			adventureModeUnlocked: this.adventureModeUnlocked,
-			meditationUnlocked: this.meditationUnlocked
+			meditationUnlocked: this.meditationUnlocked,
+			story: this.storyManager.serialize()
 		};
 	}
 
@@ -986,6 +1061,11 @@ export class Game {
 		this.idleExpRate = state.idleExpRate || 0;
 		this.adventureModeUnlocked = state.adventureModeUnlocked || false;
 		this.meditationUnlocked = state.meditationUnlocked || false;
+
+		// Load story state if present (optional for backward compatibility)
+		if (state.story) {
+			this.storyManager.loadState(state.story);
+		}
 
 		// Recalculate derived values
 		this.recalculateClickMultiplier();
@@ -1140,6 +1220,20 @@ export class Game {
 			getGameState: () => this.toGameState(),
 			loadGameState: (state) => this.loadFromGameState(state)
 		});
+
+		this.storyManager = new StoryManager(
+			{
+				getCurrentExp: () => this.exp,
+				getLifetimeExp: () => this.lifetimeExp,
+				getCurrentLevel: () => this.level,
+				getStats: () => this.stats,
+				getUpgrades: () => this.upgrades,
+				getPlayerName: () => this.name,
+				areAllStatsUnlocked: () => this.areAllStatsUnlocked(),
+				isAdventureModeUnlocked: () => this.adventureModeUnlocked
+			},
+			loadStoryEntries() // Reload fresh story entries
+		);
 
 		this.recalculateClickMultiplier();
 	}

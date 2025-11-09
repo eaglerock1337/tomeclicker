@@ -19,6 +19,15 @@ export interface GameState {
 	idleExpRate: number;
 	adventureModeUnlocked: boolean;
 	meditationUnlocked: boolean;
+	story?: {
+		// Optional for backward compatibility with old saves
+		entryStates: Array<{
+			id: string;
+			unlocked: boolean;
+			acknowledged: boolean;
+			timestamp?: number;
+		}>;
+	};
 }
 
 /**
