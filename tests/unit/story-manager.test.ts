@@ -189,10 +189,18 @@ describe('StoryManager', () => {
 			expect(result.newlyUnlocked[0].id).toBe('test-lifetimeExp');
 			expect(result.totalUnread).toBe(1);
 
-			// Check again - should not unlock again
+			// Check again - queue persists until acknowledged (NEW behavior)
+			result = manager.checkForNewUnlocks();
+			expect(result.newlyUnlocked).toHaveLength(1); // Entry still in queue
+			expect(result.totalUnread).toBe(1); // Still unread
+
+			// Acknowledge the entry to clear it from queue
+			manager.acknowledge('test-lifetimeExp');
+
+			// Now queue should be empty
 			result = manager.checkForNewUnlocks();
 			expect(result.newlyUnlocked).toHaveLength(0);
-			expect(result.totalUnread).toBe(1); // Still unread
+			expect(result.totalUnread).toBe(0); // Now read
 		});
 
 		it('should unlock entry when level threshold is met', () => {
