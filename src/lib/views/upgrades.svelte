@@ -80,8 +80,8 @@
     function getCategoryDisplayName(category: string): string {
         switch (category) {
             case 'click': return 'Click Power';
-            case 'ruminate': return 'Ruminate (Idle)';
-            case 'training': return 'Stat Training';
+            case 'research': return 'Research';
+            case 'studying': return 'Studying';
             case 'special': return 'Special';
             default: return category;
         }
@@ -89,9 +89,9 @@
 
     function getCategoryDescription(category: string): string {
         switch (category) {
-            case 'click': return 'Enhance active clicking power and critical hits';
-            case 'ruminate': return 'Improve passive EXP generation and efficiency';
-            case 'training': return 'Accelerate stat development and training';
+            case 'click': return 'Enhance your active practice sessions';
+            case 'research': return 'Improve your research and experience gain';
+            case 'studying': return 'Prepare and improve stat development and training';
             case 'special': return 'Powerful universal bonuses';
             default: return '';
         }
@@ -145,7 +145,7 @@
         <!-- Categorized Upgrades -->
         {#each visibleCategories.filter(cat => cat !== 'special') as category (category)}
             {@const categoryUpgrades = game.getUpgradesByCategory(category).filter(u => !u.minLevel || u.minLevel <= game.level)}
-            {#if categoryUpgrades.length > 0 && (category !== 'training' || game.areAllStatsUnlocked())}
+            {#if categoryUpgrades.length > 0 && (category !== 'studying' || game.areAllStatsUnlocked())}
                 <div class="category-section">
                     <button
                         class="category-header"
@@ -185,23 +185,23 @@
                                             +{(upgrade.effectValue * 100).toFixed(1)}% crit chance per level
                                         {:else if upgrade.effectType === 'clickCritDamage'}
                                             +{(upgrade.effectValue * 100).toFixed(0)}% crit damage per level
-                                        {:else if upgrade.effectType === 'ruminateMultiplierPercent'}
+                                        {:else if upgrade.effectType === 'researchMultiplierPercent'}
                                             +{(upgrade.effectValue * 100).toFixed(0)}% ruminate EXP per level
-                                        {:else if upgrade.effectType === 'ruminateSpeed'}
+                                        {:else if upgrade.effectType === 'researchSpeed'}
                                             -{upgrade.effectValue}s per thought per level
-                                        {:else if upgrade.effectType === 'ruminateCrit'}
+                                        {:else if upgrade.effectType === 'researchCrit'}
                                             +{(upgrade.effectValue * 100).toFixed(1)}% ruminate crit per level
-                                        {:else if upgrade.effectType === 'ruminateCritDamage'}
+                                        {:else if upgrade.effectType === 'researchCritDamage'}
                                             +{(upgrade.effectValue * 100).toFixed(0)}% ruminate crit damage per level
                                         {:else if upgrade.effectType === 'statGainPercent'}
                                             +{(upgrade.effectValue * 100).toFixed(0)}% stat EXP per level
-                                        {:else if upgrade.effectType === 'trainingSpeed'}
+                                        {:else if upgrade.effectType === 'studyingSpeed'}
                                             -{upgrade.effectValue}s per training per level
-                                        {:else if upgrade.effectType === 'trainingCrit'}
+                                        {:else if upgrade.effectType === 'studyingCrit'}
                                             +{(upgrade.effectValue * 100).toFixed(1)}% training crit per level
-                                        {:else if upgrade.effectType === 'trainingCritDamage'}
+                                        {:else if upgrade.effectType === 'studyingCritDamage'}
                                             +{(upgrade.effectValue * 100).toFixed(0)}% training crit damage per level
-                                        {:else if upgrade.effectType === 'trainingEfficiency'}
+                                        {:else if upgrade.effectType === 'studyingEfficiency'}
                                             -{(upgrade.effectValue * 100).toFixed(0)}% training cost per level
                                         {:else if upgrade.effectType === 'discipline'}
                                             {upgrade.effectValue}x all EXP per level

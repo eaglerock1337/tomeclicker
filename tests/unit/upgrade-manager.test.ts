@@ -39,17 +39,17 @@ describe('UpgradeManager', () => {
 			expect(upgrades['critical-clicks']).toBeDefined();
 			expect(upgrades['devastating-click']).toBeDefined();
 			expect(upgrades['click-mastery']).toBeDefined();
-			expect(upgrades['ruminate-speed']).toBeDefined();
-			expect(upgrades['ruminate-power']).toBeDefined();
+			expect(upgrades['research-speed']).toBeDefined();
+			expect(upgrades['research-power']).toBeDefined();
 			expect(upgrades['focus-flow']).toBeDefined();
 			expect(upgrades['intense-thoughts']).toBeDefined();
-			expect(upgrades['ruminate-mastery']).toBeDefined();
-			expect(upgrades['training-speed']).toBeDefined();
-			expect(upgrades['training-efficiency']).toBeDefined();
-			expect(upgrades['training-power']).toBeDefined();
+			expect(upgrades['research-mastery']).toBeDefined();
+			expect(upgrades['studying-speed']).toBeDefined();
+			expect(upgrades['studying-efficiency']).toBeDefined();
+			expect(upgrades['studying-power']).toBeDefined();
 			expect(upgrades['perfect-form']).toBeDefined();
-			expect(upgrades['devastating-training']).toBeDefined();
-			expect(upgrades['training-mastery']).toBeDefined();
+			expect(upgrades['devastating-studying']).toBeDefined();
+			expect(upgrades['studying-mastery']).toBeDefined();
 			expect(upgrades['discipline']).toBeDefined();
 		});
 
@@ -73,41 +73,41 @@ describe('UpgradeManager', () => {
 			expect(critClicks?.maxLevel).toBe(50);
 		});
 
-		it('should initialize ruminate upgrades correctly', () => {
-			const ruminateSpeed = manager.getUpgrade('ruminate-speed');
-			const ruminatePower = manager.getUpgrade('ruminate-power');
+		it('should initialize research upgrades correctly', () => {
+			const researchSpeed = manager.getUpgrade('research-speed');
+			const researchPower = manager.getUpgrade('research-power');
 
-			expect(ruminateSpeed?.effectType).toBe('ruminateSpeed');
-			expect(ruminateSpeed?.effectValue).toBe(0.1);
-			expect(ruminateSpeed?.minLevel).toBe(2);
+			expect(researchSpeed?.effectType).toBe('researchSpeed');
+			expect(researchSpeed?.effectValue).toBe(0.1);
+			expect(researchSpeed?.minLevel).toBe(2);
 
-			expect(ruminatePower?.effectType).toBe('ruminatePower');
-			expect(ruminatePower?.effectValue).toBe(25);
-			expect(ruminatePower?.minLevel).toBe(2);
+			expect(researchPower?.effectType).toBe('researchPower');
+			expect(researchPower?.effectValue).toBe(25);
+			expect(researchPower?.minLevel).toBe(2);
 		});
 
-		it('should initialize training upgrades correctly', () => {
-			const trainingSpeed = manager.getUpgrade('training-speed');
-			const trainingEff = manager.getUpgrade('training-efficiency');
-			const trainingPower = manager.getUpgrade('training-power');
+		it('should initialize studying upgrades correctly', () => {
+			const studyingSpeed = manager.getUpgrade('studying-speed');
+			const studyingEff = manager.getUpgrade('studying-efficiency');
+			const studyingPower = manager.getUpgrade('studying-power');
 			const perfectForm = manager.getUpgrade('perfect-form');
 
-			expect(trainingSpeed?.effectType).toBe('trainingSpeed');
-			expect(trainingSpeed?.effectValue).toBe(0.1);
-			expect(trainingSpeed?.maxLevel).toBe(50);
-			expect(trainingSpeed?.minLevel).toBe(3);
+			expect(studyingSpeed?.effectType).toBe('studyingSpeed');
+			expect(studyingSpeed?.effectValue).toBe(0.1);
+			expect(studyingSpeed?.maxLevel).toBe(50);
+			expect(studyingSpeed?.minLevel).toBe(3);
 
-			expect(trainingEff?.effectType).toBe('trainingEfficiency');
-			expect(trainingEff?.effectValue).toBe(0.01);
-			expect(trainingEff?.maxLevel).toBe(50);
-			expect(trainingEff?.minLevel).toBe(3);
+			expect(studyingEff?.effectType).toBe('studyingEfficiency');
+			expect(studyingEff?.effectValue).toBe(0.01);
+			expect(studyingEff?.maxLevel).toBe(50);
+			expect(studyingEff?.minLevel).toBe(3);
 
-			expect(trainingPower?.effectType).toBe('statGainPercent');
-			expect(trainingPower?.effectValue).toBe(0.01);
-			expect(trainingPower?.maxLevel).toBe(50);
-			expect(trainingPower?.minLevel).toBe(3);
+			expect(studyingPower?.effectType).toBe('statGainPercent');
+			expect(studyingPower?.effectValue).toBe(0.01);
+			expect(studyingPower?.maxLevel).toBe(50);
+			expect(studyingPower?.minLevel).toBe(3);
 
-			expect(perfectForm?.effectType).toBe('trainingCrit');
+			expect(perfectForm?.effectType).toBe('studyingCrit');
 			expect(perfectForm?.effectValue).toBe(0.005);
 			expect(perfectForm?.maxLevel).toBe(50);
 			expect(perfectForm?.minLevel).toBe(4);
@@ -431,14 +431,14 @@ describe('UpgradeManager', () => {
 			expect(manager.getUpgradeCost('click-power')).toBe(50);
 			expect(manager.getUpgradeCost('critical-clicks')).toBe(200);
 
-			// Ruminate upgrades
-			expect(manager.getUpgradeCost('ruminate-speed')).toBe(800);
-			expect(manager.getUpgradeCost('ruminate-power')).toBe(500);
+			// Research upgrades
+			expect(manager.getUpgradeCost('research-speed')).toBe(800);
+			expect(manager.getUpgradeCost('research-power')).toBe(500);
 
-			// Training upgrades
-			expect(manager.getUpgradeCost('training-speed')).toBe(2500);
-			expect(manager.getUpgradeCost('training-efficiency')).toBe(3000);
-			expect(manager.getUpgradeCost('training-power')).toBe(2000);
+			// Studying upgrades
+			expect(manager.getUpgradeCost('studying-speed')).toBe(2500);
+			expect(manager.getUpgradeCost('studying-efficiency')).toBe(3000);
+			expect(manager.getUpgradeCost('studying-power')).toBe(2000);
 			expect(manager.getUpgradeCost('perfect-form')).toBe(4000);
 
 			// Discipline
@@ -449,13 +449,13 @@ describe('UpgradeManager', () => {
 			const manager = new UpgradeManagerBuilder().withCurrentExp(999999).build();
 			const upgrades = manager.getUpgrades();
 
-			// Training efficiency: max level 50
-			upgrades['training-efficiency'].currentLevel = 50;
-			expect(manager.canPurchaseUpgrade('training-efficiency')).toBe(false);
+			// studying efficiency: max level 50
+			upgrades['studying-efficiency'].currentLevel = 50;
+			expect(manager.canPurchaseUpgrade('studying-efficiency')).toBe(false);
 
-			// Training speed: max level 50
-			upgrades['training-speed'].currentLevel = 50;
-			expect(manager.canPurchaseUpgrade('training-speed')).toBe(false);
+			// studying speed: max level 50
+			upgrades['studying-speed'].currentLevel = 50;
+			expect(manager.canPurchaseUpgrade('studying-speed')).toBe(false);
 
 			// Critical clicks: max level 50
 			upgrades['critical-clicks'].currentLevel = 50;

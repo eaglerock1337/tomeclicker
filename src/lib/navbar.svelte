@@ -18,7 +18,7 @@
         Workflow,
         Trophy,
         TrendingUp,
-        Dumbbell,
+        Library,
         Brain,
         Compass
     } from 'lucide-svelte';
@@ -37,9 +37,9 @@
         )
     );
 
-    // Check if active training is blocked (at cap or can't afford)
+    // Check if active studying is blocked (at cap or can't afford)
     // Force re-evaluation by accessing game properties directly
-    $: hasBlockedTraining = game && game.exp >= 0 && game.hasBlockedTraining();
+    $: hasBlockedStudying = game && game.exp >= 0 && game.hasBlockedStudying();
 
     // Check if there are unread journal entries
     // Force re-evaluation by accessing game properties directly
@@ -65,10 +65,10 @@
             </button>
         {/if}
         {#if game.showTraining()}
-            <button on:click="{() => game.menu = 'study'}">
-                <p class:red="{game.menu === 'study'}">
-                    <Dumbbell size={24}/>
-                    {#if hasBlockedTraining}
+            <button on:click="{() => game.menu = 'library'}">
+                <p class:red="{game.menu === 'library'}">
+                    <Library size={24}/>
+                    {#if hasBlockedStudying}
                         <span class="notification-badge">!</span>
                     {/if}
                 </p>

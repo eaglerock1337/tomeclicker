@@ -3,8 +3,8 @@ import {
 	calculateLevelUpCost,
 	calculateUpgradeCost,
 	calculateStatLevelCost,
-	calculateTrainingSpeedMultiplier,
-	calculateTrainingCostMultiplier,
+	calculateStudyingSpeedMultiplier,
+	calculateStudyingCostMultiplier,
 	calculateRuminateExpBonus,
 	calculateGlobalIdleSpeedMultiplier,
 	calculateRuminateSpeedMultiplier
@@ -176,71 +176,71 @@ describe('Upgrade Calculations', () => {
 });
 
 describe('Upgrade Effect Calculations', () => {
-	describe('calculateTrainingSpeedMultiplier', () => {
+	describe('calculateStudyingSpeedMultiplier', () => {
 		it('should return 1.0 with no upgrades', () => {
-			expect(calculateTrainingSpeedMultiplier({})).toBe(1.0);
+			expect(calculateStudyingSpeedMultiplier({})).toBe(1.0);
 		});
 
 		it('should calculate multiplier for single upgrade level', () => {
 			const upgrades = {
 				'training-speed': {
 					id: 'training-speed',
-					effectType: 'trainingSpeed',
+					effectType: 'studyingSpeed',
 					effectValue: 0.5,
 					currentLevel: 1,
-					category: 'training'
+					category: 'studying'
 				} as Upgrade
 			};
 
 			// 15 / (15 - 0.5) = 15 / 14.5 = 1.0345
-			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(1.0345, 4);
+			expect(calculateStudyingSpeedMultiplier(upgrades)).toBeCloseTo(1.0345, 4);
 		});
 
 		it('should calculate multiplier for multiple upgrade levels', () => {
 			const upgrades = {
 				'training-speed': {
 					id: 'training-speed',
-					effectType: 'trainingSpeed',
+					effectType: 'studyingSpeed',
 					effectValue: 0.5,
 					currentLevel: 2,
-					category: 'training'
+					category: 'studying'
 				} as Upgrade
 			};
 
 			// 15 / (15 - (0.5 * 2)) = 15 / 14 = 1.0714
-			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(1.0714, 4);
+			expect(calculateStudyingSpeedMultiplier(upgrades)).toBeCloseTo(1.0714, 4);
 		});
 
 		it('should stack multiple different upgrades', () => {
 			const upgrades = {
 				'upgrade-1': {
 					id: 'upgrade-1',
-					effectType: 'trainingSpeed',
+					effectType: 'studyingSpeed',
 					effectValue: 0.5, // 0.5s per level (v0.1.5)
 					currentLevel: 2, // 1s total reduction
-					category: 'training'
+					category: 'studying'
 				} as Upgrade,
 				'upgrade-2': {
 					id: 'upgrade-2',
-					effectType: 'trainingSpeed',
+					effectType: 'studyingSpeed',
 					effectValue: 0.5,
 					currentLevel: 4, // 2s total reduction
-					category: 'training'
+					category: 'studying'
 				} as Upgrade
 			};
 
 			// v0.1.5: 15 / (15 - 1) * 15 / (15 - 2) = 1.0714 * 1.1538 = 1.2363
-			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(1.2363, 4);
+			expect(calculateStudyingSpeedMultiplier(upgrades)).toBeCloseTo(1.2363, 4);
 		});
 
-		it('should ignore non-trainingSpeed upgrades', () => {
+		it('should ignore non-studyingSpeed upgrades', () => {
 			const upgrades = {
 				'training-speed': {
 					id: 'training-speed',
-					effectType: 'trainingSpeed',
+					effectType: 'studyingSpeed',
 					effectValue: 0.5, // v0.1.5: 0.5s per level
 					currentLevel: 2, // 1s total reduction
-					category: 'training'
+					category: 'studying'
 				} as Upgrade,
 				'other-upgrade': {
 					id: 'other-upgrade',
@@ -252,43 +252,43 @@ describe('Upgrade Effect Calculations', () => {
 			};
 
 			// v0.1.5: 15 / (15 - 1) = 1.0714 (only training-speed affects this)
-			expect(calculateTrainingSpeedMultiplier(upgrades)).toBeCloseTo(1.0714, 4);
+			expect(calculateStudyingSpeedMultiplier(upgrades)).toBeCloseTo(1.0714, 4);
 		});
 	});
 
-	describe('calculateTrainingCostMultiplier', () => {
+	describe('calculateStudyingCostMultiplier', () => {
 		it('should return 1.0 with no upgrades', () => {
-			expect(calculateTrainingCostMultiplier({})).toBe(1.0);
+			expect(calculateStudyingCostMultiplier({})).toBe(1.0);
 		});
 
 		it('should calculate multiplier for single upgrade level', () => {
 			const upgrades = {
 				'training-efficiency': {
 					id: 'training-efficiency',
-					effectType: 'trainingEfficiency', // v0.1.5
+					effectType: 'studyingEfficiency', // v0.1.5
 					effectValue: 0.01, // v0.1.5: 1% per level
 					currentLevel: 10, // 10% total reduction
-					category: 'training'
+					category: 'studying'
 				} as Upgrade
 			};
 
 			// (1 - 0.01)^10 = 0.9044
-			expect(calculateTrainingCostMultiplier(upgrades)).toBeCloseTo(0.9044, 4);
+			expect(calculateStudyingCostMultiplier(upgrades)).toBeCloseTo(0.9044, 4);
 		});
 
 		it('should calculate multiplier for multiple upgrade levels', () => {
 			const upgrades = {
 				'training-efficiency': {
 					id: 'training-efficiency',
-					effectType: 'trainingEfficiency', // v0.1.5
+					effectType: 'studyingEfficiency', // v0.1.5
 					effectValue: 0.01, // v0.1.5: 1% per level
 					currentLevel: 20, // 20% total reduction
-					category: 'training'
+					category: 'studying'
 				} as Upgrade
 			};
 
 			// (1 - 0.01)^20 = 0.8179
-			expect(calculateTrainingCostMultiplier(upgrades)).toBeCloseTo(0.8179, 4);
+			expect(calculateStudyingCostMultiplier(upgrades)).toBeCloseTo(0.8179, 4);
 		});
 	});
 
@@ -301,7 +301,7 @@ describe('Upgrade Effect Calculations', () => {
 			const upgrades = {
 				'osmotic-absorption': {
 					id: 'osmotic-absorption',
-					effectType: 'ruminatePower',
+					effectType: 'researchPower',
 					effectValue: 1,
 					currentLevel: 1,
 					category: 'click'
@@ -315,7 +315,7 @@ describe('Upgrade Effect Calculations', () => {
 			const upgrades = {
 				'osmotic-absorption': {
 					id: 'osmotic-absorption',
-					effectType: 'ruminatePower',
+					effectType: 'researchPower',
 					effectValue: 1,
 					currentLevel: 5,
 					category: 'click'
@@ -329,14 +329,14 @@ describe('Upgrade Effect Calculations', () => {
 			const upgrades = {
 				'upgrade-1': {
 					id: 'upgrade-1',
-					effectType: 'ruminatePower',
+					effectType: 'researchPower',
 					effectValue: 1,
 					currentLevel: 3,
 					category: 'click'
 				} as Upgrade,
 				'upgrade-2': {
 					id: 'upgrade-2',
-					effectType: 'ruminatePower',
+					effectType: 'researchPower',
 					effectValue: 2,
 					currentLevel: 2,
 					category: 'click'
@@ -415,10 +415,10 @@ describe('Upgrade Effect Calculations', () => {
 			const upgrades = {
 				'ruminate-speed': {
 					id: 'ruminate-speed',
-					effectType: 'ruminateSpeed',
+					effectType: 'researchSpeed',
 					effectValue: 0.1, // -0.1s per level
 					currentLevel: 1,
-					category: 'ruminate'
+					category: 'research'
 				} as Upgrade
 			};
 
@@ -430,10 +430,10 @@ describe('Upgrade Effect Calculations', () => {
 			const upgrades = {
 				'ruminate-speed': {
 					id: 'ruminate-speed',
-					effectType: 'ruminateSpeed',
+					effectType: 'researchSpeed',
 					effectValue: 0.1, // -0.1s per level
 					currentLevel: 10,
-					category: 'ruminate'
+					category: 'research'
 				} as Upgrade
 			};
 
@@ -445,10 +445,10 @@ describe('Upgrade Effect Calculations', () => {
 			const upgrades = {
 				'ruminate-speed': {
 					id: 'ruminate-speed',
-					effectType: 'ruminateSpeed',
+					effectType: 'researchSpeed',
 					effectValue: 0.1,
 					currentLevel: 100, // Would be -0.1s without limit
-					category: 'ruminate'
+					category: 'research'
 				} as Upgrade
 			};
 

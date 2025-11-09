@@ -64,29 +64,29 @@ click-mastery:
 # Upgrades for the idle research action
 # ============================================================================
 
-ruminate-power:
-  id: ruminate-power
+research-power:
+  id: research-power
   name: Research Power
   description: Increases EXP gained from each research session
   effect: '+25 EXP per session per level'
   baseCost: 500
   costMultiplier: 1.4
   maxLevel: 50
-  category: ruminate
-  effectType: ruminatePower
+  category: research
+  effectType: researchPower
   effectValue: 25
   minLevel: 2
 
-ruminate-speed:
-  id: ruminate-speed
+research-speed:
+  id: research-speed
   name: Research Speed
   description: Reduces time between research sessions
   effect: '-0.1s per session per level'
   baseCost: 800
   costMultiplier: 1.4
   maxLevel: 50
-  category: ruminate
-  effectType: ruminateSpeed
+  category: research
+  effectType: researchSpeed
   effectValue: 0.1
   minLevel: 2
 
@@ -98,8 +98,8 @@ focus-flow:
   baseCost: 1200
   costMultiplier: 1.4
   maxLevel: 50
-  category: ruminate
-  effectType: ruminateCrit
+  category: research
+  effectType: researchCrit
   effectValue: 0.005
   minLevel: 3
 
@@ -111,21 +111,21 @@ intense-thoughts:
   baseCost: 2000
   costMultiplier: 1.4
   maxLevel: 50
-  category: ruminate
-  effectType: ruminateCritDamage
+  category: research
+  effectType: researchCritDamage
   effectValue: 0.02
   minLevel: 4
 
-ruminate-mastery:
-  id: ruminate-mastery
+research-mastery:
+  id: research-mastery
   name: Research Mastery
   description: Multiplicative bonus to all research EXP gains
   effect: '+20% research EXP per level'
   baseCost: 25000
   costMultiplier: 2
   maxLevel: 20
-  category: ruminate
-  effectType: ruminateMultiplierPercent
+  category: research
+  effectType: researchMultiplierPercent
   effectValue: 0.2
   minLevel: 4
 
@@ -134,42 +134,42 @@ ruminate-mastery:
 # Upgrades that enhance stat study effectiveness
 # ============================================================================
 
-training-power:
-  id: training-power
+studying-power:
+  id: studying-power
   name: Study Power
   description: Increases stat EXP gained from each study session
   effect: '+1% stat EXP per study per level'
   baseCost: 2000
   costMultiplier: 1.4
   maxLevel: 50
-  category: training
+  category: studying
   effectType: statGainPercent
   effectValue: 0.01
   minLevel: 3
 
-training-speed:
-  id: training-speed
+studying-speed:
+  id: studying-speed
   name: Study Speed
   description: Reduces time required to complete stat study sessions
   effect: '-0.1s per study per level'
   baseCost: 2500
   costMultiplier: 1.4
   maxLevel: 50
-  category: training
-  effectType: trainingSpeed
+  category: studying
+  effectType: studyingSpeed
   effectValue: 0.1
   minLevel: 3
 
-training-efficiency:
-  id: training-efficiency
+studying-efficiency:
+  id: studying-efficiency
   name: Study Efficiency
   description: Reduces character EXP cost to start studying
   effect: '-1% study cost per level'
   baseCost: 3000
   costMultiplier: 1.4
   maxLevel: 50
-  category: training
-  effectType: trainingEfficiency
+  category: studying
+  effectType: studyingEfficiency
   effectValue: 0.01
   minLevel: 3
 
@@ -181,33 +181,33 @@ perfect-form:
   baseCost: 4000
   costMultiplier: 1.4
   maxLevel: 50
-  category: training
-  effectType: trainingCrit
+  category: studying
+  effectType: studyingCrit
   effectValue: 0.005
   minLevel: 4
 
-devastating-training:
-  id: devastating-training
+devastating-studying:
+  id: devastating-studying
   name: Eureka Moments
   description: Increases the bonus stat EXP multiplier when study critically strikes
   effect: '+2% study crit damage per level'
   baseCost: 5000
   costMultiplier: 1.4
   maxLevel: 50
-  category: training
-  effectType: trainingCritDamage
+  category: studying
+  effectType: studyingCritDamage
   effectValue: 0.02
   minLevel: 4
 
-training-mastery:
-  id: training-mastery
+studying-mastery:
+  id: studying-mastery
   name: Study Mastery
   description: Multiplicative bonus to all stat EXP gains from studying
   effect: '+5% stat EXP per study per level'
   baseCost: 50000
   costMultiplier: 2
   maxLevel: 20
-  category: training
+  category: studying
   effectType: statGainPercent
   effectValue: 0.05
   minLevel: 4

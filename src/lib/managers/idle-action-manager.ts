@@ -1,11 +1,11 @@
 import type { Stats } from '../game';
 import {
-	TRAINING_BASE_COST,
-	TRAINING_REWARD,
-	TRAINING_CRIT_MULTIPLIER,
+	STUDYING_BASE_COST,
+	STUDYING_REWARD,
+	STUDYING_CRIT_MULTIPLIER,
 	RUMINATE_BASE_REWARD,
 	RUMINATE_BASE_DURATION,
-	TRAINING_BASE_DURATION,
+	STUDYING_BASE_DURATION,
 	MEDITATION_FUTURE_DURATION,
 	MEDITATION_FUTURE_COST,
 	MEDITATION_DISASSOCIATE_DURATION,
@@ -17,11 +17,11 @@ import {
 	calculateRuminateCritDamage,
 	calculateStatGainBonus,
 	calculateStatGainMultiplierPercent,
-	calculateTrainingCritDamage
+	calculateStudyingCritDamage
 } from '../utils/calculations';
 
 /**
- * Represents a training or meditation action
+ * Represents a studying or meditation action
  */
 export interface IdleAction {
 	id: string;
@@ -39,7 +39,7 @@ export interface IdleAction {
 	isActive: boolean;
 	/** Last time progress was updated */
 	lastUpdate: number;
-	/** What stat this trains (if any) - only base stats, not EXP properties */
+	/** What stat this studies (if any) - only base stats, not EXP properties */
 	trainsStat?: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>;
 	/** Whether this is a one-time action */
 	oneTime?: boolean;
@@ -58,7 +58,7 @@ export interface ActionCompletionResult {
 		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>;
 		amount: number;
 	};
-	/** EXP cost for the stat level (if training) */
+	/** EXP cost for the stat level (if studying) */
 	expCost?: number;
 	/** Whether the action should continue running */
 	shouldContinue: boolean;
@@ -72,10 +72,10 @@ export interface ActionCompletionResult {
  * Dependencies required by IdleActionManager
  */
 export interface IdleActionDependencies {
-	/** Get training speed multiplier from upgrades */
-	getTrainingSpeedMultiplier: () => number;
-	/** Get training cost multiplier from upgrades */
-	getTrainingCostMultiplier: () => number;
+	/** Get studying speed multiplier from upgrades */
+	getStudyingSpeedMultiplier: () => number;
+	/** Get studying cost multiplier from upgrades */
+	getStudyingCostMultiplier: () => number;
 	/** Get ruminate EXP bonus from upgrades */
 	getRuminateExpBonus: () => number;
 	/** Get Discipline multiplier for all EXP gains */
@@ -88,8 +88,8 @@ export interface IdleActionDependencies {
 	getRuminateSpeedMultiplier: () => number;
 	/** Get EXP cost to level up a specific stat (legacy - kept for migration) */
 	getStatLevelCost: (stat: keyof Stats) => number;
-	/** Get character EXP cost to start training a specific stat (v0.1.5+) */
-	getStatTrainingCost: (
+	/** Get character EXP cost to start studying a specific stat (v0.1.5+) */
+	getStatStudyingCost: (
 		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	) => number;
 	/** Add stat EXP and handle level ups (v0.1.5+) */
@@ -97,7 +97,7 @@ export interface IdleActionDependencies {
 		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>,
 		amount: number
 	) => { success: boolean; leveledUp: boolean; newLevel: number };
-	/** Get current crit chance (for training rewards) */
+	/** Get current crit chance (for studying rewards) */
 	getCritChance: () => number;
 	/** Get current EXP balance */
 	getCurrentExp: () => number;
@@ -111,10 +111,10 @@ export interface IdleActionDependencies {
 	getStatGainBonus: () => number;
 	/** Get stat gain percentage multiplier from upgrades */
 	getStatGainMultiplierPercent: () => number;
-	/** Get training crit chance from upgrades */
-	getTrainingCritChance: () => number;
-	/** Get training crit damage multiplier from upgrades */
-	getTrainingCritDamage: () => number;
+	/** Get studying crit chance from upgrades */
+	getStudyingCritChance: () => number;
+	/** Get studying crit damage multiplier from upgrades */
+	getStudyingCritDamage: () => number;
 	/** Get max level for a specific stat */
 	getMaxStatLevel: (
 		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
@@ -127,21 +127,21 @@ export interface IdleActionDependencies {
 
 /**
  * Manages all idle action state and lifecycle
- * Handles training, meditation, and ruminate actions
+ * Handles studying, meditation, and ruminate actions
  */
 export class IdleActionManager {
-	private trainingActions: { [key: string]: IdleAction };
+	private studyingActions: { [key: string]: IdleAction };
 	private meditationActions: { [key: string]: IdleAction };
 
 	constructor(private deps: IdleActionDependencies) {
-		this.trainingActions = this.initializeTrainingActions();
+		this.studyingActions = this.initializeStudyingActions();
 		this.meditationActions = this.initializeMeditationActions();
 	}
 
 	/**
-	 * Initializes training actions for stat development
+	 * Initializes studying actions for stat development
 	 */
-	private initializeTrainingActions(): { [key: string]: IdleAction } {
+	private initializeStudyingActions(): { [key: string]: IdleAction } {
 		return {
 			'study-research': {
 				id: 'study-research',
@@ -157,11 +157,11 @@ export class IdleActionManager {
 			'study-athletics': {
 				id: 'study-athletics',
 				name: 'Study Athletics',
-				description: 'Learn strength training and combat theory',
+				description: 'Theoretical Athletic Techniques',
 				progress: 0,
-				baseDuration: TRAINING_BASE_DURATION,
-				duration: TRAINING_BASE_DURATION,
-				expCost: TRAINING_BASE_COST,
+				baseDuration: STUDYING_BASE_DURATION,
+				duration: STUDYING_BASE_DURATION,
+				expCost: STUDYING_BASE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
 				trainsStat: 'strength'
@@ -169,11 +169,11 @@ export class IdleActionManager {
 			'study-kinetics': {
 				id: 'study-kinetics',
 				name: 'Study Kinetics',
-				description: 'Study speed, agility, and reflexes methodology',
+				description: 'Kintetic Reflex Metholodogies',
 				progress: 0,
-				baseDuration: TRAINING_BASE_DURATION,
-				duration: TRAINING_BASE_DURATION,
-				expCost: TRAINING_BASE_COST,
+				baseDuration: STUDYING_BASE_DURATION,
+				duration: STUDYING_BASE_DURATION,
+				expCost: STUDYING_BASE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
 				trainsStat: 'agility'
@@ -181,11 +181,11 @@ export class IdleActionManager {
 			'study-selfdefense': {
 				id: 'study-selfdefense',
 				name: 'Study Self-Defense',
-				description: 'Learn principles of mental fortitude and defensive tactics',
+				description: 'Academic Principles of Defensive Tactics',
 				progress: 0,
-				baseDuration: TRAINING_BASE_DURATION,
-				duration: TRAINING_BASE_DURATION,
-				expCost: TRAINING_BASE_COST,
+				baseDuration: STUDYING_BASE_DURATION,
+				duration: STUDYING_BASE_DURATION,
+				expCost: STUDYING_BASE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
 				trainsStat: 'willpower'
@@ -193,11 +193,11 @@ export class IdleActionManager {
 			'study-fitness': {
 				id: 'study-fitness',
 				name: 'Study Fitness',
-				description: 'Study physical conditioning theory and endurance training',
+				description: 'Application of Physical Fitness Theory',
 				progress: 0,
-				baseDuration: TRAINING_BASE_DURATION,
-				duration: TRAINING_BASE_DURATION,
-				expCost: TRAINING_BASE_COST,
+				baseDuration: STUDYING_BASE_DURATION,
+				duration: STUDYING_BASE_DURATION,
+				expCost: STUDYING_BASE_COST,
 				isActive: false,
 				lastUpdate: Date.now(),
 				trainsStat: 'endurance'
@@ -226,10 +226,10 @@ export class IdleActionManager {
 	}
 
 	/**
-	 * Gets all training actions
+	 * Gets all studying actions
 	 */
-	getTrainingActions(): { [key: string]: IdleAction } {
-		return this.trainingActions;
+	getStudyingActions(): { [key: string]: IdleAction } {
+		return this.studyingActions;
 	}
 
 	/**
@@ -240,10 +240,10 @@ export class IdleActionManager {
 	}
 
 	/**
-	 * Gets a specific training action
+	 * Gets a specific studying action
 	 */
-	getTrainingAction(actionId: string): IdleAction | undefined {
-		return this.trainingActions[actionId];
+	getStudyingAction(actionId: string): IdleAction | undefined {
+		return this.studyingActions[actionId];
 	}
 
 	/**
@@ -257,8 +257,8 @@ export class IdleActionManager {
 	 * Migrates saved training actions to the latest definitions
 	 * Preserves progress and active state while adding new actions
 	 */
-	migrateTrainingActions(savedActions: { [key: string]: IdleAction }): void {
-		const freshActions = this.initializeTrainingActions();
+	migrateStudyingActions(savedActions: { [key: string]: IdleAction }): void {
+		const freshActions = this.initializeStudyingActions();
 
 		// Migration map for renamed actions (Training → Study rebrand)
 		const migrationMap: { [oldId: string]: string } = {
@@ -288,7 +288,7 @@ export class IdleActionManager {
 			}
 		}
 
-		this.trainingActions = freshActions;
+		this.studyingActions = freshActions;
 	}
 
 	/**
@@ -319,18 +319,18 @@ export class IdleActionManager {
 	 * @param actionId - ID of the action to start
 	 * @returns True if action started successfully
 	 */
-	startIdleAction(actionMap: 'training' | 'meditation', actionId: string): boolean {
-		const actions = actionMap === 'training' ? this.trainingActions : this.meditationActions;
+	startIdleAction(actionMap: 'studying' | 'meditation', actionId: string): boolean {
+		const actions = actionMap === 'studying' ? this.studyingActions : this.meditationActions;
 		const action = actions[actionId];
 		if (!action) return false;
 
 		// Check if already completed (for one-time actions)
 		if (action.oneTime && action.completed) return false;
 
-		// For stat training (v0.1.5+): Check character EXP cost and charge upfront
+		// For stat studying (v0.1.5+): Check character EXP cost and charge upfront
 		if (action.trainsStat && actionId !== 'study-research') {
 			const stat = action.trainsStat;
-			const cost = this.deps.getStatTrainingCost(stat);
+			const cost = this.deps.getStatStudyingCost(stat);
 			const currentExp = this.deps.getCurrentExp();
 
 			// Check if player can afford the training
@@ -363,8 +363,8 @@ export class IdleActionManager {
 			const combinedSpeed = ruminateSpeed * globalSpeed;
 			action.duration = Math.floor(action.baseDuration / combinedSpeed);
 		} else if (action.trainsStat) {
-			// Stat training gets training speed and global idle speed
-			const trainingSpeed = this.deps.getTrainingSpeedMultiplier();
+			// Stat studying gets studying speed and global idle speed
+			const trainingSpeed = this.deps.getStudyingSpeedMultiplier();
 			const globalSpeed = this.deps.getGlobalIdleSpeedMultiplier();
 			action.duration = Math.floor((action.baseDuration * trainingSpeed) / globalSpeed);
 		} else {
@@ -381,8 +381,8 @@ export class IdleActionManager {
 	 * @param actionMap - The action map (trainingActions or meditationActions)
 	 * @param actionId - ID of the action to stop
 	 */
-	stopIdleAction(actionMap: 'training' | 'meditation', actionId: string): void {
-		const actions = actionMap === 'training' ? this.trainingActions : this.meditationActions;
+	stopIdleAction(actionMap: 'studying' | 'meditation', actionId: string): void {
+		const actions = actionMap === 'studying' ? this.studyingActions : this.meditationActions;
 		const action = actions[actionId];
 		if (!action) return;
 
@@ -399,13 +399,13 @@ export class IdleActionManager {
 		const now = Date.now();
 		const results: ActionCompletionResult[] = [];
 
-		// Update training actions
-		for (const action of Object.values(this.trainingActions)) {
+		// Update studying actions
+		for (const action of Object.values(this.studyingActions)) {
 			if (action.isActive) {
-				// For stat training at completion, check if blocked before updating progress
+				// For stat studying at completion, check if blocked before updating progress
 				// This freezes progress when player can't afford restart or stat is at cap
 				if (action.trainsStat && action.progress >= 1.0) {
-					const cost = this.deps.getStatTrainingCost(action.trainsStat);
+					const cost = this.deps.getStatStudyingCost(action.trainsStat);
 					const currentStatLevel = this.deps.getCurrentStatLevel(action.trainsStat);
 					const maxStatLevel = this.deps.getMaxStatLevel(action.trainsStat);
 					const canAfford = this.deps.getCurrentExp() >= cost;
@@ -422,7 +422,7 @@ export class IdleActionManager {
 				action.lastUpdate = now;
 
 				if (action.progress >= 1.0) {
-					const result = this.completeTrainingAction(action.id);
+					const result = this.completeStudyingAction(action.id);
 					if (result) results.push(result);
 				}
 			}
@@ -446,17 +446,17 @@ export class IdleActionManager {
 	}
 
 	/**
-	 * Get the character EXP cost to start a training action (v0.1.5+)
-	 * @param actionId - ID of the training action
-	 * @returns Character EXP cost, or 0 if not a stat training action
+	 * Get the character EXP cost to start a studying action (v0.1.5+)
+	 * @param actionId - ID of the studying action
+	 * @returns Character EXP cost, or 0 if not a stat studying action
 	 */
-	getTrainingCost(actionId: string): number {
-		const action = this.trainingActions[actionId];
+	getStudyingCost(actionId: string): number {
+		const action = this.studyingActions[actionId];
 		if (!action || !action.trainsStat || actionId === 'practice-ruminate') {
-			return 0; // Ruminate is free, non-training actions have no cost
+			return 0; // Ruminate is free, non-studying actions have no cost
 		}
 
-		return this.deps.getStatTrainingCost(action.trainsStat);
+		return this.deps.getStatStudyingCost(action.trainsStat);
 	}
 
 	/**
@@ -464,13 +464,13 @@ export class IdleActionManager {
 	 * @param actionId - ID of the training action
 	 * @returns True if the action can be started
 	 */
-	canStartTraining(actionId: string): boolean {
-		const action = this.trainingActions[actionId];
+	canStartStudying(actionId: string): boolean {
+		const action = this.studyingActions[actionId];
 		if (!action || !action.trainsStat || actionId === 'practice-ruminate') {
 			return true; // Ruminate and non-training actions can always be started
 		}
 
-		const cost = this.getTrainingCost(actionId);
+		const cost = this.getStudyingCost(actionId);
 		return this.deps.getCurrentExp() >= cost;
 	}
 
@@ -478,8 +478,8 @@ export class IdleActionManager {
 	 * Completes a training action and returns the result
 	 * @param actionId - ID of the training action to complete
 	 */
-	private completeTrainingAction(actionId: string): ActionCompletionResult | null {
-		const action = this.trainingActions[actionId];
+	private completeStudyingAction(actionId: string): ActionCompletionResult | null {
+		const action = this.studyingActions[actionId];
 		if (!action || !action.isActive) return null;
 
 		// Handle ruminate completion
@@ -519,8 +519,8 @@ export class IdleActionManager {
 			const stat = action.trainsStat;
 			const statGainBonus = this.deps.getStatGainBonus();
 			const statGainPercent = this.deps.getStatGainMultiplierPercent();
-			const critChance = this.deps.getTrainingCritChance();
-			const critDamage = this.deps.getTrainingCritDamage();
+			const critChance = this.deps.getStudyingCritChance();
+			const critDamage = this.deps.getStudyingCritDamage();
 
 			// Calculate stat EXP gained: (base + bonus) × percentage_mult × crit_mult
 			let statExpGained = 10 + statGainBonus; // Base 10 + flat bonus
@@ -536,7 +536,7 @@ export class IdleActionManager {
 			const statResult = this.deps.addStatExp(stat, statExpGained);
 
 			// Check if player can afford AND stat not at cap to RESTART training
-			const cost = this.deps.getStatTrainingCost(stat);
+			const cost = this.deps.getStatStudyingCost(stat);
 			const currentExp = this.deps.getCurrentExp();
 			const currentStatLevel = this.deps.getCurrentStatLevel(stat);
 			const maxStatLevel = this.deps.getMaxStatLevel(stat);

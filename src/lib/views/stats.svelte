@@ -32,7 +32,7 @@
             currentExp: game.getStatExp('strength'),
             requiredExp: game.getStatExpRequired('strength'),
             maxLevel: game.getMaxStatLevel('strength'),
-            trainingCost: game.getStatTrainingCost('strength'),
+            trainingCost: game.getStatStudyingCost('strength'),
             effect: game.isStatLocked('strength') ? '???' : 'Attack',
             color: 'var(--red)',
             available: game.level >= 3,
@@ -47,7 +47,7 @@
             currentExp: game.getStatExp('agility'),
             requiredExp: game.getStatExpRequired('agility'),
             maxLevel: game.getMaxStatLevel('agility'),
-            trainingCost: game.getStatTrainingCost('agility'),
+            trainingCost: game.getStatStudyingCost('agility'),
             effect: game.isStatLocked('agility') ? '???' : 'Attack Speed',
             color: 'var(--green)',
             available: game.level >= 3,
@@ -62,7 +62,7 @@
             currentExp: game.getStatExp('willpower'),
             requiredExp: game.getStatExpRequired('willpower'),
             maxLevel: game.getMaxStatLevel('willpower'),
-            trainingCost: game.getStatTrainingCost('willpower'),
+            trainingCost: game.getStatStudyingCost('willpower'),
             effect: game.isStatLocked('willpower') ? '???' : 'Defense',
             color: 'var(--blue)',
             available: game.level >= 3,
@@ -77,7 +77,7 @@
             currentExp: game.getStatExp('endurance'),
             requiredExp: game.getStatExpRequired('endurance'),
             maxLevel: game.getMaxStatLevel('endurance'),
-            trainingCost: game.getStatTrainingCost('endurance'),
+            trainingCost: game.getStatStudyingCost('endurance'),
             effect: game.isStatLocked('endurance') ? '???' : 'HP',
             color: 'var(--yellow)',
             available: game.level >= 3,
@@ -197,11 +197,11 @@
         {#if game.level >= 3}
             <div class="rate-row">
                 <span class="rate-label">Training Speed:</span>
-                <span class="rate-value">{(game.getTrainingSpeedMultiplier() * 100).toFixed(0)}%</span>
+                <span class="rate-value">{(game.getStudyingSpeedMultiplier() * 100).toFixed(0)}%</span>
             </div>
             <div class="rate-row">
                 <span class="rate-label">Training Cost:</span>
-                <span class="rate-value">{(game.getTrainingCostMultiplier() * 100).toFixed(0)}%</span>
+                <span class="rate-value">{(game.getStudyingCostMultiplier() * 100).toFixed(0)}%</span>
             </div>
         {/if}
     </div>

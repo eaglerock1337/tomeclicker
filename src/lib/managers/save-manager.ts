@@ -11,10 +11,10 @@ export interface GameState {
 	clickMultiplier: number;
 	critChance: number;
 	critDamage: number;
-	trainingCritChance: number;
+	studyingCritChance: number;
 	upgrades: Record<string, any>; // Upgrade objects or legacy format
 	stats: Stats;
-	trainingActions: Record<string, any>; // IdleAction objects
+	studyingActions: Record<string, any>; // IdleAction objects
 	meditationActions: Record<string, any>; // IdleAction objects
 	idleExpRate: number;
 	adventureModeUnlocked: boolean;

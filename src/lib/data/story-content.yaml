@@ -19,13 +19,13 @@ chapters:
           upgradeId: discipline
 
       - id: ch1-level2
-        text: 'My experience is starting to pay off. My thoughts start ruminating in the back of my mind, giving me even more insights as I progress.'
+        text: "My experience is starting to pay off, but I won't progress much further without better direction. I need to start studying to improve."
         trigger:
           type: level
           threshold: 2
 
       - id: ch1-level3
-        text: "I'm starting to get the hang of this. My practice is making me realize what I need to focus on if I'm ever going to venture away from home."
+        text: "I'm starting to get the hang of this. My studying is making me realize what I need to focus on if I'm ever going to venture away from home."
         trigger:
           type: level
           threshold: 3

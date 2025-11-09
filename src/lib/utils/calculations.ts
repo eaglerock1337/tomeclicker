@@ -70,30 +70,30 @@ export function calculateStatLevelCost(currentStatLevel: number): number {
 }
 
 /**
- * Calculates the training speed multiplier from upgrades
- * Lower multiplier = faster training
+ * Calculates the studying speed multiplier from upgrades
+ * Lower multiplier = faster studying
  *
  * @param upgrades - Map of all upgrades
- * @returns Multiplier for training duration (lower is faster)
+ * @returns Multiplier for studying duration (lower is faster)
  *
  * @example
  * // No upgrades: 1.0 (100% duration)
- * calculateTrainingSpeedMultiplier({})
+ * calculateStudyingSpeedMultiplier({})
  *
- * // One level of -10% training time: 0.9 (90% duration)
- * calculateTrainingSpeedMultiplier({
- *   'efficient-training': { effectType: 'trainingSpeed', effectValue: 0.1, currentLevel: 1 }
+ * // One level of -10% studying time: 0.9 (90% duration)
+ * calculateStudyingSpeedMultiplier({
+ *   'efficient-studying': { effectType: 'trainingSpeed', effectValue: 0.1, currentLevel: 1 }
  * })
  */
-export function calculateTrainingSpeedMultiplier(upgrades: { [key: string]: Upgrade }): number {
+export function calculateStudyingSpeedMultiplier(upgrades: { [key: string]: Upgrade }): number {
 	let multiplier = 1.0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'trainingSpeed') {
+		if (upgrade.effectType === 'studyingSpeed') {
 			// v0.1.5+: -0.1s per level from 15s base
 			// Convert seconds reduction to multiplier: 15 / (15 - (0.1 * level))
 			const secondsReduced = upgrade.effectValue * upgrade.currentLevel; // 0.1s * level
-			const baseDuration = 15; // 15 second base training time
+			const baseDuration = 15; // 15 second base studying time
 			const newDuration = Math.max(1, baseDuration - secondsReduced); // Min 1 second
 			multiplier *= baseDuration / newDuration;
 		}
@@ -103,27 +103,27 @@ export function calculateTrainingSpeedMultiplier(upgrades: { [key: string]: Upgr
 }
 
 /**
- * Calculates the training cost multiplier from upgrades
- * Lower multiplier = cheaper training
+ * Calculates the studying cost multiplier from upgrades
+ * Lower multiplier = cheaper studying
  *
  * @param upgrades - Map of all upgrades
- * @returns Multiplier for training EXP cost (lower is cheaper)
+ * @returns Multiplier for studying EXP cost (lower is cheaper)
  *
  * @example
  * // No upgrades: 1.0 (100% cost)
- * calculateTrainingCostMultiplier({})
+ * calculateStudyingCostMultiplier({})
  *
  * // One level of -20% cost: 0.8 (80% cost)
- * calculateTrainingCostMultiplier({
+ * calculateStudyingCostMultiplier({
  *   'cost-reduction': { effectType: 'trainingCost', effectValue: 0.2, currentLevel: 1 }
  * })
  */
-export function calculateTrainingCostMultiplier(upgrades: { [key: string]: Upgrade }): number {
+export function calculateStudyingCostMultiplier(upgrades: { [key: string]: Upgrade }): number {
 	let multiplier = 1.0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'trainingEfficiency') {
-			// v0.1.5+: -1% training cost per level
+		if (upgrade.effectType === 'studyingEfficiency') {
+			// v0.1.5+: -1% studying cost per level
 			multiplier *= Math.pow(1 - upgrade.effectValue, upgrade.currentLevel);
 		}
 	}
@@ -150,7 +150,7 @@ export function calculateRuminateExpBonus(upgrades: { [key: string]: Upgrade }):
 	let bonus = 0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'ruminatePower') {
+		if (upgrade.effectType === 'researchPower') {
 			// v0.1.5+: +1 EXP per tick per level
 			bonus += upgrade.effectValue * upgrade.currentLevel;
 		}
@@ -207,7 +207,7 @@ export function calculateRuminateSpeedMultiplier(upgrades: { [key: string]: Upgr
 	let multiplier = 1.0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'ruminateSpeed') {
+		if (upgrade.effectType === 'researchSpeed') {
 			// v0.1.5+: -0.1s per level from 10s base
 			// Convert seconds reduction to speed multiplier
 			const secondsReduced = upgrade.effectValue * upgrade.currentLevel; // 0.1s * level
@@ -250,23 +250,23 @@ export function calculateStatExpRequired(currentStatLevel: number): number {
 }
 
 /**
- * Calculates the character EXP cost to start stat training (v0.1.5+ training economy)
+ * Calculates the character EXP cost to start stat studying (v0.1.5+ studying economy)
  * Uses the formula: 100,000 × (statLevel ^ 1.3)
  *
- * Special case: Level 0 training costs 100,000 character EXP (unlock cost)
+ * Special case: Level 0 studying costs 100,000 character EXP (unlock cost)
  *
- * @param currentStatLevel - The current level of the stat being trained
- * @returns Character EXP cost to start training this stat
+ * @param currentStatLevel - The current level of the stat being studied
+ * @returns Character EXP cost to start studying this stat
  *
  * @example
- * calculateStatTrainingCost(0) // 100,000 (Train to unlock stat at level 1)
- * calculateStatTrainingCost(1) // 100,000 (Train Strength 1→2)
- * calculateStatTrainingCost(5) // 900,000 (Train Strength 5→6)
- * calculateStatTrainingCost(10) // 2,800,000 (Train Strength 10→11)
- * calculateStatTrainingCost(20) // 13,000,000 (Train Strength 20→21)
+ * calculateStatStudyingCost(0) // 100,000 (Study to unlock stat at level 1)
+ * calculateStatStudyingCost(1) // 100,000 (Study Strength 1→2)
+ * calculateStatStudyingCost(5) // 900,000 (Study Strength 5→6)
+ * calculateStatStudyingCost(10) // 2,800,000 (Study Strength 10→11)
+ * calculateStatStudyingCost(20) // 13,000,000 (Study Strength 20→21)
  */
-export function calculateStatTrainingCost(currentStatLevel: number): number {
-	// Special case: Level 0 training costs 100,000 character EXP
+export function calculateStatStudyingCost(currentStatLevel: number): number {
+	// Special case: Level 0 studying costs 100,000 character EXP
 	if (currentStatLevel === 0) {
 		return 100000;
 	}
@@ -296,11 +296,11 @@ export function calculateMaxStatLevel(characterLevel: number): number {
 }
 
 /**
- * Calculates the stat gain bonus from upgrades (v0.1.5+ training system)
- * Additional stat EXP gained per training completion
+ * Calculates the stat gain bonus from upgrades (v0.1.5+ studying system)
+ * Additional stat EXP gained per studying completion
  *
  * @param upgrades - Map of all upgrades
- * @returns Additional stat EXP per training completion
+ * @returns Additional stat EXP per studying completion
  *
  * @example
  * // No upgrades: 0 bonus stat EXP
@@ -316,7 +316,7 @@ export function calculateStatGainBonus(upgrades: { [key: string]: Upgrade }): nu
 
 	for (const upgrade of Object.values(upgrades)) {
 		if (upgrade.effectType === 'statGain') {
-			// v0.1.5+: +1 stat EXP per training per level
+			// v0.1.5+: +1 stat EXP per studying per level
 			bonus += upgrade.effectValue * upgrade.currentLevel;
 		}
 	}
@@ -325,27 +325,27 @@ export function calculateStatGainBonus(upgrades: { [key: string]: Upgrade }): nu
 }
 
 /**
- * Calculates the training crit chance from upgrades (v0.1.5+ training system)
- * Chance for training to grant double stat EXP
+ * Calculates the studying crit chance from upgrades (v0.1.5+ studying system)
+ * Chance for studying to grant double stat EXP
  *
  * @param upgrades - Map of all upgrades
- * @returns Crit chance for training (0.0 to 1.0)
+ * @returns Crit chance for studying (0.0 to 1.0)
  *
  * @example
  * // No upgrades: 0.0 (0% crit chance)
- * calculateTrainingCritChance({})
+ * calculateStudyingCritChance({})
  *
  * // 10 levels of +2% crit: 0.2 (20% crit chance)
- * calculateTrainingCritChance({
+ * calculateStudyingCritChance({
  *   'perfect-form': { effectType: 'trainingCrit', effectValue: 0.02, currentLevel: 10 }
  * })
  */
-export function calculateTrainingCritChance(upgrades: { [key: string]: Upgrade }): number {
+export function calculateStudyingCritChance(upgrades: { [key: string]: Upgrade }): number {
 	let critChance = 0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'trainingCrit') {
-			// v0.1.5+: +2% training crit chance per level
+		if (upgrade.effectType === 'studyingCrit') {
+			// v0.1.5+: +2% studying crit chance per level
 			critChance += upgrade.effectValue * upgrade.currentLevel;
 		}
 	}
@@ -431,7 +431,7 @@ export function calculateRuminateCritChance(upgrades: { [key: string]: Upgrade }
 	let critChance = 0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'ruminateCrit') {
+		if (upgrade.effectType === 'researchCrit') {
 			// v0.1.5+: +2% ruminate crit chance per level
 			critChance += upgrade.effectValue * upgrade.currentLevel;
 		}
@@ -460,7 +460,7 @@ export function calculateRuminateCritDamage(upgrades: { [key: string]: Upgrade }
 	let critDamage = 0.5; // Base 50% bonus (1.5x EXP)
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'ruminateCritDamage') {
+		if (upgrade.effectType === 'researchCritDamage') {
 			// v0.1.5+: +5% crit damage per level
 			critDamage += upgrade.effectValue * upgrade.currentLevel;
 		}
@@ -470,26 +470,26 @@ export function calculateRuminateCritDamage(upgrades: { [key: string]: Upgrade }
 }
 
 /**
- * Calculates the training crit damage multiplier from upgrades (v0.1.5+ training system)
- * Additional stat EXP gained when a training crit occurs
+ * Calculates the studying crit damage multiplier from upgrades (v0.1.5+ studying system)
+ * Additional stat EXP gained when a studying crit occurs
  *
  * @param upgrades - Map of all upgrades
  * @returns Crit damage multiplier (0.5 to 1.5, meaning 1.5x to 2.5x total stat EXP)
  *
  * @example
  * // No upgrades: 0.5 (1.5x stat EXP on crit)
- * calculateTrainingCritDamage({})
+ * calculateStudyingCritDamage({})
  *
  * // 10 levels of +5% crit damage: 1.0 (2.0x stat EXP on crit)
- * calculateTrainingCritDamage({
- *   'devastating-training': { effectType: 'trainingCritDamage', effectValue: 0.05, currentLevel: 10 }
+ * calculateStudyingCritDamage({
+ *   'devastating-studying': { effectType: 'trainingCritDamage', effectValue: 0.05, currentLevel: 10 }
  * })
  */
-export function calculateTrainingCritDamage(upgrades: { [key: string]: Upgrade }): number {
+export function calculateStudyingCritDamage(upgrades: { [key: string]: Upgrade }): number {
 	let critDamage = 0.5; // Base 50% bonus (1.5x stat EXP)
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'trainingCritDamage') {
+		if (upgrade.effectType === 'studyingCritDamage') {
 			// v0.1.5+: +5% crit damage per level
 			critDamage += upgrade.effectValue * upgrade.currentLevel;
 		}
@@ -547,7 +547,7 @@ export function calculateRuminateMultiplierPercent(upgrades: { [key: string]: Up
 	let multiplier = 1.0;
 
 	for (const upgrade of Object.values(upgrades)) {
-		if (upgrade.effectType === 'ruminateMultiplierPercent') {
+		if (upgrade.effectType === 'researchMultiplierPercent') {
 			// v0.1.5+: +5% ruminate power per level (additive)
 			multiplier += upgrade.effectValue * upgrade.currentLevel;
 		}
@@ -557,8 +557,8 @@ export function calculateRuminateMultiplierPercent(upgrades: { [key: string]: Up
 }
 
 /**
- * Calculates the stat gain percentage multiplier from upgrades (v0.1.5+ training system)
- * Multiplicative bonus to all stat EXP gain from training
+ * Calculates the stat gain percentage multiplier from upgrades (v0.1.5+ studying system)
+ * Multiplicative bonus to all stat EXP gain from studying
  *
  * @param upgrades - Map of all upgrades
  * @returns Multiplier for stat EXP (higher is more stat EXP)
@@ -569,7 +569,7 @@ export function calculateRuminateMultiplierPercent(upgrades: { [key: string]: Up
  *
  * // 10 levels of +5% bonus: 1.5 (150% stat EXP)
  * calculateStatGainMultiplierPercent({
- *   'training-mastery': { effectType: 'statGainPercent', effectValue: 0.05, currentLevel: 10 }
+ *   'studying-mastery': { effectType: 'statGainPercent', effectValue: 0.05, currentLevel: 10 }
  * })
  */
 export function calculateStatGainMultiplierPercent(upgrades: { [key: string]: Upgrade }): number {

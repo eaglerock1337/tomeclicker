@@ -24,7 +24,7 @@ import type { Stats } from '../../src/lib/game';
  * Usage:
  * ```ts
  * const manager = new ParametricIdleActionBuilder()
- *   .withTrainingRewardOf(10)
+ *   .withStudyingRewardOf(10)
  *   .withStatLevelCostOf(1, 100)
  *   .withCurrentExp(500)
  *   .build();
@@ -32,15 +32,15 @@ import type { Stats } from '../../src/lib/game';
  */
 export class ParametricIdleActionBuilder {
 	private deps: IdleActionDependencies = {
-		getTrainingSpeedMultiplier: () => 1.0,
-		getTrainingCostMultiplier: () => 1.0,
+		getStudyingSpeedMultiplier: () => 1.0,
+		getStudyingCostMultiplier: () => 1.0,
 		getRuminateExpBonus: () => 0,
 		getDisciplineMultiplier: () => 1.0,
 		getCurrentLevel: () => 1,
 		getGlobalIdleSpeedMultiplier: () => 1.0,
 		getRuminateSpeedMultiplier: () => 1.0,
 		getStatLevelCost: () => 100, // Legacy - kept for migration compatibility
-		getStatTrainingCost: () => 10,
+		getStatStudyingCost: () => 10,
 		addStatExp: () => ({ success: true, leveledUp: false, newLevel: 1 }),
 		getCritChance: () => 0.0,
 		getCurrentExp: () => 1000,
@@ -49,8 +49,8 @@ export class ParametricIdleActionBuilder {
 		getRuminateCritDamage: () => 0.5,
 		getStatGainBonus: () => 0,
 		getStatGainMultiplierPercent: () => 1.0,
-		getTrainingCritChance: () => 0.0,
-		getTrainingCritDamage: () => 0.5,
+		getStudyingCritChance: () => 0.0,
+		getStudyingCritDamage: () => 0.5,
 		getMaxStatLevel: (stat) => {
 			// Default max stat level is current level + 10 (allows training to continue)
 			const currentLevel = (this.statLevels[stat as keyof Stats] as number) || 1;
@@ -60,7 +60,7 @@ export class ParametricIdleActionBuilder {
 	};
 
 	// Training rewards (base stat EXP per training completion)
-	private trainingReward: number = 10;
+	private studyingReward: number = 10;
 
 	// Crit multiplier (how much extra stat EXP on crit)
 	private critMultiplier: number = 2;
@@ -86,7 +86,7 @@ export class ParametricIdleActionBuilder {
 	};
 
 	// Training cost formula: baseCost * (1 + (statLevel - 1) * 0.3)
-	private trainingCostBase: number = 10;
+	private studyingCostBase: number = 10;
 
 	// Generate default stat costs: 100 * (1.5 ^ (level - 1))
 	private generateDefaultStatCosts(): { [level: number]: number } {
@@ -101,8 +101,8 @@ export class ParametricIdleActionBuilder {
 	 * Set base stat EXP reward per training completion
 	 * Default: 10
 	 */
-	withTrainingRewardOf(amount: number): this {
-		this.trainingReward = amount;
+	withStudyingRewardOf(amount: number): this {
+		this.studyingReward = amount;
 		return this;
 	}
 
@@ -124,7 +124,7 @@ export class ParametricIdleActionBuilder {
 	 * - Progression pacing
 	 *
 	 * Does NOT affect:
-	 * - Training cost (getStatTrainingCost)
+	 * - Training cost (getStatStudyingCost)
 	 * - Actual training numbers
 	 */
 	withStatLevelCostOf(level: number, cost: number): this {
@@ -164,8 +164,8 @@ export class ParametricIdleActionBuilder {
 	 * Note: Actual cost scales with stat level in the real game
 	 * This sets the BASE cost before scaling.
 	 */
-	withTrainingCostOf(baseCost: number): this {
-		this.trainingCostBase = baseCost;
+	withStudyingCostOf(baseCost: number): this {
+		this.studyingCostBase = baseCost;
 		return this;
 	}
 
@@ -173,8 +173,8 @@ export class ParametricIdleActionBuilder {
 	 * Set training speed multiplier from upgrades
 	 * 1.0 = normal, 0.5 = 50% faster, 2.0 = 50% slower
 	 */
-	withTrainingSpeed(multiplier: number): this {
-		this.deps.getTrainingSpeedMultiplier = () => multiplier;
+	withStudyingSpeed(multiplier: number): this {
+		this.deps.getStudyingSpeedMultiplier = () => multiplier;
 		return this;
 	}
 
@@ -182,8 +182,8 @@ export class ParametricIdleActionBuilder {
 	 * Set training cost multiplier (cost reduction upgrades)
 	 * 1.0 = normal, 0.8 = 20% cheaper, 1.2 = 20% more expensive
 	 */
-	withTrainingCostMultiplier(multiplier: number): this {
-		this.deps.getTrainingCostMultiplier = () => multiplier;
+	withStudyingCostMultiplier(multiplier: number): this {
+		this.deps.getStudyingCostMultiplier = () => multiplier;
 		return this;
 	}
 
@@ -222,16 +222,16 @@ export class ParametricIdleActionBuilder {
 	/**
 	 * Set training crit chance (0.0 to 1.0)
 	 */
-	withTrainingCritChance(chance: number): this {
-		this.deps.getTrainingCritChance = () => chance;
+	withStudyingCritChance(chance: number): this {
+		this.deps.getStudyingCritChance = () => chance;
 		return this;
 	}
 
 	/**
 	 * Set training crit damage bonus (0.5 to 1.5, meaning 1.5x to 2.5x total)
 	 */
-	withTrainingCritDamage(damage: number): this {
-		this.deps.getTrainingCritDamage = () => damage;
+	withStudyingCritDamage(damage: number): this {
+		this.deps.getStudyingCritDamage = () => damage;
 		return this;
 	}
 
@@ -293,7 +293,7 @@ export class ParametricIdleActionBuilder {
 		this.deps.addStatExp = this.createAddStatExpFunction();
 
 		// Wire up training cost function
-		this.deps.getStatTrainingCost = () => this.trainingCostBase;
+		this.deps.getStatStudyingCost = () => this.studyingCostBase;
 
 		return new IdleActionManager(this.deps);
 	}
@@ -333,15 +333,15 @@ export class ParametricIdleActionBuilder {
  */
 export class IdleActionManagerBuilder {
 	private deps: IdleActionDependencies = {
-		getTrainingSpeedMultiplier: () => 1.0,
-		getTrainingCostMultiplier: () => 1.0,
+		getStudyingSpeedMultiplier: () => 1.0,
+		getStudyingCostMultiplier: () => 1.0,
 		getRuminateExpBonus: () => 0,
 		getDisciplineMultiplier: () => 1.0,
 		getCurrentLevel: () => 1,
 		getGlobalIdleSpeedMultiplier: () => 1.0,
 		getRuminateSpeedMultiplier: () => 1.0,
 		getStatLevelCost: () => 100,
-		getStatTrainingCost: () => 10,
+		getStatStudyingCost: () => 10,
 		addStatExp: () => ({ success: true, leveledUp: false, newLevel: 1 }),
 		getCritChance: () => 0.0,
 		getCurrentExp: () => 1000,
@@ -350,14 +350,14 @@ export class IdleActionManagerBuilder {
 		getRuminateCritDamage: () => 0.5,
 		getStatGainBonus: () => 0,
 		getStatGainMultiplierPercent: () => 1.0,
-		getTrainingCritChance: () => 0.0,
-		getTrainingCritDamage: () => 0.5,
+		getStudyingCritChance: () => 0.0,
+		getStudyingCritDamage: () => 0.5,
 		getMaxStatLevel: () => 10,
 		getCurrentStatLevel: () => 1
 	};
 
-	withTrainingSpeed(multiplier: number): this {
-		this.deps.getTrainingSpeedMultiplier = () => multiplier;
+	withStudyingSpeed(multiplier: number): this {
+		this.deps.getStudyingSpeedMultiplier = () => multiplier;
 		return this;
 	}
 

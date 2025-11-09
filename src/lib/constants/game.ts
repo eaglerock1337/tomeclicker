@@ -44,7 +44,7 @@ export const BASE_LEVEL_COST = 1000;
 export const LEVEL_COST_MULTIPLIER = 1000;
 
 // ============================================================================
-// STAT TRAINING SYSTEM
+// STAT STUDYING SYSTEM
 // ============================================================================
 
 /**
@@ -54,22 +54,22 @@ export const LEVEL_COST_MULTIPLIER = 1000;
 export const STAT_BASE_COST = 100;
 
 /**
- * Exponential multiplier for stat training costs
+ * Exponential multiplier for stat studying costs
  * Results in: 100, 150, 225, 337... (1.5x per level)
  */
 export const STAT_COST_MULTIPLIER = 1.5;
 
 /**
- * Base EXP cost to start a stat training session
- * Paid upfront before training begins
+ * Base EXP cost to start a stat studying session
+ * Paid upfront before studying begins
  */
-export const TRAINING_BASE_COST = 10;
+export const STUDYING_BASE_COST = 10;
 
 /**
- * EXP reward for completing a stat training session
+ * EXP reward for completing a stat studying session
  * Modified by crit chance for +50% bonus
  */
-export const TRAINING_REWARD = 10;
+export const STUDYING_REWARD = 10;
 
 /**
  * Base EXP gained per ruminate cycle completion
@@ -89,10 +89,10 @@ export const RUMINATE_BASE_REWARD = 10;
 export const BASE_CRIT_DAMAGE = 0.5;
 
 /**
- * Critical hit damage multiplier for training rewards
- * Used when determining EXP bonus from crit hits during training
+ * Critical hit damage multiplier for studying rewards
+ * Used when determining EXP bonus from crit hits during studying
  */
-export const TRAINING_CRIT_MULTIPLIER = 1.5;
+export const STUDYING_CRIT_MULTIPLIER = 1.5;
 
 // ============================================================================
 // GAME TIMING
@@ -105,11 +105,11 @@ export const TRAINING_CRIT_MULTIPLIER = 1.5;
 export const GAME_TICK_RATE = 1000;
 
 /**
- * Base duration for stat training actions in milliseconds
- * Training actions include: Strength, Dex, Int, Wis training
- * Modified by training speed upgrades and global idle speed
+ * Base duration for stat studying actions in milliseconds
+ * Studying actions include: Strength, Dex, Int, Wis studying
+ * Modified by studying speed upgrades and global idle speed
  */
-export const TRAINING_BASE_DURATION = 15000;
+export const STUDYING_BASE_DURATION = 15000;
 
 /**
  * Base duration for ruminate action in milliseconds

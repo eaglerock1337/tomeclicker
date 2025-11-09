@@ -6,19 +6,19 @@
     export let game: Game;
 
     function startAction(actionId: string) {
-        game.startIdleAction('training', actionId);
+        game.startIdleAction('studying', actionId);
         game = game;
     }
 
     // Filter actions by level - reactive to game.level changes
-    $: availableActions = Object.values(game.trainingActions).filter(action => {
+    $: availableActions = Object.values(game.studyingActions).filter(action => {
         if (action.id === 'study-research') return game.level >= 2;
         if (action.trainsStat) return game.level >= 3;
         return false;
     });
 
     // Get dynamic stat EXP gain with bonuses - reactive to upgrade changes
-    $: statExpGain = game.getStatExpGainPerTraining();
+    $: statExpGain = game.getStatExpGainPerStudying();
 </script>
 
 <ViewLayout title="study" maxWidth="1200px">
@@ -27,10 +27,10 @@
         {#each availableActions as action (action.id)}
             <!-- Reactive calculations that update when game state changes -->
             {@const isActive = action.isActive}
-            {@const cost = action.id === 'study-research' ? 0 : (action.trainsStat ? game.getStatTrainingCost(action.trainsStat) : 0)}
+            {@const cost = action.id === 'study-research' ? 0 : (action.trainsStat ? game.getStatStudyingCost(action.trainsStat) : 0)}
             {@const canAfford = action.id === 'study-research' || (action.trainsStat ? game.exp >= cost : true)}
             {@const progress = isActive ? action.progress : 0}
-            {@const duration = game.getTrainingDuration(action.id)}
+            {@const duration = game.getStudyingDuration(action.id)}
             {@const currentStatExp = action.trainsStat ? game.getStatExp(action.trainsStat) : 0}
             {@const requiredStatExp = action.trainsStat ? game.getStatExpRequired(action.trainsStat) : 0}
             {@const statLevel = action.trainsStat ? game.stats[action.trainsStat] : 0}
@@ -122,12 +122,12 @@
                     </div>
 
                     <!-- Row 3: Crit (if applicable) -->
-                    {#if action.trainsStat && !game.isStatLocked(action.trainsStat) && game.trainingCritChance > 0}
+                    {#if action.trainsStat && !game.isStatLocked(action.trainsStat) && game.studyingCritChance > 0}
                         <div class="detail-row">
                             <div class="detail-full">
                                 <span class="detail-label">Crit:</span>
                                 <span class="detail-value crit-value">
-                                    {(game.trainingCritChance * 100).toFixed(0)}% chance for {(1 + game.getTrainingCritDamage()).toFixed(1)}x
+                                    {(game.studyingCritChance * 100).toFixed(0)}% chance for {(1 + game.getStudyingCritDamage()).toFixed(1)}x
                                 </span>
                             </div>
                         </div>

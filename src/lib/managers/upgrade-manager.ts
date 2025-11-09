@@ -22,31 +22,31 @@ export interface Upgrade {
 	/** Current level/times purchased */
 	currentLevel: number;
 	/** Category for UI organization */
-	category: 'click' | 'ruminate' | 'training' | 'special';
+	category: 'click' | 'research' | 'studying' | 'special';
 	/** Type of effect this upgrade provides */
 	effectType:
 		| 'clickMultiplier'
 		| 'clickCrit'
 		| 'clickCritDamage'
 		| 'clickMultiplierPercent'
-		| 'ruminateSpeed'
-		| 'ruminatePower'
-		| 'ruminateCrit'
-		| 'ruminateCritDamage'
-		| 'ruminateMultiplierPercent'
-		| 'trainingSpeed'
-		| 'trainingEfficiency'
+		| 'researchSpeed'
+		| 'researchPower'
+		| 'researchCrit'
+		| 'researchCritDamage'
+		| 'researchMultiplierPercent'
+		| 'studyingSpeed'
+		| 'studyingEfficiency'
 		| 'statGain'
 		| 'statGainPercent'
-		| 'trainingCrit'
-		| 'trainingCritDamage'
+		| 'studyingCrit'
+		| 'studyingCritDamage'
 		| 'levelUp'
 		| 'discipline'
 		| 'critChance'
 		| 'critDamage'
 		| 'globalIdleSpeed'
 		| 'idleExp'
-		| 'trainingCost';
+		| 'studyingCost';
 	/** Numeric value of the effect per level */
 	effectValue: number;
 	/** Minimum level required to see this upgrade */
@@ -124,15 +124,15 @@ export class UpgradeManager {
 	/**
 	 * Gets all upgrades in a specific category
 	 */
-	getUpgradesByCategory(category: 'click' | 'ruminate' | 'training' | 'special'): Upgrade[] {
+	getUpgradesByCategory(category: 'click' | 'research' | 'studying' | 'special'): Upgrade[] {
 		return Object.values(this.upgrades).filter((upgrade) => upgrade.category === category);
 	}
 
 	/**
 	 * Gets all upgrade categories that have visible upgrades for the current level
 	 */
-	getVisibleCategories(currentLevel: number): ('click' | 'ruminate' | 'training' | 'special')[] {
-		const categories = new Set<'click' | 'ruminate' | 'training' | 'special'>();
+	getVisibleCategories(currentLevel: number): ('click' | 'research' | 'studying' | 'special')[] {
+		const categories = new Set<'click' | 'research' | 'studying' | 'special'>();
 
 		for (const upgrade of Object.values(this.upgrades)) {
 			if (!upgrade.minLevel || currentLevel >= upgrade.minLevel) {

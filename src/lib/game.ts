@@ -1,13 +1,13 @@
 import {
 	calculateLevelUpCost,
 	calculateStatLevelCost,
-	calculateTrainingSpeedMultiplier,
-	calculateTrainingCostMultiplier,
+	calculateStudyingSpeedMultiplier,
+	calculateStudyingCostMultiplier,
 	calculateRuminateExpBonus,
 	calculateGlobalIdleSpeedMultiplier,
 	calculateRuminateSpeedMultiplier,
 	calculateStatExpRequired,
-	calculateStatTrainingCost,
+	calculateStatStudyingCost,
 	calculateMaxStatLevel,
 	calculateClickMultiplierPercent,
 	calculateClickCritChance,
@@ -17,8 +17,8 @@ import {
 	calculateRuminateCritDamage,
 	calculateStatGainBonus,
 	calculateStatGainMultiplierPercent,
-	calculateTrainingCritChance,
-	calculateTrainingCritDamage
+	calculateStudyingCritChance,
+	calculateStudyingCritDamage
 } from './utils/calculations';
 import {
 	IdleActionManager,
@@ -92,7 +92,7 @@ export class Game {
 	public clickMultiplier: number;
 	public critChance: number; // Character EXP crit chance (clicking)
 	public critDamage: number; // Character EXP crit damage multiplier
-	public trainingCritChance: number; // Stat EXP training crit chance
+	public studyingCritChance: number; // Stat EXP studying crit chance
 
 	// New RPG and idle systems
 	public idleExpRate: number;
@@ -124,7 +124,7 @@ export class Game {
 		this.clickMultiplier = 1.0;
 		this.critChance = 0.0; // Start with 0% character crit chance
 		this.critDamage = BASE_CRIT_DAMAGE; // Crits do +50% damage (1.5x total)
-		this.trainingCritChance = 0.0; // Start with 0% training crit chance
+		this.studyingCritChance = 0.0; // Start with 0% studying crit chance
 
 		// Initialize new systems
 		this.idleExpRate = 0;
@@ -143,15 +143,15 @@ export class Game {
 
 		// Initialize idle action manager with dependencies
 		this.idleActionManager = new IdleActionManager({
-			getTrainingSpeedMultiplier: () => this.getTrainingSpeedMultiplier(),
-			getTrainingCostMultiplier: () => this.getTrainingCostMultiplier(),
+			getStudyingSpeedMultiplier: () => this.getStudyingSpeedMultiplier(),
+			getStudyingCostMultiplier: () => this.getStudyingCostMultiplier(),
 			getRuminateExpBonus: () => this.getRuminateExpBonus(),
 			getDisciplineMultiplier: () => this.getDisciplineMultiplier(),
 			getCurrentLevel: () => this.level,
 			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
 			getRuminateSpeedMultiplier: () => this.getRuminateSpeedMultiplier(),
 			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
-			getStatTrainingCost: (stat) => this.statsManager.getStatTrainingCost(stat),
+			getStatStudyingCost: (stat) => this.statsManager.getStatStudyingCost(stat),
 			addStatExp: (stat, amount) => this.statsManager.addStatExp(stat, amount),
 			getCritChance: () => this.critChance,
 			getCurrentExp: () => this.exp,
@@ -160,8 +160,8 @@ export class Game {
 			getRuminateCritDamage: () => this.getRuminateCritDamage(),
 			getStatGainBonus: () => this.getStatGainBonus(),
 			getStatGainMultiplierPercent: () => this.getStatGainMultiplierPercent(),
-			getTrainingCritChance: () => this.getTrainingCritChance(),
-			getTrainingCritDamage: () => this.getTrainingCritDamage(),
+			getStudyingCritChance: () => this.getStudyingCritChance(),
+			getStudyingCritDamage: () => this.getStudyingCritDamage(),
 			getMaxStatLevel: (stat) => this.getMaxStatLevel(stat),
 			getCurrentStatLevel: (stat) => this.stats[stat]
 		});
@@ -206,10 +206,10 @@ export class Game {
 	}
 
 	/**
-	 * Gets all training actions (delegates to IdleActionManager)
+	 * Gets all studying actions (delegates to IdleActionManager)
 	 */
-	get trainingActions(): { [key: string]: IdleAction } {
-		return this.idleActionManager.getTrainingActions();
+	get studyingActions(): { [key: string]: IdleAction } {
+		return this.idleActionManager.getStudyingActions();
 	}
 
 	/**
@@ -292,14 +292,14 @@ export class Game {
 	/**
 	 * Gets upgrades by category (v0.1.5+ categorized system)
 	 */
-	getUpgradesByCategory(category: 'click' | 'ruminate' | 'training' | 'special'): UpgradeType[] {
+	getUpgradesByCategory(category: 'click' | 'research' | 'studying' | 'special'): UpgradeType[] {
 		return this.upgradeManager.getUpgradesByCategory(category);
 	}
 
 	/**
 	 * Gets all visible upgrade categories for the current level
 	 */
-	getVisibleUpgradeCategories(): ('click' | 'ruminate' | 'training' | 'special')[] {
+	getVisibleUpgradeCategories(): ('click' | 'research' | 'studying' | 'special')[] {
 		return this.upgradeManager.getVisibleCategories(this.level);
 	}
 
@@ -377,24 +377,24 @@ export class Game {
 		this.critChance = calculateClickCritChance(this.upgrades);
 		this.critDamage = calculateClickCritDamage(this.upgrades);
 
-		// Calculate training crit chance from upgrades
-		this.trainingCritChance = calculateTrainingCritChance(this.upgrades);
+		// Calculate studying crit chance from upgrades
+		this.studyingCritChance = calculateStudyingCritChance(this.upgrades);
 	}
 
 	/**
-	 * Gets the training speed multiplier from upgrades
-	 * @returns Multiplier for training duration (lower is faster)
+	 * Gets the studying speed multiplier from upgrades
+	 * @returns Multiplier for studying duration (lower is faster)
 	 */
-	getTrainingSpeedMultiplier(): number {
-		return calculateTrainingSpeedMultiplier(this.upgrades);
+	getStudyingSpeedMultiplier(): number {
+		return calculateStudyingSpeedMultiplier(this.upgrades);
 	}
 
 	/**
-	 * Gets the training cost multiplier from upgrades
-	 * @returns Multiplier for training EXP cost (lower is cheaper)
+	 * Gets the studying cost multiplier from upgrades
+	 * @returns Multiplier for studying EXP cost (lower is cheaper)
 	 */
-	getTrainingCostMultiplier(): number {
-		return calculateTrainingCostMultiplier(this.upgrades);
+	getStudyingCostMultiplier(): number {
+		return calculateStudyingCostMultiplier(this.upgrades);
 	}
 
 	/**
@@ -473,7 +473,7 @@ export class Game {
 
 	/**
 	 * Gets the stat gain bonus from upgrades
-	 * @returns Additional stat EXP per training completion
+	 * @returns Additional stat EXP per studying completion
 	 */
 	getStatGainBonus(): number {
 		return calculateStatGainBonus(this.upgrades);
@@ -488,27 +488,27 @@ export class Game {
 	}
 
 	/**
-	 * Gets the training crit chance from upgrades
+	 * Gets the studying crit chance from upgrades
 	 * @returns Crit chance percentage (0.0 to 1.0)
 	 */
-	getTrainingCritChance(): number {
-		return this.trainingCritChance;
+	getStudyingCritChance(): number {
+		return this.studyingCritChance;
 	}
 
 	/**
-	 * Gets the training crit damage multiplier from upgrades
+	 * Gets the studying crit damage multiplier from upgrades
 	 * @returns Crit damage multiplier (0.5 to 1.5)
 	 */
-	getTrainingCritDamage(): number {
-		return calculateTrainingCritDamage(this.upgrades);
+	getStudyingCritDamage(): number {
+		return calculateStudyingCritDamage(this.upgrades);
 	}
 
 	/**
-	 * Gets the stat EXP gain per training completion (v0.1.5+)
+	 * Gets the stat EXP gain per studying completion (v0.1.5+)
 	 * Includes bonuses from all stat gain upgrades (before crit)
-	 * @returns Stat EXP gained per training (before crit)
+	 * @returns Stat EXP gained per studying (before crit)
 	 */
-	getStatExpGainPerTraining(): number {
+	getStatExpGainPerStudying(): number {
 		const baseReward = 10; // TRAINING_REWARD constant
 		const flatBonus = this.getStatGainBonus(); // Flat bonuses from upgrades
 		const percentMultiplier = this.getStatGainMultiplierPercent(); // Percentage multipliers
@@ -521,8 +521,8 @@ export class Game {
 	 * @param actionId - ID of the training action
 	 * @returns Duration in milliseconds with all bonuses applied
 	 */
-	getTrainingDuration(actionId: string): number {
-		const action = this.trainingActions[actionId];
+	getStudyingDuration(actionId: string): number {
+		const action = this.studyingActions[actionId];
 		if (!action) return 0;
 
 		// Calculate bonused duration (same logic as startIdleAction)
@@ -532,7 +532,7 @@ export class Game {
 			const combinedSpeed = ruminateSpeed * globalSpeed;
 			return Math.floor(action.baseDuration / combinedSpeed);
 		} else if (action.trainsStat) {
-			const trainingSpeed = this.getTrainingSpeedMultiplier();
+			const trainingSpeed = this.getStudyingSpeedMultiplier();
 			const globalSpeed = this.getGlobalIdleSpeedMultiplier();
 			const combinedSpeed = trainingSpeed * globalSpeed;
 			return Math.floor(action.baseDuration / combinedSpeed);
@@ -577,11 +577,11 @@ export class Game {
 	 * @param stat - The stat to check
 	 * @returns Character EXP cost to start training (with multipliers applied)
 	 */
-	getStatTrainingCost(
+	getStatStudyingCost(
 		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): number {
-		const baseCost = this.statsManager.getStatTrainingCost(stat);
-		const multiplier = this.getTrainingCostMultiplier();
+		const baseCost = this.statsManager.getStatStudyingCost(stat);
+		const multiplier = this.getStudyingCostMultiplier();
 		return Math.floor(baseCost * multiplier);
 	}
 
@@ -631,8 +631,8 @@ export class Game {
 	 * @param actionId - ID of the training action
 	 * @returns True if the action can be started
 	 */
-	canStartTraining(actionId: string): boolean {
-		return this.idleActionManager.canStartTraining(actionId);
+	canStartStudying(actionId: string): boolean {
+		return this.idleActionManager.canStartStudying(actionId);
 	}
 
 	/**
@@ -641,7 +641,7 @@ export class Game {
 	 * @returns Character EXP cost
 	 */
 	getTrainingCost(actionId: string): number {
-		return this.idleActionManager.getTrainingCost(actionId);
+		return this.idleActionManager.getStudyingCost(actionId);
 	}
 
 	/**
@@ -649,9 +649,9 @@ export class Game {
 	 * Used for navbar notification
 	 * @returns True if training is stuck/blocked
 	 */
-	hasBlockedTraining(): boolean {
+	hasBlockedStudying(): boolean {
 		// Find any active stat training
-		const activeTraining = Object.values(this.trainingActions).find(
+		const activeTraining = Object.values(this.studyingActions).find(
 			(action) => action.isActive && action.trainsStat
 		);
 
@@ -668,7 +668,7 @@ export class Game {
 		const statLevel = this.stats[stat];
 		const maxLevel = this.getMaxStatLevel(stat);
 		const atCap = statLevel >= maxLevel;
-		const cost = this.getStatTrainingCost(stat);
+		const cost = this.getStatStudyingCost(stat);
 		const canAfford = this.exp >= cost;
 
 		// Blocked if at cap OR can't afford to restart
@@ -709,8 +709,8 @@ export class Game {
 	 * Preserves progress and active state while adding new actions
 	 * @param savedActions - Training action data from a saved game
 	 */
-	migrateTrainingActions(savedActions: { [key: string]: IdleAction }): void {
-		this.idleActionManager.migrateTrainingActions(savedActions);
+	migrateStudyingActions(savedActions: { [key: string]: IdleAction }): void {
+		this.idleActionManager.migrateStudyingActions(savedActions);
 	}
 
 	/**
@@ -726,14 +726,14 @@ export class Game {
 
 	/**
 	 * Starts an idle action (Progress Knight style - keeps running until switched)
-	 * @param actionMap - The action map ('training' or 'meditation')
+	 * @param actionMap - The action map ('studying' or 'meditation')
 	 * @param actionId - ID of the action to start
 	 * @returns True if action started successfully
 	 */
-	startIdleAction(actionMap: 'training' | 'meditation', actionId: string): boolean {
+	startIdleAction(actionMap: 'studying' | 'meditation', actionId: string): boolean {
 		// For stat training, check and deduct character EXP cost upfront (v0.1.5+)
-		if (actionMap === 'training') {
-			const trainingCost = this.idleActionManager.getTrainingCost(actionId);
+		if (actionMap === 'studying') {
+			const trainingCost = this.idleActionManager.getStudyingCost(actionId);
 			if (trainingCost > 0) {
 				// Check if we can afford the training
 				if (this.exp < trainingCost) {
@@ -801,10 +801,10 @@ export class Game {
 
 	/**
 	 * Stops an active idle action without completion
-	 * @param actionMap - The action map ('training' or 'meditation')
+	 * @param actionMap - The action map ('studying' or 'meditation')
 	 * @param actionId - ID of the action to stop
 	 */
-	stopIdleAction(actionMap: 'training' | 'meditation', actionId: string): void {
+	stopIdleAction(actionMap: 'studying' | 'meditation', actionId: string): void {
 		this.idleActionManager.stopIdleAction(actionMap, actionId);
 	}
 
@@ -1030,10 +1030,10 @@ export class Game {
 			clickMultiplier: this.clickMultiplier,
 			critChance: this.critChance,
 			critDamage: this.critDamage,
-			trainingCritChance: this.trainingCritChance,
+			studyingCritChance: this.studyingCritChance,
 			upgrades: this.upgradeManager.getUpgrades(),
 			stats: this.stats,
-			trainingActions: this.idleActionManager.getTrainingActions(),
+			studyingActions: this.idleActionManager.getStudyingActions(),
 			meditationActions: this.idleActionManager.getMeditationActions(),
 			idleExpRate: this.idleExpRate,
 			adventureModeUnlocked: this.adventureModeUnlocked,
@@ -1052,7 +1052,7 @@ export class Game {
 		this.level = state.level || 1;
 		this.critChance = state.critChance || 0.0;
 		this.critDamage = state.critDamage || 1.5;
-		this.trainingCritChance = state.trainingCritChance || 0.0;
+		this.studyingCritChance = state.studyingCritChance || 0.0;
 
 		// Load stats into StatsManager with migration for v0.1.5+ stat EXP system
 		const loadedStats = state.stats || { strength: 0, dexterity: 0, intelligence: 0, wisdom: 0 };
@@ -1083,8 +1083,8 @@ export class Game {
 		this.migrateUpgrades(state.upgrades);
 
 		// Migrate training and meditation actions
-		if (state.trainingActions) {
-			this.migrateTrainingActions(state.trainingActions);
+		if (state.studyingActions) {
+			this.migrateStudyingActions(state.studyingActions);
 		}
 		if (state.meditationActions) {
 			this.migrateMeditationActions(state.meditationActions);
@@ -1210,7 +1210,7 @@ export class Game {
 		this.clickMultiplier = 1.0;
 		this.critChance = 0.0;
 		this.critDamage = BASE_CRIT_DAMAGE;
-		this.trainingCritChance = 0.0;
+		this.studyingCritChance = 0.0;
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
 		this.meditationUnlocked = false;
@@ -1225,15 +1225,15 @@ export class Game {
 		});
 
 		this.idleActionManager = new IdleActionManager({
-			getTrainingSpeedMultiplier: () => this.getTrainingSpeedMultiplier(),
-			getTrainingCostMultiplier: () => this.getTrainingCostMultiplier(),
+			getStudyingSpeedMultiplier: () => this.getStudyingSpeedMultiplier(),
+			getStudyingCostMultiplier: () => this.getStudyingCostMultiplier(),
 			getRuminateExpBonus: () => this.getRuminateExpBonus(),
 			getDisciplineMultiplier: () => this.getDisciplineMultiplier(),
 			getCurrentLevel: () => this.level,
 			getGlobalIdleSpeedMultiplier: () => this.getGlobalIdleSpeedMultiplier(),
 			getRuminateSpeedMultiplier: () => this.getRuminateSpeedMultiplier(),
 			getStatLevelCost: (stat) => this.getStatLevelCost(stat),
-			getStatTrainingCost: (stat) => this.statsManager.getStatTrainingCost(stat),
+			getStatStudyingCost: (stat) => this.statsManager.getStatStudyingCost(stat),
 			addStatExp: (stat, amount) => this.statsManager.addStatExp(stat, amount),
 			getCritChance: () => this.critChance,
 			getCurrentExp: () => this.exp,
@@ -1242,8 +1242,8 @@ export class Game {
 			getRuminateCritDamage: () => this.getRuminateCritDamage(),
 			getStatGainBonus: () => this.getStatGainBonus(),
 			getStatGainMultiplierPercent: () => this.getStatGainMultiplierPercent(),
-			getTrainingCritChance: () => this.getTrainingCritChance(),
-			getTrainingCritDamage: () => this.getTrainingCritDamage(),
+			getStudyingCritChance: () => this.getStudyingCritChance(),
+			getStudyingCritDamage: () => this.getStudyingCritDamage(),
 			getMaxStatLevel: (stat) => this.getMaxStatLevel(stat),
 			getCurrentStatLevel: (stat) => this.stats[stat]
 		});
