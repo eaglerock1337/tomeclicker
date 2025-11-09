@@ -44,7 +44,7 @@ class SaveManagerBuilder {
 		clickMultiplier: 1.0,
 		critChance: 0.0,
 		critDamage: 1.5,
-		trainingCritChance: 0.0,
+		studyingCritChance: 0.0,
 		upgrades: {},
 		stats: {
 			strength: 1,
@@ -60,7 +60,7 @@ class SaveManagerBuilder {
 			intelligenceExp: 0,
 			wisdomExp: 0
 		},
-		trainingActions: {},
+		studyingActions: {},
 		meditationActions: {},
 		idleExpRate: 0,
 		adventureModeUnlocked: false,
@@ -324,7 +324,7 @@ describe('SaveManager', () => {
 						intelligenceExp: 0,
 						wisdomExp: 0
 					},
-					trainingActions: {},
+					studyingActions: {},
 					meditationActions: {},
 					critChance: 0,
 					critDamage: 1.5,
@@ -362,7 +362,7 @@ describe('SaveManager', () => {
 						intelligenceExp: 0,
 						wisdomExp: 0
 					},
-					trainingActions: {},
+					studyingActions: {},
 					meditationActions: {},
 					critChance: 0,
 					critDamage: 1.5,

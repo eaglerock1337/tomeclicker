@@ -15,7 +15,7 @@ describe('Config Loader', () => {
 			expect(upgrades).toBeDefined();
 			expect(typeof upgrades).toBe('object');
 
-			// Should have all 16 upgrades (4 click + 5 ruminate + 6 training + 1 special)
+			// Should have all 16 upgrades (4 click + 5 research + 6 studying + 1 special)
 			expect(Object.keys(upgrades)).toHaveLength(16);
 		});
 
@@ -31,31 +31,31 @@ describe('Config Loader', () => {
 			expect(upgrades['click-power'].category).toBe('click');
 		});
 
-		it('should load all ruminate category upgrades', () => {
+		it('should load all research category upgrades', () => {
 			const upgrades = loadUpgrades();
 
-			expect(upgrades['ruminate-power']).toBeDefined();
-			expect(upgrades['ruminate-speed']).toBeDefined();
+			expect(upgrades['research-power']).toBeDefined();
+			expect(upgrades['research-speed']).toBeDefined();
 			expect(upgrades['focus-flow']).toBeDefined();
 			expect(upgrades['intense-thoughts']).toBeDefined();
-			expect(upgrades['ruminate-mastery']).toBeDefined();
+			expect(upgrades['research-mastery']).toBeDefined();
 
 			// Verify category
-			expect(upgrades['ruminate-power'].category).toBe('ruminate');
+			expect(upgrades['research-power'].category).toBe('research');
 		});
 
-		it('should load all training category upgrades', () => {
+		it('should load all studying category upgrades', () => {
 			const upgrades = loadUpgrades();
 
-			expect(upgrades['training-power']).toBeDefined();
-			expect(upgrades['training-speed']).toBeDefined();
-			expect(upgrades['training-efficiency']).toBeDefined();
+			expect(upgrades['studying-power']).toBeDefined();
+			expect(upgrades['studying-speed']).toBeDefined();
+			expect(upgrades['studying-efficiency']).toBeDefined();
 			expect(upgrades['perfect-form']).toBeDefined();
-			expect(upgrades['devastating-training']).toBeDefined();
-			expect(upgrades['training-mastery']).toBeDefined();
+			expect(upgrades['devastating-studying']).toBeDefined();
+			expect(upgrades['studying-mastery']).toBeDefined();
 
 			// Verify category
-			expect(upgrades['training-power'].category).toBe('training');
+			expect(upgrades['studying-power'].category).toBe('studying');
 		});
 
 		it('should load special category upgrades', () => {

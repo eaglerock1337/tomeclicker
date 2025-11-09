@@ -1,7 +1,7 @@
 import {
 	calculateStatLevelCost,
 	calculateStatExpRequired,
-	calculateStatTrainingCost,
+	calculateStatStudyingCost,
 	calculateMaxStatLevel
 } from '../utils/calculations';
 import type { Stats } from '../game';
@@ -163,14 +163,14 @@ export class StatsManager {
 	}
 
 	/**
-	 * Get the character EXP cost to start training a specific stat
+	 * Get the character EXP cost to start studying a specific stat
 	 * @param stat - The stat to query
 	 */
-	getStatTrainingCost(
+	getStatStudyingCost(
 		stat: keyof Pick<Stats, 'strength' | 'agility' | 'willpower' | 'endurance'>
 	): number {
 		const currentLevel = this.getStatLevel(stat);
-		return calculateStatTrainingCost(currentLevel);
+		return calculateStatStudyingCost(currentLevel);
 	}
 
 	/**

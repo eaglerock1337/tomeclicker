@@ -50,14 +50,14 @@ describe('Game', () => {
 			expect(game.stats.wisdom).toBe(0);
 		});
 
-		it('should initialize training actions', () => {
+		it('should initialize studying actions', () => {
 			const game = createTestGame();
 
-			expect(game.trainingActions['study-research']).toBeDefined();
-			expect(game.trainingActions['study-athletics']).toBeDefined();
-			expect(game.trainingActions['study-kinetics']).toBeDefined();
-			expect(game.trainingActions['study-selfdefense']).toBeDefined();
-			expect(game.trainingActions['study-fitness']).toBeDefined();
+			expect(game.studyingActions['study-research']).toBeDefined();
+			expect(game.studyingActions['study-athletics']).toBeDefined();
+			expect(game.studyingActions['study-kinetics']).toBeDefined();
+			expect(game.studyingActions['study-selfdefense']).toBeDefined();
+			expect(game.studyingActions['study-fitness']).toBeDefined();
 		});
 	});
 
@@ -531,23 +531,23 @@ describe('Game', () => {
 		});
 	});
 
-	describe('Training System', () => {
+	describe('studying System', () => {
 		it('should initialize Research action', () => {
 			const game = createTestGame();
-			const research = game.trainingActions['study-research'];
+			const research = game.studyingActions['study-research'];
 
 			expect(research).toBeDefined();
 			expect(research.name).toBe('Research');
 			expect(research.expCost).toBe(0); // Free to use
 		});
 
-		it('should initialize stat training actions', () => {
+		it('should initialize stat studying actions', () => {
 			const game = createTestGame();
 
-			expect(game.trainingActions['study-athletics'].trainsStat).toBe('strength');
-			expect(game.trainingActions['study-kinetics'].trainsStat).toBe('agility');
-			expect(game.trainingActions['study-selfdefense'].trainsStat).toBe('willpower');
-			expect(game.trainingActions['study-fitness'].trainsStat).toBe('endurance');
+			expect(game.studyingActions['study-athletics'].trainsStat).toBe('strength');
+			expect(game.studyingActions['study-kinetics'].trainsStat).toBe('agility');
+			expect(game.studyingActions['study-selfdefense'].trainsStat).toBe('willpower');
+			expect(game.studyingActions['study-fitness'].trainsStat).toBe('endurance');
 		});
 
 		describe('getStatLevelCost', () => {
@@ -894,17 +894,17 @@ describe('Game', () => {
 
 	describe('Idle Action System', () => {
 		describe('startIdleAction', () => {
-			it('should not crash when starting training action', () => {
+			it('should not crash when starting studying action', () => {
 				const game = new GameBuilder().withExp(1000).build();
 
 				// Should not throw
-				expect(() => game.startIdleAction('training', 'ruminate')).not.toThrow();
+				expect(() => game.startIdleAction('studying', 'research')).not.toThrow();
 			});
 
 			it('should return boolean result', () => {
 				const game = new GameBuilder().withExp(100000).withLevel(10).build();
 
-				const result = game.startIdleAction('training', 'ruminate');
+				const result = game.startIdleAction('studying', 'research');
 
 				// Should return boolean (either true or false)
 				expect(typeof result).toBe('boolean');
@@ -913,7 +913,7 @@ describe('Game', () => {
 			it('should return false when insufficient exp', () => {
 				const game = new GameBuilder().withExp(0).build();
 
-				const result = game.startIdleAction('training', 'ruminate');
+				const result = game.startIdleAction('studying', 'research');
 
 				expect(result).toBe(false);
 			});
@@ -922,24 +922,24 @@ describe('Game', () => {
 		describe('stopIdleAction', () => {
 			it('should not crash when stopping an action', () => {
 				const game = new GameBuilder().withExp(1000).build();
-				game.startIdleAction('training', 'ruminate');
+				game.startIdleAction('studying', 'research');
 
 				// Should not throw
-				expect(() => game.stopIdleAction('training', 'ruminate')).not.toThrow();
+				expect(() => game.stopIdleAction('studying', 'research')).not.toThrow();
 			});
 
 			it('should not crash when stopping non-existent action', () => {
 				const game = new GameBuilder().withExp(1000).build();
 
 				// Should not throw
-				expect(() => game.stopIdleAction('training', 'ruminate')).not.toThrow();
+				expect(() => game.stopIdleAction('studying', 'research')).not.toThrow();
 			});
 		});
 
 		describe('updateIdleActions', () => {
 			it('should not crash when called', () => {
 				const game = new GameBuilder().withExp(1000).build();
-				game.startIdleAction('training', 'ruminate');
+				game.startIdleAction('studying', 'research');
 
 				// Should not throw
 				expect(() => game.updateIdleActions()).not.toThrow();

@@ -1,7 +1,7 @@
 <script lang="ts">
     import Practice from '$lib/views/practice.svelte';
     import Upgrades from '$lib/views/upgrades.svelte';
-    import Study from '$lib/views/study.svelte';
+    import Library from '$lib/views/library.svelte';
     import Stats from '$lib/views/stats.svelte';
     import Meditation from '$lib/views/meditation.svelte';
     import Adventure from '$lib/views/adventure.svelte';
@@ -25,8 +25,8 @@
         <Practice bind:config bind:game/>
     {:else if game && game.menu === "upgrades"}
         <Upgrades bind:config bind:game/>
-    {:else if game && game.menu === "study"}
-        <Study bind:game/>
+    {:else if game && game.menu === "library"}
+        <Library bind:game/>
     {:else if game && game.menu === "stats"}
         <Stats bind:game/>
     {:else if game && game.menu === "meditation"}
