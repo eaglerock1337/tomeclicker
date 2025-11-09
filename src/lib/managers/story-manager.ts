@@ -151,6 +151,10 @@ export class StoryManager {
 	/**
 	 * Check for newly unlocked story entries based on current game state
 	 * Call this from Game.tick() or after major state changes
+	 *
+	 * NOTE: This method adds unlocked entries to a persistent queue but does NOT clear it.
+	 * The queue persists until entries are shown to the player and acknowledged.
+	 * This allows multiple calls to checkForNewUnlocks() without losing entries.
 	 */
 	checkForNewUnlocks(): StoryCheckResult {
 		const newlyUnlocked: StoryEntry[] = [];
@@ -164,8 +168,11 @@ export class StoryManager {
 					entry.unlocked = true;
 					entry.timestamp = Date.now();
 					newlyUnlocked.push(entry);
-					// Add to queue so UI can retrieve it later
-					this.unlockedQueue.push(entry);
+					// Add to queue only if not already in queue
+					if (!this.unlockedQueue.find((e) => e.id === entry.id)) {
+						this.unlockedQueue.push(entry);
+						console.log('[StoryManager] Added to queue:', entry.id);
+					}
 				}
 			}
 		}
@@ -183,16 +190,15 @@ export class StoryManager {
 			);
 		}
 
-		// Return queued entries (not just ones unlocked in this check)
-		const queuedEntries = [...this.unlockedQueue];
-		this.unlockedQueue = []; // Clear queue after returning
-
-		console.log('[StoryManager] Returning queued entries:', queuedEntries.length);
-		return { newlyUnlocked: queuedEntries, totalUnread };
+		// Return queue WITHOUT clearing it
+		// Queue will be managed by consumeQueuedEntry() when UI acknowledges entries
+		console.log('[StoryManager] Returning queued entries:', this.unlockedQueue.length);
+		return { newlyUnlocked: [...this.unlockedQueue], totalUnread };
 	}
 
 	/**
 	 * Mark a story entry as acknowledged (player read the modal)
+	 * Also removes it from the unlock queue
 	 */
 	acknowledge(entryId: string): AcknowledgeResult {
 		const entry = this.entries.get(entryId);
@@ -201,6 +207,13 @@ export class StoryManager {
 		}
 
 		entry.acknowledged = true;
+
+		// Remove from queue if present
+		const queueIndex = this.unlockedQueue.findIndex((e) => e.id === entryId);
+		if (queueIndex !== -1) {
+			this.unlockedQueue.splice(queueIndex, 1);
+			console.log('[StoryManager] Removed from queue:', entryId);
+		}
 
 		const remainingUnread = Array.from(this.entries.values()).filter(
 			(e) => e.unlocked && !e.acknowledged
