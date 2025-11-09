@@ -60,15 +60,15 @@ click-mastery:
   minLevel: 3
 
 # ============================================================================
-# RUMINATE CATEGORY (Level 2-4)
-# Upgrades for the idle rumination action
+# RESEARCH CATEGORY (Level 2-4)
+# Upgrades for the idle research action
 # ============================================================================
 
 ruminate-power:
   id: ruminate-power
-  name: Ruminate Power
-  description: Increases EXP gained from each rumination thought
-  effect: '+25 EXP per thought per level'
+  name: Research Power
+  description: Increases EXP gained from each research session
+  effect: '+25 EXP per session per level'
   baseCost: 500
   costMultiplier: 1.4
   maxLevel: 50
@@ -79,9 +79,9 @@ ruminate-power:
 
 ruminate-speed:
   id: ruminate-speed
-  name: Ruminate Speed
-  description: Reduces time between rumination thoughts
-  effect: '-0.1s per thought per level'
+  name: Research Speed
+  description: Reduces time between research sessions
+  effect: '-0.1s per session per level'
   baseCost: 800
   costMultiplier: 1.4
   maxLevel: 50
@@ -92,9 +92,9 @@ ruminate-speed:
 
 focus-flow:
   id: focus-flow
-  name: Focus Flow
-  description: Increases chance for rumination to critically strike for bonus EXP
-  effect: '+0.5% ruminate crit chance per level'
+  name: Deep Focus
+  description: Increases chance for research to critically strike for bonus EXP
+  effect: '+0.5% research crit chance per level'
   baseCost: 1200
   costMultiplier: 1.4
   maxLevel: 50
@@ -105,9 +105,9 @@ focus-flow:
 
 intense-thoughts:
   id: intense-thoughts
-  name: Intense Thoughts
-  description: Increases the bonus EXP multiplier when rumination critically strikes
-  effect: '+2% ruminate crit damage per level'
+  name: Breakthrough Insights
+  description: Increases the bonus EXP multiplier when research critically strikes
+  effect: '+2% research crit damage per level'
   baseCost: 2000
   costMultiplier: 1.4
   maxLevel: 50
@@ -118,9 +118,9 @@ intense-thoughts:
 
 ruminate-mastery:
   id: ruminate-mastery
-  name: Ruminate Mastery
-  description: Multiplicative bonus to all rumination EXP gains
-  effect: '+20% ruminate EXP per level'
+  name: Research Mastery
+  description: Multiplicative bonus to all research EXP gains
+  effect: '+20% research EXP per level'
   baseCost: 25000
   costMultiplier: 2
   maxLevel: 20
@@ -130,15 +130,15 @@ ruminate-mastery:
   minLevel: 4
 
 # ============================================================================
-# TRAINING CATEGORY (Level 3-4)
-# Upgrades that enhance stat training effectiveness
+# STUDY CATEGORY (Level 3-4)
+# Upgrades that enhance stat study effectiveness
 # ============================================================================
 
 training-power:
   id: training-power
-  name: Training Power
-  description: Increases stat EXP gained from each training completion
-  effect: '+1% stat EXP per training per level'
+  name: Study Power
+  description: Increases stat EXP gained from each study session
+  effect: '+1% stat EXP per study per level'
   baseCost: 2000
   costMultiplier: 1.4
   maxLevel: 50
@@ -149,9 +149,9 @@ training-power:
 
 training-speed:
   id: training-speed
-  name: Training Speed
-  description: Reduces time required to complete stat training exercises
-  effect: '-0.1s per training per level'
+  name: Study Speed
+  description: Reduces time required to complete stat study sessions
+  effect: '-0.1s per study per level'
   baseCost: 2500
   costMultiplier: 1.4
   maxLevel: 50
@@ -162,9 +162,9 @@ training-speed:
 
 training-efficiency:
   id: training-efficiency
-  name: Training Efficiency
-  description: Reduces character EXP cost to start training
-  effect: '-1% training cost per level'
+  name: Study Efficiency
+  description: Reduces character EXP cost to start studying
+  effect: '-1% study cost per level'
   baseCost: 3000
   costMultiplier: 1.4
   maxLevel: 50
@@ -175,9 +175,9 @@ training-efficiency:
 
 perfect-form:
   id: perfect-form
-  name: Perfect Form
-  description: Increases chance for training to critically strike for bonus stat EXP
-  effect: '+0.5% training crit chance per level'
+  name: Deep Understanding
+  description: Increases chance for study to critically strike for bonus stat EXP
+  effect: '+0.5% study crit chance per level'
   baseCost: 4000
   costMultiplier: 1.4
   maxLevel: 50
@@ -188,9 +188,9 @@ perfect-form:
 
 devastating-training:
   id: devastating-training
-  name: Devastating Training
-  description: Increases the bonus stat EXP multiplier when training critically strikes
-  effect: '+2% training crit damage per level'
+  name: Eureka Moments
+  description: Increases the bonus stat EXP multiplier when study critically strikes
+  effect: '+2% study crit damage per level'
   baseCost: 5000
   costMultiplier: 1.4
   maxLevel: 50
@@ -201,9 +201,9 @@ devastating-training:
 
 training-mastery:
   id: training-mastery
-  name: Training Mastery
-  description: Multiplicative bonus to all stat EXP gains from training
-  effect: '+5% stat EXP per training per level'
+  name: Study Mastery
+  description: Multiplicative bonus to all stat EXP gains from studying
+  effect: '+5% stat EXP per study per level'
   baseCost: 50000
   costMultiplier: 2
   maxLevel: 20
