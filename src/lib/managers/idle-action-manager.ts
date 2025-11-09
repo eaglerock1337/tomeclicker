@@ -143,10 +143,10 @@ export class IdleActionManager {
 	 */
 	private initializeTrainingActions(): { [key: string]: IdleAction } {
 		return {
-			'practice-ruminate': {
-				id: 'practice-ruminate',
-				name: 'Ruminate',
-				description: 'Learn through observation and reflection',
+			'study-research': {
+				id: 'study-research',
+				name: 'Research',
+				description: 'Study academic texts to gain experience and insights',
 				progress: 0,
 				baseDuration: RUMINATE_BASE_DURATION,
 				duration: RUMINATE_BASE_DURATION,
@@ -154,10 +154,10 @@ export class IdleActionManager {
 				isActive: false,
 				lastUpdate: Date.now()
 			},
-			'train-strength': {
-				id: 'train-strength',
-				name: 'Lift Heavy Objects',
-				description: 'Build raw physical power',
+			'study-athletics': {
+				id: 'study-athletics',
+				name: 'Study Athletics',
+				description: 'Learn strength training and combat theory',
 				progress: 0,
 				baseDuration: TRAINING_BASE_DURATION,
 				duration: TRAINING_BASE_DURATION,
@@ -166,10 +166,10 @@ export class IdleActionManager {
 				lastUpdate: Date.now(),
 				trainsStat: 'strength'
 			},
-			'train-agility': {
-				id: 'train-agility',
-				name: 'Practice Quick Movements',
-				description: 'Improve speed and reflexes',
+			'study-kinetics': {
+				id: 'study-kinetics',
+				name: 'Study Kinetics',
+				description: 'Study speed, agility, and reflexes methodology',
 				progress: 0,
 				baseDuration: TRAINING_BASE_DURATION,
 				duration: TRAINING_BASE_DURATION,
@@ -178,10 +178,10 @@ export class IdleActionManager {
 				lastUpdate: Date.now(),
 				trainsStat: 'agility'
 			},
-			'train-willpower': {
-				id: 'train-willpower',
-				name: 'Situational Awareness',
-				description: 'Develop instincts to protect yourself',
+			'study-selfdefense': {
+				id: 'study-selfdefense',
+				name: 'Study Self-Defense',
+				description: 'Learn principles of mental fortitude and defensive tactics',
 				progress: 0,
 				baseDuration: TRAINING_BASE_DURATION,
 				duration: TRAINING_BASE_DURATION,
@@ -190,10 +190,10 @@ export class IdleActionManager {
 				lastUpdate: Date.now(),
 				trainsStat: 'willpower'
 			},
-			'train-endurance': {
-				id: 'train-endurance',
-				name: 'Physical Conditioning',
-				description: 'Build stamina and resilience',
+			'study-fitness': {
+				id: 'study-fitness',
+				name: 'Study Fitness',
+				description: 'Study physical conditioning theory and endurance training',
 				progress: 0,
 				baseDuration: TRAINING_BASE_DURATION,
 				duration: TRAINING_BASE_DURATION,
@@ -260,14 +260,30 @@ export class IdleActionManager {
 	migrateTrainingActions(savedActions: { [key: string]: IdleAction }): void {
 		const freshActions = this.initializeTrainingActions();
 
+		// Migration map for renamed actions (Training → Study rebrand)
+		const migrationMap: { [oldId: string]: string } = {
+			'practice-ruminate': 'study-research',
+			'train-strength': 'study-athletics',
+			'train-agility': 'study-kinetics',
+			'train-willpower': 'study-selfdefense',
+			'train-endurance': 'study-fitness'
+		};
+
 		// Preserve progress and state from saved actions
 		for (const actionId in freshActions) {
-			if (savedActions[actionId]) {
-				freshActions[actionId].progress = savedActions[actionId].progress;
-				freshActions[actionId].isActive = savedActions[actionId].isActive;
-				freshActions[actionId].lastUpdate = savedActions[actionId].lastUpdate;
-				if (savedActions[actionId].completed !== undefined) {
-					freshActions[actionId].completed = savedActions[actionId].completed;
+			// Check both new ID and old ID (for migration)
+			const savedAction =
+				savedActions[actionId] ||
+				savedActions[
+					Object.keys(migrationMap).find((oldId) => migrationMap[oldId] === actionId) || ''
+				];
+
+			if (savedAction) {
+				freshActions[actionId].progress = savedAction.progress;
+				freshActions[actionId].isActive = savedAction.isActive;
+				freshActions[actionId].lastUpdate = savedAction.lastUpdate;
+				if (savedAction.completed !== undefined) {
+					freshActions[actionId].completed = savedAction.completed;
 				}
 			}
 		}
@@ -312,7 +328,7 @@ export class IdleActionManager {
 		if (action.oneTime && action.completed) return false;
 
 		// For stat training (v0.1.5+): Check character EXP cost and charge upfront
-		if (action.trainsStat && actionId !== 'practice-ruminate') {
+		if (action.trainsStat && actionId !== 'study-research') {
 			const stat = action.trainsStat;
 			const cost = this.deps.getStatTrainingCost(stat);
 			const currentExp = this.deps.getCurrentExp();
@@ -340,7 +356,7 @@ export class IdleActionManager {
 		action.lastUpdate = Date.now();
 
 		// Apply speed multipliers based on action type
-		if (actionId === 'practice-ruminate') {
+		if (actionId === 'study-research') {
 			// Ruminate gets both ruminate-specific and global idle speed bonuses
 			const ruminateSpeed = this.deps.getRuminateSpeedMultiplier();
 			const globalSpeed = this.deps.getGlobalIdleSpeedMultiplier();
@@ -467,7 +483,7 @@ export class IdleActionManager {
 		if (!action || !action.isActive) return null;
 
 		// Handle ruminate completion
-		if (actionId === 'practice-ruminate') {
+		if (actionId === 'study-research') {
 			const bonus = this.deps.getRuminateExpBonus();
 			const level = this.deps.getCurrentLevel();
 			const disciplineMult = this.deps.getDisciplineMultiplier();

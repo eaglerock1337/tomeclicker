@@ -53,11 +53,11 @@ describe('Game', () => {
 		it('should initialize training actions', () => {
 			const game = createTestGame();
 
-			expect(game.trainingActions['practice-ruminate']).toBeDefined();
-			expect(game.trainingActions['train-strength']).toBeDefined();
-			expect(game.trainingActions['train-agility']).toBeDefined();
-			expect(game.trainingActions['train-willpower']).toBeDefined();
-			expect(game.trainingActions['train-endurance']).toBeDefined();
+			expect(game.trainingActions['study-research']).toBeDefined();
+			expect(game.trainingActions['study-athletics']).toBeDefined();
+			expect(game.trainingActions['study-kinetics']).toBeDefined();
+			expect(game.trainingActions['study-selfdefense']).toBeDefined();
+			expect(game.trainingActions['study-fitness']).toBeDefined();
 		});
 	});
 
@@ -532,22 +532,22 @@ describe('Game', () => {
 	});
 
 	describe('Training System', () => {
-		it('should initialize Ruminate action', () => {
+		it('should initialize Research action', () => {
 			const game = createTestGame();
-			const ruminate = game.trainingActions['practice-ruminate'];
+			const research = game.trainingActions['study-research'];
 
-			expect(ruminate).toBeDefined();
-			expect(ruminate.name).toBe('Ruminate');
-			expect(ruminate.expCost).toBe(0); // Free to use
+			expect(research).toBeDefined();
+			expect(research.name).toBe('Research');
+			expect(research.expCost).toBe(0); // Free to use
 		});
 
 		it('should initialize stat training actions', () => {
 			const game = createTestGame();
 
-			expect(game.trainingActions['train-strength'].trainsStat).toBe('strength');
-			expect(game.trainingActions['train-agility'].trainsStat).toBe('agility');
-			expect(game.trainingActions['train-willpower'].trainsStat).toBe('willpower');
-			expect(game.trainingActions['train-endurance'].trainsStat).toBe('endurance');
+			expect(game.trainingActions['study-athletics'].trainsStat).toBe('strength');
+			expect(game.trainingActions['study-kinetics'].trainsStat).toBe('agility');
+			expect(game.trainingActions['study-selfdefense'].trainsStat).toBe('willpower');
+			expect(game.trainingActions['study-fitness'].trainsStat).toBe('endurance');
 		});
 
 		describe('getStatLevelCost', () => {

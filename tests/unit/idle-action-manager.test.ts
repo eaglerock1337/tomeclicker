@@ -91,24 +91,24 @@ describe('IdleActionManager', () => {
 		it('should initialize training actions with correct defaults', () => {
 			const actions = manager.getTrainingActions();
 
-			expect(actions['practice-ruminate']).toBeDefined();
-			expect(actions['practice-ruminate'].name).toBe('Ruminate');
-			expect(actions['practice-ruminate'].expCost).toBe(0); // Free!
-			expect(actions['practice-ruminate'].isActive).toBe(false);
-			expect(actions['practice-ruminate'].progress).toBe(0);
+			expect(actions['study-research']).toBeDefined();
+			expect(actions['study-research'].name).toBe('Research');
+			expect(actions['study-research'].expCost).toBe(0); // Free!
+			expect(actions['study-research'].isActive).toBe(false);
+			expect(actions['study-research'].progress).toBe(0);
 
-			expect(actions['train-strength']).toBeDefined();
-			expect(actions['train-strength'].trainsStat).toBe('strength');
-			expect(actions['train-strength'].expCost).toBe(10);
+			expect(actions['study-athletics']).toBeDefined();
+			expect(actions['study-athletics'].trainsStat).toBe('strength');
+			expect(actions['study-athletics'].expCost).toBe(10);
 
-			expect(actions['train-agility']).toBeDefined();
-			expect(actions['train-agility'].trainsStat).toBe('agility');
+			expect(actions['study-kinetics']).toBeDefined();
+			expect(actions['study-kinetics'].trainsStat).toBe('agility');
 
-			expect(actions['train-willpower']).toBeDefined();
-			expect(actions['train-willpower'].trainsStat).toBe('willpower');
+			expect(actions['study-selfdefense']).toBeDefined();
+			expect(actions['study-selfdefense'].trainsStat).toBe('willpower');
 
-			expect(actions['train-endurance']).toBeDefined();
-			expect(actions['train-endurance'].trainsStat).toBe('endurance');
+			expect(actions['study-fitness']).toBeDefined();
+			expect(actions['study-fitness'].trainsStat).toBe('endurance');
 		});
 
 		it('should initialize meditation actions with correct defaults', () => {
@@ -120,9 +120,9 @@ describe('IdleActionManager', () => {
 		});
 
 		it('should allow getting individual actions', () => {
-			const ruminate = manager.getTrainingAction('practice-ruminate');
+			const ruminate = manager.getTrainingAction('study-research');
 			expect(ruminate).toBeDefined();
-			expect(ruminate?.name).toBe('Ruminate');
+			expect(ruminate?.name).toBe('Research');
 
 			const meditation = manager.getMeditationAction('disassociate');
 			expect(meditation).toBeDefined();
@@ -137,34 +137,34 @@ describe('IdleActionManager', () => {
 
 	describe('Action Lifecycle', () => {
 		it('should start an action and set it as active', () => {
-			const result = manager.startIdleAction('training', 'practice-ruminate');
+			const result = manager.startIdleAction('training', 'study-research');
 
 			expect(result).toBe(true);
-			const action = manager.getTrainingAction('practice-ruminate');
+			const action = manager.getTrainingAction('study-research');
 			expect(action?.isActive).toBe(true);
 			expect(action?.progress).toBe(0);
 		});
 
 		it('should stop other actions when starting a new one', () => {
 			// Start first action
-			manager.startIdleAction('training', 'practice-ruminate');
-			expect(manager.getTrainingAction('practice-ruminate')?.isActive).toBe(true);
+			manager.startIdleAction('training', 'study-research');
+			expect(manager.getTrainingAction('study-research')?.isActive).toBe(true);
 
 			// Start second action
-			manager.startIdleAction('training', 'train-strength');
+			manager.startIdleAction('training', 'study-athletics');
 
 			// First action should be stopped
-			expect(manager.getTrainingAction('practice-ruminate')?.isActive).toBe(false);
-			expect(manager.getTrainingAction('train-strength')?.isActive).toBe(true);
+			expect(manager.getTrainingAction('study-research')?.isActive).toBe(false);
+			expect(manager.getTrainingAction('study-athletics')?.isActive).toBe(true);
 		});
 
 		it('should allow stopping an active action', () => {
-			manager.startIdleAction('training', 'practice-ruminate');
-			expect(manager.getTrainingAction('practice-ruminate')?.isActive).toBe(true);
+			manager.startIdleAction('training', 'study-research');
+			expect(manager.getTrainingAction('study-research')?.isActive).toBe(true);
 
-			manager.stopIdleAction('training', 'practice-ruminate');
+			manager.stopIdleAction('training', 'study-research');
 
-			const action = manager.getTrainingAction('practice-ruminate');
+			const action = manager.getTrainingAction('study-research');
 			expect(action?.isActive).toBe(false);
 			expect(action?.progress).toBe(0);
 		});
@@ -177,9 +177,9 @@ describe('IdleActionManager', () => {
 		it('should apply training speed multiplier', () => {
 			const manager = new IdleActionManagerBuilder().withTrainingSpeed(0.5).build();
 
-			manager.startIdleAction('training', 'train-strength');
+			manager.startIdleAction('training', 'study-athletics');
 
-			const action = manager.getTrainingAction('train-strength');
+			const action = manager.getTrainingAction('study-athletics');
 			// Base duration is 15000ms, training speed 0.5 means 50% faster (duration * 0.5)
 			expect(action?.duration).toBe(15000 * 0.5);
 		});
@@ -187,9 +187,9 @@ describe('IdleActionManager', () => {
 		it('should apply global idle speed multiplier', () => {
 			const manager = new IdleActionManagerBuilder().withGlobalIdleSpeed(2.0).build();
 
-			manager.startIdleAction('training', 'train-strength');
+			manager.startIdleAction('training', 'study-athletics');
 
-			const action = manager.getTrainingAction('train-strength');
+			const action = manager.getTrainingAction('study-athletics');
 			// Base 15000ms, global speed 2.0 means 2x faster (duration / 2.0)
 			expect(action?.duration).toBe(15000 / 2.0);
 		});
@@ -200,9 +200,9 @@ describe('IdleActionManager', () => {
 				.withGlobalIdleSpeed(2.0) // 2x faster (divide)
 				.build();
 
-			manager.startIdleAction('training', 'train-strength');
+			manager.startIdleAction('training', 'study-athletics');
 
-			const action = manager.getTrainingAction('train-strength');
+			const action = manager.getTrainingAction('study-athletics');
 			// (15000 * 0.8) / 2.0 = 12000 / 2.0 = 6000
 			expect(action?.duration).toBe(6000);
 		});
@@ -213,9 +213,9 @@ describe('IdleActionManager', () => {
 				.withGlobalIdleSpeed(2.0) // 2x faster
 				.build();
 
-			manager.startIdleAction('training', 'practice-ruminate');
+			manager.startIdleAction('training', 'study-research');
 
-			const action = manager.getTrainingAction('practice-ruminate');
+			const action = manager.getTrainingAction('study-research');
 			// 15000 / (1.5 * 2.0) = 15000 / 3.0 = 5000
 			expect(action?.duration).toBe(5000);
 		});
@@ -226,8 +226,8 @@ describe('IdleActionManager', () => {
 			vi.useFakeTimers();
 			const startTime = Date.now();
 
-			manager.startIdleAction('training', 'practice-ruminate');
-			const action = manager.getTrainingAction('practice-ruminate');
+			manager.startIdleAction('training', 'study-research');
+			const action = manager.getTrainingAction('study-research');
 
 			// Advance time by half the duration
 			vi.advanceTimersByTime(action!.duration / 2);
@@ -244,8 +244,8 @@ describe('IdleActionManager', () => {
 
 			const manager = new IdleActionManagerBuilder().withRuminateBonus(5).build();
 
-			manager.startIdleAction('training', 'practice-ruminate');
-			const action = manager.getTrainingAction('practice-ruminate');
+			manager.startIdleAction('training', 'study-research');
+			const action = manager.getTrainingAction('study-research');
 
 			// Advance time to complete the action
 			vi.advanceTimersByTime(action!.duration + 100);
@@ -266,10 +266,10 @@ describe('IdleActionManager', () => {
 		it('should handle multiple completions in one update', () => {
 			vi.useFakeTimers();
 
-			manager.startIdleAction('training', 'practice-ruminate');
+			manager.startIdleAction('training', 'study-research');
 			manager.startIdleAction('meditation', 'disassociate');
 
-			const trainingAction = manager.getTrainingAction('practice-ruminate');
+			const trainingAction = manager.getTrainingAction('study-research');
 			const meditationAction = manager.getMeditationAction('disassociate');
 
 			// Advance time to complete both
@@ -289,8 +289,8 @@ describe('IdleActionManager', () => {
 		it('should award base EXP on ruminate completion', () => {
 			vi.useFakeTimers();
 
-			manager.startIdleAction('training', 'practice-ruminate');
-			const action = manager.getTrainingAction('practice-ruminate');
+			manager.startIdleAction('training', 'study-research');
+			const action = manager.getTrainingAction('study-research');
 
 			vi.advanceTimersByTime(action!.duration + 100);
 
@@ -308,8 +308,8 @@ describe('IdleActionManager', () => {
 
 			const manager = new IdleActionManagerBuilder().withRuminateBonus(25).build();
 
-			manager.startIdleAction('training', 'practice-ruminate');
-			const action = manager.getTrainingAction('practice-ruminate');
+			manager.startIdleAction('training', 'study-research');
+			const action = manager.getTrainingAction('study-research');
 
 			vi.advanceTimersByTime(action!.duration + 100);
 
@@ -323,8 +323,8 @@ describe('IdleActionManager', () => {
 		it('should automatically restart ruminate after completion', () => {
 			vi.useFakeTimers();
 
-			manager.startIdleAction('training', 'practice-ruminate');
-			const action = manager.getTrainingAction('practice-ruminate');
+			manager.startIdleAction('training', 'study-research');
+			const action = manager.getTrainingAction('study-research');
 
 			vi.advanceTimersByTime(action!.duration + 100);
 			manager.updateIdleActions();
@@ -349,8 +349,8 @@ describe('IdleActionManager', () => {
 
 			// Complete 5 trainings = 50 stat EXP = level up
 			for (let i = 0; i < 5; i++) {
-				manager.startIdleAction('training', 'train-strength');
-				const action = manager.getTrainingAction('train-strength');
+				manager.startIdleAction('training', 'study-athletics');
+				const action = manager.getTrainingAction('study-athletics');
 				vi.advanceTimersByTime(action!.duration + 100);
 				const results = manager.updateIdleActions();
 
@@ -367,7 +367,7 @@ describe('IdleActionManager', () => {
 			}
 
 			// Training should still be active (Progress Knight style - never stops)
-			const action = manager.getTrainingAction('train-strength');
+			const action = manager.getTrainingAction('study-athletics');
 			expect(action?.isActive).toBe(true);
 
 			vi.useRealTimers();
@@ -384,8 +384,8 @@ describe('IdleActionManager', () => {
 
 			// Complete 5 trainings (50 stat EXP - not enough to level up)
 			for (let i = 0; i < 5; i++) {
-				manager.startIdleAction('training', 'train-strength');
-				const action = manager.getTrainingAction('train-strength');
+				manager.startIdleAction('training', 'study-athletics');
+				const action = manager.getTrainingAction('study-athletics');
 				vi.advanceTimersByTime(action!.duration + 100);
 				const results = manager.updateIdleActions();
 
@@ -420,8 +420,8 @@ describe('IdleActionManager', () => {
 			// With crits (10 * 2.0 = 20 EXP each), need only 3 trainings (60 EXP)
 			// Without crits (10 EXP each), would need 6 trainings
 			for (let i = 0; i < 3; i++) {
-				manager.startIdleAction('training', 'train-strength');
-				const action = manager.getTrainingAction('train-strength');
+				manager.startIdleAction('training', 'study-athletics');
+				const action = manager.getTrainingAction('study-athletics');
 				vi.advanceTimersByTime(action!.duration + 100);
 				const results = manager.updateIdleActions();
 
@@ -447,9 +447,9 @@ describe('IdleActionManager', () => {
 
 			// Train each stat 5 times (50 stat EXP each = level up)
 			const stats = [
-				{ action: 'train-agility', stat: 'agility' },
-				{ action: 'train-willpower', stat: 'willpower' },
-				{ action: 'train-endurance', stat: 'endurance' }
+				{ action: 'study-kinetics', stat: 'agility' },
+				{ action: 'study-selfdefense', stat: 'willpower' },
+				{ action: 'study-fitness', stat: 'endurance' }
 			];
 
 			for (const { action: actionName, stat } of stats) {
@@ -492,8 +492,8 @@ describe('IdleActionManager', () => {
 	describe('Migration', () => {
 		it('should migrate training actions and preserve progress', () => {
 			const savedActions: { [key: string]: IdleAction } = {
-				'practice-ruminate': {
-					id: 'practice-ruminate',
+				'study-research': {
+					id: 'study-research',
 					name: 'Old Name',
 					description: 'Old description',
 					progress: 0.75,
@@ -507,18 +507,18 @@ describe('IdleActionManager', () => {
 
 			manager.migrateTrainingActions(savedActions);
 
-			const action = manager.getTrainingAction('practice-ruminate');
+			const action = manager.getTrainingAction('study-research');
 			expect(action?.progress).toBe(0.75); // Preserved
 			expect(action?.isActive).toBe(true); // Preserved
 			expect(action?.lastUpdate).toBe(12345); // Preserved
-			expect(action?.name).toBe('Ruminate'); // Updated to new definition
+			expect(action?.name).toBe('Research'); // Updated to new definition
 		});
 
 		it('should add new actions during migration', () => {
 			const savedActions: { [key: string]: IdleAction } = {
-				'practice-ruminate': {
-					id: 'practice-ruminate',
-					name: 'Ruminate',
+				'study-research': {
+					id: 'study-research',
+					name: 'Research',
 					description: 'Learn through observation',
 					progress: 0,
 					baseDuration: 15000,
@@ -533,11 +533,11 @@ describe('IdleActionManager', () => {
 
 			// Should have all actions, including new ones
 			const actions = manager.getTrainingActions();
-			expect(actions['practice-ruminate']).toBeDefined();
-			expect(actions['train-strength']).toBeDefined();
-			expect(actions['train-agility']).toBeDefined();
-			expect(actions['train-willpower']).toBeDefined();
-			expect(actions['train-endurance']).toBeDefined();
+			expect(actions['study-research']).toBeDefined();
+			expect(actions['study-athletics']).toBeDefined();
+			expect(actions['study-kinetics']).toBeDefined();
+			expect(actions['study-selfdefense']).toBeDefined();
+			expect(actions['study-fitness']).toBeDefined();
 		});
 	});
 
@@ -548,14 +548,14 @@ describe('IdleActionManager', () => {
 				.build();
 
 			// Should not throw
-			expect(() => manager.startIdleAction('training', 'train-strength')).not.toThrow();
+			expect(() => manager.startIdleAction('training', 'study-athletics')).not.toThrow();
 		});
 
 		it('should handle very high speed multipliers', () => {
 			const manager = new IdleActionManagerBuilder().withGlobalIdleSpeed(1000).build();
 
-			manager.startIdleAction('training', 'practice-ruminate');
-			const action = manager.getTrainingAction('practice-ruminate');
+			manager.startIdleAction('training', 'study-research');
+			const action = manager.getTrainingAction('study-research');
 
 			// Should result in very short duration
 			expect(action?.duration).toBe(15);
@@ -564,8 +564,8 @@ describe('IdleActionManager', () => {
 		it('should not update inactive actions', () => {
 			vi.useFakeTimers();
 
-			manager.startIdleAction('training', 'practice-ruminate');
-			manager.stopIdleAction('training', 'practice-ruminate');
+			manager.startIdleAction('training', 'study-research');
+			manager.stopIdleAction('training', 'study-research');
 
 			vi.advanceTimersByTime(100000); // Long time
 

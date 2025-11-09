@@ -12,7 +12,7 @@
 
     // Filter actions by level - reactive to game.level changes
     $: availableActions = Object.values(game.trainingActions).filter(action => {
-        if (action.id === 'practice-ruminate') return game.level >= 2;
+        if (action.id === 'study-research') return game.level >= 2;
         if (action.trainsStat) return game.level >= 3;
         return false;
     });
@@ -21,14 +21,14 @@
     $: statExpGain = game.getStatExpGainPerTraining();
 </script>
 
-<ViewLayout title="training" maxWidth="1200px">
+<ViewLayout title="study" maxWidth="1200px">
 
     <div class="actions-grid">
         {#each availableActions as action (action.id)}
             <!-- Reactive calculations that update when game state changes -->
             {@const isActive = action.isActive}
-            {@const cost = action.id === 'practice-ruminate' ? 0 : (action.trainsStat ? game.getStatTrainingCost(action.trainsStat) : 0)}
-            {@const canAfford = action.id === 'practice-ruminate' || (action.trainsStat ? game.exp >= cost : true)}
+            {@const cost = action.id === 'study-research' ? 0 : (action.trainsStat ? game.getStatTrainingCost(action.trainsStat) : 0)}
+            {@const canAfford = action.id === 'study-research' || (action.trainsStat ? game.exp >= cost : true)}
             {@const progress = isActive ? action.progress : 0}
             {@const duration = game.getTrainingDuration(action.id)}
             {@const currentStatExp = action.trainsStat ? game.getStatExp(action.trainsStat) : 0}
@@ -105,7 +105,7 @@
                     <div class="detail-row">
                         <div class="detail-half">
                             <span class="detail-label">Reward:</span>
-                            {#if action.id === 'practice-ruminate'}
+                            {#if action.id === 'study-research'}
                                 <span class="detail-value reward-value">
                                     +{formatCompact(game.getRuminateReward(), 1)} EXP
                                 </span>
