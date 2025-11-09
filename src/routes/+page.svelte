@@ -31,13 +31,18 @@
 		if (!game) return;
 
 		const result = game.checkStoryUnlocks();
+		console.log('[Story Debug] Check result:', result);
 
 		if (result.newlyUnlocked.length > 0) {
+			console.log('[Story Debug] Found newly unlocked:', result.newlyUnlocked);
 			// Add newly unlocked entries to queue
 			storyQueue = [...storyQueue, ...result.newlyUnlocked];
+			console.log('[Story Debug] Current story:', currentStory);
+			console.log('[Story Debug] Queue:', storyQueue);
 
 			// If no modal is currently showing, show the first one
 			if (!currentStory && storyQueue.length > 0) {
+				console.log('[Story Debug] Calling showNextStory()');
 				showNextStory();
 			}
 		}
@@ -47,8 +52,10 @@
 	 * Show the next story in the queue
 	 */
 	function showNextStory() {
+		console.log('[Story Debug] showNextStory - queue length:', storyQueue.length);
 		if (storyQueue.length === 0) {
 			currentStory = null;
+			console.log('[Story Debug] Queue empty, clearing currentStory');
 			return;
 		}
 
@@ -56,6 +63,8 @@
 		const [next, ...remaining] = storyQueue;
 		currentStory = next;
 		storyQueue = remaining;
+		console.log('[Story Debug] Set currentStory to:', currentStory);
+		console.log('[Story Debug] Remaining queue:', storyQueue);
 	}
 
 	/**
@@ -99,6 +108,27 @@
 			}
 		}
 		game = new Game();
+		console.log('[Story Debug] Game created');
+		console.log('[Story Debug] Initial unread count:', game.getUnreadStoryCount());
+
+		// Debug: Add game to window for console testing
+		if (typeof window !== 'undefined') {
+			(window as any).debugGame = game;
+			(window as any).debugStory = {
+				checkUnlocks: () => checkStoryUnlocks(),
+				showQueue: () => console.log('Queue:', storyQueue),
+				showCurrent: () => console.log('Current:', currentStory),
+				forceUnlock: () => {
+					const result = game.checkStoryUnlocks();
+					console.log('Force check result:', result);
+					if (result.newlyUnlocked.length > 0) {
+						storyQueue = [...storyQueue, ...result.newlyUnlocked];
+						if (!currentStory) showNextStory();
+					}
+				}
+			};
+			console.log('[Story Debug] Added window.debugGame and window.debugStory helpers');
+		}
 
 		// Load saved data
 		setTimeout(() => {
@@ -108,6 +138,8 @@
 					game.loadFromCookies();
 				}
 				game = game; // Force reactivity
+				console.log('[Story Debug] After load - unread count:', game.getUnreadStoryCount());
+				console.log('[Story Debug] After load - unlocked chapters:', game.getUnlockedStoryChapters());
 			}
 		}, 100);
 
@@ -219,6 +251,11 @@
 			playerName={game.name}
 			onAcknowledge={handleStoryAcknowledge}
 		/>
+	{:else}
+		<!-- Debug: Modal not showing -->
+		<div style="display: none;">
+			currentStory: {currentStory ? 'SET' : 'NULL'}, game: {game ? 'SET' : 'NULL'}
+		</div>
 	{/if}
 </div>
 
