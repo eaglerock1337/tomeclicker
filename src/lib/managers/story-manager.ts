@@ -132,6 +132,7 @@ export interface StoryManagerDependencies {
  */
 export class StoryManager {
 	private entries: Map<string, StoryEntry>;
+	private unlockedQueue: StoryEntry[] = []; // Queue of newly unlocked entries waiting to be shown
 
 	constructor(
 		private deps: StoryManagerDependencies,
@@ -163,6 +164,8 @@ export class StoryManager {
 					entry.unlocked = true;
 					entry.timestamp = Date.now();
 					newlyUnlocked.push(entry);
+					// Add to queue so UI can retrieve it later
+					this.unlockedQueue.push(entry);
 				}
 			}
 		}
@@ -179,7 +182,13 @@ export class StoryManager {
 				totalUnread
 			);
 		}
-		return { newlyUnlocked, totalUnread };
+
+		// Return queued entries (not just ones unlocked in this check)
+		const queuedEntries = [...this.unlockedQueue];
+		this.unlockedQueue = []; // Clear queue after returning
+
+		console.log('[StoryManager] Returning queued entries:', queuedEntries.length);
+		return { newlyUnlocked: queuedEntries, totalUnread };
 	}
 
 	/**
