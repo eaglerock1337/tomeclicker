@@ -39,6 +39,7 @@ type TriggerYaml = Record<string, any>;
 export function loadStoryEntries(): StoryEntry[] {
 	// Use the already-parsed YAML data from @rollup/plugin-yaml
 	const data = storyContentYaml as StoryContentYaml;
+	console.log('[Story Loader] Loaded YAML data:', data);
 
 	if (!data?.chapters) {
 		console.warn('No chapters found in story-content.yaml');
@@ -67,6 +68,8 @@ export function loadStoryEntries(): StoryEntry[] {
 		}
 	}
 
+	console.log('[Story Loader] Loaded', entries.length, 'entries');
+	console.log('[Story Loader] First entry:', entries[0]);
 	return entries;
 }
 

@@ -155,10 +155,15 @@ export class StoryManager {
 		const newlyUnlocked: StoryEntry[] = [];
 
 		for (const entry of this.entries.values()) {
-			if (!entry.unlocked && this.evaluateTrigger(entry.trigger)) {
-				entry.unlocked = true;
-				entry.timestamp = Date.now();
-				newlyUnlocked.push(entry);
+			if (!entry.unlocked) {
+				const shouldUnlock = this.evaluateTrigger(entry.trigger);
+
+				if (shouldUnlock) {
+					console.log(`[StoryManager] UNLOCKING: ${entry.id}`, entry);
+					entry.unlocked = true;
+					entry.timestamp = Date.now();
+					newlyUnlocked.push(entry);
+				}
 			}
 		}
 
@@ -166,6 +171,14 @@ export class StoryManager {
 			(e) => e.unlocked && !e.acknowledged
 		).length;
 
+		if (newlyUnlocked.length > 0) {
+			console.log(
+				'[StoryManager] Newly unlocked:',
+				newlyUnlocked.length,
+				'Total unread:',
+				totalUnread
+			);
+		}
 		return { newlyUnlocked, totalUnread };
 	}
 
