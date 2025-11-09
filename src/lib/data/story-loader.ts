@@ -6,7 +6,7 @@
  */
 
 import type { StoryEntry, TriggerCondition } from '$lib/managers/story-manager';
-import storyContentYaml from '../../../design/story-content.yaml?raw';
+import storyContentYaml from './story-content.yaml?raw';
 
 /**
  * YAML structure for story content file

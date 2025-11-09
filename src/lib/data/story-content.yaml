@@ -7,42 +7,42 @@ chapters:
     title: 'Awakening'
     entries:
       - id: ch1-awakening
-        text: "You wake up not knowing who you are or what happened to you, but you're compelled to start practicing, as if you were destined for something greater."
+        text: "I woke up not remembering who I am or what happened to me, but I'm compelled to start practicing, as if I am destined for something greater."
         trigger:
           type: lifetimeExp
           threshold: 50
 
       - id: ch1-discipline
-        text: 'Your practice seems to be working. Your self-discipline is strengthening, focusing your efforts even harder. You feel more productive.'
+        text: 'My practice seems to be working. My self-discipline is strengthening, focusing my efforts even harder. I feel more productive.'
         trigger:
           type: upgradeOwned
           upgradeId: discipline
 
       - id: ch1-level2
-        text: 'Your experience is starting to pay off. Your thoughts start ruminating in the back of your mind, giving you even more insights as you progress.'
+        text: 'My experience is starting to pay off. My thoughts start ruminating in the back of my mind, giving me even more insights as I progress.'
         trigger:
           type: level
           threshold: 2
 
       - id: ch1-level3
-        text: "You're starting to get the hang of this. Your practice is making you realize what you need to focus on if you're ever going to venture away from home."
+        text: "I'm starting to get the hang of this. My practice is making me realize what I need to focus on if I'm ever going to venture away from home."
         trigger:
           type: level
           threshold: 3
 
       - id: ch1-first-stat
-        text: "You're starting to see your path forwards. Focusing on different aspects of your fitness and your attack and defense skills are key to protecting yourself."
+        text: "I'm starting to see my path forwards. Focusing on different aspects of my fitness and my attack and defense skills are key to protecting myself."
         trigger:
           type: anyStatLevel
           level: 1
 
       - id: ch1-stats-unlocked
-        text: "You're now starting to realize how far you have to go before you're ready, but know you're progressing. It's time to define your identity as an adventurer."
+        text: "I'm now starting to realize how far I have to go before I'm ready, but know I'm progressing. It's time to define my identity as an adventurer."
         trigger:
           type: adventureUnlocked
 
       - id: ch1-name-set
-        text: 'As you keep preparing for adventure, you redefine yourself. You are now <adventurer-name>, destined for greatness. You tirelessly keep at it.'
+        text: "As I keep preparing for adventure, I redefine myself. I don't remember who I was, but now know who I am. I am now <adventurer-name>, destined for greatness."
         trigger:
           type: nameSet
 
@@ -50,7 +50,7 @@ chapters:
     title: 'Adventure'
     entries:
       - id: ch2-adventure-unlock
-        text: 'Your practice has paid off and you finally feel ready for adventure. You head out, ready to fight with nothing but your bare hands. Your destiny awaits.'
+        text: 'My practice has paid off and I finally feel ready for adventure. I head out, ready to fight with nothing but my bare hands. My destiny awaits.'
         trigger:
           type: adventureUnlocked
 # Future chapters (triggers defined but not implemented yet)
