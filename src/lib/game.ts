@@ -106,6 +106,9 @@ export class Game {
 	private statsManager: StatsManager;
 	private storyManager: StoryManager;
 
+	// Story modal queue (entries waiting to be shown)
+	private pendingStoryModals: StoryEntry[] = [];
+
 	/**
 	 * Creates a new game instance with default values
 	 * @param name - Player name, defaults to 'A Stranger' if not provided

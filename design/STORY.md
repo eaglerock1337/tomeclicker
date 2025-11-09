@@ -6,91 +6,91 @@ The whole story is going to come in small bits, small enough to fit on one scree
 
 ### First blurb at 50 EXP
 
-You wake up not knowing who you are or what happened to you, but you're compelled to start practicing, as if you were destined for something greater.
+I wake up not knowing who I am or what happened to I, but I'm compelled to start practicing, as if I am destined for something greater.
 
 ### Blurb at first Discipline upgrade
 
-Your practice seems to be working. Your self-discipline is strengthening, focusing your efforts even harder. You feel more productive.
+My practice seems to be working. My self-discipline is strengthening, focusing my efforts even harder. I feel more productive.
 
 ### Blurb at Level 2
 
-Your experience is starting to pay off. Your thoughts start ruminating in the back of your mind, giving you even more insights as you progress.
+My experience is starting to pay off. My thoughts start ruminating in the back of my mind, giving me even more insights as I progress.
 
 ### Blurb when you reach Level 3 (you can start training RPG stats)
 
-You're starting to get the hang of this. Your practice is making you realize what you need to focus on if you're ever going to venture away from home.
+I'm starting to get the hang of this. My practice is making me realize what I need to focus on if I'm ever going to venture away from home.
 
 ### Blurb when you level up your first RPG stat
 
-You're starting to see your path forwards. Focusing on different aspects of your fitness and your attack and defense skills are key to protecting yourself.
+I'm starting to see my path forwards. Focusing on different aspects of my fitness and my attack and defense skills are key to protecting myself.
 
 ### Blurb when you've unlocked RPG stat upgrades and the adventure page
 
-You're now starting to realize how far you have to go before you're ready, but know you're progressing. It's time to define your identity as an adventurer.
+I'm now starting to realize how far I have to go before I'm ready, but know I'm progressing. It's time to define my identity as an adventurer.
 
 ### Blurb when you've set your name (and gender)
 
-As you keep preparing for adventure, you redefine yourself. You are now <adventurer-name>, destined for greatness. You tirelessly keep at it.
+As I keep preparing for adventure, I redefine myself. I don't remember who I was, but now know who I am. I am now <adventurer-name>, destined for greatness.
 
 ## Chapter 2 - Adventure
 
 ### First blurb when adventure mode is unlocked
 
-Your practice has paid off and you finally feel ready for adventure. You head out, ready to fight with nothing but your bare hands. Your destiny awaits.
+My practice has paid off and I finally feel ready for adventure. I head out, ready to fight with nothing but my bare hands. My destiny awaits.
 
 ### Blurb when you complete your first adventure
 
-Your adventure leads you to a chest hidden in plain sight. You stare at it, wondering what treasure await you inside. It's time to open it.
+My adventure leads me to a chest hidden in plain sight. I stare at it, wondering what treasures await me inside. It's time to open it.
 
 ### Blurb when you open your first treasure chest (guaranteed sword item)
 
-You open the treasure chest and find a piece of adventure gear. You find an old sword, ready and waiting for battle. Time to see what it can do.
+I open the treasure chest and find a piece of adventuring gear. I find an old sword, ready and waiting for battle. Time to see what it can do.
 
 ### Blurb when you open your first duplicate item (item mastery mechanic)
 
-You open a treasure chest and find an extra piece of gear. You dismantle it and study it, learning how to make your gear stronger in the process.
+I open a treasure chest and find an extra piece of gear. I dismantle it and study it, learning how to make my gear stronger in the process.
 
 ### Blurb when you reach your first max level
 
-You keep advancing and getting stronger, but are starting to feel your limits. Despite your body, however, your mind wants more. You keep going.
+I keep advancing and getting stronger, but am starting to feel my limits. Despite my body, however, my mind wants more. I keep going.
 
 ### Blurb when it's time for your first Retreat (first prestige mechanic)
 
-You're finally hitting roadblocks and can't seem to progress further. It's time to retreat for home, reflect on your adventures, and start fresh.
+I'm finally hitting roadblocks and can't seem to progress further. It's time to retreat for home, reflect on my adventures, and start fresh.
 
 ### Blurb when you've done your first Retreat
 
-You head home and reflect on your learnings. You're back to square one and have to do it all over again, but know this time will be easier and you'll go farther.
+I head home and reflect on my learnings. I'm back to square one and have to do it all over again, but know this time will be easier and I'll go farther.
 
 ### Blurb when you've hit the previous advancement (previous max level)
 
-You've made it as far as you went before. You realize now you can reach a higher level and grow stronger than before. Your motivation grows.
+I've made it as far as I went before. I realize now I can reach a higher level and grow stronger than before. My motivation grows.
 
 ## Chapter 3 - Questing
 
 ### First blurb when you unlock max level (level 20)
 
-Your cycle of adventuring and retreating has been laborious, but you think you are finally reaching your peak performance. Time to test it out.
+My cycle of adventuring and retreating has been laborious, but I think I am finally reaching my peak performance. Time to test it out.
 
 ### Blurb when you hit max level
 
-Your body is finally catching up to your mind as if you're on another level. You feel as though your potential has been unlocked, and are eager for more.
+My body is finally catching up to my mind as if I'm on another level. I feel as though my potential has been unlocked, and am eager for more.
 
 ### Blurb when you hit max stats (all RPG stats 100)
 
-Your adventuring has left you in peak physical and mental shape, like Adonis the Greek god. Your gear needs upgrading to keep up with your form.
+My adventuring has left me in peak physical and mental shape, like Adonis the Greek god. My gear needs upgrading to keep up with my form.
 
 ### Blurb when you hit max Adventure gear
 
-Your gear has finally caught up with your Adonis form. Nothing can defeat you here, so you fly headfirst into the most dangerous lands, looking for more.
+My gear has finally caught up with my Adonis form. Nothing can defeat me here, so I fly headfirst into the most dangerous lands, looking for more.
 
 ### Blurb when questing is unlocked (defeating dangerous adventures)
 
-You come across a cryptic map that leads somewhere far, but doesn't say where. You destiny awaits there, you can feel it. Time to quest for it.
+I come across a cryptic map that leads somewhere far, but doesn't say where. My destiny awaits there, I can feel it. Time to quest for it.
 
 ### Blurb when the first quest is complete
 
-Your quest finally leads you to a cave out in the wilderness. You feel a strange energy as you stand at the entrance. Is your destiny inside?
+My quest finally leads me to a cave out in the wilderness. I feel a strange energy as I stand at the entrance. Is my destiny inside?
 
 ## Chapter 4 - The Tomes of Magic
 
@@ -98,13 +98,13 @@ This is the story pivot, so this single multi-step blurb is the entire chapter.
 
 ### Multi-step blurb when you unlock the Tomes of Magic
 
-You finally reach the end of the cave riddled with magical creatures. You enter a room full of books and scrolls, clearly a wizard's lair.
+I finally reach the end of the cave riddled with magical creatures. I enter a room full of books and scrolls, clearly a wizard's lair.
 
-On a table in the middle of the room, you find a notebook next to a mythical satchel. You approach the table and look at the notebook.
+On a table in the middle of the room, I find a notebook next to a mythical satchel. I approach the table and look at the notebook.
 
 The notebook contains the writings of a wizard who lived in this cave as he studied the world of magic and collected all the books he could.
 
-None of the books, however, could help the wizard learn magic. You start to realize he wasn't really a wizard, just another adventurer like you.
+None of the books, however, could help the wizard learn magic. I start to realize he wasn't really a wizard, just another adventurer like I.
 
 The adventurer described his trials and failings at learning magic, until he was came across one ancient book that changed everything.
 
@@ -112,8 +112,8 @@ This ancient book, the Tome of Magic, was the only book that helped the adventur
 
 The adventurer discovered this Tome was one of 50 Tomes, all of which appear to describe the lost world of magic in incredible detail.
 
-Inside the satchel, you find the Tome of Magic itself, as well as leaves from other Tomes the adventurer started to collect.
+Inside the satchel, I find the Tome of Magic itself, as well as leaves from other Tomes the adventurer started to collect.
 
-You hold the Tome of Magic in your hands, finally understanding your destiny. You feel your hands pulsing as you grip the leather binding.
+I hold the Tome of Magic in my hands, finally understanding my destiny. I feel my hands pulsing as I grip the leather binding.
 
-It's time to pick up where the adventurer left off. You will quest for the remaining Tomes and discover the lost world of magic.
+It's time to pick up where the adventurer left off. I will quest for the remaining Tomes and discover the lost world of magic.
