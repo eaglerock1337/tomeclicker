@@ -143,14 +143,14 @@
 
 	/* Modal Card */
 	.modal-card {
-		background-color: var(--bg-primary);
-		border: 2px solid var(--border-primary);
-		border-radius: 8px;
-		max-width: 600px;
-		width: 100%;
+		background-color: var(--alt-bg);
+		border: 3px solid var(--text);
+		border-radius: 12px;
+		max-width: 700px;
+		width: 90%;
 		max-height: 80vh;
 		overflow-y: auto;
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 		animation: slideUp 0.3s ease-in-out;
 	}
 
@@ -168,7 +168,8 @@
 	/* Header */
 	.modal-header {
 		padding: 1.5rem;
-		border-bottom: 1px solid var(--border-primary);
+		border-bottom: 2px solid var(--text);
+		background-color: var(--bg);
 		display: flex;
 		flex-direction: column;
 		gap: 0.75rem;
@@ -202,20 +203,21 @@
 		font-family: 'Caveat', cursive;
 		font-size: 2rem;
 		font-weight: 700;
-		color: var(--text-primary);
+		color: var(--text);
 		margin: 0;
 	}
 
 	/* Body */
 	.modal-body {
 		padding: 2rem 1.5rem;
+		background-color: var(--alt-bg);
 	}
 
 	.story-text {
 		font-family: 'JetBrains Mono', 'Courier New', monospace;
-		font-size: 1rem;
+		font-size: 1.1rem;
 		line-height: 1.8;
-		color: var(--text-primary);
+		color: var(--text);
 		margin: 0;
 		white-space: pre-wrap;
 		word-wrap: break-word;
@@ -224,10 +226,12 @@
 	/* Footer */
 	.modal-footer {
 		padding: 1.5rem;
-		border-top: 1px solid var(--border-primary);
+		border-top: 2px solid var(--text);
+		background-color: var(--bg);
 		display: flex;
 		justify-content: center;
 		min-height: 80px; /* Reserve space for button */
+		border-radius: 0 0 12px 12px;
 	}
 
 	/* Button */
@@ -273,7 +277,8 @@
 	.loading-dots span {
 		width: 8px;
 		height: 8px;
-		background-color: var(--text-secondary);
+		background-color: var(--text);
+		opacity: 0.5;
 		border-radius: 50%;
 		animation: bounce 1.4s infinite ease-in-out both;
 	}
@@ -301,15 +306,23 @@
 
 	/* Mobile responsiveness */
 	@media (max-width: 768px) {
+		.modal-backdrop {
+			padding: 0;
+		}
+
 		.modal-card {
+			width: 100%;
 			max-width: 100%;
-			max-height: 90vh;
-			border-radius: 12px 12px 0 0;
-			margin-top: auto;
+			height: 80vh;
+			max-height: 80vh;
+			border-radius: 12px;
+			margin: auto;
 		}
 
 		.modal-header {
-			padding: 1rem;
+			padding: 1.25rem;
+			border-top-left-radius: 12px;
+			border-top-right-radius: 12px;
 		}
 
 		.chapter-title {
@@ -317,16 +330,18 @@
 		}
 
 		.modal-body {
-			padding: 1.5rem 1rem;
+			padding: 1.75rem 1.25rem;
+			flex: 1;
+			overflow-y: auto;
 		}
 
 		.story-text {
-			font-size: 0.95rem;
+			font-size: 1rem;
 			line-height: 1.7;
 		}
 
 		.modal-footer {
-			padding: 1rem;
+			padding: 1.25rem;
 		}
 	}
 </style>
