@@ -511,7 +511,7 @@ export class Game {
 		if (!action) return 0;
 
 		// Calculate bonused duration (same logic as startIdleAction)
-		if (actionId === 'practice-ruminate') {
+		if (actionId === 'study-research') {
 			const ruminateSpeed = this.getRuminateSpeedMultiplier();
 			const globalSpeed = this.getGlobalIdleSpeedMultiplier();
 			const combinedSpeed = ruminateSpeed * globalSpeed;
