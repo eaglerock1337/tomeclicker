@@ -5,7 +5,6 @@
         Book,
         Bookmark,
         Copy,
-        Edit,
         Settings,
         History,
         Clock,
@@ -41,6 +40,10 @@
     // Check if active training is blocked (at cap or can't afford)
     // Force re-evaluation by accessing game properties directly
     $: hasBlockedTraining = game && game.exp >= 0 && game.hasBlockedTraining();
+
+    // Check if there are unread journal entries
+    // Force re-evaluation by accessing game properties directly
+    $: hasUnreadJournalEntries = game && game.exp >= 0 && game.getUnreadStoryCount() > 0;
 </script>
 
 <div class="navbar">
@@ -81,8 +84,13 @@
                 <p class:red="{game.menu === 'adventure'}"><Compass size={24}/></p>
             </button>
         {/if}
-        <button on:click="{() => game.menu = 'story'}">
-            <p class:red="{game.menu === 'story'}"><Edit size={24}/></p>
+        <button on:click="{() => game.menu = 'journal'}">
+            <p class:red="{game.menu === 'journal'}">
+                <Book size={24}/>
+                {#if hasUnreadJournalEntries}
+                    <span class="notification-badge journal-badge">{game.getUnreadStoryCount()}</span>
+                {/if}
+            </p>
         </button>
         <!-- Temporarily hidden until fleshed out
         <button on:click="{() => game.menu = 'help'}">
@@ -194,6 +202,11 @@
         align-items: center;
         justify-content: center;
         border: 2px solid var(--bg);
+    }
+
+    .journal-badge {
+        background-color: var(--blue);
+        color: white;
     }
 
 </style>
