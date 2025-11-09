@@ -26,6 +26,7 @@
 
 	/**
 	 * Check for newly unlocked story entries and add to queue
+	 * NOTE: StoryManager now maintains a persistent queue, so we just sync with it
 	 */
 	function checkStoryUnlocks() {
 		if (!game) return;
@@ -34,17 +35,22 @@
 		console.log('[Story Debug] Check result:', result);
 
 		if (result.newlyUnlocked.length > 0) {
-			console.log('[Story Debug] Found newly unlocked:', result.newlyUnlocked);
-			// Add newly unlocked entries to queue
-			storyQueue = [...storyQueue, ...result.newlyUnlocked];
+			console.log('[Story Debug] Manager queue has entries:', result.newlyUnlocked);
+
+			// Replace our queue with the manager's queue (don't append, to avoid duplicates)
+			// The manager's queue persists until entries are acknowledged
+			storyQueue = result.newlyUnlocked;
 			console.log('[Story Debug] Current story:', currentStory);
-			console.log('[Story Debug] Queue:', storyQueue);
+			console.log('[Story Debug] Local queue synced:', storyQueue.length);
 
 			// If no modal is currently showing, show the first one
 			if (!currentStory && storyQueue.length > 0) {
 				console.log('[Story Debug] Calling showNextStory()');
 				showNextStory();
 			}
+		} else if (currentStory === null && result.newlyUnlocked.length === 0) {
+			// Queue is empty, clear our local queue too
+			storyQueue = [];
 		}
 	}
 
@@ -73,11 +79,18 @@
 	function handleStoryAcknowledge(entryId: string) {
 		if (!game) return;
 
-		// Acknowledge the entry in the game state
+		console.log('[Story Debug] Acknowledging:', entryId);
+
+		// Acknowledge the entry in the game state (removes from manager queue)
 		game.acknowledgeStoryEntry(entryId);
 
 		// Force reactivity
 		game = game;
+
+		// Sync local queue with manager queue to stay in sync
+		const result = game.checkStoryUnlocks();
+		storyQueue = result.newlyUnlocked;
+		console.log('[Story Debug] Queue after acknowledge:', storyQueue.length);
 
 		// Show next story in queue (or clear modal)
 		showNextStory();
