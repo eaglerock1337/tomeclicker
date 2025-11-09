@@ -224,6 +224,18 @@ export class Game {
 	}
 
 	/**
+	 * Sets the player's name and checks for name-related story triggers
+	 * @param name - New name for the player
+	 */
+	setName(name: string): void {
+		if (name && name !== 'A Stranger' && name !== this.name) {
+			this.name = name;
+			// Check for story entries that unlock when name is set
+			this.storyManager.checkForNewUnlocks();
+		}
+	}
+
+	/**
 	 * Checks for newly unlocked story entries
 	 * @returns Result with newly unlocked entries and total unread count
 	 */
@@ -778,6 +790,9 @@ export class Game {
 		// Recalculate click multiplier if any stats leveled up (stats affect click power)
 		if (anyStatLeveledUp) {
 			this.recalculateClickMultiplier();
+
+			// Check for story entries that may have unlocked (e.g., first stat level)
+			this.storyManager.checkForNewUnlocks();
 		}
 	}
 
@@ -845,6 +860,10 @@ export class Game {
 		if (!meetsRequirements) return false;
 
 		this.adventureModeUnlocked = true;
+
+		// Check for story entries that may have unlocked
+		this.storyManager.checkForNewUnlocks();
+
 		return true;
 	}
 
@@ -855,6 +874,9 @@ export class Game {
 	addExp(amount: number): void {
 		this.exp += amount;
 		this.lifetimeExp += amount;
+
+		// Check for story entries that may have unlocked
+		this.storyManager.checkForNewUnlocks();
 	}
 
 	/** Level System */
@@ -884,6 +906,10 @@ export class Game {
 		if (!this.canLevelUp()) return false;
 		this.exp -= this.getLevelUpCost();
 		this.level++;
+
+		// Check for story entries that may have unlocked
+		this.storyManager.checkForNewUnlocks();
+
 		return true;
 	}
 
@@ -931,6 +957,9 @@ export class Game {
 
 			// Recalculate click multiplier after purchase
 			this.recalculateClickMultiplier();
+
+			// Check for story entries that may have unlocked (e.g., discipline)
+			this.storyManager.checkForNewUnlocks();
 
 			return true;
 		}
