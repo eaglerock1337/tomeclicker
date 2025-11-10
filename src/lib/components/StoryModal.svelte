@@ -94,7 +94,7 @@
 		<div class="button-container">
 			{#if showButton}
 				<button class="dismiss-button" on:click={handleDismiss} transition:fade>
-					Continue
+					Add to Journal
 				</button>
 			{/if}
 		</div>
@@ -203,16 +203,16 @@
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 	}
 
-	/* Mobile responsiveness - 80% of available viewport */
+	/* Mobile responsiveness - symmetric spacing, narrower width */
 	@media (max-width: 768px) {
 		.modal-container {
-			top: 5rem; /* Smaller top offset for mobile */
+			top: 2.5rem; /* 50% closer to navbar */
 			padding: 0;
 		}
 
 		.modal-card {
-			width: 85%;
-			height: 80%;
+			width: 75%; /* Narrowed by 10% */
+			height: calc(100vh - 5rem); /* Symmetric top/bottom spacing (2.5rem each) */
 			max-height: none;
 			padding: 2rem 1.5rem;
 		}
