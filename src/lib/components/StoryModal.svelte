@@ -47,9 +47,10 @@
 	}
 
 	/**
-	 * Handle button click - acknowledge and close
+	 * Handle button click - dismiss modal (don't acknowledge yet)
+	 * Entry stays unread until viewed in journal
 	 */
-	function handleAcknowledge() {
+	function handleDismiss() {
 		onAcknowledge(entry.id);
 	}
 
@@ -60,12 +61,12 @@
 		// Only allow Enter/Space if button is visible
 		if (showButton && (event.key === 'Enter' || event.key === ' ')) {
 			event.preventDefault();
-			handleAcknowledge();
+			handleDismiss();
 		}
-		// Escape key always closes (acknowledges)
+		// Escape key always dismisses
 		if (event.key === 'Escape') {
 			event.preventDefault();
-			handleAcknowledge();
+			handleDismiss();
 		}
 	}
 </script>
@@ -92,8 +93,8 @@
 		<!-- Button container - always reserves space -->
 		<div class="button-container">
 			{#if showButton}
-				<button class="acknowledge-button" on:click={handleAcknowledge} transition:fade>
-					Add to Journal
+				<button class="dismiss-button" on:click={handleDismiss} transition:fade>
+					Continue
 				</button>
 			{/if}
 		</div>
@@ -101,29 +102,29 @@
 </div>
 
 <style>
-	/* Modal Container - no dark backdrop, just centered */
+	/* Modal Container - no dark backdrop, positioned below navbar */
 	.modal-container {
 		position: fixed;
-		top: 0;
+		top: 7rem; /* Below header + navbar */
 		left: 0;
 		right: 0;
-		bottom: 0;
+		bottom: 1rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		z-index: 9999;
-		padding: 6rem 1rem 1rem 1rem; /* Top padding to avoid header/navbar */
+		padding: 0 1rem;
 		pointer-events: none; /* Allow clicks through container */
 	}
 
-	/* Modal Card - portrait oriented, taller than wider */
+	/* Modal Card - portrait oriented, fills available space */
 	.modal-card {
 		background-color: var(--alt-bg);
 		border: 3px solid var(--text);
 		border-radius: 12px;
 		width: 90%;
 		max-width: 500px;
-		height: 70vh;
+		height: 100%;
 		max-height: 700px;
 		display: flex;
 		flex-direction: column;
@@ -176,7 +177,7 @@
 	}
 
 	/* Button - fades in within reserved space */
-	.acknowledge-button {
+	.dismiss-button {
 		font-family: 'Lato', sans-serif;
 		font-size: 1rem;
 		font-weight: 600;
@@ -190,27 +191,29 @@
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 	}
 
-	.acknowledge-button:hover {
+	.dismiss-button:hover {
 		background-color: color-mix(in srgb, var(--blue) 85%, white);
 		transform: translateY(-2px);
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 	}
 
-	.acknowledge-button:active {
+	.dismiss-button:active {
 		transform: translateY(0);
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 	}
 
-	/* Mobile responsiveness - 80% of viewport dimensions */
+	/* Mobile responsiveness */
 	@media (max-width: 768px) {
 		.modal-container {
-			padding: 4rem 0 0 0; /* Adjust for mobile header */
+			top: 5rem; /* Smaller top offset for mobile */
+			bottom: 0.5rem;
+			padding: 0;
 		}
 
 		.modal-card {
-			width: 80%;
-			height: 80%;
-			max-height: 80%;
+			width: 85%;
+			height: 100%;
+			max-height: none;
 			padding: 2rem 1.5rem;
 		}
 
