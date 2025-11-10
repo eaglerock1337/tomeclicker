@@ -185,8 +185,21 @@ export class StoryManager {
 	}
 
 	/**
-	 * Mark a story entry as acknowledged (player read the modal)
-	 * Also removes it from the unlock queue
+	 * Dismiss a modal (remove from queue) without acknowledging
+	 * Entry stays unread in journal until viewed there
+	 */
+	dismissModal(entryId: string): boolean {
+		const queueIndex = this.unlockedQueue.findIndex((e) => e.id === entryId);
+		if (queueIndex !== -1) {
+			this.unlockedQueue.splice(queueIndex, 1);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Mark a story entry as acknowledged (player read it in journal)
+	 * Does NOT remove from queue (dismissModal handles that)
 	 */
 	acknowledge(entryId: string): AcknowledgeResult {
 		const entry = this.entries.get(entryId);
@@ -195,12 +208,6 @@ export class StoryManager {
 		}
 
 		entry.acknowledged = true;
-
-		// Remove from queue if present
-		const queueIndex = this.unlockedQueue.findIndex((e) => e.id === entryId);
-		if (queueIndex !== -1) {
-			this.unlockedQueue.splice(queueIndex, 1);
-		}
 
 		const remainingUnread = Array.from(this.entries.values()).filter(
 			(e) => e.unlocked && !e.acknowledged
