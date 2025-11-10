@@ -25,10 +25,16 @@ chapters:
           threshold: 2
 
       - id: ch1-level3
-        text: "I'm starting to get the hang of this. My studying is making me realize what I need to focus on if I'm ever going to venture away from home."
+        text: "I'm starting to get the hang of this. However, my practice and research is making me realize the more targeted study I will need to be ready."
         trigger:
           type: level
           threshold: 3
+
+      - id: ch1-first-stat
+        text: "Reading through wordy academic texts is finally starting to pay off. It's a lot of effort to study this way, but at least I'm making progress."
+        trigger:
+          type: anyStatLevel
+          level: 1
 
       - id: ch1-level4
         text: 'I keep seeing the progress in myself. A world of adventure is out there waiting for me, as soon as I am ready. I need to focus and keep studying.'
@@ -36,19 +42,13 @@ chapters:
           type: level
           threshold: 4
 
-      - id: ch1-first-stat
-        text: "I'm starting to see my path forwards. Focusing on different aspects of my fitness and my attack and defense skills are key to protecting myself."
-        trigger:
-          type: anyStatLevel
-          level: 1
-
       - id: ch1-stats-unlocked
-        text: "I'm now starting to realize how far I have to go before I'm ready, but know I'm progressing. It's time to define my identity as an adventurer."
+        text: "As I'm getting stronger and more confident, I'm starting to feel ready for the next step. It's time to define my identity as an adventurer."
         trigger:
           type: adventureUnlockAttempted
 
       - id: ch1-name-set
-        text: "As I keep preparing for adventure, I redefine myself. I don't remember who I was, but now know who I am. I am now <adventurer-name>, destined for greatness."
+        text: "Today is the day I reinvent myself. I don't remember who I was, but I now know who I am. I am <adventurer-name>, ready for adventure."
         trigger:
           type: all
           conditions:
@@ -60,7 +60,7 @@ chapters:
     title: 'Adventure'
     entries:
       - id: ch2-adventure-unlock
-        text: 'My practice has paid off and I finally feel ready for adventure. I head out, ready to fight with nothing but my bare hands. My destiny awaits.'
+        text: 'My practice and study have paid off and I finally feel ready for adventure. I head out, ready to fight with nothing but my bare hands. My destiny awaits.'
         trigger:
           type: adventureUnlocked
 # Future chapters (triggers defined but not implemented yet)

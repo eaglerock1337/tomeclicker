@@ -157,7 +157,7 @@ export class IdleActionManager {
 			'study-athletics': {
 				id: 'study-athletics',
 				name: 'Study Athletics',
-				description: 'Theoretical Athletic Techniques',
+				description: 'Theoretical Athletic Performance Techniques',
 				progress: 0,
 				baseDuration: STUDYING_BASE_DURATION,
 				duration: STUDYING_BASE_DURATION,
@@ -169,7 +169,7 @@ export class IdleActionManager {
 			'study-kinetics': {
 				id: 'study-kinetics',
 				name: 'Study Kinetics',
-				description: 'Kintetic Reflex Metholodogies',
+				description: 'Classical Kintetic Reflex Metholodogies',
 				progress: 0,
 				baseDuration: STUDYING_BASE_DURATION,
 				duration: STUDYING_BASE_DURATION,
@@ -193,7 +193,7 @@ export class IdleActionManager {
 			'study-fitness': {
 				id: 'study-fitness',
 				name: 'Study Fitness',
-				description: 'Application of Physical Fitness Theory',
+				description: 'Applications of Physical Fitness Theory',
 				progress: 0,
 				baseDuration: STUDYING_BASE_DURATION,
 				duration: STUDYING_BASE_DURATION,
