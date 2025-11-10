@@ -138,7 +138,7 @@
                 {#if isNameChangeBlocking}
                     <span class="notification-badge">!</span>
                 {:else if hasNameChangeOpportunity}
-                    <span class="notification-badge journal-badge">!</span>
+                    <span class="notification-badge">!</span>
                 {/if}
             </p>
         </button>

@@ -877,9 +877,9 @@ describe('Game', () => {
 				expect(game.showAdventure()).toBe(true);
 			});
 
-			it('should return false when level >= 4 but stats are locked', () => {
+			it('should return true when level >= 4 regardless of stat status', () => {
 				const game = new GameBuilder().withLevel(4).build();
-				expect(game.showAdventure()).toBe(false);
+				expect(game.showAdventure()).toBe(true);
 			});
 
 			it('should return true for higher levels with all stats unlocked', () => {

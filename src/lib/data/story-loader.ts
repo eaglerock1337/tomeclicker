@@ -39,7 +39,6 @@ type TriggerYaml = Record<string, any>;
 export function loadStoryEntries(): StoryEntry[] {
 	// Use the already-parsed YAML data from @rollup/plugin-yaml
 	const data = storyContentYaml as StoryContentYaml;
-	console.log('[Story Loader] Loaded YAML data:', data);
 
 	if (!data?.chapters) {
 		console.warn('No chapters found in story-content.yaml');
@@ -48,6 +47,7 @@ export function loadStoryEntries(): StoryEntry[] {
 
 	// Flatten chapter entries into single array with chapter metadata
 	const entries: StoryEntry[] = [];
+	let orderCounter = 0;
 
 	for (const chapter of data.chapters) {
 		if (!chapter.entries || chapter.entries.length === 0) {
@@ -63,13 +63,12 @@ export function loadStoryEntries(): StoryEntry[] {
 				trigger: parseTrigger(entry.trigger),
 				unlocked: false, // Initialize as locked
 				acknowledged: false, // Initialize as unread
-				timestamp: undefined // Will be set when unlocked
+				timestamp: undefined, // Will be set when unlocked
+				order: orderCounter++ // Track order from YAML file
 			});
 		}
 	}
 
-	console.log('[Story Loader] Loaded', entries.length, 'entries');
-	console.log('[Story Loader] First entry:', entries[0]);
 	return entries;
 }
 
@@ -244,12 +243,16 @@ function parseTrigger(triggerYaml: TriggerYaml): TriggerCondition {
 		// Feature unlocks
 		case 'adventureUnlocked':
 			return { type: 'adventureUnlocked' };
+		case 'adventureUnlockAttempted':
+			return { type: 'adventureUnlockAttempted' };
 		case 'questingUnlocked':
 			return { type: 'questingUnlocked' };
 		case 'tomesUnlocked':
 			return { type: 'tomesUnlocked' };
 		case 'nameSet':
 			return { type: 'nameSet' };
+		case 'storyUnlocked':
+			return { type: 'storyUnlocked', entryId: triggerYaml.entryId };
 
 		// Adventure system
 		case 'adventureCompleted':

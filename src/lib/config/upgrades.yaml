@@ -92,7 +92,7 @@ research-speed:
 
 focus-flow:
   id: focus-flow
-  name: Deep Focus
+  name: Focus Flow
   description: Increases chance for research to critically strike for bonus EXP
   effect: '+0.5% research crit chance per level'
   baseCost: 1200
@@ -105,7 +105,7 @@ focus-flow:
 
 intense-thoughts:
   id: intense-thoughts
-  name: Breakthrough Insights
+  name: Intense Thoughts
   description: Increases the bonus EXP multiplier when research critically strikes
   effect: '+2% research crit damage per level'
   baseCost: 2000
@@ -136,7 +136,7 @@ research-mastery:
 
 studying-power:
   id: studying-power
-  name: Study Power
+  name: Reading Comprehension
   description: Increases stat EXP gained from each study session
   effect: '+1% stat EXP per study per level'
   baseCost: 2000
@@ -149,7 +149,7 @@ studying-power:
 
 studying-speed:
   id: studying-speed
-  name: Study Speed
+  name: Speed Reading
   description: Reduces time required to complete stat study sessions
   effect: '-0.1s per study per level'
   baseCost: 2500
@@ -162,8 +162,8 @@ studying-speed:
 
 studying-efficiency:
   id: studying-efficiency
-  name: Study Efficiency
-  description: Reduces character EXP cost to start studying
+  name: Pneumonic Devices
+  description: Makes studying more efficient by using less EXP
   effect: '-1% study cost per level'
   baseCost: 3000
   costMultiplier: 1.4

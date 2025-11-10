@@ -27,31 +27,25 @@
     function unlockAdventure() {
         if (!meetsStatRequirements) return;
 
-        // First click: Mark attempted and trigger ch1-stats-unlocked story
+        // First click: Mark attempted, unlock name change, and trigger ch1-stats-unlocked story
         if (!game.adventureUnlockAttempted) {
             game.adventureUnlockAttempted = true;
+            game.nameChangeUnlocked = true;
+
+            // Check for story unlocks (this marks ch1-stats-unlocked as unlocked in the journal)
+            game.checkStoryUnlocks();
+
+            // Save the state
+            game.autoSave();
+
+            // Force reactivity
             game = game;
 
-            // Show ch1-stats-unlocked story first
+            // Manually show the story modal
             if (typeof window !== 'undefined' && (window as any).showStory) {
                 (window as any).showStory('ch1-stats-unlocked');
-
-                // If already named, set up listener to show ch1-name-set after first story is dismissed
-                if (game.nameChanged) {
-                    const checkForNextStory = () => {
-                        // Wait for modal to be dismissed
-                        setTimeout(() => {
-                            const nameSetStory = game.getStoryEntry('ch1-name-set');
-                            if (nameSetStory && !nameSetStory.unlocked) {
-                                if (typeof window !== 'undefined' && (window as any).showStory) {
-                                    (window as any).showStory('ch1-name-set');
-                                }
-                            }
-                        }, 500); // Wait for first modal to be dismissed
-                    };
-                    checkForNextStory();
-                }
             }
+
             return;
         }
 
@@ -115,7 +109,22 @@
                     {/if}
                 </div>
 
-                {#if meetsStatRequirements && (!showIdentityRequirement || game.nameChanged)}
+                {#if meetsStatRequirements && !showIdentityRequirement}
+                    <div class="unlock-ready">
+                        <p>
+                            <em>Your training has finally paid off. You know it's time to fulfill your destiny.</em>
+                        </p>
+                        <button class="unlock-button" onclick={unlockAdventure}>
+                            Unlock Adventure
+                        </button>
+                    </div>
+                {:else if meetsStatRequirements && showIdentityRequirement && !game.nameChanged}
+                    <div class="training-hint">
+                        <p>
+                            <em>Check it. I need a handle, man. I mean, I don't have an identity until I have a handle.</em>
+                        </p>
+                    </div>
+                {:else if meetsStatRequirements && showIdentityRequirement && game.nameChanged}
                     <div class="unlock-ready">
                         <p>
                             <em>Your training has finally paid off. You know it's time to fulfill your destiny.</em>
@@ -127,7 +136,7 @@
                 {:else}
                     <div class="training-hint">
                         <p>
-                            <em>{showIdentityRequirement ? "Check it. I need a handle, man. I mean, I don't have an identity until I have a handle." : "You really want to get out there, but know it's best to keep training."}</em>
+                            <em>You really want to get out there, but know it's best to keep training.</em>
                         </p>
                     </div>
                 {/if}
