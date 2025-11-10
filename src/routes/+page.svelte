@@ -262,6 +262,7 @@
 		padding: 0;
 		height: 100%;
 		width: 100%;
+		position: fixed;
 		/* Prevent any scrolling on html/body */
 		overflow: hidden;
 		/* Prevent overscroll/rubber-band effect and pull-to-refresh */
@@ -283,7 +284,10 @@
 		height: 100vh;
 		height: 100dvh; /* Dynamic viewport height for mobile */
 		width: 100vw;
-		max-width: 100%;
+		width: 100dvw; /* Dynamic viewport width for mobile */
+		max-width: 100vw;
+		max-height: 100vh;
+		max-height: 100dvh;
 		overflow: hidden;
 		/* Prevent overscroll/rubber-band effect */
 		overscroll-behavior: none;

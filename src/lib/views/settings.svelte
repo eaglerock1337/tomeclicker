@@ -159,9 +159,13 @@
 		// Force reactivity
 		game = game;
 
-		// Directly show the ch1-name-set story
-		if (typeof window !== 'undefined' && (window as any).showStory) {
-			(window as any).showStory('ch1-name-set');
+		// Only show ch1-name-set story if ch1-stats-unlocked has already fired
+		const statsUnlockedStory = game.getStoryEntry('ch1-stats-unlocked');
+		if (statsUnlockedStory && statsUnlockedStory.unlocked) {
+			// Directly show the ch1-name-set story
+			if (typeof window !== 'undefined' && (window as any).showStory) {
+				(window as any).showStory('ch1-name-set');
+			}
 		}
 
 		showMessageFor('Name changed successfully!', 'success');
