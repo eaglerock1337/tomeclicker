@@ -89,12 +89,14 @@
 			</p>
 		</div>
 
-		<!-- Delayed button at bottom -->
-		{#if showButton}
-			<button class="acknowledge-button" on:click={handleAcknowledge} transition:fade>
-				Add to Journal
-			</button>
-		{/if}
+		<!-- Button container - always reserves space -->
+		<div class="button-container">
+			{#if showButton}
+				<button class="acknowledge-button" on:click={handleAcknowledge} transition:fade>
+					Add to Journal
+				</button>
+			{/if}
+		</div>
 	</div>
 </div>
 
@@ -110,25 +112,26 @@
 		align-items: center;
 		justify-content: center;
 		z-index: 9999;
-		padding: 1rem;
+		padding: 6rem 1rem 1rem 1rem; /* Top padding to avoid header/navbar */
 		pointer-events: none; /* Allow clicks through container */
 	}
 
-	/* Modal Card - rounded page with border */
+	/* Modal Card - portrait oriented, taller than wider */
 	.modal-card {
 		background-color: var(--alt-bg);
 		border: 3px solid var(--text);
 		border-radius: 12px;
-		max-width: 600px;
-		width: 80%;
-		max-height: 80vh;
+		width: 90%;
+		max-width: 500px;
+		height: 70vh;
+		max-height: 700px;
 		display: flex;
 		flex-direction: column;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 		animation: slideUp 0.3s ease-in-out;
 		pointer-events: auto; /* Re-enable clicks on card */
-		padding: 2rem;
-		gap: 1.5rem;
+		padding: 2.5rem 2rem;
+		gap: 0;
 	}
 
 	@keyframes slideUp {
@@ -149,6 +152,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		padding: 0.5rem 0;
 	}
 
 	.story-text {
@@ -162,7 +166,16 @@
 		text-align: center;
 	}
 
-	/* Button at bottom */
+	/* Button container - always reserves space, equal padding to top */
+	.button-container {
+		margin-top: 1.5rem;
+		min-height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* Button - fades in within reserved space */
 	.acknowledge-button {
 		font-family: 'Lato', sans-serif;
 		font-size: 1rem;
@@ -175,7 +188,6 @@
 		cursor: pointer;
 		transition: all 0.2s ease;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-		align-self: center;
 	}
 
 	.acknowledge-button:hover {
@@ -189,17 +201,17 @@
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 	}
 
-	/* Mobile responsiveness - 80% of viewport */
+	/* Mobile responsiveness - 80% of viewport dimensions */
 	@media (max-width: 768px) {
 		.modal-container {
-			padding: 0;
+			padding: 4rem 0 0 0; /* Adjust for mobile header */
 		}
 
 		.modal-card {
 			width: 80%;
 			height: 80%;
 			max-height: 80%;
-			padding: 1.5rem;
+			padding: 2rem 1.5rem;
 		}
 
 		.story-text {
