@@ -165,6 +165,7 @@
 		white-space: pre-wrap;
 		word-wrap: break-word;
 		text-align: center;
+		max-width: 85%; /* Constrain text width to prevent horizontal scrolling */
 	}
 
 	/* Button container - always reserves space */
@@ -223,6 +224,7 @@
 		.story-text {
 			font-size: 1rem;
 			line-height: 1.7;
+			max-width: 90%; /* Slightly wider on mobile, still prevent scrolling */
 		}
 	}
 

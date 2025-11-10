@@ -97,6 +97,7 @@ export class Game {
 	// New RPG and idle systems
 	public idleExpRate: number;
 	public adventureModeUnlocked: boolean;
+	public adventureUnlockAttempted: boolean; // Tracks if player has clicked unlock button (for story)
 	public meditationUnlocked: boolean;
 	public nameChangeUnlocked: boolean;
 	public nameChanged: boolean;
@@ -131,6 +132,7 @@ export class Game {
 		// Initialize new systems
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
+		this.adventureUnlockAttempted = false;
 		this.meditationUnlocked = false;
 		this.nameChangeUnlocked = false;
 		this.nameChanged = false;
@@ -186,7 +188,8 @@ export class Game {
 				getUpgrades: () => this.upgrades,
 				getPlayerName: () => this.name,
 				areAllStatsUnlocked: () => this.areAllStatsUnlocked(),
-				isAdventureModeUnlocked: () => this.adventureModeUnlocked
+				isAdventureModeUnlocked: () => this.adventureModeUnlocked,
+				isAdventureUnlockAttempted: () => this.adventureUnlockAttempted
 			},
 			loadStoryEntries() // Load story entries from YAML
 		);
@@ -1080,6 +1083,7 @@ export class Game {
 			meditationActions: this.idleActionManager.getMeditationActions(),
 			idleExpRate: this.idleExpRate,
 			adventureModeUnlocked: this.adventureModeUnlocked,
+			adventureUnlockAttempted: this.adventureUnlockAttempted,
 			meditationUnlocked: this.meditationUnlocked,
 			nameChangeUnlocked: this.nameChangeUnlocked,
 			nameChanged: this.nameChanged,
@@ -1137,6 +1141,7 @@ export class Game {
 
 		this.idleExpRate = state.idleExpRate || 0;
 		this.adventureModeUnlocked = state.adventureModeUnlocked || false;
+		this.adventureUnlockAttempted = state.adventureUnlockAttempted || false;
 		this.meditationUnlocked = state.meditationUnlocked || false;
 
 		// Migration: Set nameChangeUnlocked for old saves if level >= 3
@@ -1313,7 +1318,8 @@ export class Game {
 				getUpgrades: () => this.upgrades,
 				getPlayerName: () => this.name,
 				areAllStatsUnlocked: () => this.areAllStatsUnlocked(),
-				isAdventureModeUnlocked: () => this.adventureModeUnlocked
+				isAdventureModeUnlocked: () => this.adventureModeUnlocked,
+				isAdventureUnlockAttempted: () => this.adventureUnlockAttempted
 			},
 			loadStoryEntries() // Reload fresh story entries
 		);

@@ -115,6 +115,12 @@
 		if (typeof window !== 'undefined') {
 			(window as any).game = game;
 			(window as any).checkStoryUnlocks = checkStoryUnlocks;
+			(window as any).showStory = (entryId: string) => {
+				const entry = game.getStoryEntry(entryId);
+				if (entry) {
+					currentStory = entry;
+				}
+			};
 
 			// Listen for game state changes from child components
 			window.addEventListener('game-state-changed', () => {
@@ -255,8 +261,9 @@
 		margin: 0;
 		padding: 0;
 		height: 100%;
-		/* Allow scrolling on body for iOS compatibility */
-		overflow: visible;
+		width: 100%;
+		/* Prevent any scrolling on html/body */
+		overflow: hidden;
 		/* Prevent overscroll/rubber-band effect and pull-to-refresh */
 		overscroll-behavior: none;
 		/* Prevent double-tap zoom while allowing pinch-zoom */
@@ -266,11 +273,17 @@
 	}
 
 	.app {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
 		height: 100dvh; /* Dynamic viewport height for mobile */
 		width: 100vw;
+		max-width: 100%;
 		overflow: hidden;
 		/* Prevent overscroll/rubber-band effect */
 		overscroll-behavior: none;

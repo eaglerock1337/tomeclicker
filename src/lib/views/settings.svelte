@@ -159,10 +159,9 @@
 		// Force reactivity
 		game = game;
 
-		// Trigger a custom event to notify parent component to check story unlocks
-		// This ensures the story modal appears
-		if (typeof window !== 'undefined') {
-			window.dispatchEvent(new CustomEvent('game-state-changed'));
+		// Directly show the ch1-name-set story
+		if (typeof window !== 'undefined' && (window as any).showStory) {
+			(window as any).showStory('ch1-name-set');
 		}
 
 		showMessageFor('Name changed successfully!', 'success');

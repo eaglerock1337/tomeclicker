@@ -59,6 +59,16 @@
         game.nameChangeUnlocked &&
         !game.nameChanged &&
         !game.adventureModeUnlocked;
+
+    // Check if adventure is ready to progress (green badge)
+    // Ready when stats are met but adventure is not yet unlocked
+    // Force re-evaluation by accessing game properties directly
+    $: isAdventureReadyToProgress = game && game.exp >= 0 &&
+        game.stats.strength >= 5 &&
+        game.stats.agility >= 5 &&
+        game.stats.willpower >= 5 &&
+        game.stats.endurance >= 5 &&
+        !game.adventureModeUnlocked;
 </script>
 
 <div class="navbar">
@@ -96,7 +106,12 @@
         {/if}
         {#if game.showAdventure()}
             <button on:click="{() => game.menu = 'adventure'}">
-                <p class:red="{game.menu === 'adventure'}"><Compass size={24}/></p>
+                <p
+                    class:red="{game.menu === 'adventure'}"
+                    class:green="{game.menu !== 'adventure' && isAdventureReadyToProgress}"
+                >
+                    <Compass size={24}/>
+                </p>
             </button>
         {/if}
         <button on:click="{() => game.menu = 'journal'}">
