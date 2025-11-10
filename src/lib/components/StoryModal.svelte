@@ -102,36 +102,36 @@
 </div>
 
 <style>
-	/* Modal Container - no dark backdrop, fills viewport */
+	/* Modal Container - no dark backdrop, positions within main content area */
 	.modal-container {
 		position: fixed;
-		top: 0;
+		top: 5rem; /* Below header (mobile) */
 		left: 0;
 		right: 0;
-		bottom: 0;
+		bottom: 4rem; /* Above navbar */
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		z-index: 9999;
-		padding: 10vh 10vw; /* 10% borders on all sides */
-		pointer-events: none; /* Allow clicks through container */
+		padding: 20% 10%; /* 20% top/bottom, 10% left/right of main area */
+		pointer-events: auto; /* Enable clicks on modal */
 	}
 
-	/* Modal Card - 80% of viewport with 10% margin on all sides, capped at max size */
+	/* Modal Card - fills container (60% of content area), capped at max size */
 	.modal-card {
 		background-color: var(--alt-bg);
 		border: 3px solid var(--text);
 		border-radius: 12px;
-		width: 100%; /* Fill container (which is 80vw) */
-		height: 100%; /* Fill container (which is 80vh) */
+		width: 100%; /* Fill container */
+		height: 100%; /* Fill container */
 		max-width: 600px;
 		max-height: 1000px;
 		display: flex;
 		flex-direction: column;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 		animation: slideUp 0.3s ease-in-out;
-		pointer-events: auto; /* Re-enable clicks on card */
 		padding: 2.5rem 2rem;
+		touch-action: manipulation; /* Prevent double-tap zoom on button */
 	}
 
 	@keyframes slideUp {
@@ -190,12 +190,18 @@
 		cursor: pointer;
 		transition: all 0.2s ease;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		touch-action: manipulation; /* Prevent double-tap zoom */
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0.1); /* iOS tap feedback */
+		user-select: none; /* Prevent text selection on touch */
 	}
 
-	.dismiss-button:hover {
-		background-color: color-mix(in srgb, var(--blue) 85%, white);
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	/* Desktop hover effects */
+	@media (hover: hover) and (pointer: fine) {
+		.dismiss-button:hover {
+			background-color: color-mix(in srgb, var(--blue) 85%, white);
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+		}
 	}
 
 	.dismiss-button:active {
@@ -203,8 +209,13 @@
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 	}
 
-	/* Mobile responsiveness - adjust padding only */
+	/* Mobile responsiveness */
 	@media (max-width: 768px) {
+		.modal-container {
+			top: 5rem; /* Mobile header height */
+			bottom: 4rem; /* Mobile navbar height */
+		}
+
 		.modal-card {
 			padding: 2rem 1.5rem;
 		}
@@ -212,6 +223,14 @@
 		.story-text {
 			font-size: 1rem;
 			line-height: 1.7;
+		}
+	}
+
+	/* Desktop adjustments */
+	@media (min-width: 769px) {
+		.modal-container {
+			top: 7rem; /* Desktop header height */
+			bottom: 4rem; /* Navbar height */
 		}
 	}
 </style>
