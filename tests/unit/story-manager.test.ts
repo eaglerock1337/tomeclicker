@@ -189,17 +189,22 @@ describe('StoryManager', () => {
 			expect(result.newlyUnlocked[0].id).toBe('test-lifetimeExp');
 			expect(result.totalUnread).toBe(1);
 
-			// Check again - queue persists until acknowledged (NEW behavior)
+			// Check again - queue persists until dismissed (NEW behavior)
 			result = manager.checkForNewUnlocks();
 			expect(result.newlyUnlocked).toHaveLength(1); // Entry still in queue
 			expect(result.totalUnread).toBe(1); // Still unread
 
-			// Acknowledge the entry to clear it from queue
-			manager.acknowledge('test-lifetimeExp');
+			// Dismiss modal to clear from queue (but keeps entry unread)
+			manager.dismissModal('test-lifetimeExp');
 
-			// Now queue should be empty
+			// Queue should be empty but entry still unread
 			result = manager.checkForNewUnlocks();
 			expect(result.newlyUnlocked).toHaveLength(0);
+			expect(result.totalUnread).toBe(1); // Still unread
+
+			// Acknowledge in journal to mark as read
+			manager.acknowledge('test-lifetimeExp');
+			result = manager.checkForNewUnlocks();
 			expect(result.totalUnread).toBe(0); // Now read
 		});
 

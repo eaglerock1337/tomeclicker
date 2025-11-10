@@ -102,10 +102,10 @@
 </div>
 
 <style>
-	/* Modal Container - no dark backdrop, positioned below navbar */
+	/* Modal Container - no dark backdrop, fills viewport */
 	.modal-container {
 		position: fixed;
-		top: 7rem; /* Below header + navbar */
+		top: 0;
 		left: 0;
 		right: 0;
 		bottom: 0;
@@ -113,19 +113,17 @@
 		align-items: center;
 		justify-content: center;
 		z-index: 9999;
-		padding: 0 1rem;
+		padding: 10vh 10vw; /* 10% borders on all sides */
 		pointer-events: none; /* Allow clicks through container */
 	}
 
-	/* Modal Card - portrait oriented, uses 80% of available height */
+	/* Modal Card - 80% of viewport with 10% margin on all sides */
 	.modal-card {
 		background-color: var(--alt-bg);
 		border: 3px solid var(--text);
 		border-radius: 12px;
-		width: 90%;
-		max-width: 500px;
-		height: 80%;
-		max-height: 700px;
+		width: 100%; /* Fill container (which is 80vw) */
+		height: 100%; /* Fill container (which is 80vh) */
 		display: flex;
 		flex-direction: column;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
@@ -203,17 +201,9 @@
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 	}
 
-	/* Mobile responsiveness - symmetric spacing, narrower width */
+	/* Mobile responsiveness - adjust padding only */
 	@media (max-width: 768px) {
-		.modal-container {
-			top: 2.5rem; /* 50% closer to navbar */
-			padding: 0;
-		}
-
 		.modal-card {
-			width: 75%; /* Narrowed by 10% */
-			height: calc(100vh - 5rem); /* Symmetric top/bottom spacing (2.5rem each) */
-			max-height: none;
 			padding: 2rem 1.5rem;
 		}
 
