@@ -113,7 +113,7 @@
 		align-items: center;
 		justify-content: center;
 		z-index: 9999;
-		padding: 20% 10%; /* 20% top/bottom, 10% left/right of main area */
+		padding: 10% 10% 20% 10%; /* 10% top, 10% sides, 20% bottom */
 		pointer-events: auto; /* Enable clicks on modal */
 	}
 
@@ -130,7 +130,7 @@
 		flex-direction: column;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 		animation: slideUp 0.3s ease-in-out;
-		padding: 2.5rem 2rem;
+		padding: 2.5rem 1rem; /* Narrower horizontal padding for more vertical text */
 		touch-action: manipulation; /* Prevent double-tap zoom on button */
 	}
 
@@ -217,7 +217,7 @@
 		}
 
 		.modal-card {
-			padding: 2rem 1.5rem;
+			padding: 2rem 0.75rem; /* Even narrower on mobile for more vertical text */
 		}
 
 		.story-text {
