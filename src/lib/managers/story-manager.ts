@@ -164,14 +164,12 @@ export class StoryManager {
 				const shouldUnlock = this.evaluateTrigger(entry.trigger);
 
 				if (shouldUnlock) {
-					console.log(`[StoryManager] UNLOCKING: ${entry.id}`, entry);
 					entry.unlocked = true;
 					entry.timestamp = Date.now();
 					newlyUnlocked.push(entry);
 					// Add to queue only if not already in queue
 					if (!this.unlockedQueue.find((e) => e.id === entry.id)) {
 						this.unlockedQueue.push(entry);
-						console.log('[StoryManager] Added to queue:', entry.id);
 					}
 				}
 			}
@@ -181,18 +179,8 @@ export class StoryManager {
 			(e) => e.unlocked && !e.acknowledged
 		).length;
 
-		if (newlyUnlocked.length > 0) {
-			console.log(
-				'[StoryManager] Newly unlocked:',
-				newlyUnlocked.length,
-				'Total unread:',
-				totalUnread
-			);
-		}
-
 		// Return queue WITHOUT clearing it
 		// Queue will be managed by consumeQueuedEntry() when UI acknowledges entries
-		console.log('[StoryManager] Returning queued entries:', this.unlockedQueue.length);
 		return { newlyUnlocked: [...this.unlockedQueue], totalUnread };
 	}
 
@@ -212,7 +200,6 @@ export class StoryManager {
 		const queueIndex = this.unlockedQueue.findIndex((e) => e.id === entryId);
 		if (queueIndex !== -1) {
 			this.unlockedQueue.splice(queueIndex, 1);
-			console.log('[StoryManager] Removed from queue:', entryId);
 		}
 
 		const remainingUnread = Array.from(this.entries.values()).filter(
