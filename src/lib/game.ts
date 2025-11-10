@@ -247,7 +247,17 @@ export class Game {
 	}
 
 	/**
-	 * Acknowledges a story entry (marks as read)
+	 * Dismisses a story modal (removes from queue without acknowledging)
+	 * Entry stays unread in journal until viewed there
+	 * @param entryId - ID of the story entry to dismiss
+	 * @returns True if dismissed successfully
+	 */
+	dismissStoryModal(entryId: string): boolean {
+		return this.storyManager.dismissModal(entryId);
+	}
+
+	/**
+	 * Acknowledges a story entry (marks as read in journal)
 	 * @param entryId - ID of the story entry to acknowledge
 	 * @returns Result with remaining unread count
 	 */

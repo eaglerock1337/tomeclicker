@@ -64,16 +64,14 @@
 	}
 
 	/**
-	 * Handle story modal dismissal (player clicked "Continue")
-	 * Entry stays unread until viewed in journal
+	 * Handle story modal dismissal (player clicked "Add to Journal")
+	 * Removes from modal queue but keeps entry unread in journal
 	 */
 	function handleStoryDismiss(entryId: string) {
 		if (!game) return;
 
-		// Just dismiss the modal - entry stays unlocked but unacknowledged
-		// This removes it from the modal queue but keeps it unread in journal
-		// Force reactivity
-		game = game;
+		// Dismiss from modal queue (doesn't acknowledge - stays unread in journal)
+		game.dismissStoryModal(entryId);
 
 		// Show next story in queue (or clear modal)
 		showNextStory();
