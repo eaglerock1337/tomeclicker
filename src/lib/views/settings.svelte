@@ -14,6 +14,9 @@
 
 	const availableThemes = getThemeNames();
 
+	// Name change state
+	let newName = $state(game.name);
+
 	// Save management state
 	let importText = $state('');
 	let message = $state('');
@@ -142,6 +145,28 @@
 			showMessageFor('Failed to reset game', 'error');
 		}
 	}
+
+	function handleNameChange() {
+		const trimmedName = newName.trim();
+		if (!trimmedName || trimmedName === game.name) {
+			showMessageFor('Please enter a different name', 'error');
+			return;
+		}
+
+		// Change the name (this will trigger story event and dismiss badge)
+		game.changePlayerName(trimmedName);
+
+		// Force reactivity
+		game = game;
+
+		// Trigger a custom event to notify parent component to check story unlocks
+		// This ensures the story modal appears
+		if (typeof window !== 'undefined') {
+			window.dispatchEvent(new CustomEvent('game-state-changed'));
+		}
+
+		showMessageFor('Name changed successfully!', 'success');
+	}
 </script>
 
 <ViewLayout title="settings" maxWidth="1200px">
@@ -162,7 +187,26 @@
 		<!-- Left Column: Settings -->
 		<div class="settings-column">
 			<section class="settings-card">
-				<h2>color theme</h2>
+				{#if game.nameChangeUnlocked}
+					<h2>player name</h2>
+					<input
+						type="text"
+						bind:value={newName}
+						placeholder="Enter your name"
+						maxlength="20"
+						class="name-input"
+						class:name-available={!game.nameChanged}
+					/>
+					<button
+						class="name-save-btn"
+						onclick={handleNameChange}
+						disabled={!newName.trim() || newName.trim() === game.name}
+					>
+						Save Name
+					</button>
+				{/if}
+
+				<h2 style="margin-top: {game.nameChangeUnlocked ? '1.5rem' : '0'};">color theme</h2>
 				<select id="theme-select" class="theme-select" bind:value={config.theme}>
 					{#each availableThemes as themeName}
 						<option value={themeName}>
@@ -358,6 +402,7 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 180px;
+		transition: all 0.3s ease;
 	}
 
 	.settings-card p {
@@ -680,11 +725,73 @@
 		border-color: var(--text);
 	}
 
+	/* Name Change Section */
+	.name-input {
+		width: 100%;
+		padding: 0.5rem 1rem;
+		border-radius: 10px;
+		border: 2px solid var(--text);
+		background: var(--bg);
+		color: var(--text);
+		font-family: JetBrains Mono, monospace;
+		font-size: 1rem;
+		transition: all 0.3s ease;
+		margin-bottom: 0.5rem;
+		box-sizing: border-box;
+	}
+
+	.name-input.name-available {
+		border-color: var(--green);
+		box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+	}
+
+	.name-input:focus {
+		outline: none;
+		border-color: var(--green);
+		box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+	}
+
+	.name-save-btn {
+		width: 100%;
+		padding: 0.75rem 1rem;
+		border-radius: 10px;
+		background-color: var(--text);
+		color: var(--bg);
+		border: 2px solid var(--text);
+		font-family: JetBrains Mono, monospace;
+		font-weight: 400;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		margin-top: 0; /* Override default button margin */
+		margin-bottom: 0.5rem;
+	}
+
+	.name-save-btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.name-save-btn:not(:disabled):hover {
+		background-color: var(--green);
+		border-color: var(--green);
+		color: white;
+	}
+
 	/* Mobile Responsiveness */
 	@media (max-width: 768px) {
 		.settings-card {
 			padding: 1rem;
 			min-height: 150px;
+		}
+
+		.name-input {
+			font-size: 0.9rem;
+			padding: 0.4rem 0.75rem;
+		}
+
+		.name-save-btn {
+			font-size: 0.9rem;
+			padding: 0.6rem 0.75rem;
 		}
 
 		.theme-select {

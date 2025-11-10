@@ -125,7 +125,7 @@
 		width: 100%; /* Fill container */
 		height: 100%; /* Fill container */
 		max-width: 600px;
-		max-height: 1000px;
+		max-height: 800px;
 		display: flex;
 		flex-direction: column;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);

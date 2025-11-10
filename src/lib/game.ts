@@ -98,6 +98,8 @@ export class Game {
 	public idleExpRate: number;
 	public adventureModeUnlocked: boolean;
 	public meditationUnlocked: boolean;
+	public nameChangeUnlocked: boolean;
+	public nameChanged: boolean;
 
 	// Managers
 	private idleActionManager: IdleActionManager;
@@ -130,6 +132,8 @@ export class Game {
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
 		this.meditationUnlocked = false;
+		this.nameChangeUnlocked = false;
+		this.nameChanged = false;
 
 		// Initialize stats manager with character level dependency
 		this.statsManager = new StatsManager(undefined, {
@@ -236,6 +240,29 @@ export class Game {
 			// Check for story entries that unlock when name is set
 			this.storyManager.checkForNewUnlocks();
 		}
+	}
+
+	/**
+	 * Changes the player's name (used by UI)
+	 * Marks nameChanged as true on first use and triggers story event
+	 * @param name - New name for the player
+	 */
+	changePlayerName(name: string): void {
+		const trimmedName = name.trim();
+		if (!trimmedName || trimmedName === this.name) {
+			return; // No change
+		}
+
+		// Set the name
+		this.name = trimmedName;
+
+		// Mark as changed (dismisses badge and highlighting)
+		if (!this.nameChanged) {
+			this.nameChanged = true;
+		}
+
+		// Trigger story check (will unlock ch1-name-set story event)
+		this.storyManager.checkForNewUnlocks();
 	}
 
 	/**
@@ -851,7 +878,8 @@ export class Game {
 
 	/**
 	 * Determines if Adventure page should be accessible
-	 * @returns True if player has reached level 4 AND all stats are unlocked (level 1+)
+	 * Requires: Level 4+ and all stats unlocked (level 1+)
+	 * @returns True if player meets requirements to see the adventure page
 	 */
 	showAdventure(): boolean {
 		return this.level >= 4 && this.areAllStatsUnlocked();
@@ -919,6 +947,11 @@ export class Game {
 		if (!this.canLevelUp()) return false;
 		this.exp -= this.getLevelUpCost();
 		this.level++;
+
+		// Unlock name change at Level 3 (when Stats page appears)
+		if (this.level >= 3) {
+			this.nameChangeUnlocked = true;
+		}
 
 		// Check for story entries that may have unlocked
 		this.storyManager.checkForNewUnlocks();
@@ -1048,6 +1081,8 @@ export class Game {
 			idleExpRate: this.idleExpRate,
 			adventureModeUnlocked: this.adventureModeUnlocked,
 			meditationUnlocked: this.meditationUnlocked,
+			nameChangeUnlocked: this.nameChangeUnlocked,
+			nameChanged: this.nameChanged,
 			story: this.storyManager.serialize()
 		};
 	}
@@ -1103,6 +1138,10 @@ export class Game {
 		this.idleExpRate = state.idleExpRate || 0;
 		this.adventureModeUnlocked = state.adventureModeUnlocked || false;
 		this.meditationUnlocked = state.meditationUnlocked || false;
+
+		// Migration: Set nameChangeUnlocked for old saves if level >= 3
+		this.nameChangeUnlocked = state.nameChangeUnlocked ?? this.level >= 3;
+		this.nameChanged = state.nameChanged || false;
 
 		// Load story state if present (optional for backward compatibility)
 		if (state.story) {
@@ -1224,6 +1263,8 @@ export class Game {
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
 		this.meditationUnlocked = false;
+		this.nameChangeUnlocked = false;
+		this.nameChanged = false;
 
 		// Reinitialize managers
 		this.statsManager = new StatsManager(undefined, {
