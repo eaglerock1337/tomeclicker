@@ -32,20 +32,14 @@
 		if (!game) return;
 
 		const result = game.checkStoryUnlocks();
-		console.log('[Story Debug] Check result:', result);
 
 		if (result.newlyUnlocked.length > 0) {
-			console.log('[Story Debug] Manager queue has entries:', result.newlyUnlocked);
-
 			// Replace our queue with the manager's queue (don't append, to avoid duplicates)
 			// The manager's queue persists until entries are acknowledged
 			storyQueue = result.newlyUnlocked;
-			console.log('[Story Debug] Current story:', currentStory);
-			console.log('[Story Debug] Local queue synced:', storyQueue.length);
 
 			// If no modal is currently showing, show the first one
 			if (!currentStory && storyQueue.length > 0) {
-				console.log('[Story Debug] Calling showNextStory()');
 				showNextStory();
 			}
 		} else if (currentStory === null && result.newlyUnlocked.length === 0) {
@@ -58,10 +52,8 @@
 	 * Show the next story in the queue
 	 */
 	function showNextStory() {
-		console.log('[Story Debug] showNextStory - queue length:', storyQueue.length);
 		if (storyQueue.length === 0) {
 			currentStory = null;
-			console.log('[Story Debug] Queue empty, clearing currentStory');
 			return;
 		}
 
@@ -69,28 +61,19 @@
 		const [next, ...remaining] = storyQueue;
 		currentStory = next;
 		storyQueue = remaining;
-		console.log('[Story Debug] Set currentStory to:', currentStory);
-		console.log('[Story Debug] Remaining queue:', storyQueue);
 	}
 
 	/**
-	 * Handle story acknowledgement (player clicked "Add to Journal")
+	 * Handle story modal dismissal (player clicked "Continue")
+	 * Entry stays unread until viewed in journal
 	 */
-	function handleStoryAcknowledge(entryId: string) {
+	function handleStoryDismiss(entryId: string) {
 		if (!game) return;
 
-		console.log('[Story Debug] Acknowledging:', entryId);
-
-		// Acknowledge the entry in the game state (removes from manager queue)
-		game.acknowledgeStoryEntry(entryId);
-
+		// Just dismiss the modal - entry stays unlocked but unacknowledged
+		// This removes it from the modal queue but keeps it unread in journal
 		// Force reactivity
 		game = game;
-
-		// Sync local queue with manager queue to stay in sync
-		const result = game.checkStoryUnlocks();
-		storyQueue = result.newlyUnlocked;
-		console.log('[Story Debug] Queue after acknowledge:', storyQueue.length);
 
 		// Show next story in queue (or clear modal)
 		showNextStory();
@@ -121,27 +104,6 @@
 			}
 		}
 		game = new Game();
-		console.log('[Story Debug] Game created');
-		console.log('[Story Debug] Initial unread count:', game.getUnreadStoryCount());
-
-		// Debug: Add game to window for console testing
-		if (typeof window !== 'undefined') {
-			(window as any).debugGame = game;
-			(window as any).debugStory = {
-				checkUnlocks: () => checkStoryUnlocks(),
-				showQueue: () => console.log('Queue:', storyQueue),
-				showCurrent: () => console.log('Current:', currentStory),
-				forceUnlock: () => {
-					const result = game.checkStoryUnlocks();
-					console.log('Force check result:', result);
-					if (result.newlyUnlocked.length > 0) {
-						storyQueue = [...storyQueue, ...result.newlyUnlocked];
-						if (!currentStory) showNextStory();
-					}
-				}
-			};
-			console.log('[Story Debug] Added window.debugGame and window.debugStory helpers');
-		}
 
 		// Load saved data
 		setTimeout(() => {
@@ -151,8 +113,6 @@
 					game.loadFromCookies();
 				}
 				game = game; // Force reactivity
-				console.log('[Story Debug] After load - unread count:', game.getUnreadStoryCount());
-				console.log('[Story Debug] After load - unlocked chapters:', game.getUnlockedStoryChapters());
 			}
 		}, 100);
 
@@ -259,11 +219,7 @@
 
 	<!-- Story Modal (overlays everything) -->
 	{#if currentStory && game}
-		<StoryModal
-			entry={currentStory}
-			playerName={game.name}
-			onAcknowledge={handleStoryAcknowledge}
-		/>
+		<StoryModal entry={currentStory} playerName={game.name} onAcknowledge={handleStoryDismiss} />
 	{:else}
 		<!-- Debug: Modal not showing -->
 		<div style="display: none;">
