@@ -53,7 +53,8 @@ describe('StoryManager', () => {
 				text: 'You wake up...',
 				trigger: { type: 'lifetimeExp', threshold: 50 },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 0
 			},
 			{
 				id: 'test-level',
@@ -62,7 +63,8 @@ describe('StoryManager', () => {
 				text: 'You reach level 2...',
 				trigger: { type: 'level', threshold: 2 },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 1
 			},
 			{
 				id: 'test-upgrade',
@@ -71,7 +73,8 @@ describe('StoryManager', () => {
 				text: 'You learn discipline...',
 				trigger: { type: 'upgradeOwned', upgradeId: 'discipline' },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 2
 			},
 			{
 				id: 'test-stat',
@@ -80,7 +83,8 @@ describe('StoryManager', () => {
 				text: 'You grow stronger...',
 				trigger: { type: 'statLevel', stat: 'strength', level: 5 },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 3
 			},
 			{
 				id: 'test-anystat',
@@ -89,7 +93,8 @@ describe('StoryManager', () => {
 				text: 'Your first stat...',
 				trigger: { type: 'anyStatLevel', level: 1 },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 4
 			},
 			{
 				id: 'test-allstats',
@@ -98,7 +103,8 @@ describe('StoryManager', () => {
 				text: 'All stats trained...',
 				trigger: { type: 'allStatsLevel', level: 5 },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 5
 			},
 			{
 				id: 'test-adventure',
@@ -107,7 +113,8 @@ describe('StoryManager', () => {
 				text: 'Adventure unlocked...',
 				trigger: { type: 'adventureUnlocked' },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 6
 			},
 			{
 				id: 'test-name',
@@ -116,7 +123,8 @@ describe('StoryManager', () => {
 				text: 'You define yourself...',
 				trigger: { type: 'nameSet' },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 7
 			},
 			{
 				id: 'test-composite-all',
@@ -131,7 +139,8 @@ describe('StoryManager', () => {
 					]
 				},
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 8
 			},
 			{
 				id: 'test-composite-any',
@@ -146,7 +155,8 @@ describe('StoryManager', () => {
 					]
 				},
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 9
 			},
 			{
 				id: 'test-manual',
@@ -155,7 +165,8 @@ describe('StoryManager', () => {
 				text: 'A special event...',
 				trigger: { type: 'manual', eventId: 'special-event' },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 10
 			}
 		];
 	});
@@ -225,7 +236,8 @@ describe('StoryManager', () => {
 				text: 'EXP test',
 				trigger: { type: 'exp', threshold: 1000 },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 11
 			};
 			const manager = new StoryManager(deps, [entry]);
 
@@ -264,7 +276,8 @@ describe('StoryManager', () => {
 				text: 'Upgrade level test',
 				trigger: { type: 'upgradeLevel', upgradeId: 'discipline', level: 3 },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 12
 			};
 			const manager = new StoryManager(deps, [entry]);
 
@@ -371,7 +384,8 @@ describe('StoryManager', () => {
 				text: 'Total stats test',
 				trigger: { type: 'totalStats', total: 20 },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 13
 			};
 			const manager = new StoryManager(deps, [entry]);
 
@@ -760,7 +774,8 @@ describe('StoryManager', () => {
 				text: 'Exactly level 5',
 				trigger: { type: 'level', threshold: 5, operator: 'eq' },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 14
 			};
 			const manager = new StoryManager(deps, [entry]);
 
@@ -782,7 +797,8 @@ describe('StoryManager', () => {
 				text: 'Level 3 or higher',
 				trigger: { type: 'level', threshold: 3 },
 				unlocked: false,
-				acknowledged: false
+				acknowledged: false,
+				order: 15
 			};
 			const manager = new StoryManager(deps, [entry]);
 

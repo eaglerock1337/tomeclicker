@@ -156,13 +156,23 @@
 		// Change the name (this will trigger story event and dismiss badge)
 		game.changePlayerName(trimmedName);
 
-		// Force reactivity
+		// Force reactivity immediately after name change
 		game = game;
 
-		// Only show ch1-name-set story if ch1-stats-unlocked has already fired
-		const statsUnlockedStory = game.getStoryEntry('ch1-stats-unlocked');
-		if (statsUnlockedStory && statsUnlockedStory.unlocked) {
-			// Directly show the ch1-name-set story
+		// Check for story unlocks (this marks ch1-name-set as unlocked in the journal if conditions are met)
+		game.checkStoryUnlocks();
+
+		// Save the state
+		game.autoSave();
+
+		// Force reactivity again after story check
+		game = game;
+
+		// Verify the story was unlocked and show it
+		const nameSetStory = game.getStoryEntry('ch1-name-set');
+
+		if (nameSetStory && nameSetStory.unlocked) {
+			// Manually show the story modal
 			if (typeof window !== 'undefined' && (window as any).showStory) {
 				(window as any).showStory('ch1-name-set');
 			}

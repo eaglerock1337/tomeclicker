@@ -30,6 +30,12 @@ chapters:
           type: level
           threshold: 3
 
+      - id: ch1-level4
+        text: 'I keep seeing the progress in myself. A world of adventure is out there waiting for me, as soon as I am ready. I need to focus and keep studying.'
+        trigger:
+          type: level
+          threshold: 4
+
       - id: ch1-first-stat
         text: "I'm starting to see my path forwards. Focusing on different aspects of my fitness and my attack and defense skills are key to protecting myself."
         trigger:

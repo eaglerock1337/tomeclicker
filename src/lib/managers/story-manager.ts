@@ -21,6 +21,7 @@ export interface StoryEntry {
 	unlocked: boolean; // Whether player has met unlock criteria
 	acknowledged: boolean; // Whether player has read the modal popup
 	timestamp?: number; // When it was unlocked (for save versioning)
+	order: number; // Order in which entry appears in YAML (for display ordering)
 }
 
 /**
@@ -227,7 +228,7 @@ export class StoryManager {
 	getChapterEntries(chapter: number): StoryEntry[] {
 		return Array.from(this.entries.values())
 			.filter((e) => e.chapter === chapter)
-			.sort((a, b) => a.id.localeCompare(b.id));
+			.sort((a, b) => a.order - b.order);
 	}
 
 	/**

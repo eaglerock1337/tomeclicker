@@ -881,11 +881,11 @@ export class Game {
 
 	/**
 	 * Determines if Adventure page should be accessible
-	 * Requires: Level 4+ and all stats unlocked (level 1+)
+	 * Requires: Level 4+
 	 * @returns True if player meets requirements to see the adventure page
 	 */
 	showAdventure(): boolean {
-		return this.level >= 4 && this.areAllStatsUnlocked();
+		return this.level >= 4;
 	}
 
 	/**
@@ -903,6 +903,7 @@ export class Game {
 
 		if (!meetsRequirements) return false;
 
+		// Actually unlock adventure mode
 		this.adventureModeUnlocked = true;
 
 		// Check for story entries that may have unlocked
@@ -950,11 +951,6 @@ export class Game {
 		if (!this.canLevelUp()) return false;
 		this.exp -= this.getLevelUpCost();
 		this.level++;
-
-		// Unlock name change at Level 3 (when Stats page appears)
-		if (this.level >= 3) {
-			this.nameChangeUnlocked = true;
-		}
 
 		// Check for story entries that may have unlocked
 		this.storyManager.checkForNewUnlocks();
@@ -1144,8 +1140,8 @@ export class Game {
 		this.adventureUnlockAttempted = state.adventureUnlockAttempted || false;
 		this.meditationUnlocked = state.meditationUnlocked || false;
 
-		// Migration: Set nameChangeUnlocked for old saves if level >= 3
-		this.nameChangeUnlocked = state.nameChangeUnlocked ?? this.level >= 3;
+		// Load name change state
+		this.nameChangeUnlocked = state.nameChangeUnlocked || false;
 		this.nameChanged = state.nameChanged || false;
 
 		// Load story state if present (optional for backward compatibility)
@@ -1267,6 +1263,7 @@ export class Game {
 		this.studyingCritChance = 0.0;
 		this.idleExpRate = 0;
 		this.adventureModeUnlocked = false;
+		this.adventureUnlockAttempted = false;
 		this.meditationUnlocked = false;
 		this.nameChangeUnlocked = false;
 		this.nameChanged = false;
