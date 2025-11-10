@@ -108,7 +108,7 @@
 		top: 7rem; /* Below header + navbar */
 		left: 0;
 		right: 0;
-		bottom: 1rem;
+		bottom: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -117,14 +117,14 @@
 		pointer-events: none; /* Allow clicks through container */
 	}
 
-	/* Modal Card - portrait oriented, fills available space */
+	/* Modal Card - portrait oriented, uses 80% of available height */
 	.modal-card {
 		background-color: var(--alt-bg);
 		border: 3px solid var(--text);
 		border-radius: 12px;
 		width: 90%;
 		max-width: 500px;
-		height: 100%;
+		height: 80%;
 		max-height: 700px;
 		display: flex;
 		flex-direction: column;
@@ -132,7 +132,6 @@
 		animation: slideUp 0.3s ease-in-out;
 		pointer-events: auto; /* Re-enable clicks on card */
 		padding: 2.5rem 2rem;
-		gap: 0;
 	}
 
 	@keyframes slideUp {
@@ -154,6 +153,7 @@
 		align-items: center;
 		justify-content: center;
 		padding: 0.5rem 0;
+		min-height: 0; /* Allow flex shrink */
 	}
 
 	.story-text {
@@ -167,13 +167,14 @@
 		text-align: center;
 	}
 
-	/* Button container - always reserves space, equal padding to top */
+	/* Button container - always reserves space */
 	.button-container {
-		margin-top: 1.5rem;
+		flex-shrink: 0;
 		min-height: 48px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		padding-top: 1.5rem;
 	}
 
 	/* Button - fades in within reserved space */
@@ -202,17 +203,16 @@
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 	}
 
-	/* Mobile responsiveness */
+	/* Mobile responsiveness - 80% of available viewport */
 	@media (max-width: 768px) {
 		.modal-container {
 			top: 5rem; /* Smaller top offset for mobile */
-			bottom: 0.5rem;
 			padding: 0;
 		}
 
 		.modal-card {
 			width: 85%;
-			height: 100%;
+			height: 80%;
 			max-height: none;
 			padding: 2rem 1.5rem;
 		}
