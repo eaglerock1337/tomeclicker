@@ -25,13 +25,13 @@ chapters:
           threshold: 2
 
       - id: ch1-level3
-        text: "I'm starting to get the hang of this. However, my practice and research is making me realize the more targeted study I will need to be ready."
+        text: "I'm starting to get the hang of this. However, my practice and research is making me realize the more targeted study I will need to go further."
         trigger:
           type: level
           threshold: 3
 
       - id: ch1-first-stat
-        text: "Reading through wordy academic texts is finally starting to pay off. It's a lot of effort to study this way, but at least I'm making progress."
+        text: "Reading through wordy academic texts is finally starting to pay off. It's difficult to read and hard to study, but I'm making progress."
         trigger:
           type: anyStatLevel
           level: 1
@@ -48,7 +48,7 @@ chapters:
           type: adventureUnlockAttempted
 
       - id: ch1-name-set
-        text: "Today is the day I reinvent myself. I don't remember who I was, but I now know who I am. I am <adventurer-name>, ready for adventure."
+        text: "Today is the day I reinvent myself. I don't remember who I was, but I now know who I am. I am <adventurer-name>, destined for greatness."
         trigger:
           type: all
           conditions:
