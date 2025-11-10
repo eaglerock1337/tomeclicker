@@ -117,13 +117,15 @@
 		pointer-events: none; /* Allow clicks through container */
 	}
 
-	/* Modal Card - 80% of viewport with 10% margin on all sides */
+	/* Modal Card - 80% of viewport with 10% margin on all sides, capped at max size */
 	.modal-card {
 		background-color: var(--alt-bg);
 		border: 3px solid var(--text);
 		border-radius: 12px;
 		width: 100%; /* Fill container (which is 80vw) */
 		height: 100%; /* Fill container (which is 80vh) */
+		max-width: 600px;
+		max-height: 1000px;
 		display: flex;
 		flex-direction: column;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
