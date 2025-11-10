@@ -39,7 +39,7 @@ chapters:
       - id: ch1-stats-unlocked
         text: "I'm now starting to realize how far I have to go before I'm ready, but know I'm progressing. It's time to define my identity as an adventurer."
         trigger:
-          type: adventureUnlocked
+          type: adventureUnlockAttempted
 
       - id: ch1-name-set
         text: "As I keep preparing for adventure, I redefine myself. I don't remember who I was, but now know who I am. I am now <adventurer-name>, destined for greatness."

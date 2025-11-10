@@ -9,9 +9,6 @@
 
     let { game = $bindable() }: Props = $props();
 
-    // Track if player has attempted to unlock (to show identity requirement)
-    let unlockAttempted = $state(false);
-
     // Derived reactive states
     let isUnlocked = $derived(game.adventureModeUnlocked);
     let meetsStatRequirements = $derived(
@@ -21,25 +18,34 @@
         game.stats.endurance >= 5
     );
 
-    // Show identity requirement only if attempted unlock without a name
-    let showIdentityRequirement = $derived(unlockAttempted && !game.nameChanged);
-    let allRequirementsMet = $derived(meetsStatRequirements && game.nameChanged);
+    // Show identity requirement after first click, until adventure is unlocked
+    let showIdentityRequirement = $derived(
+        game.adventureUnlockAttempted &&
+        !game.adventureModeUnlocked
+    );
 
     function unlockAdventure() {
-        // If name not set yet, mark as attempted and show requirement
-        if (!game.nameChanged && meetsStatRequirements) {
-            unlockAttempted = true;
+        if (!meetsStatRequirements) return;
+
+        // First click: Mark attempted and trigger ch1-stats-unlocked story
+        if (!game.adventureUnlockAttempted) {
+            game.adventureUnlockAttempted = true;
+            game = game;
+
+            // Directly force show the story modal
+            if (typeof window !== 'undefined' && (window as any).showStory) {
+                (window as any).showStory('ch1-stats-unlocked');
+            }
             return;
         }
 
-        // Otherwise, proceed with unlock
-        if (game.unlockAdventureMode()) {
-            game = game; // Force reactivity
+        // Subsequent clicks: Only proceed if name is set
+        if (!game.nameChanged) return;
 
-            // Trigger story check to show both modals in sequence
-            if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent('game-state-changed'));
-            }
+        // All requirements met: unlock adventure
+        if (!game.adventureModeUnlocked) {
+            game.unlockAdventureMode();
+            game = game;
         }
     }
 </script>
@@ -93,7 +99,7 @@
                     {/if}
                 </div>
 
-                {#if allRequirementsMet || (!unlockAttempted && meetsStatRequirements)}
+                {#if meetsStatRequirements && (!showIdentityRequirement || game.nameChanged)}
                     <div class="unlock-ready">
                         <p>
                             <em>Your training has finally paid off. You know it's time to fulfill your destiny.</em>

@@ -40,7 +40,8 @@ describe('StoryManager', () => {
 			getUpgrades: () => ({}),
 			getPlayerName: () => 'A Stranger',
 			areAllStatsUnlocked: () => false,
-			isAdventureModeUnlocked: () => false
+			isAdventureModeUnlocked: () => false,
+			isAdventureUnlockAttempted: () => false
 		};
 
 		// Create test story entries
@@ -744,7 +745,8 @@ describe('StoryManager', () => {
 				getUpgrades: () => ({}),
 				getPlayerName: () => '',
 				areAllStatsUnlocked: () => false,
-				isAdventureModeUnlocked: () => false
+				isAdventureModeUnlocked: () => false,
+				isAdventureUnlockAttempted: () => false
 			};
 
 			const manager = new StoryManager(minimalDeps, testEntries);

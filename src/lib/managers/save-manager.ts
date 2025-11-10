@@ -18,6 +18,7 @@ export interface GameState {
 	meditationActions: Record<string, any>; // IdleAction objects
 	idleExpRate: number;
 	adventureModeUnlocked: boolean;
+	adventureUnlockAttempted?: boolean;
 	meditationUnlocked: boolean;
 	nameChangeUnlocked?: boolean;
 	nameChanged?: boolean;

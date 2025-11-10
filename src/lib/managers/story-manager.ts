@@ -45,6 +45,7 @@ export type TriggerCondition =
 
 	// UI/Feature unlocks
 	| { type: 'adventureUnlocked' }
+	| { type: 'adventureUnlockAttempted' } // Player clicked unlock button (stats met)
 	| { type: 'questingUnlocked' }
 	| { type: 'tomesUnlocked' }
 	| { type: 'nameSet' } // Player has set their name
@@ -110,6 +111,7 @@ export interface StoryManagerDependencies {
 	// Feature unlock checks
 	areAllStatsUnlocked: () => boolean;
 	isAdventureModeUnlocked: () => boolean;
+	isAdventureUnlockAttempted: () => boolean;
 
 	// Future dependencies (optional - gracefully degrade if not provided)
 	getAdventureCount?: () => number;
@@ -350,6 +352,8 @@ export class StoryManager {
 			// Feature unlocks
 			case 'adventureUnlocked':
 				return this.deps.isAdventureModeUnlocked();
+			case 'adventureUnlockAttempted':
+				return this.deps.isAdventureUnlockAttempted();
 			case 'nameSet':
 				return this.deps.getPlayerName() !== '' && this.deps.getPlayerName() !== 'A Stranger';
 
