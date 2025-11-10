@@ -3,18 +3,43 @@
     import ViewLayout from '$lib/components/ViewLayout.svelte';
     import { formatCompact } from '$lib/utils/format';
 
-    export let game: Game;
+    interface Props {
+        game: Game;
+    }
 
-    $: isUnlocked = game.adventureModeUnlocked;
-    $: meetsStatRequirements =
+    let { game = $bindable() }: Props = $props();
+
+    // Track if player has attempted to unlock (to show identity requirement)
+    let unlockAttempted = $state(false);
+
+    // Derived reactive states
+    let isUnlocked = $derived(game.adventureModeUnlocked);
+    let meetsStatRequirements = $derived(
         game.stats.strength >= 5 &&
         game.stats.agility >= 5 &&
         game.stats.willpower >= 5 &&
-        game.stats.endurance >= 5;
+        game.stats.endurance >= 5
+    );
+
+    // Show identity requirement only if attempted unlock without a name
+    let showIdentityRequirement = $derived(unlockAttempted && !game.nameChanged);
+    let allRequirementsMet = $derived(meetsStatRequirements && game.nameChanged);
 
     function unlockAdventure() {
+        // If name not set yet, mark as attempted and show requirement
+        if (!game.nameChanged && meetsStatRequirements) {
+            unlockAttempted = true;
+            return;
+        }
+
+        // Otherwise, proceed with unlock
         if (game.unlockAdventureMode()) {
             game = game; // Force reactivity
+
+            // Trigger story check to show both modals in sequence
+            if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('game-state-changed'));
+            }
         }
     }
 </script>
@@ -58,21 +83,29 @@
                             {#if game.stats.endurance >= 5}✓{/if}
                         </span>
                     </div>
+                    {#if showIdentityRequirement}
+                        <div class="requirement-item identity-requirement" class:met={game.nameChanged}>
+                            <span class="requirement-label">Define your identity:</span>
+                            <span class="requirement-value">
+                                {game.nameChanged ? '✓' : '✗'}
+                            </span>
+                        </div>
+                    {/if}
                 </div>
 
-                {#if meetsStatRequirements}
+                {#if allRequirementsMet || (!unlockAttempted && meetsStatRequirements)}
                     <div class="unlock-ready">
                         <p>
                             <em>Your training has finally paid off. You know it's time to fulfill your destiny.</em>
                         </p>
-                        <button class="unlock-button" on:click={unlockAdventure}>
+                        <button class="unlock-button" onclick={unlockAdventure}>
                             Unlock Adventure
                         </button>
                     </div>
                 {:else}
                     <div class="training-hint">
                         <p>
-                            <em>You really want to get out there, but know it's best to keep training.</em>
+                            <em>{showIdentityRequirement ? "Check it. I need a handle, man. I mean, I don't have an identity until I have a handle." : "You really want to get out there, but know it's best to keep training."}</em>
                         </p>
                     </div>
                 {/if}
@@ -109,7 +142,7 @@
                         <li>Idle combat and adventure zones</li>
                         <li>Adventure Points and treasures</li>
                         <li>Equipment and gear system</li>
-                        <li>The mystery of the Tomes still await...</li>
+                        <li>The mystery of the Tomes are still out there...</li>
                     </ul>
                 </div>
             </div>
@@ -160,6 +193,12 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 0.75rem;
         margin-bottom: 1rem;
+    }
+
+    .identity-requirement {
+        grid-column: 1 / -1; /* Span full width */
+        justify-content: center;
+        font-weight: 600;
     }
 
     .requirement-item {

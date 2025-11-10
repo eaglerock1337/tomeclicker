@@ -44,6 +44,21 @@
     // Check if there are unread journal entries
     // Force re-evaluation by accessing game properties directly
     $: hasUnreadJournalEntries = game && game.exp >= 0 && game.getUnreadStoryCount() > 0;
+
+    // Check if name change is blocking progression (red badge)
+    // When adventure is unlocked but name hasn't been set, it's blocking story progression
+    // Force re-evaluation by accessing game properties directly
+    $: isNameChangeBlocking = game && game.exp >= 0 &&
+        game.adventureModeUnlocked &&
+        game.nameChangeUnlocked &&
+        !game.nameChanged;
+
+    // Check if name change is available but not blocking (blue badge)
+    // Force re-evaluation by accessing game properties directly
+    $: hasNameChangeOpportunity = game && game.exp >= 0 &&
+        game.nameChangeUnlocked &&
+        !game.nameChanged &&
+        !game.adventureModeUnlocked;
 </script>
 
 <div class="navbar">
@@ -103,7 +118,14 @@
             </button>
         {/if}
         <button on:click="{() => game.menu = 'settings'}">
-            <p class:red="{game.menu === 'settings'}"><Settings size={24}/></p>
+            <p class:red="{game.menu === 'settings'}">
+                <Settings size={24}/>
+                {#if isNameChangeBlocking}
+                    <span class="notification-badge">!</span>
+                {:else if hasNameChangeOpportunity}
+                    <span class="notification-badge journal-badge">!</span>
+                {/if}
+            </p>
         </button>
         <button on:click="{() => game.menu = 'about'}">
             <p class:red="{game.menu === 'about'}"><Info size={24}/></p>

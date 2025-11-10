@@ -19,6 +19,8 @@ export interface GameState {
 	idleExpRate: number;
 	adventureModeUnlocked: boolean;
 	meditationUnlocked: boolean;
+	nameChangeUnlocked?: boolean;
+	nameChanged?: boolean;
 	story?: {
 		// Optional for backward compatibility with old saves
 		entryStates: Array<{

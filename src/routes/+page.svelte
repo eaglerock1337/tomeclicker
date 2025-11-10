@@ -111,6 +111,17 @@
 		}
 		game = new Game();
 
+		// Expose game to console for debugging (development only)
+		if (typeof window !== 'undefined') {
+			(window as any).game = game;
+			(window as any).checkStoryUnlocks = checkStoryUnlocks;
+
+			// Listen for game state changes from child components
+			window.addEventListener('game-state-changed', () => {
+				checkStoryUnlocks();
+			});
+		}
+
 		// Load saved data
 		setTimeout(() => {
 			if (game) {

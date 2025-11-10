@@ -49,6 +49,9 @@ export type TriggerCondition =
 	| { type: 'tomesUnlocked' }
 	| { type: 'nameSet' } // Player has set their name
 
+	// Story sequencing
+	| { type: 'storyUnlocked'; entryId: string } // Another story entry has been unlocked
+
 	// Adventure system (future)
 	| { type: 'adventureCompleted'; count: number } // Completed nth adventure
 	| { type: 'chestOpened'; count: number } // Opened nth chest
@@ -349,6 +352,12 @@ export class StoryManager {
 				return this.deps.isAdventureModeUnlocked();
 			case 'nameSet':
 				return this.deps.getPlayerName() !== '' && this.deps.getPlayerName() !== 'A Stranger';
+
+			// Story sequencing
+			case 'storyUnlocked': {
+				const entry = this.entries.get(trigger.entryId);
+				return entry ? entry.unlocked : false;
+			}
 
 			// Future: Adventure system (graceful degradation)
 			case 'adventureCompleted':
