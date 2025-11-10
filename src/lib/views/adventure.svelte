@@ -32,9 +32,25 @@
             game.adventureUnlockAttempted = true;
             game = game;
 
-            // Directly force show the story modal
+            // Show ch1-stats-unlocked story first
             if (typeof window !== 'undefined' && (window as any).showStory) {
                 (window as any).showStory('ch1-stats-unlocked');
+
+                // If already named, set up listener to show ch1-name-set after first story is dismissed
+                if (game.nameChanged) {
+                    const checkForNextStory = () => {
+                        // Wait for modal to be dismissed
+                        setTimeout(() => {
+                            const nameSetStory = game.getStoryEntry('ch1-name-set');
+                            if (nameSetStory && !nameSetStory.unlocked) {
+                                if (typeof window !== 'undefined' && (window as any).showStory) {
+                                    (window as any).showStory('ch1-name-set');
+                                }
+                            }
+                        }, 500); // Wait for first modal to be dismissed
+                    };
+                    checkForNextStory();
+                }
             }
             return;
         }
