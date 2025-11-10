@@ -79,6 +79,7 @@ export interface StorageBackend {
 	setItem(key: string, value: string): void;
 	getItem(key: string): string | null;
 	removeItem(key: string): void;
+	clear(): void;
 }
 
 /**
@@ -98,6 +99,11 @@ export class LocalStorageBackend implements StorageBackend {
 	removeItem(key: string): void {
 		if (typeof localStorage === 'undefined') return;
 		localStorage.removeItem(key);
+	}
+
+	clear(): void {
+		if (typeof localStorage === 'undefined') return;
+		localStorage.clear();
 	}
 }
 
@@ -126,6 +132,11 @@ export class CookieStorageBackend implements StorageBackend {
 	removeItem(key: string): void {
 		if (typeof document === 'undefined') return;
 		document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+	}
+
+	clear(): void {
+		// Cookies are deprecated, this method does nothing
+		// Hard reset only works with localStorage backend
 	}
 }
 
@@ -227,10 +238,10 @@ export class SaveManager {
 	}
 
 	/**
-	 * Clear save data from storage
+	 * Clear ALL data from localStorage (full hard reset)
 	 */
 	clearSave(): void {
-		this.storage.removeItem(SaveManager.STORAGE_KEY);
+		this.storage.clear();
 	}
 
 	/**
