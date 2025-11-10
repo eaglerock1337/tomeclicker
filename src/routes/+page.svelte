@@ -73,8 +73,16 @@
 		// Dismiss from modal queue (doesn't acknowledge - stays unread in journal)
 		game.dismissStoryModal(entryId);
 
-		// Show next story in queue (or clear modal)
-		showNextStory();
+		// Clear current story immediately for reactivity
+		currentStory = null;
+
+		// Remove from local queue as well
+		storyQueue = storyQueue.filter((entry) => entry.id !== entryId);
+
+		// Show next story in queue (or keep modal hidden)
+		if (storyQueue.length > 0) {
+			showNextStory();
+		}
 	}
 
 	onMount(() => {
