@@ -1,3 +1,32 @@
+# [0.3.0](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.7...v0.3.0) (2025-11-10)
+
+### Bug Fixes
+
+- improve modal layout and implement full localStorage clear on hard reset ([9bf76cd](https://github.com/eaglerock1337/tomeclicker/commit/9bf76cd3ebc7746c3933aa5fdaad5844c5556e39))
+- improve modal layout and implement full localStorage clear on hard reset ([d93582c](https://github.com/eaglerock1337/tomeclicker/commit/d93582cc987e5c80c531e3e6f215e098b90232d8))
+- lock down game testing to dev environments ([fae4aa8](https://github.com/eaglerock1337/tomeclicker/commit/fae4aa8185fdcd1cb76e6def5d8919604da0f01a))
+- make journal first person ([82d244e](https://github.com/eaglerock1337/tomeclicker/commit/82d244e1644f819b479b21daa53c48d980f71001))
+- mobile scrolling ([d8e65de](https://github.com/eaglerock1337/tomeclicker/commit/d8e65dea0eba0aabca0318f74b192c643c5cb5b7))
+- most story trigger issues ([ea107a1](https://github.com/eaglerock1337/tomeclicker/commit/ea107a1db019c5908c04f10111497d4bf1a668f3))
+- practice page number display ([4ff7faf](https://github.com/eaglerock1337/tomeclicker/commit/4ff7faff2c7b492ff9d52adae6c70613b9efc67b))
+- resolve modal button reactivity and refine layout ([9dc320a](https://github.com/eaglerock1337/tomeclicker/commit/9dc320a6e03e3db5172015e83e5a8324b8659960))
+- resolve story modal queue timing issue with persistent queue ([99b9168](https://github.com/eaglerock1337/tomeclicker/commit/99b9168049c67c9af7b50ad85ebc1d525c7e7ee0))
+- story modal not showing by adding unlock queue to StoryManager ([3b45af0](https://github.com/eaglerock1337/tomeclicker/commit/3b45af0f48c906c9a7ecaa600c3c19ecf565dd9e))
+- story modal not triggering due to incorrect YAML import ([d0f7383](https://github.com/eaglerock1337/tomeclicker/commit/d0f73831046fd48d13230d61033d1ced0718e8a0))
+- story mode triggers ([51c0c76](https://github.com/eaglerock1337/tomeclicker/commit/51c0c7628525bc389d00516c1b8c57281605406d))
+- story triggers and adventure unlock flow ([3f8c404](https://github.com/eaglerock1337/tomeclicker/commit/3f8c4048e6826fb0110eaca161e135558d59a588))
+- story wording ([e4992d8](https://github.com/eaglerock1337/tomeclicker/commit/e4992d80381b69e37006f1ceb3575637958316f9))
+- update StoryModal styling for visibility and prominence ([57498e2](https://github.com/eaglerock1337/tomeclicker/commit/57498e29e0f106d7bb264d40b919c07a6dd6c529))
+
+### Features
+
+- add story modal with queue system (phase 2) ([a2036ba](https://github.com/eaglerock1337/tomeclicker/commit/a2036baac12ad4fb86b1cfc8756b35f706793fe1))
+- add story system foundation (phase 1) ([d625a17](https://github.com/eaglerock1337/tomeclicker/commit/d625a17d7118c1e7ccca9d7011b97d706e4a0d3d))
+- rebrand Training → Study with academic theming ([2d5c88b](https://github.com/eaglerock1337/tomeclicker/commit/2d5c88b94480c003b008a87603cdb53950b61821))
+- redesign story modal with minimal centered card layout ([19f3b6e](https://github.com/eaglerock1337/tomeclicker/commit/19f3b6ed098bfa03f73c8f49e686282b60cf967e))
+- redesign story page as journal with unread badges ([302f787](https://github.com/eaglerock1337/tomeclicker/commit/302f7870cdb0039ee8d1fb0f51a14602bb96bf95))
+- wire up story triggers in Game methods ([bb1c062](https://github.com/eaglerock1337/tomeclicker/commit/bb1c062d9770a81ef4009de21cb039ad8cfd3106))
+
 ## [0.2.7](https://github.com/eaglerock1337/tomeclicker/compare/v0.2.6...v0.2.7) (2025-11-08)
 
 ### Bug Fixes
