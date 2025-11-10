@@ -82,7 +82,7 @@
                         {#if game.canLevelUp()}
                             level up available
                         {:else if showCritAmount}
-                            +{critAmount.toFixed(0)} EXP
+                            +{Math.floor(critAmount).toLocaleString()} EXP
                         {:else}
                             {clickText}
                         {/if}

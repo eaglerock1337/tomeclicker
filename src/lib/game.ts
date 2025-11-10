@@ -732,7 +732,7 @@ export class Game {
 
 		// Show the EXP amount (whole number)
 		const expAmount = Math.floor(this.clickMultiplier);
-		return `+${expAmount} EXP`;
+		return `+${expAmount.toLocaleString()} EXP`;
 	}
 
 	/**
